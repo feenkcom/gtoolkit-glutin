@@ -10,36 +10,6 @@ Class {
 	#category : #'OSWindow-Winit'
 }
 
-{ #category : #'instance creation' }
-WinitWindow class >> create [
-	"Create a window for a new events loop"
-	^ self create: WinitEventsLoop create
-]
-
-{ #category : #'instance creation' }
-WinitWindow class >> create: anEventsLoop [
-	"Create a window for a given events loop"
-	| aWindow |
-	
-	aWindow := self primCreate: anEventsLoop.
-	aWindow autoRelease.
-	
-	aWindow initializeWith: anEventsLoop.
-	^ aWindow
-]
-
-{ #category : #'private - ffi' }
-WinitWindow class >> primCreate: anEventsLoop [
-	^ self ffiCall: #(WinitWindow winit_create_window(WinitEventsLoop anEventsLoop))
-]
-
-{ #category : #'private - ffi' }
-WinitWindow class >> primRelease: aHandle [
-	
-	"Plain pointers must be deleted using delete(), all users must implement a specific method"
-	^ self ffiCall: #(void winit_destroy_window(void* aHandle))
-]
-
 { #category : #'initialize-release' }
 WinitWindow >> destroy [
 	self release
@@ -54,12 +24,12 @@ WinitWindow >> eventsLoop [
 WinitWindow >> initializeWith: anEventsLoop [
 	eventsLoop := anEventsLoop.
 
-	title := ''
+	"self title: 'Window'"
 ]
 
 { #category : #'private - ffi' }
 WinitWindow >> primSetTitle: aString [
-	^ self ffiCall: #(void winit_window_set_title(WinitWindow self, String aString))
+	self subclassResponsibility
 ]
 
 { #category : #accessing }
@@ -71,6 +41,7 @@ WinitWindow >> title [
 
 { #category : #accessing }
 WinitWindow >> title: aString [
+
 	self primSetTitle: aString.
 	title := aString
 ]
