@@ -30,11 +30,11 @@ TWinitPtr classSide >> release: aHandle [
 
 { #category : #debug }
 TWinitPtr classSide >> warning: aMessageBlock [ 
-	| message |
+	"| message |
 
 	message := '[', self name asString ,'] ', aMessageBlock value.
 
-	Transcript show: message; cr
+	Transcript show: message; cr"
 ]
 
 { #category : #'initialize-release' }
