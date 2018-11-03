@@ -1,7 +1,7 @@
 Class {
 	#name : #WinitEventsLoopCallback,
 	#superclass : #FFICallback,
-	#category : #'OSWindow-Winit'
+	#category : #Winit
 }
 
 { #category : #'instance creation' }

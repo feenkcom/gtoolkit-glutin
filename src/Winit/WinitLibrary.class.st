@@ -1,7 +1,7 @@
 Class {
 	#name : #WinitLibrary,
 	#superclass : #FFILibrary,
-	#category : #'OSWindow-Winit'
+	#category : #Winit
 }
 
 { #category : #'accessing platform' }

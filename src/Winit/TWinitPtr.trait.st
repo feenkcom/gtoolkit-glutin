@@ -1,6 +1,6 @@
 Trait {
 	#name : #TWinitPtr,
-	#category : #'OSWindow-Winit'
+	#category : #Winit
 }
 
 { #category : #finalization }

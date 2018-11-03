@@ -1,7 +1,7 @@
 Class {
 	#name : #WinitEnum,
 	#superclass : #FFIExternalEnumeration,
-	#category : #'OSWindow-Winit'
+	#category : #Winit
 }
 
 { #category : #'enum declaration' }

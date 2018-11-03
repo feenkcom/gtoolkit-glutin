@@ -8,7 +8,7 @@ window title: 'Simple Window'.
 Class {
 	#name : #WinitSimpleWindow,
 	#superclass : #WinitWindow,
-	#category : #'OSWindow-Winit'
+	#category : #Winit
 }
 
 { #category : #'instance creation' }

@@ -1,6 +1,6 @@
 Trait {
 	#name : #TWinitLibrary,
-	#category : #'OSWindow-Winit'
+	#category : #Winit
 }
 
 { #category : #'library path' }

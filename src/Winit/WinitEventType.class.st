@@ -24,7 +24,7 @@ Class {
 		'WindowEventTouch',
 		'WindowEventTouchpadPressure'
 	],
-	#category : #'OSWindow-Winit'
+	#category : #Winit
 }
 
 { #category : #'accessing enum' }

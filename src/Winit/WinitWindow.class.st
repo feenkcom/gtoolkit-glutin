@@ -7,7 +7,7 @@ Class {
 		'eventsLoop',
 		'title'
 	],
-	#category : #'OSWindow-Winit'
+	#category : #Winit
 }
 
 { #category : #'initialize-release' }

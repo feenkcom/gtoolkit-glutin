@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'glWindow'
 	],
-	#category : #'OSWindow-Winit'
+	#category : #Winit
 }
 
 { #category : #'instance creation' }

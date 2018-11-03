@@ -9,7 +9,7 @@ Class {
 		'withTransparency',
 		'withResizable'
 	],
-	#category : #'OSWindow-Winit'
+	#category : #Winit
 }
 
 { #category : #'api - instantiation' }

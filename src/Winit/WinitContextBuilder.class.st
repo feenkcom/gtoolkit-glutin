@@ -3,7 +3,7 @@ Class {
 	#superclass : #FFIExternalObject,
 	#traits : 'TWinitLibrary + TWinitPtr',
 	#classTraits : 'TWinitLibrary classTrait + TWinitPtr classTrait',
-	#category : #'OSWindow-Winit'
+	#category : #Winit
 }
 
 { #category : #'api - instantiation' }
