@@ -27,3 +27,8 @@ OSWinitWindowHandle >> initWithHandle: aHandle [
 
 	handle := aHandle
 ]
+
+{ #category : #testing }
+OSWinitWindowHandle >> isValid [
+	^ true
+]

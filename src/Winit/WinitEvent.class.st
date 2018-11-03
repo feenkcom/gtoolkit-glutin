@@ -4,7 +4,7 @@ Class {
 	#classVars : [
 		'OFFSET_EVENT_TYPE'
 	],
-	#category : #Winit
+	#category : #'Winit-Structures'
 }
 
 { #category : #'field definition' }

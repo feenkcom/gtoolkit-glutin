@@ -42,6 +42,42 @@ WinitGLWindow class >> windowBuilder: aWindowBuilder contextBuilder: aContextBui
 		contextBuilder: aContextBuilder
 ]
 
+{ #category : #accessing }
+WinitGLWindow >> framebufferExtent [
+	<return: #Point>
+	| aSizeU32 |
+	
+	aSizeU32 := WinitSizeU32 new.
+	self primGetFramebufferSize: aSizeU32.
+
+	^ aSizeU32 x @ aSizeU32 y
+]
+
+{ #category : #accessing }
+WinitGLWindow >> innerExtent [
+	<return: #Point>
+	| aSizeF64 |
+	
+	aSizeF64 := WinitSizeF64 new.
+	self primGetInnerSize: aSizeF64.
+
+	^ (aSizeF64 x @ aSizeF64 y) asIntegerPoint
+]
+
+{ #category : #'private - ffi' }
+WinitGLWindow >> primGetFramebufferSize: aSizeU32 [
+	^ self ffiCall: #(void winit_gl_window_get_framebuffer_size(
+		WinitGLWindow self,
+		WinitSizeU32* aSizeU32))
+]
+
+{ #category : #'private - ffi' }
+WinitGLWindow >> primGetInnerSize: aSizeF64 [
+	^ self ffiCall: #(void winit_gl_window_get_inner_size(
+		WinitGLWindow self,
+		WinitSizeF64* aSizeF64))
+]
+
 { #category : #'private - ffi' }
 WinitGLWindow >> primSetTitle: aString [
 	^ self ffiCall: #(void winit_gl_window_set_title(WinitGLWindow self, String aString))
