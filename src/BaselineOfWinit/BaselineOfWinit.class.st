@@ -7,5 +7,5 @@ Class {
 { #category : #baselines }
 BaselineOfWinit >> baseline: spec [
 	<baseline>
-	spec for: #common do: [ spec spec package: 'Winit' ]
+	spec for: #common do: [ spec package: 'Winit' ]
 ]
