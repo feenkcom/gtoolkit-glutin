@@ -9,6 +9,6 @@ BaselineOfOSWindowWinit >> baseline: spec [
 	<baseline>
 	spec for: #common do: [ spec
 		baseline: 'Winit' with: [ 
-			spec repository: 'github://syrel/oswindow-winit/src' ];
+			spec repository: 'github://feenkcom/oswindow-winit/src' ];
 		package: 'OSWindow-Winit' with: [ spec requires: #(Winit) ] ]
 ]
