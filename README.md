@@ -6,6 +6,6 @@ Winit backend for OSWindow
 ```smalltalk
 Metacello new
    baseline: 'OSWindowWinit';
-   repository: 'github://syrel/oswindow-winit/src';
+   repository: 'github://feenkcom/oswindow-winit/src';
    load
 ```
