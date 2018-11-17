@@ -26,8 +26,11 @@ WinitEventsLoop class >> primRelease: aHandle [
 { #category : #events }
 WinitEventsLoop >> pollEvents: aBlock [
 	| aCallback baseEvent |
+
+	self isNull
+		ifTrue: [ ^ self ].
 	
-	baseEvent := WinitEvent new.
+	baseEvent := WinitBaseEvent new.
 	aCallback := WinitEventsLoopCallback on: [ aBlock value: baseEvent. true ].
 
 	self primPollEvents: aCallback event: baseEvent
@@ -37,7 +40,7 @@ WinitEventsLoop >> pollEvents: aBlock [
 WinitEventsLoop >> primPollEvents: aCallback event: aWinitEvent [
 	^ self ffiCall: #(void winit_events_loop_poll_events(
 		WinitEventsLoop self,
-		WinitEvent *aWinitEvent,
+		WinitBaseEvent *aWinitEvent,
 		WinitEventsLoopCallback aCallback))
 ]
 
@@ -45,7 +48,7 @@ WinitEventsLoop >> primPollEvents: aCallback event: aWinitEvent [
 WinitEventsLoop >> primRunForever: aCallback event: aWinitEvent [
 	^ self ffiCall: #(void winit_events_loop_run_forever(
 		WinitEventsLoop self,
-		WinitEvent *aWinitEvent,
+		#WinitBaseEvent *aWinitEvent,
 		WinitEventsLoopCallback aCallback))
 ]
 
@@ -53,7 +56,7 @@ WinitEventsLoop >> primRunForever: aCallback event: aWinitEvent [
 WinitEventsLoop >> runForever: aBlock [
 	| aCallback baseEvent |
 	
-	baseEvent := WinitEvent new.
+	baseEvent := WinitBaseEvent new.
 	aCallback := WinitEventsLoopCallback on: [ 
 		| aResult |
 		aResult := aBlock value: baseEvent.

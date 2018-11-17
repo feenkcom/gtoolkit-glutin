@@ -14,6 +14,12 @@ OSWinitWindowHandle class >> newWithHandle: aHandle [
 	^ self basicNew initWithHandle: aHandle
 ]
 
+{ #category : #deleting }
+OSWinitWindowHandle >> destroy [
+	self handle destroy.
+	handle := nil
+]
+
 { #category : #accessing }
 OSWinitWindowHandle >> handle [
 	<return: #WinitWindow>
@@ -30,5 +36,28 @@ OSWinitWindowHandle >> initWithHandle: aHandle [
 
 { #category : #testing }
 OSWinitWindowHandle >> isValid [
-	^ true
+	^ handle isNotNil and: [ handle isValid ]
+]
+
+{ #category : #factory }
+OSWinitWindowHandle >> newOpenGLRenderer [
+	^ renderer := OSWinitGLRenderer new 
+		window: self;
+		createContext;
+		yourself
+]
+
+{ #category : #'events-processing' }
+OSWinitWindowHandle >> pollEvents [
+	self isValid
+		ifFalse: [ ^ self ].
+
+	handle eventsLoop pollEvents: [ :aWinitEvent | aWinitEvent mapped logCr ]
+]
+
+{ #category : #accessing }
+OSWinitWindowHandle >> winitWindow [
+	<return: #WinitWindow>
+
+	^ self handle
 ]

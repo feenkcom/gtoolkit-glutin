@@ -27,6 +27,11 @@ WinitWindow >> initializeWith: anEventsLoop [
 	"self title: 'Window'"
 ]
 
+{ #category : #'as yet unclassified' }
+WinitWindow >> isValid [
+	^ handle isNotNil and: [ handle isNull not ]
+]
+
 { #category : #'private - ffi' }
 WinitWindow >> primSetTitle: aString [
 	self subclassResponsibility

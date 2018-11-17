@@ -64,6 +64,11 @@ WinitGLWindow >> innerExtent [
 	^ (aSizeF64 x @ aSizeF64 y) asIntegerPoint
 ]
 
+{ #category : #misc }
+WinitGLWindow >> makeCurrent [
+	self primMakeCurrent
+]
+
 { #category : #'private - ffi' }
 WinitGLWindow >> primGetFramebufferSize: aSizeU32 [
 	^ self ffiCall: #(void winit_gl_window_get_framebuffer_size(
@@ -79,6 +84,21 @@ WinitGLWindow >> primGetInnerSize: aSizeF64 [
 ]
 
 { #category : #'private - ffi' }
+WinitGLWindow >> primMakeCurrent [
+	^ self ffiCall: #(void winit_gl_window_make_current(WinitGLWindow self))
+]
+
+{ #category : #'private - ffi' }
 WinitGLWindow >> primSetTitle: aString [
 	^ self ffiCall: #(void winit_gl_window_set_title(WinitGLWindow self, String aString))
+]
+
+{ #category : #'private - ffi' }
+WinitGLWindow >> primSwapBuffers [
+	^ self ffiCall: #(void winit_gl_window_swap_buffers(WinitGLWindow self))
+]
+
+{ #category : #misc }
+WinitGLWindow >> swapBuffers [
+	self primSwapBuffers
 ]
