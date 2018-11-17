@@ -3,10 +3,20 @@ Class {
 	#superclass : #OSWindowGLRenderer,
 	#instVars : [
 		'api',
-		'renderer'
+		'renderer',
+		'pipelineId',
+		'epoch',
+		'documentId'
 	],
 	#category : #'OSWindow-Winit'
 }
+
+{ #category : #geometry }
+OSWinitGLRenderer >> canvasExtent [
+	<return: #Point>
+
+	^ window winitWindow framebufferExtent
+]
 
 { #category : #misc }
 OSWinitGLRenderer >> checkThread [
@@ -19,10 +29,43 @@ OSWinitGLRenderer >> createContext [
 	self onRenderThreadBlocking: [
 		| aState |
 		
-		aState := WebrenderState window: window winitWindow.
+		aState := window winitWindow initWebrender.
 		
 		api := aState api.
-		renderer := aState renderer ]
+		renderer := aState renderer.
+		documentId := api addDocument: self canvasExtent layer: 0.
+		pipelineId := WebrenderPipelineId id: 0@0.
+		epoch := 0 ]
+]
+
+{ #category : #drawing }
+OSWinitGLRenderer >> drawDuring: aBlock [
+	self asCurrentDo: [
+		| aTransaction aCanvas |
+		
+		aTransaction := WebrenderTransaction new.
+		aCanvas := WebrenderCanvas extent: self layoutExtent pipeline: pipelineId.
+		
+		aBlock value: aCanvas.
+		
+		aTransaction setDisplayList: aCanvas epoch: epoch.
+		"canvas is no more valid here"
+		aTransaction rootPipeline: pipelineId.
+		aTransaction generateFrame.
+		documentId sendTransaction: aTransaction.
+		"transaction is no more valid"
+		
+		renderer update.
+		renderer render: self canvasExtent.
+		self swapBuffers
+	].
+]
+
+{ #category : #geometry }
+OSWinitGLRenderer >> layoutExtent [
+	<return: #Point>
+
+	^ window winitWindow innerExtent
 ]
 
 { #category : #misc }

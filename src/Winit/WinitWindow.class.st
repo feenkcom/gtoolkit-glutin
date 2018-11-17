@@ -27,7 +27,7 @@ WinitWindow >> initializeWith: anEventsLoop [
 	"self title: 'Window'"
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 WinitWindow >> isValid [
 	^ handle isNotNil and: [ handle isNull not ]
 ]

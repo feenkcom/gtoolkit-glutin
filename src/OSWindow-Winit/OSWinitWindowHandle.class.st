@@ -14,10 +14,25 @@ OSWinitWindowHandle class >> newWithHandle: aHandle [
 	^ self basicNew initWithHandle: aHandle
 ]
 
+{ #category : #accessing }
+OSWinitWindowHandle >> canvasExtent [
+	^ self winitWindow framebufferExtent
+]
+
 { #category : #deleting }
 OSWinitWindowHandle >> destroy [
 	self handle destroy.
 	handle := nil
+]
+
+{ #category : #accessing }
+OSWinitWindowHandle >> extent [
+	^ self winitWindow innerExtent
+]
+
+{ #category : #accessing }
+OSWinitWindowHandle >> extent: newExtent [
+	self winitWindow innerExtent: newExtent
 ]
 
 { #category : #accessing }
@@ -53,6 +68,26 @@ OSWinitWindowHandle >> pollEvents [
 		ifFalse: [ ^ self ].
 
 	handle eventsLoop pollEvents: [ :aWinitEvent | aWinitEvent mapped logCr ]
+]
+
+{ #category : #accessing }
+OSWinitWindowHandle >> position [
+	^ self winitWindow position
+]
+
+{ #category : #accessing }
+OSWinitWindowHandle >> show [
+	
+]
+
+{ #category : #accessing }
+OSWinitWindowHandle >> title [
+	^ self winitWindow title
+]
+
+{ #category : #accessing }
+OSWinitWindowHandle >> title: aTitle [
+	self winitWindow title: aTitle
 ]
 
 { #category : #accessing }

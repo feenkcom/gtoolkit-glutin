@@ -64,9 +64,19 @@ WinitGLWindow >> innerExtent [
 	^ (aSizeF64 x @ aSizeF64 y) asIntegerPoint
 ]
 
+{ #category : #accessing }
+WinitGLWindow >> innerExtent: aPoint [
+	self primSetInnerWidth: aPoint x height: aPoint y
+]
+
 { #category : #misc }
 WinitGLWindow >> makeCurrent [
 	self primMakeCurrent
+]
+
+{ #category : #accessing }
+WinitGLWindow >> position [
+	^ 0@0
 ]
 
 { #category : #'private - ffi' }
@@ -86,6 +96,14 @@ WinitGLWindow >> primGetInnerSize: aSizeF64 [
 { #category : #'private - ffi' }
 WinitGLWindow >> primMakeCurrent [
 	^ self ffiCall: #(void winit_gl_window_make_current(WinitGLWindow self))
+]
+
+{ #category : #'private - ffi' }
+WinitGLWindow >> primSetInnerWidth: aWidth height: aHeight [
+	^ self ffiCall: #(void winit_gl_window_set_inner_size(
+		WinitGLWindow self,
+		float64 aWidth,
+		float64 aHeight))
 ]
 
 { #category : #'private - ffi' }
