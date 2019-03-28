@@ -1,23 +1,23 @@
 Trait {
-	#name : #TWinitPtr,
+	#name : #TGlutinPtr,
 	#category : #Winit
 }
 
 { #category : #finalization }
-TWinitPtr classSide >> finalizeResourceData: aHandle [
+TGlutinPtr classSide >> finalizeResourceData: aHandle [
 	
 	self release: aHandle
 ]
 
 { #category : #'private - ffi' }
-TWinitPtr classSide >> primRelease: aHandle [
+TGlutinPtr classSide >> primRelease: aHandle [
 	
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"
 	^ self explicitRequirement
 ]
 
 { #category : #finalization }
-TWinitPtr classSide >> release: aHandle [
+TGlutinPtr classSide >> release: aHandle [
 
 	aHandle isNull
 		"A handle may already be null, if garbage collector did his job before us :) "
@@ -29,7 +29,7 @@ TWinitPtr classSide >> release: aHandle [
 ]
 
 { #category : #debug }
-TWinitPtr classSide >> warning: aMessageBlock [ 
+TGlutinPtr classSide >> warning: aMessageBlock [ 
 	"| message |
 
 	message := '[', self name asString ,'] ', aMessageBlock value.
@@ -38,7 +38,7 @@ TWinitPtr classSide >> warning: aMessageBlock [
 ]
 
 { #category : #'initialize-release' }
-TWinitPtr >> release [
+TGlutinPtr >> release [
 
 	self class release: self resourceData.
 	

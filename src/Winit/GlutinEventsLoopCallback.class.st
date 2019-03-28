@@ -1,22 +1,22 @@
 Class {
-	#name : #WinitEventsLoopCallback,
+	#name : #GlutinEventsLoopCallback,
 	#superclass : #FFICallback,
 	#category : #Winit
 }
 
 { #category : #'instance creation' }
-WinitEventsLoopCallback class >> fnSpec [
+GlutinEventsLoopCallback class >> fnSpec [
 	^ #(bool ())
 ]
 
 { #category : #'instance creation' }
-WinitEventsLoopCallback class >> on: aBlock [
+GlutinEventsLoopCallback class >> on: aBlock [
 	^ self 
 		signature: self fnSpec 
 		block: aBlock
 ]
 
 { #category : #initialization }
-WinitEventsLoopCallback >> initialize [
+GlutinEventsLoopCallback >> initialize [
 	super initialize.
 ]

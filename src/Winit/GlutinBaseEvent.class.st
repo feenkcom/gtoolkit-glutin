@@ -1,5 +1,5 @@
 Class {
-	#name : #WinitBaseEvent,
+	#name : #GlutinBaseEvent,
 	#superclass : #FFIExternalStructure,
 	#classVars : [
 		'OFFSET_EVENT_TYPE',
@@ -15,12 +15,12 @@ Class {
 }
 
 { #category : #accessing }
-WinitBaseEvent class >> eventMap [
+GlutinBaseEvent class >> eventMap [
 	^ EventTypeMap
 ]
 
 { #category : #'field definition' }
-WinitBaseEvent class >> fieldsDesc [
+GlutinBaseEvent class >> fieldsDesc [
 	"
 	self rebuildFieldAccessors
 	"
@@ -34,7 +34,7 @@ WinitBaseEvent class >> fieldsDesc [
 ]
 
 { #category : #initialization }
-WinitBaseEvent class >> initializeEventTypeMap [
+GlutinBaseEvent class >> initializeEventTypeMap [
 	"
 	self initializeEventTypeMap
 	"
@@ -46,66 +46,66 @@ WinitBaseEvent class >> initializeEventTypeMap [
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseEvent >> event_type [
+GlutinBaseEvent >> event_type [
 	"This method was automatically generated"
 	^WinitEventType fromInteger: (handle unsignedLongAt: OFFSET_EVENT_TYPE)
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseEvent >> event_type: anObject [
+GlutinBaseEvent >> event_type: anObject [
 	"This method was automatically generated"
 	handle unsignedLongAt: OFFSET_EVENT_TYPE put: anObject value
 ]
 
 { #category : #accessing }
-WinitBaseEvent >> mapped [
+GlutinBaseEvent >> mapped [
 	^ (self class eventMap at: self event_type ifAbsent: [ WinitUnknownEvent ]) fromBaseEvent: self
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseEvent >> mouse_wheel [
+GlutinBaseEvent >> mouse_wheel [
 	"This method was automatically generated"
 	^ WinitBaseMouseWheelEvent fromHandle: (handle referenceStructAt: OFFSET_MOUSE_WHEEL length: WinitBaseMouseWheelEvent byteSize)
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseEvent >> mouse_wheel: anObject [
+GlutinBaseEvent >> mouse_wheel: anObject [
 	"This method was automatically generated"
 	handle structAt: OFFSET_MOUSE_WHEEL put: anObject getHandle length: WinitBaseMouseWheelEvent byteSize
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseEvent >> touch [
+GlutinBaseEvent >> touch [
 	"This method was automatically generated"
 	^ WinitBaseTouchEvent fromHandle: (handle referenceStructAt: OFFSET_TOUCH length: WinitBaseTouchEvent byteSize)
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseEvent >> touch: anObject [
+GlutinBaseEvent >> touch: anObject [
 	"This method was automatically generated"
 	handle structAt: OFFSET_TOUCH put: anObject getHandle length: WinitBaseTouchEvent byteSize
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseEvent >> window_moved [
+GlutinBaseEvent >> window_moved [
 	"This method was automatically generated"
 	^ WinitBaseWindowMovedEvent fromHandle: (handle referenceStructAt: OFFSET_WINDOW_MOVED length: WinitBaseWindowMovedEvent byteSize)
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseEvent >> window_moved: anObject [
+GlutinBaseEvent >> window_moved: anObject [
 	"This method was automatically generated"
 	handle structAt: OFFSET_WINDOW_MOVED put: anObject getHandle length: WinitBaseWindowMovedEvent byteSize
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseEvent >> window_resized [
+GlutinBaseEvent >> window_resized [
 	"This method was automatically generated"
 	^ WinitBaseWindowResizedEvent fromHandle: (handle referenceStructAt: OFFSET_WINDOW_RESIZED length: WinitBaseWindowResizedEvent byteSize)
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseEvent >> window_resized: anObject [
+GlutinBaseEvent >> window_resized: anObject [
 	"This method was automatically generated"
 	handle structAt: OFFSET_WINDOW_RESIZED put: anObject getHandle length: WinitBaseWindowResizedEvent byteSize
 ]

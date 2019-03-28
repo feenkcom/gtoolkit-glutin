@@ -1,14 +1,19 @@
 Class {
 	#name : #WinitWindow,
 	#superclass : #FFIExternalObject,
-	#traits : 'TWinitLibrary + TWinitPtr',
-	#classTraits : 'TWinitLibrary classTrait + TWinitPtr classTrait',
+	#traits : 'TGlutinLibrary + TGlutinPtr',
+	#classTraits : 'TGlutinLibrary classTrait + TGlutinPtr classTrait',
 	#instVars : [
 		'eventsLoop',
 		'title'
 	],
 	#category : #Winit
 }
+
+{ #category : #'library path' }
+WinitWindow class >> ffiLibraryName [
+	^ GlutinLibrary
+]
 
 { #category : #'initialize-release' }
 WinitWindow >> destroy [

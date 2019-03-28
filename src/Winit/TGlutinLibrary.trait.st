@@ -1,14 +1,14 @@
 Trait {
-	#name : #TWinitLibrary,
+	#name : #TGlutinLibrary,
 	#category : #Winit
 }
 
 { #category : #'library path' }
-TWinitLibrary classSide >> ffiLibraryName [
-	^ WinitLibrary
+TGlutinLibrary classSide >> ffiLibraryName [
+	^ GlutinLibrary
 ]
 
 { #category : #'library path' }
-TWinitLibrary >> ffiLibraryName [
+TGlutinLibrary >> ffiLibraryName [
 	^ self class ffiLibraryName
 ]

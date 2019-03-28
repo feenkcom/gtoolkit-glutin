@@ -14,7 +14,7 @@ Class {
 { #category : #'instance creation' }
 WinitSimpleWindow class >> create [
 	"Create a window for a new events loop"
-	^ self createFor: WinitEventsLoop create
+	^ self createFor: GlutinEventsLoop create
 ]
 
 { #category : #'instance creation' }
@@ -31,7 +31,7 @@ WinitSimpleWindow class >> createFor: anEventsLoop [
 
 { #category : #'private - ffi' }
 WinitSimpleWindow class >> primCreate: anEventsLoop [
-	^ self ffiCall: #(WinitSimpleWindow winit_create_window(WinitEventsLoop anEventsLoop))
+	^ self ffiCall: #(WinitSimpleWindow winit_create_window(#GlutinEventsLoop anEventsLoop))
 ]
 
 { #category : #'private - ffi' }

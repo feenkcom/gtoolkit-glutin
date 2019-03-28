@@ -1,8 +1,8 @@
 Class {
 	#name : #OSWinitDriver,
 	#superclass : #OSWindowDriver,
-	#traits : 'TWinitLibrary',
-	#classTraits : 'TWinitLibrary classTrait',
+	#traits : 'TGlutinLibrary',
+	#classTraits : 'TGlutinLibrary classTrait',
 	#classVars : [
 		'EventLoopProcess',
 		'WindowsRegistry',
@@ -17,13 +17,13 @@ OSWinitDriver >> createWindowWithAttributes: anOSWindowAttributes osWindow: osWi
 	<return: #OSWinitWindowHandle>
 
 	WindowsRegistryMutex critical: [ 
-		windowBuilder := WinitWindowBuilder new
+		windowBuilder := GlutinWindowBuilder new
 			title: anOSWindowAttributes title;
 			withDecorations: anOSWindowAttributes borderless not;
 			withTransparency: false;
 			withResizable: anOSWindowAttributes resizable.
 
-		contextBuilder := WinitContextBuilder create.
+		contextBuilder := GlutinContextBuilder create.
 		
 		handle := WinitGLWindow
 			windowBuilder: windowBuilder

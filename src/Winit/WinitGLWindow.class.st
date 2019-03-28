@@ -22,9 +22,9 @@ WinitGLWindow class >> create: anEventsLoop windowBuilder: aWindowBuilder contex
 { #category : #'private - ffi' }
 WinitGLWindow class >> primCreate: anEventsLoop windowBuilder: aWindowBuilder contextBuilder: aContextBuilder [
 	^ self ffiCall: #(WinitGLWindow winit_create_gl_window_with_context(
-			WinitEventsLoop anEventsLoop,
-			WinitWindowBuilder aWindowBuilder,
-			WinitContextBuilder aContextBuilder))
+			#GlutinEventsLoop anEventsLoop,
+			#GlutinWindowBuilder aWindowBuilder,
+			#GlutinContextBuilder aContextBuilder))
 ]
 
 { #category : #'private - ffi' }
@@ -37,7 +37,7 @@ WinitGLWindow class >> primRelease: aHandle [
 { #category : #'instance creation' }
 WinitGLWindow class >> windowBuilder: aWindowBuilder contextBuilder: aContextBuilder [
 	^ self
-		create: WinitEventsLoop create
+		create: GlutinEventsLoop create
 		windowBuilder: aWindowBuilder
 		contextBuilder: aContextBuilder
 ]
