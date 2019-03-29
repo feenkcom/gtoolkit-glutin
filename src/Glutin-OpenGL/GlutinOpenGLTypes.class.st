@@ -35,7 +35,7 @@ Class {
 		'GLushort',
 		'GLvoid'
 	],
-	#category : #'Winit-OpenGL'
+	#category : #'Glutin-OpenGL'
 }
 
 { #category : #'class initialization' }

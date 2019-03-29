@@ -8,7 +8,7 @@ Class {
 		'GlutinOpenGLConstants',
 		'GlutinOpenGLTypes'
 	],
-	#category : #'Winit-OpenGL'
+	#category : #'Glutin-OpenGL'
 }
 
 { #category : #'generated bindings' }

@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'gl'
 	],
-	#category : #'Winit-OpenGL'
+	#category : #'Glutin-OpenGL'
 }
 
 { #category : #accessing }

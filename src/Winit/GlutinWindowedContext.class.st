@@ -7,7 +7,6 @@ Class {
 	#traits : 'TGlutinLibrary + TGlutinPtr',
 	#classTraits : 'TGlutinLibrary classTrait + TGlutinPtr classTrait',
 	#instVars : [
-		'gl',
 		'eventsLoop'
 	],
 	#category : #Winit
@@ -20,7 +19,6 @@ GlutinWindowedContext class >> create: anEventsLoop windowBuilder: aWindowBuilde
 	aWindowedContext := self primCreate: anEventsLoop  windowBuilder: aWindowBuilder contextBuilder: aContextBuilder.
 	aWindowedContext autoRelease.
 	aWindowedContext eventsLoop: anEventsLoop.
-	aWindowedContext initialize.
 
 	^ aWindowedContext
 ]
@@ -48,13 +46,6 @@ GlutinWindowedContext class >> windowBuilder: aWindowBuilder contextBuilder: aCo
 		contextBuilder: aContextBuilder
 ]
 
-{ #category : #accessing }
-GlutinWindowedContext >> eventsLoop [
-	<return: #GlutinEventsLoop>
-
-	^ eventsLoop
-]
-
 { #category : #initialization }
 GlutinWindowedContext >> eventsLoop: aGlutinEventsLoop [
 	eventsLoop := aGlutinEventsLoop
@@ -63,18 +54,6 @@ GlutinWindowedContext >> eventsLoop: aGlutinEventsLoop [
 { #category : #'api - gl' }
 GlutinWindowedContext >> getProcAddress: aString [
 	^ self primGetProcAddress: aString
-]
-
-{ #category : #'api - gl' }
-GlutinWindowedContext >> gl [
-	<return: #GlutinOpenGL>
-
-	^ gl
-]
-
-{ #category : #initialization }
-GlutinWindowedContext >> initialize [
-	gl := GlutinOpenGL new context: self
 ]
 
 { #category : #'api - gl' }

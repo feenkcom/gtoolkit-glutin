@@ -5642,7 +5642,7 @@ Class {
 		'GL_ZOOM_Y',
 		'GL_Z_EXT'
 	],
-	#category : #'Winit-OpenGL'
+	#category : #'Glutin-OpenGL'
 }
 
 { #category : #'constant data' }
