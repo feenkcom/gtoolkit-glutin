@@ -16,14 +16,19 @@ GlutinContextBuilder class >> ffiLibraryName [
 	^ GlutinLibrary
 ]
 
+{ #category : #'instance creation' }
+GlutinContextBuilder class >> new [
+	^ self create
+]
+
 { #category : #'private - ffi' }
 GlutinContextBuilder class >> primCreate [
-	^ self ffiCall: #(#GlutinContextBuilder winit_create_context_builder())
+	^ self ffiCall: #(#GlutinContextBuilder glutin_create_context_builder())
 ]
 
 { #category : #'private - ffi' }
 GlutinContextBuilder class >> primRelease: aHandle [
 	
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"
-	^ self ffiCall: #(void winit_destroy_context_builder(void* aHandle))
+	^ self ffiCall: #(void glutin_destroy_context_builder(void* aHandle))
 ]

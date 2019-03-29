@@ -16,6 +16,11 @@ GlutinEventsLoop class >> ffiLibraryName [
 	^ GlutinLibrary
 ]
 
+{ #category : #'instance creation' }
+GlutinEventsLoop class >> new [
+	^ self create
+]
+
 { #category : #'private - ffi' }
 GlutinEventsLoop class >> primCreate [
 	^ self ffiCall: #(#GlutinEventsLoop glutin_create_events_loop())
