@@ -35,6 +35,28 @@ GlutinWindowedContextExamples >> getProcAddress [
 	^ anAddress
 ]
 
+{ #category : #examples }
+GlutinWindowedContextExamples >> liveWindow [
+	<gtExample>
+	| aWindowedContext aProcess |
+	
+	aWindowedContext := self windowedContext.
+	aProcess := [
+		
+		aWindowedContext makeCurrent.
+		
+		aWindowedContext pollEvents: [ :anEvent |
+			anEvent mapped logCr
+		].
+		
+		aWindowedContext swapBuffers.
+		
+		16 milliSeconds wait.
+	] fork. 
+	
+	^ aWindowedContext
+]
+
 { #category : #'instance creation' }
 GlutinWindowedContextExamples >> windowedContext [
 	<gtExample>

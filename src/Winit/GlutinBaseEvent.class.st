@@ -34,10 +34,14 @@ GlutinBaseEvent class >> fieldsDesc [
 ]
 
 { #category : #initialization }
-GlutinBaseEvent class >> initializeEventTypeMap [
-	"
+GlutinBaseEvent class >> initialize [
 	self initializeEventTypeMap
-	"
+]
+
+{ #category : #initialization }
+GlutinBaseEvent class >> initializeEventTypeMap [
+	<script: 'self initializeEventTypeMap'>
+
 	EventTypeMap := Dictionary new.
 	WinitMappedEvent allSubclassesDo: [ :cls |
 		| eventType |
