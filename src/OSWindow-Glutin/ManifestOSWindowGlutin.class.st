@@ -9,10 +9,10 @@ Class {
 
 { #category : #'code-critics' }
 ManifestOSWindowGlutin class >> ruleRBLiteralArrayContainsCommaRuleV1FalsePositive [
-	^ #(#(#(#RGPackage #(#'OSWindow-Winit')) #'2018-11-02T01:33:14.403386+01:00') )
+	^ #(#(#(#RGPackage #(#'OSWindow-Glutin')) #'2018-11-02T01:33:14.403386+01:00') )
 ]
 
 { #category : #'code-critics' }
 ManifestOSWindowGlutin class >> ruleRBMissingTranslationsInMenusRuleV1FalsePositive [
-	^ #(#(#(#RGPackage #(#'OSWindow-Winit')) #'2018-11-02T00:47:19.20429+01:00') )
+	^ #(#(#(#RGPackage #(#'OSWindow-Glutin')) #'2018-11-02T00:47:19.20429+01:00') )
 ]
