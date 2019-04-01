@@ -1,11 +1,11 @@
-# OSWindow-Winit
-Winit backend for OSWindow
+# OSWindow-Glutin
+Glutin backend for OSWindow
 
 ## Installation
 
 ```smalltalk
 Metacello new
-   baseline: 'OSWindowWinit';
-   repository: 'github://feenkcom/oswindow-winit/src';
+   baseline: 'OSWindowGlutin';
+   repository: 'github://feenkcom/oswindow-glutin/src';
    load
 ```
