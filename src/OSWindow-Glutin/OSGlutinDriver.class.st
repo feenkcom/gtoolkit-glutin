@@ -1,5 +1,5 @@
 Class {
-	#name : #OSWinitDriver,
+	#name : #OSGlutinDriver,
 	#superclass : #OSWindowDriver,
 	#traits : 'TGlutinLibrary',
 	#classTraits : 'TGlutinLibrary classTrait',
@@ -8,13 +8,13 @@ Class {
 		'WindowsRegistry',
 		'WindowsRegistryMutex'
 	],
-	#category : #'OSWindow-Winit'
+	#category : #'OSWindow-Glutin'
 }
 
 { #category : #'window creation' }
-OSWinitDriver >> createWindowWithAttributes: anOSWindowAttributes osWindow: osWindow [
+OSGlutinDriver >> createWindowWithAttributes: anOSWindowAttributes osWindow: osWindow [
 	| windowBuilder contextBuilder handle window |
-	<return: #OSWinitWindowHandle>
+	<return: #OSGlutinWindowHandle>
 
 	WindowsRegistryMutex critical: [ 
 		windowBuilder := GlutinWindowBuilder new
@@ -25,11 +25,11 @@ OSWinitDriver >> createWindowWithAttributes: anOSWindowAttributes osWindow: osWi
 
 		contextBuilder := GlutinContextBuilder create.
 		
-		handle := WinitGLWindow
+		handle := GlutinWindowedContext
 			windowBuilder: windowBuilder
 			contextBuilder: contextBuilder.
 			
-		window := OSWinitWindowHandle newWithHandle: handle.
+		window := OSGlutinWindowHandle newWithHandle: handle.
 		window osWindow: osWindow.
 		self registerWindow: window.
 		
@@ -40,7 +40,7 @@ OSWinitDriver >> createWindowWithAttributes: anOSWindowAttributes osWindow: osWi
 ]
 
 { #category : #'events-processing' }
-OSWinitDriver >> eventLoopProcess [
+OSGlutinDriver >> eventLoopProcess [
 	| session |
 
 	session := Smalltalk session.
@@ -48,12 +48,12 @@ OSWinitDriver >> eventLoopProcess [
 	[ session == Smalltalk session] 
 		whileTrue: [
 			WindowsRegistryMutex critical: [ 
-				WindowsRegistry do: [ :eachOSWinitWindowHandle | eachOSWinitWindowHandle ifNotNil: #pollEvents ] ].
+				WindowsRegistry do: [ :eachOSGlutinWindowHandle | eachOSGlutinWindowHandle ifNotNil: #pollEvents ] ].
 			(Delay forMilliseconds: 5) wait ]
 ]
 
 { #category : #initialization }
-OSWinitDriver >> initialize [
+OSGlutinDriver >> initialize [
 	super initialize.
 
 	self initializeWindowsRegistry.
@@ -61,22 +61,22 @@ OSWinitDriver >> initialize [
 ]
 
 { #category : #initialization }
-OSWinitDriver >> initializeWindowsRegistry [
+OSGlutinDriver >> initializeWindowsRegistry [
 
 	WindowsRegistry ifNil: [ WindowsRegistry := WeakOrderedCollection new ].
 	WindowsRegistryMutex := Semaphore forMutualExclusion
 ]
 
 { #category : #'window creation and deletion' }
-OSWinitDriver >> registerWindow: anOSWinitWindowHandle [
+OSGlutinDriver >> registerWindow: anOSWinitWindowHandle [
 	WindowsRegistry add: anOSWinitWindowHandle
 ]
 
 { #category : #'events-processing' }
-OSWinitDriver >> setupEventLoop [
+OSGlutinDriver >> setupEventLoop [
 	EventLoopProcess ifNotNil: [ EventLoopProcess terminate ].
 	EventLoopProcess := [ self eventLoopProcess ] forkAt: Processor lowIOPriority.
 	EventLoopProcess
-		name: 'Winit Event loop';
+		name: 'Glutin Event loop';
 		resume
 ]

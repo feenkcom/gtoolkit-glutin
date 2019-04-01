@@ -1,97 +1,96 @@
 Class {
-	#name : #OSWinitWindowHandle,
+	#name : #OSGlutinWindowHandle,
 	#superclass : #OSWindowHandle,
 	#instVars : [
 		'handle',
 		'currentCursor',
 		'iconSurface'
 	],
-	#category : #'OSWindow-Winit'
+	#category : #'OSWindow-Glutin'
 }
 
 { #category : #'instance creation' }
-OSWinitWindowHandle class >> newWithHandle: aHandle [
+OSGlutinWindowHandle class >> newWithHandle: aHandle [
 	^ self basicNew initWithHandle: aHandle
 ]
 
 { #category : #accessing }
-OSWinitWindowHandle >> canvasExtent [
+OSGlutinWindowHandle >> canvasExtent [
 	^ self winitWindow framebufferExtent
 ]
 
 { #category : #deleting }
-OSWinitWindowHandle >> destroy [
+OSGlutinWindowHandle >> destroy [
 	self handle destroy.
 	handle := nil
 ]
 
 { #category : #accessing }
-OSWinitWindowHandle >> extent [
+OSGlutinWindowHandle >> extent [
 	^ self winitWindow innerExtent
 ]
 
 { #category : #accessing }
-OSWinitWindowHandle >> extent: newExtent [
+OSGlutinWindowHandle >> extent: newExtent [
 	self winitWindow innerExtent: newExtent
 ]
 
 { #category : #accessing }
-OSWinitWindowHandle >> handle [
-	<return: #WinitWindow>
+OSGlutinWindowHandle >> handle [
+	<return: #GlutinWindowedContext>
 
 	^ handle
 ]
 
 { #category : #initialize }
-OSWinitWindowHandle >> initWithHandle: aHandle [
-	"aHandle is WinitWindow"
+OSGlutinWindowHandle >> initWithHandle: aHandle [
+	"aHandle is GlutinWindowedContext"
 
 	handle := aHandle
 ]
 
 { #category : #testing }
-OSWinitWindowHandle >> isValid [
+OSGlutinWindowHandle >> isValid [
 	^ handle isNotNil and: [ handle isValid ]
 ]
 
 { #category : #factory }
-OSWinitWindowHandle >> newOpenGLRenderer [
-	^ renderer := OSWinitGLRenderer new 
+OSGlutinWindowHandle >> newOpenGLRenderer [
+	^ renderer := OSGlutinRenderer new 
 		window: self;
-		createContext;
 		yourself
 ]
 
 { #category : #'events-processing' }
-OSWinitWindowHandle >> pollEvents [
+OSGlutinWindowHandle >> pollEvents [
 	self isValid
 		ifFalse: [ ^ self ].
 
-	handle eventsLoop pollEvents: [ :aWinitEvent | aWinitEvent mapped logCr ]
+	handle pollEvents: [ :aWinitEvent | aWinitEvent mapped logCr ]
 ]
 
 { #category : #accessing }
-OSWinitWindowHandle >> position [
+OSGlutinWindowHandle >> position [
 	^ self winitWindow position
 ]
 
 { #category : #accessing }
-OSWinitWindowHandle >> show [
+OSGlutinWindowHandle >> show [
 	
 ]
 
 { #category : #accessing }
-OSWinitWindowHandle >> title [
+OSGlutinWindowHandle >> title [
 	^ self winitWindow title
 ]
 
 { #category : #accessing }
-OSWinitWindowHandle >> title: aTitle [
+OSGlutinWindowHandle >> title: aTitle [
 	self winitWindow title: aTitle
 ]
 
 { #category : #accessing }
-OSWinitWindowHandle >> winitWindow [
+OSGlutinWindowHandle >> winitWindow [
 	<return: #WinitWindow>
 
 	^ self handle

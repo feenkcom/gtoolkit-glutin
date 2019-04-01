@@ -56,6 +56,11 @@ GlutinWindowedContext >> getProcAddress: aString [
 	^ self primGetProcAddress: aString
 ]
 
+{ #category : #testing }
+GlutinWindowedContext >> isValid [
+	^ handle isNotNil and: [ handle isNull not ]
+]
+
 { #category : #'api - gl' }
 GlutinWindowedContext >> makeCurrent [
 	self primMakeCurrent

@@ -1,5 +1,5 @@
 Class {
-	#name : #OSWinitGLRenderer,
+	#name : #OSWebrenderRenderer,
 	#superclass : #OSWindowGLRenderer,
 	#instVars : [
 		'api',
@@ -8,24 +8,24 @@ Class {
 		'epoch',
 		'documentId'
 	],
-	#category : #'OSWindow-Winit'
+	#category : #'OSWindow-Glutin'
 }
 
 { #category : #geometry }
-OSWinitGLRenderer >> canvasExtent [
+OSWebrenderRenderer >> canvasExtent [
 	<return: #Point>
 
 	^ window winitWindow framebufferExtent
 ]
 
 { #category : #misc }
-OSWinitGLRenderer >> checkThread [
+OSWebrenderRenderer >> checkThread [
 	OSWindowRenderThread isActiveThread
 		ifFalse: [ ^ 'GL Renderer must be used inside the OSWindowRenderThread or a critical section' ]
 ]
 
 { #category : #misc }
-OSWinitGLRenderer >> createContext [
+OSWebrenderRenderer >> createContext [
 	self onRenderThreadBlocking: [
 		| aState |
 		
@@ -39,7 +39,7 @@ OSWinitGLRenderer >> createContext [
 ]
 
 { #category : #drawing }
-OSWinitGLRenderer >> drawDuring: aBlock [
+OSWebrenderRenderer >> drawDuring: aBlock [
 	self asCurrentDo: [
 		| aTransaction aCanvas |
 		
@@ -62,14 +62,14 @@ OSWinitGLRenderer >> drawDuring: aBlock [
 ]
 
 { #category : #geometry }
-OSWinitGLRenderer >> layoutExtent [
+OSWebrenderRenderer >> layoutExtent [
 	<return: #Point>
 
 	^ window winitWindow innerExtent
 ]
 
 { #category : #misc }
-OSWinitGLRenderer >> makeCurrent: aWindow [
+OSWebrenderRenderer >> makeCurrent: aWindow [
 	| winitWindow |
 
 	(api isNil or: [ renderer isNil ])
@@ -86,7 +86,7 @@ OSWinitGLRenderer >> makeCurrent: aWindow [
 ]
 
 { #category : #misc }
-OSWinitGLRenderer >> swapBuffers: aWindow [
+OSWebrenderRenderer >> swapBuffers: aWindow [
 	self checkThread.
 	aWindow winitWindow swapBuffers
 ]
