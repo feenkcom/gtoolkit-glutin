@@ -13,3 +13,8 @@ WinitMappedEvent class >> eventType [
 WinitMappedEvent class >> fromBaseEvent: anEvent [
 	^ self subclassResponsibility
 ]
+
+{ #category : #visiting }
+WinitMappedEvent >> accept: aVisitor [
+	^ self subclassResponsibility
+]

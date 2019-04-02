@@ -1,5 +1,5 @@
 Class {
-	#name : #WinitEventModifiersState,
+	#name : #GlutinEventModifiersState,
 	#superclass : #FFIExternalStructure,
 	#classVars : [
 		'OFFSET_ALT',
@@ -11,7 +11,7 @@ Class {
 }
 
 { #category : #'field definition' }
-WinitEventModifiersState class >> fieldsDesc [
+GlutinEventModifiersState class >> fieldsDesc [
 	"
 	self rebuildFieldAccessors
 	"
@@ -24,49 +24,49 @@ WinitEventModifiersState class >> fieldsDesc [
 ]
 
 { #category : #'accessing structure variables' }
-WinitEventModifiersState >> alt [
+GlutinEventModifiersState >> alt [
 	"This method was automatically generated"
 	^handle booleanAt: OFFSET_ALT
 ]
 
 { #category : #'accessing structure variables' }
-WinitEventModifiersState >> alt: anObject [
+GlutinEventModifiersState >> alt: anObject [
 	"This method was automatically generated"
 	handle booleanAt: OFFSET_ALT put: anObject
 ]
 
 { #category : #'accessing structure variables' }
-WinitEventModifiersState >> ctrl [
+GlutinEventModifiersState >> ctrl [
 	"This method was automatically generated"
 	^handle booleanAt: OFFSET_CTRL
 ]
 
 { #category : #'accessing structure variables' }
-WinitEventModifiersState >> ctrl: anObject [
+GlutinEventModifiersState >> ctrl: anObject [
 	"This method was automatically generated"
 	handle booleanAt: OFFSET_CTRL put: anObject
 ]
 
 { #category : #'accessing structure variables' }
-WinitEventModifiersState >> logo [
+GlutinEventModifiersState >> logo [
 	"This method was automatically generated"
 	^handle booleanAt: OFFSET_LOGO
 ]
 
 { #category : #'accessing structure variables' }
-WinitEventModifiersState >> logo: anObject [
+GlutinEventModifiersState >> logo: anObject [
 	"This method was automatically generated"
 	handle booleanAt: OFFSET_LOGO put: anObject
 ]
 
 { #category : #'accessing structure variables' }
-WinitEventModifiersState >> shift [
+GlutinEventModifiersState >> shift [
 	"This method was automatically generated"
 	^handle booleanAt: OFFSET_SHIFT
 ]
 
 { #category : #'accessing structure variables' }
-WinitEventModifiersState >> shift: anObject [
+GlutinEventModifiersState >> shift: anObject [
 	"This method was automatically generated"
 	handle booleanAt: OFFSET_SHIFT put: anObject
 ]

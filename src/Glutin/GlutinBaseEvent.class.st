@@ -2,7 +2,9 @@ Class {
 	#name : #GlutinBaseEvent,
 	#superclass : #FFIExternalStructure,
 	#classVars : [
+		'OFFSET_CURSOR_MOVED',
 		'OFFSET_EVENT_TYPE',
+		'OFFSET_MOUSE_INPUT',
 		'OFFSET_MOUSE_WHEEL',
 		'OFFSET_TOUCH',
 		'OFFSET_WINDOW_MOVED',
@@ -28,6 +30,8 @@ GlutinBaseEvent class >> fieldsDesc [
 		WinitEventType event_type
 		#WinitBaseTouchEvent touch
 		#WinitBaseMouseWheelEvent mouse_wheel
+		GlutinBaseMouseInputEvent mouse_input
+		GlutinBaseCursorMovedEvent cursor_moved
 		WinitBaseWindowResizedEvent window_resized
 		WinitBaseWindowMovedEvent window_moved
  	)
@@ -50,6 +54,18 @@ GlutinBaseEvent class >> initializeEventTypeMap [
 ]
 
 { #category : #'accessing structure variables' }
+GlutinBaseEvent >> cursor_moved [
+	"This method was automatically generated"
+	^ GlutinBaseCursorMovedEvent fromHandle: (handle referenceStructAt: OFFSET_CURSOR_MOVED length: GlutinBaseCursorMovedEvent byteSize)
+]
+
+{ #category : #'accessing structure variables' }
+GlutinBaseEvent >> cursor_moved: anObject [
+	"This method was automatically generated"
+	handle structAt: OFFSET_CURSOR_MOVED put: anObject getHandle length: GlutinBaseCursorMovedEvent byteSize
+]
+
+{ #category : #'accessing structure variables' }
 GlutinBaseEvent >> event_type [
 	"This method was automatically generated"
 	^WinitEventType fromInteger: (handle unsignedLongAt: OFFSET_EVENT_TYPE)
@@ -64,6 +80,18 @@ GlutinBaseEvent >> event_type: anObject [
 { #category : #accessing }
 GlutinBaseEvent >> mapped [
 	^ (self class eventMap at: self event_type ifAbsent: [ WinitUnknownEvent ]) fromBaseEvent: self
+]
+
+{ #category : #'accessing structure variables' }
+GlutinBaseEvent >> mouse_input [
+	"This method was automatically generated"
+	^ GlutinBaseMouseInputEvent fromHandle: (handle referenceStructAt: OFFSET_MOUSE_INPUT length: GlutinBaseMouseInputEvent byteSize)
+]
+
+{ #category : #'accessing structure variables' }
+GlutinBaseEvent >> mouse_input: anObject [
+	"This method was automatically generated"
+	handle structAt: OFFSET_MOUSE_INPUT put: anObject getHandle length: GlutinBaseMouseInputEvent byteSize
 ]
 
 { #category : #'accessing structure variables' }

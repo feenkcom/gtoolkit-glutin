@@ -13,3 +13,8 @@ WinitBaseWindowRefreshEvent class >> eventType [
 WinitBaseWindowRefreshEvent class >> fromBaseEvent: anEvent [
 	^ self new
 ]
+
+{ #category : #visiting }
+WinitBaseWindowRefreshEvent >> accept: aVisitor [
+	^ aVisitor visitWindowRefreshEvent: self
+]

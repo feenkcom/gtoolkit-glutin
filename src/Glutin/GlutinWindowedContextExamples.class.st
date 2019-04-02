@@ -21,18 +21,23 @@ GlutinWindowedContextExamples >> liveWindow [
 	| aWindowedContext aProcess |
 	
 	aWindowedContext := self windowedContext.
-	aProcess := [ [
+	aProcess := [
+		| isRunning |
+		isRunning := true.
+		[
 		aWindowedContext makeCurrent.
 		aWindowedContext pollEvents: [ :anEvent |
+			anEvent mapped logCr.
 			anEvent mapped class = WinitBaseWindowCloseRequested
 				ifTrue: [
 					aWindowedContext release.
-					aProcess terminate.
+					isRunning := false.
 				].
 		].
-		aWindowedContext swapBuffers.
+		isRunning ifTrue: [ aWindowedContext swapBuffers ].
 		16 milliSeconds wait.
-	] repeat ] fork. 
+		isRunning
+	] whileTrue ] fork. 
 	
 	^ aWindowedContext
 ]

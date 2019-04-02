@@ -13,3 +13,8 @@ WinitBaseWindowCloseRequested class >> eventType [
 WinitBaseWindowCloseRequested class >> fromBaseEvent: anEvent [
 	^ self new
 ]
+
+{ #category : #visiting }
+WinitBaseWindowCloseRequested >> accept: aVisitor [
+	^ aVisitor visitWindowCloseRequest: self
+]

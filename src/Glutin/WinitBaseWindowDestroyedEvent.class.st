@@ -13,3 +13,8 @@ WinitBaseWindowDestroyedEvent class >> eventType [
 WinitBaseWindowDestroyedEvent class >> fromBaseEvent: anEvent [
 	^ self new
 ]
+
+{ #category : #visiting }
+WinitBaseWindowDestroyedEvent >> accept: aVisitor [
+	^ aVisitor visitWindowDestroyed: self
+]

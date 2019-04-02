@@ -29,6 +29,11 @@ WinitBaseWindowResizedEvent class >> fromBaseEvent: anEvent [
 	^ anEvent window_resized
 ]
 
+{ #category : #visiting }
+WinitBaseWindowResizedEvent >> accept: aVisitor [
+	^ aVisitor visitWindowResizedEvent: self
+]
+
 { #category : #'accessing structure variables' }
 WinitBaseWindowResizedEvent >> height [
 	"This method was automatically generated"

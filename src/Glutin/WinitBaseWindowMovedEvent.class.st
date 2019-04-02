@@ -29,6 +29,11 @@ WinitBaseWindowMovedEvent class >> fromBaseEvent: anEvent [
 	^ anEvent window_moved
 ]
 
+{ #category : #visiting }
+WinitBaseWindowMovedEvent >> accept: aVisitor [
+	^ aVisitor visitWindowMovedEvent: self
+]
+
 { #category : #'accessing structure variables' }
 WinitBaseWindowMovedEvent >> x [
 	"This method was automatically generated"
