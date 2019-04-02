@@ -15,7 +15,7 @@ OSGlutinWindowHandle class >> newWithHandle: aHandle [
 
 { #category : #accessing }
 OSGlutinWindowHandle >> canvasExtent [
-	^ self winitWindow framebufferExtent
+	^ self handle framebufferExtent
 ]
 
 { #category : #'events-processing' }
@@ -35,7 +35,7 @@ OSGlutinWindowHandle >> destroy [
 
 { #category : #accessing }
 OSGlutinWindowHandle >> extent [
-	^ self winitWindow innerExtent
+	^ self handle innerExtent
 ]
 
 { #category : #accessing }
@@ -57,6 +57,11 @@ OSGlutinWindowHandle >> initWithHandle: aHandle [
 	handle := aHandle
 ]
 
+{ #category : #'text input' }
+OSGlutinWindowHandle >> isTextInputActive [
+	^ true
+]
+
 { #category : #testing }
 OSGlutinWindowHandle >> isValid [
 	^ handle isNotNil and: [ handle isValid ]
@@ -69,6 +74,11 @@ OSGlutinWindowHandle >> newOpenGLRenderer [
 		yourself
 ]
 
+{ #category : #accessing }
+OSGlutinWindowHandle >> platformSpecificHandle [
+	^ nil
+]
+
 { #category : #'events-processing' }
 OSGlutinWindowHandle >> pollEvents [
 	self isValid
@@ -79,11 +89,21 @@ OSGlutinWindowHandle >> pollEvents [
 
 { #category : #accessing }
 OSGlutinWindowHandle >> position [
-	^ self winitWindow position
+	^ self handle position
 ]
 
 { #category : #accessing }
 OSGlutinWindowHandle >> show [
+	
+]
+
+{ #category : #'text input' }
+OSGlutinWindowHandle >> startTextInput [
+	
+]
+
+{ #category : #'text input' }
+OSGlutinWindowHandle >> stopTextInput [
 	
 ]
 

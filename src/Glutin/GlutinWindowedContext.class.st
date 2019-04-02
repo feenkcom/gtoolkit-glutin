@@ -7,7 +7,8 @@ Class {
 	#traits : 'TGlutinLibrary + TGlutinPtr',
 	#classTraits : 'TGlutinLibrary classTrait + TGlutinPtr classTrait',
 	#instVars : [
-		'eventsLoop'
+		'eventsLoop',
+		'title'
 	],
 	#category : #Glutin
 }
@@ -19,6 +20,7 @@ GlutinWindowedContext class >> create: anEventsLoop windowBuilder: aWindowBuilde
 	aWindowedContext := self primCreate: anEventsLoop  windowBuilder: aWindowBuilder contextBuilder: aContextBuilder.
 	aWindowedContext autoRelease.
 	aWindowedContext eventsLoop: anEventsLoop.
+	aWindowedContext title: aWindowBuilder title.
 
 	^ aWindowedContext
 ]
@@ -51,9 +53,31 @@ GlutinWindowedContext >> eventsLoop: aGlutinEventsLoop [
 	eventsLoop := aGlutinEventsLoop
 ]
 
+{ #category : #'api - accessing' }
+GlutinWindowedContext >> framebufferExtent [
+	<return: #Point>
+	| aSizeU32 |
+	
+	aSizeU32 := WinitSizeU32 new.
+	self primGetFramebufferSize: aSizeU32.
+
+	^ aSizeU32 x @ aSizeU32 y
+]
+
 { #category : #'api - gl' }
 GlutinWindowedContext >> getProcAddress: aString [
 	^ self primGetProcAddress: aString
+]
+
+{ #category : #'api - accessing' }
+GlutinWindowedContext >> innerExtent [
+	<return: #Point>
+	| aSizeF64 |
+	
+	aSizeF64 := WinitSizeF64 new.
+	self primGetInnerSize: aSizeF64.
+
+	^ (aSizeF64 x @ aSizeF64 y) asIntegerPoint
 ]
 
 { #category : #testing }
@@ -71,6 +95,25 @@ GlutinWindowedContext >> pollEvents: aBlock [
 	eventsLoop pollEvents: aBlock
 ]
 
+{ #category : #'api - accessing' }
+GlutinWindowedContext >> position [
+	^ 0@0
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowedContext >> primGetFramebufferSize: aSizeU32 [
+	^ self ffiCall: #(void glutin_windowed_context_get_framebuffer_size(
+		GlutinWindowedContext self,
+		WinitSizeU32* aSizeU32))
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowedContext >> primGetInnerSize: aSizeF64 [
+	^ self ffiCall: #(void glutin_windowed_context_get_inner_size(
+		GlutinWindowedContext self,
+		WinitSizeF64* aSizeF64))
+]
+
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primGetProcAddress: procName [
 	^ self ffiCall: #( void* glutin_windowed_context_get_proc_address ( GlutinWindowedContext self, String procName ) )
@@ -82,6 +125,11 @@ GlutinWindowedContext >> primMakeCurrent [
 ]
 
 { #category : #'private - ffi' }
+GlutinWindowedContext >> primSetTitle: aString [
+	^ self ffiCall: #(void glutin_windowed_context_set_title(GlutinWindowedContext self, String aString))
+]
+
+{ #category : #'private - ffi' }
 GlutinWindowedContext >> primSwapBuffers [
 	^ self ffiCall: #(void glutin_windowed_context_swap_buffers(GlutinWindowedContext self))
 ]
@@ -89,4 +137,18 @@ GlutinWindowedContext >> primSwapBuffers [
 { #category : #'api - gl' }
 GlutinWindowedContext >> swapBuffers [
 	self primSwapBuffers
+]
+
+{ #category : #'api - accessing' }
+GlutinWindowedContext >> title [
+	<return: #String>
+
+	^ title
+]
+
+{ #category : #'api - accessing' }
+GlutinWindowedContext >> title: aString [
+
+	self primSetTitle: aString.
+	title := aString
 ]
