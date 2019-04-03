@@ -10,14 +10,19 @@ Class {
 { #category : #'examples - gl' }
 GlutinOpenGLExamples >> clearScreenBlue [
 	<gtExample>
-	| aWindowedContext |
+	| aWindowedContext gl aTexture |
 	
 	aWindowedContext := GlutinWindowedContextExamples new windowedContext.
 	aWindowedContext makeCurrent.
 	
-	aWindowedContext gl
-		clearColor_red: 0.0 green: 0.0 blue: 1.0 alpha: 1.0;
-		clear: GL_COLOR_BUFFER_BIT.
+	gl := aWindowedContext gl.
+	
+	aTexture := gl gen_texture.
+	gl enable_texture_2d.
+	
+	gl bind_texture_2d: aTexture.
+	
+	gl disable_texture_2d.
 		
 	aWindowedContext swapBuffers.
 			

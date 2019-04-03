@@ -48,6 +48,11 @@ GlutinWindowedContext class >> windowBuilder: aWindowBuilder contextBuilder: aCo
 		contextBuilder: aContextBuilder
 ]
 
+{ #category : #'api - accessing' }
+GlutinWindowedContext >> destroy [
+	self release
+]
+
 { #category : #initialization }
 GlutinWindowedContext >> eventsLoop: aGlutinEventsLoop [
 	eventsLoop := aGlutinEventsLoop
@@ -132,6 +137,11 @@ GlutinWindowedContext >> primSetTitle: aString [
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primSwapBuffers [
 	^ self ffiCall: #(void glutin_windowed_context_swap_buffers(GlutinWindowedContext self))
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowedContext >> primTest [
+	^ self ffiCall: #(void glutin_windowed_context_test(GlutinWindowedContext self))
 ]
 
 { #category : #'api - gl' }
