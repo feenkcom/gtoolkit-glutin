@@ -18,8 +18,21 @@ GlutinGL class >> primRelease: aHandle [
 ]
 
 { #category : #'generated bindings' }
+GlutinGL >> array_buffer_data_static_draw: array length: length [
+	^ self ffiCall: #( void glutin_gl_array_buffer_data_static_draw (
+		GlutinGL self,
+		float32* array,
+		uint32 length ) )
+]
+
+{ #category : #'generated bindings' }
 GlutinGL >> attach_shader: shader program: program [
 	^ self ffiCall: #( void glutin_gl_attach_shader ( GlutinGL self, GLuint program, GLuint shader ) )
+]
+
+{ #category : #'generated bindings' }
+GlutinGL >> bind_array_buffer: buffer [
+	^ self ffiCall: #( void glutin_gl_bind_array_buffer ( GlutinGL self, GLuint buffer ) )
 ]
 
 { #category : #'generated bindings' }
@@ -33,8 +46,18 @@ GlutinGL >> compile_shader: shader [
 ]
 
 { #category : #'generated bindings' }
+GlutinGL >> create_buffer [
+	^ self ffiCall: #( GLuint glutin_gl_create_buffer ( GlutinGL self ) )
+]
+
+{ #category : #'generated bindings' }
 GlutinGL >> create_fragment_shader [ 
 	^ self ffiCall: #( GLuint glutin_gl_create_fragment_shader ( GlutinGL self ) )
+]
+
+{ #category : #'generated bindings' }
+GlutinGL >> create_program [
+	^ self ffiCall: #( GLuint glutin_gl_create_program ( GlutinGL self ) )
 ]
 
 { #category : #'generated bindings' }
@@ -48,8 +71,24 @@ GlutinGL >> disable_texture_2d [
 ]
 
 { #category : #'generated bindings' }
+GlutinGL >> draw_arrays_mode: mode first: first count: count [
+	^ self ffiCall: #( void glutin_gl_draw_arrays (
+		GlutinGL self,
+		GLenum mode,
+		GLint first,
+		GLsizei count) )
+]
+
+{ #category : #'generated bindings' }
 GlutinGL >> enable_texture_2d [
 	^ self ffiCall: #( void glutin_gl_enable_texture_2d ( GlutinGL self ) )
+]
+
+{ #category : #'generated bindings' }
+GlutinGL >> enable_vertex_attrib_array: index [
+	^ self ffiCall: #( void glutin_gl_enable_vertex_attrib_array (
+		GlutinGL self,
+		GLuint index) )
 ]
 
 { #category : #'generated bindings' }
@@ -58,6 +97,66 @@ GlutinGL >> gen_texture [
 ]
 
 { #category : #'generated bindings' }
+GlutinGL >> get_attribute_location_program: program name: name [
+	^ self ffiCall: #( int32 glutin_gl_get_attribute_location (
+		GlutinGL self,
+		GLuint program,
+		String name) )
+]
+
+{ #category : #'generated bindings' }
+GlutinGL >> get_uniform_location_program: program name: name [
+	^ self ffiCall: #( int32 glutin_gl_get_uniform_location (
+		GlutinGL self,
+		GLuint program,
+		String name) )
+]
+
+{ #category : #'generated bindings' }
 GlutinGL >> shader_source: shader string: source [
 	^ self ffiCall: #( void glutin_gl_shader_source ( GlutinGL self, GLuint shader, String source ) )
+]
+
+{ #category : #'generated bindings' }
+GlutinGL >> tex_image_2d_target: target level: level internalformat: internalformat width: width height: height border: border format: format type: type pixels: pixels length: length [
+	^ self ffiCall: #( void glutin_gl_tex_image_2d (
+		GlutinGL self,
+		GLint level,
+		GLint internalformat,
+		GLsizei width,
+		GLsizei height,
+		GLint border,
+		GLenum format,
+		GLenum type,
+		uint8* pixels,
+		uint32 length) )
+]
+
+{ #category : #'generated bindings' }
+GlutinGL >> tex_parameter_i_target: target name: pname param: param [
+	^ self ffiCall: #( void glutin_gl_tex_parameter_i (
+		GlutinGL self,
+		GLenum target,
+		GLenum pname,
+		GLint param) )
+]
+
+{ #category : #'generated bindings' }
+GlutinGL >> vertex_attrib_pointer_index: index size: size type: type normalized: normalized stride: stride offset: offset [
+	^ self ffiCall: #( void glutin_gl_vertex_attrib_pointer (
+		GlutinGL self,
+		GLuint index,
+		GLint size,
+		GLenum type,
+		bool normalized,
+		GLsizei stride,
+		GLuint offset) )
+]
+
+{ #category : #'generated bindings' }
+GlutinGL >> viewport_x: x y: y width: width height: height [
+	^ self ffiCall: #( GLuint glutin_gl_viewport (
+		GlutinGL self,
+		GLint x, GLint y,
+		GLsizei width, GLsizei height) )
 ]
