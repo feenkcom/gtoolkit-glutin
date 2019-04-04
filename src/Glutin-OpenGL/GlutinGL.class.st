@@ -41,6 +41,11 @@ GlutinGL >> bind_texture_2d: texture [
 ]
 
 { #category : #'generated bindings' }
+GlutinGL >> bind_vertex_array: vao [
+	^ self ffiCall: #( void glutin_gl_bind_vertex_array ( GlutinGL self, GLuint vao ) )
+]
+
+{ #category : #'generated bindings' }
 GlutinGL >> compile_shader: shader [
 	^ self ffiCall: #( void glutin_gl_compile_shader ( GlutinGL self, GLuint shader ) )
 ]
@@ -97,6 +102,11 @@ GlutinGL >> gen_texture [
 ]
 
 { #category : #'generated bindings' }
+GlutinGL >> gen_vertex_array [
+	^ self ffiCall: #( GLuint glutin_gl_gen_vertex_array ( GlutinGL self ) )
+]
+
+{ #category : #'generated bindings' }
 GlutinGL >> get_attribute_location_program: program name: name [
 	^ self ffiCall: #( int32 glutin_gl_get_attribute_location (
 		GlutinGL self,
@@ -110,6 +120,11 @@ GlutinGL >> get_uniform_location_program: program name: name [
 		GlutinGL self,
 		GLuint program,
 		String name) )
+]
+
+{ #category : #'generated bindings' }
+GlutinGL >> link_program: program [
+	^ self ffiCall: #( void glutin_gl_link_program ( GlutinGL self, GLuint program ) )
 ]
 
 { #category : #'generated bindings' }
@@ -139,6 +154,11 @@ GlutinGL >> tex_parameter_i_target: target name: pname param: param [
 		GLenum target,
 		GLenum pname,
 		GLint param) )
+]
+
+{ #category : #'generated bindings' }
+GlutinGL >> use_program: program [
+	^ self ffiCall: #( void glutin_gl_use_program ( GlutinGL self, GLuint program ) )
 ]
 
 { #category : #'generated bindings' }

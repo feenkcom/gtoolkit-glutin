@@ -85,6 +85,11 @@ GlutinWindowedContext >> innerExtent [
 	^ (aSizeF64 x @ aSizeF64 y) asIntegerPoint
 ]
 
+{ #category : #'api - accessing' }
+GlutinWindowedContext >> innerExtent: aPoint [
+	self primSetInnerWidth: aPoint x height: aPoint y
+]
+
 { #category : #testing }
 GlutinWindowedContext >> isValid [
 	^ handle isNotNil and: [ handle isNull not ]
@@ -127,6 +132,14 @@ GlutinWindowedContext >> primGetProcAddress: procName [
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primMakeCurrent [
 	^ self ffiCall: #(void glutin_windowed_context_make_current(GlutinWindowedContext self))
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowedContext >> primSetInnerWidth: aWidth height: aHeight [
+	^ self ffiCall: #(void glutin_windowed_context_set_inner_size(
+		GlutinWindowedContext self,
+		float64 aWidth,
+		float64 aHeight))
 ]
 
 { #category : #'private - ffi' }
