@@ -107,7 +107,18 @@ GlutinWindowedContext >> pollEvents: aBlock [
 
 { #category : #'api - accessing' }
 GlutinWindowedContext >> position [
-	^ 0@0
+	<return: #Point>
+	| aSizeF64 |
+	
+	aSizeF64 := WinitSizeF64 new.
+	self primGetPosition: aSizeF64.
+
+	^ (aSizeF64 x @ aSizeF64 y) asIntegerPoint
+]
+
+{ #category : #'api - accessing' }
+GlutinWindowedContext >> position: aPoint [
+	self primSetPositionX: aPoint x y: aPoint y
 ]
 
 { #category : #'private - ffi' }
@@ -120,6 +131,13 @@ GlutinWindowedContext >> primGetFramebufferSize: aSizeU32 [
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primGetInnerSize: aSizeF64 [
 	^ self ffiCall: #(void glutin_windowed_context_get_inner_size(
+		GlutinWindowedContext self,
+		WinitSizeF64* aSizeF64))
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowedContext >> primGetPosition: aSizeF64 [
+	^ self ffiCall: #(void glutin_windowed_context_get_position(
 		GlutinWindowedContext self,
 		WinitSizeF64* aSizeF64))
 ]
@@ -140,6 +158,14 @@ GlutinWindowedContext >> primSetInnerWidth: aWidth height: aHeight [
 		GlutinWindowedContext self,
 		float64 aWidth,
 		float64 aHeight))
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowedContext >> primSetPositionX: aX y: aY [
+	^ self ffiCall: #(void glutin_windowed_context_set_position(
+		GlutinWindowedContext self,
+		float64 aX,
+		float64 aY))
 ]
 
 { #category : #'private - ffi' }

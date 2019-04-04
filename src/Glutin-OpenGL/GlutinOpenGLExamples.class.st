@@ -13,6 +13,8 @@ GlutinOpenGLExamples >> clearScreenBlue [
 	| aWindowedContext gl extent vertShaderObj fragShaderObj progObj vertexBuff texBuff buffData vloc tloc uLoc tex canvas vao fancyText |
 	
 	aWindowedContext := GlutinWindowedContextExamples new windowedContext.
+	aWindowedContext innerExtent: 570@360.
+	aWindowedContext position: 200@200.
 	aWindowedContext makeCurrent.
 	
 	extent := aWindowedContext framebufferExtent.
@@ -52,9 +54,7 @@ GlutinOpenGLExamples >> clearScreenBlue [
 	buffData free.
 
 	vloc := gl get_attribute_location_program: progObj name: 'aVertex'.
-	NonInteractiveTranscript stdout show: 'vloc: ', vloc asString; cr.
 	tloc := gl get_attribute_location_program: progObj name: 'aUV'.
-	NonInteractiveTranscript stdout show: 'tloc: ', vloc asString; cr.
 	uLoc := gl get_attribute_location_program: progObj name: 'pos'.
 
 	tex := gl gen_texture.
@@ -64,11 +64,10 @@ GlutinOpenGLExamples >> clearScreenBlue [
 	
 	fancyText := self fancyText.
 	fancyText forceLayout.
-	fancyText transformDo: [ :t | t flipY; rotateBy: 180 ].
 	
 	canvas := MozCanvas extent: extent.
 	canvas fill
-		paint: (Color gray alpha: 0.3);
+		paint: (Color gray alpha: 0.5);
 		path: canvas bounds;
 		draw.
 	
@@ -169,10 +168,9 @@ GlutinOpenGLExamples >> vertexShader [
 	in vec2 aVertex;
 	in vec2 aUV;
 	out vec2 vTex;
-	uniform vec2 pos;
 	
 	void main(void) {
-		gl_Position = vec4(aVertex + pos, 0.0, 1.0);
+		gl_Position = vec4(aVertex.x, -aVertex.y, 0.0, 1.0);
 		vTex = aUV;
 	}'
 ]
