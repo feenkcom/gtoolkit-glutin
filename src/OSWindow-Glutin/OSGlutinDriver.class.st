@@ -49,7 +49,8 @@ OSGlutinDriver >> eventLoopProcess [
 		whileTrue: [
 			WindowsRegistryMutex critical: [ 
 				WindowsRegistry do: [ :eachOSGlutinWindowHandle | eachOSGlutinWindowHandle ifNotNil: #pollEvents ] ].
-			(Delay forMilliseconds: 5) wait ]
+			(Delay forMilliseconds: 5) wait.
+			Processor yield ]
 ]
 
 { #category : #initialization }

@@ -153,6 +153,22 @@ GlutinWindowedContext >> primMakeCurrent [
 ]
 
 { #category : #'private - ffi' }
+GlutinWindowedContext >> primResizeLogicalWidth: aWidth height: aHeight [
+	^ self ffiCall: #(void glutin_windowed_context_resize_logical(
+		GlutinWindowedContext self,
+		float64 aWidth,
+		float64 aHeight))
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowedContext >> primResizePhysicalWidth: aWidth height: aHeight [
+	^ self ffiCall: #(void glutin_windowed_context_resize_physical(
+		GlutinWindowedContext self,
+		float64 aWidth,
+		float64 aHeight))
+]
+
+{ #category : #'private - ffi' }
 GlutinWindowedContext >> primSetInnerWidth: aWidth height: aHeight [
 	^ self ffiCall: #(void glutin_windowed_context_set_inner_size(
 		GlutinWindowedContext self,
@@ -181,6 +197,11 @@ GlutinWindowedContext >> primSwapBuffers [
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primTest [
 	^ self ffiCall: #(void glutin_windowed_context_test(GlutinWindowedContext self))
+]
+
+{ #category : #'api - gl' }
+GlutinWindowedContext >> resize: aPoint [
+	self primResizeLogicalWidth: aPoint x height: aPoint y
 ]
 
 { #category : #'api - gl' }

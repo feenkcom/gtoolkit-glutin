@@ -14,6 +14,13 @@ OSGlutinWindowHandle class >> newWithHandle: aHandle [
 ]
 
 { #category : #accessing }
+OSGlutinWindowHandle >> bounds: newBounds [
+	self
+		position: newBounds origin;
+		extent: newBounds extent
+]
+
+{ #category : #accessing }
 OSGlutinWindowHandle >> canvasExtent [
 	^ self handle framebufferExtent
 ]
@@ -93,6 +100,11 @@ OSGlutinWindowHandle >> position [
 ]
 
 { #category : #accessing }
+OSGlutinWindowHandle >> position: newPosition [
+	self handle position: newPosition
+]
+
+{ #category : #accessing }
 OSGlutinWindowHandle >> show [
 	
 ]
@@ -118,6 +130,25 @@ OSGlutinWindowHandle >> title: aTitle [
 ]
 
 { #category : #'events-processing' }
+OSGlutinWindowHandle >> visitCharacterReceivedEvent: anEvent [
+	| aText osEvent |
+	
+	aText := ((#[ 0 0 0 0 ]
+		at: 1 put: anEvent byte_1;
+		at: 2 put: anEvent byte_2;
+		at: 3 put: anEvent byte_3;
+		at: 4 put: anEvent byte_4;
+		yourself) first: anEvent length) utf8Decoded.
+		
+	osEvent := OSTextInputEvent for: osWindow.
+	osEvent
+		text: aText;
+		position: cursorPosition.
+
+	^ osEvent deliver
+]
+
+{ #category : #'events-processing' }
 OSGlutinWindowHandle >> visitCursorMovedEvent: aCursorMovedEvent [
 	| aNewCursorPosition aDelta osEvent |
 	
@@ -138,6 +169,26 @@ OSGlutinWindowHandle >> visitCursorMovedEvent: aCursorMovedEvent [
 ]
 
 { #category : #'events-processing' }
+OSGlutinWindowHandle >> visitKeyboardInputEvent: anEvent [
+	| osEvent aState |
+
+	cursorPosition
+		ifNil: [ ^ self ].
+
+	aState := anEvent state.
+	
+	osEvent := aState = GlutinEventInputElementState Pressed
+		ifTrue: [ OSKeyDownEvent for: osWindow ]
+		ifFalse: [ OSKeyUpEvent for: osWindow ].
+
+	self convertModifiers: anEvent modifiers for: osEvent modifiers.
+	
+	
+	
+	"^ osEvent deliver."
+]
+
+{ #category : #'events-processing' }
 OSGlutinWindowHandle >> visitMouseInputEvent: aMouseInputEvent [
 	| aButton aState osEvent |
 	
@@ -151,17 +202,39 @@ OSGlutinWindowHandle >> visitMouseInputEvent: aMouseInputEvent [
 	osEvent := aState = GlutinEventInputElementState Pressed
 		ifTrue: [ OSMouseButtonPressEvent for: osWindow ]
 		ifFalse: [ OSMouseButtonReleaseEvent for: osWindow ].
-		
-	osEvent button: aButton button_code.
+	
+	osEvent button: (aButton button_type = GlutinEventMouseButtonType Left
+		ifTrue: [ 1 ]
+		ifFalse: [ aButton button_type = GlutinEventMouseButtonType Middle
+			ifTrue: [ 2 ]
+			ifFalse: [ aButton button_type = GlutinEventMouseButtonType Right
+				ifTrue: [ 3 ]
+				ifFalse: [ aButton button_code ] ] ]).
+	
 	osEvent position: cursorPosition.
 		
 	self convertModifiers: aMouseInputEvent modifiers for: osEvent modifiers.
+
 	^ osEvent deliver.
 ]
 
 { #category : #'events-processing' }
 OSGlutinWindowHandle >> visitMouseWheelEvent: aMouseWheelEvent [
-	
+	| osEvent aDelta |
+
+	cursorPosition
+		ifNil: [ ^ self ].
+		
+	aDelta := aMouseWheelEvent delta.
+
+	osEvent := OSMouseWheelEvent for: osWindow.
+	osEvent
+		position: cursorPosition;
+		scrollHorizontal: (aDelta x);
+		scrollVertical: (aDelta y negated).
+			
+	self convertModifiers: aMouseWheelEvent modifiers for: osEvent modifiers.
+	^ osEvent deliver
 ]
 
 { #category : #'events-processing' }
@@ -176,7 +249,7 @@ OSGlutinWindowHandle >> visitUnknownEvent: anUnknownEvent [
 
 { #category : #'events-processing' }
 OSGlutinWindowHandle >> visitWindowCloseRequest: aWindowCloseRequest [
-	
+	^ (OSWindowCloseEvent for: osWindow) deliver
 ]
 
 { #category : #'events-processing' }
@@ -191,12 +264,16 @@ OSGlutinWindowHandle >> visitWindowMovedEvent: aWindowMovedEvent [
 
 { #category : #'events-processing' }
 OSGlutinWindowHandle >> visitWindowRefreshEvent: aWindowRefreshEvent [
-	
 ]
 
 { #category : #'events-processing' }
 OSGlutinWindowHandle >> visitWindowResizedEvent: aWindowResizedEvent [
+	self handle resize: (aWindowResizedEvent width @ aWindowResizedEvent height).
 	
+	"^ (OSWindowResizeEvent for: osWindow)
+		width: aWindowResizedEvent width;
+		height: aWindowResizedEvent height;
+		deliver"
 ]
 
 { #category : #accessing }

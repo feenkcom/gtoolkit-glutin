@@ -4,8 +4,10 @@ Class {
 	#classVars : [
 		'OFFSET_CURSOR_MOVED',
 		'OFFSET_EVENT_TYPE',
+		'OFFSET_KEYBOARD_INPUT',
 		'OFFSET_MOUSE_INPUT',
 		'OFFSET_MOUSE_WHEEL',
+		'OFFSET_RECEIVED_CHARACTER',
 		'OFFSET_TOUCH',
 		'OFFSET_WINDOW_MOVED',
 		'OFFSET_WINDOW_RESIZED'
@@ -32,6 +34,8 @@ GlutinBaseEvent class >> fieldsDesc [
 		#WinitBaseMouseWheelEvent mouse_wheel
 		GlutinBaseMouseInputEvent mouse_input
 		GlutinBaseCursorMovedEvent cursor_moved
+		GlutinBaseKeyboardInputEvent keyboard_input
+		GlutinBaseReceivedCharacterEvent received_character
 		WinitBaseWindowResizedEvent window_resized
 		WinitBaseWindowMovedEvent window_moved
  	)
@@ -77,6 +81,18 @@ GlutinBaseEvent >> event_type: anObject [
 	handle unsignedLongAt: OFFSET_EVENT_TYPE put: anObject value
 ]
 
+{ #category : #'accessing structure variables' }
+GlutinBaseEvent >> keyboard_input [
+	"This method was automatically generated"
+	^ GlutinBaseKeyboardInputEvent fromHandle: (handle referenceStructAt: OFFSET_KEYBOARD_INPUT length: GlutinBaseKeyboardInputEvent byteSize)
+]
+
+{ #category : #'accessing structure variables' }
+GlutinBaseEvent >> keyboard_input: anObject [
+	"This method was automatically generated"
+	handle structAt: OFFSET_KEYBOARD_INPUT put: anObject getHandle length: GlutinBaseKeyboardInputEvent byteSize
+]
+
 { #category : #accessing }
 GlutinBaseEvent >> mapped [
 	^ (self class eventMap at: self event_type ifAbsent: [ WinitUnknownEvent ]) fromBaseEvent: self
@@ -104,6 +120,18 @@ GlutinBaseEvent >> mouse_wheel [
 GlutinBaseEvent >> mouse_wheel: anObject [
 	"This method was automatically generated"
 	handle structAt: OFFSET_MOUSE_WHEEL put: anObject getHandle length: WinitBaseMouseWheelEvent byteSize
+]
+
+{ #category : #'accessing structure variables' }
+GlutinBaseEvent >> received_character [
+	"This method was automatically generated"
+	^ GlutinBaseReceivedCharacterEvent fromHandle: (handle referenceStructAt: OFFSET_RECEIVED_CHARACTER length: GlutinBaseReceivedCharacterEvent byteSize)
+]
+
+{ #category : #'accessing structure variables' }
+GlutinBaseEvent >> received_character: anObject [
+	"This method was automatically generated"
+	handle structAt: OFFSET_RECEIVED_CHARACTER put: anObject getHandle length: GlutinBaseReceivedCharacterEvent byteSize
 ]
 
 { #category : #'accessing structure variables' }
