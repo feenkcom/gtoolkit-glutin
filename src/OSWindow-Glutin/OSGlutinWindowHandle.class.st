@@ -231,7 +231,7 @@ OSGlutinWindowHandle >> visitMouseWheelEvent: aMouseWheelEvent [
 	osEvent
 		position: cursorPosition;
 		scrollHorizontal: (aDelta x);
-		scrollVertical: (aDelta y negated).
+		scrollVertical: (aDelta y).
 			
 	self convertModifiers: aMouseWheelEvent modifiers for: osEvent modifiers.
 	^ osEvent deliver
