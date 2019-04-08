@@ -12,8 +12,10 @@ BaselineOfGlutin >> baseline: spec [
 	<baseline>
 	spec for: #common do: [
 		spec
+			baseline: 'GToolkitInstaller' with: [ spec repository: 'github://feenkcom/gtoolkit-installer/src' ].
+		spec
 			postLoadDoIt: #'postLoadGlutin:';
-			package: 'Glutin';
+			package: 'Glutin' with: [ spec requires: #(GToolkitInstaller) ];
 			package: 'Glutin-OpenGL' with: [ spec requires: #('Glutin') ] ]
 ]
 
