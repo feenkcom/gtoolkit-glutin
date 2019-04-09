@@ -91,7 +91,7 @@ OSGlutinWindowHandle >> pollEvents [
 	self isValid
 		ifFalse: [ ^ self ].
 
-	handle pollEvents: [ :aWinitEvent | aWinitEvent mapped accept: self ]
+	handle pollEvents: [ :aGlutinEvent | aGlutinEvent mapped accept: self ]
 ]
 
 { #category : #accessing }

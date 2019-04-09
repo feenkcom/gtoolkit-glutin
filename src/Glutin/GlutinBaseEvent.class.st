@@ -9,6 +9,7 @@ Class {
 		'OFFSET_MOUSE_WHEEL',
 		'OFFSET_RECEIVED_CHARACTER',
 		'OFFSET_TOUCH',
+		'OFFSET_WINDOW_ID',
 		'OFFSET_WINDOW_MOVED',
 		'OFFSET_WINDOW_RESIZED'
 	],
@@ -29,6 +30,7 @@ GlutinBaseEvent class >> fieldsDesc [
 	self rebuildFieldAccessors
 	"
 	^ #(
+		uint64 window_id
 		WinitEventType event_type
 		#WinitBaseTouchEvent touch
 		#WinitBaseMouseWheelEvent mouse_wheel
@@ -144,6 +146,18 @@ GlutinBaseEvent >> touch [
 GlutinBaseEvent >> touch: anObject [
 	"This method was automatically generated"
 	handle structAt: OFFSET_TOUCH put: anObject getHandle length: WinitBaseTouchEvent byteSize
+]
+
+{ #category : #'accessing structure variables' }
+GlutinBaseEvent >> window_id [
+	"This method was automatically generated"
+	^handle unsignedLongLongAt: OFFSET_WINDOW_ID
+]
+
+{ #category : #'accessing structure variables' }
+GlutinBaseEvent >> window_id: anObject [
+	"This method was automatically generated"
+	handle unsignedLongLongAt: OFFSET_WINDOW_ID put: anObject
 ]
 
 { #category : #'accessing structure variables' }
