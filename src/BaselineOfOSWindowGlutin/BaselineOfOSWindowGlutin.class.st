@@ -4,10 +4,13 @@ Class {
 	#category : #BaselineOfOSWindowGlutin
 }
 
-{ #category : #baselines }
+{ #category : #baseline }
 BaselineOfOSWindowGlutin >> baseline: spec [
 	<baseline>
-	spec for: #common do: [ spec
-		baseline: 'Glutin' with: [ spec repository: 'github://feenkcom/oswindow-glutin/src' ];
-		package: 'OSWindow-Glutin' with: [ spec requires: #(Glutin) ] ]
+	spec for: #'common' do: [
+		spec baseline: 'Glutin' with: [
+				spec repository: 'github://feenkcom/oswindow-glutin:v0.4.0/src' ].
+		spec package: 'OSWindow-Glutin' with: [
+				spec requires: #(#Glutin ). ]. ].
+
 ]
