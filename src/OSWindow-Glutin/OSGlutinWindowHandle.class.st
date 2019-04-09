@@ -172,6 +172,11 @@ OSGlutinWindowHandle >> visitCursorMovedEvent: aCursorMovedEvent [
 OSGlutinWindowHandle >> visitKeyboardInputEvent: anEvent [
 	| osEvent aState |
 
+	"anEvent logCr."
+
+	anEvent has_virtual_keycode
+		ifFalse: [ ^ self ].
+
 	cursorPosition
 		ifNil: [ ^ self ].
 
@@ -180,6 +185,8 @@ OSGlutinWindowHandle >> visitKeyboardInputEvent: anEvent [
 	osEvent := aState = GlutinEventInputElementState Pressed
 		ifTrue: [ OSKeyDownEvent for: osWindow ]
 		ifFalse: [ OSKeyUpEvent for: osWindow ].
+
+	osEvent scanCode: anEvent scan_code.
 
 	self convertModifiers: anEvent modifiers for: osEvent modifiers.
 	
@@ -270,10 +277,10 @@ OSGlutinWindowHandle >> visitWindowRefreshEvent: aWindowRefreshEvent [
 OSGlutinWindowHandle >> visitWindowResizedEvent: aWindowResizedEvent [
 	self handle resize: (aWindowResizedEvent width @ aWindowResizedEvent height).
 	
-	"^ (OSWindowResizeEvent for: osWindow)
+	^ (OSWindowResizeEvent for: osWindow)
 		width: aWindowResizedEvent width;
 		height: aWindowResizedEvent height;
-		deliver"
+		deliver
 ]
 
 { #category : #accessing }

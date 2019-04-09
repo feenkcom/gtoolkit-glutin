@@ -5,9 +5,13 @@ Class {
 	#classTraits : 'TGlutinLibrary classTrait + TGlutinPtr classTrait',
 	#instVars : [
 		'title',
+		'extent',
 		'withDecorations',
 		'withTransparency',
-		'withResizable'
+		'withResizable',
+		'withMaximized',
+		'alwaysOnTop',
+		'withVisibility'
 	],
 	#category : #Glutin
 }
@@ -39,14 +43,40 @@ GlutinWindowBuilder class >> primRelease: aHandle [
 	^ self ffiCall: #(void glutin_destroy_window_builder(void* aHandle))
 ]
 
+{ #category : #accessing }
+GlutinWindowBuilder >> alwaysOnTop [
+	^ alwaysOnTop
+]
+
+{ #category : #accessing }
+GlutinWindowBuilder >> alwaysOnTop: aBoolean [
+	alwaysOnTop := aBoolean.
+	self mutate: (self primWithAlwaysOnTop: aBoolean)
+]
+
+{ #category : #accessing }
+GlutinWindowBuilder >> extent [
+	^ extent
+]
+
+{ #category : #accessing }
+GlutinWindowBuilder >> extent: aPoint [
+	extent := aPoint.
+	self mutate: (self primWithWidth: aPoint x height: aPoint y)
+]
+
 { #category : #initialization }
 GlutinWindowBuilder >> initialize [
 	"no super to not nullify the handle"
 
 	self title: 'Window'.
+	self extent: 800@600.
+	self alwaysOnTop: false.
 	self withDecorations: true.
 	self withTransparency: false.
-	self withResizable: true
+	self withResizable: true.
+	self withMaximized: false.
+	self withVisibility: true.
 ]
 
 { #category : #'private - ffi' }
@@ -62,8 +92,18 @@ GlutinWindowBuilder >> mutate: aHandle [
 ]
 
 { #category : #'private - ffi' }
+GlutinWindowBuilder >> primWithAlwaysOnTop: aBoolean [
+	^ self ffiCall: #(void* glutin_window_builder_with_always_on_top(#GlutinWindowBuilder self, bool aBoolean))
+]
+
+{ #category : #'private - ffi' }
 GlutinWindowBuilder >> primWithDecorations: aBoolean [
 	^ self ffiCall: #(void* glutin_window_builder_with_decorations(#GlutinWindowBuilder self, bool aBoolean))
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowBuilder >> primWithMaximized: aBoolean [
+	^ self ffiCall: #(void* glutin_window_builder_with_maximized(#GlutinWindowBuilder self, bool aBoolean))
 ]
 
 { #category : #'private - ffi' }
@@ -79,6 +119,16 @@ GlutinWindowBuilder >> primWithTitle: aString [
 { #category : #'private - ffi' }
 GlutinWindowBuilder >> primWithTransparency: aBoolean [
 	^ self ffiCall: #(void* glutin_window_builder_with_transparency(#GlutinWindowBuilder self, bool aBoolean))
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowBuilder >> primWithVisibility: aBoolean [
+	^ self ffiCall: #(void* glutin_window_builder_with_visibility(#GlutinWindowBuilder self, bool aBoolean))
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowBuilder >> primWithWidth: aWidth height: aHeight [
+	^ self ffiCall: #(void* glutin_window_builder_with_dimensions(#GlutinWindowBuilder self, float64 aWidth, float64 aHeight))
 ]
 
 { #category : #accessing }
@@ -104,6 +154,17 @@ GlutinWindowBuilder >> withDecorations: aBoolean [
 ]
 
 { #category : #accessing }
+GlutinWindowBuilder >> withMaximized [
+	^ withMaximized
+]
+
+{ #category : #accessing }
+GlutinWindowBuilder >> withMaximized: aBoolean [
+	withMaximized := aBoolean.
+	self mutate: (self primWithMaximized: aBoolean)
+]
+
+{ #category : #accessing }
 GlutinWindowBuilder >> withResizable [
 	^ withResizable
 ]
@@ -123,4 +184,15 @@ GlutinWindowBuilder >> withTransparency [
 GlutinWindowBuilder >> withTransparency: aBoolean [
 	withTransparency := aBoolean.
 	self mutate: (self primWithTransparency: aBoolean)
+]
+
+{ #category : #accessing }
+GlutinWindowBuilder >> withVisibility [
+	^ withVisibility
+]
+
+{ #category : #accessing }
+GlutinWindowBuilder >> withVisibility: aBoolean [
+	withVisibility := aBoolean.
+	self mutate: (self primWithVisibility: aBoolean)
 ]

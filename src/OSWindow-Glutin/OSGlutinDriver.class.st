@@ -19,9 +19,11 @@ OSGlutinDriver >> createWindowWithAttributes: anOSWindowAttributes osWindow: osW
 	WindowsRegistryMutex critical: [ 
 		windowBuilder := GlutinWindowBuilder new
 			title: anOSWindowAttributes title;
+			extent: anOSWindowAttributes extent;
 			withDecorations: anOSWindowAttributes borderless not;
 			withTransparency: false;
-			withResizable: anOSWindowAttributes resizable.
+			withResizable: anOSWindowAttributes resizable;
+			withMaximized: anOSWindowAttributes maximized.
 
 		contextBuilder := GlutinContextBuilder create.
 		
