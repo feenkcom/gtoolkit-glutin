@@ -172,8 +172,6 @@ OSGlutinWindowHandle >> visitCursorMovedEvent: aCursorMovedEvent [
 OSGlutinWindowHandle >> visitKeyboardInputEvent: anEvent [
 	| osEvent aState |
 
-	"anEvent logCr."
-
 	anEvent has_virtual_keycode
 		ifFalse: [ ^ self ].
 
@@ -187,12 +185,12 @@ OSGlutinWindowHandle >> visitKeyboardInputEvent: anEvent [
 		ifFalse: [ OSKeyUpEvent for: osWindow ].
 
 	osEvent scanCode: anEvent scan_code.
+	osEvent symbol: anEvent virtual_keycode.
+	osEvent position: cursorPosition.
 
 	self convertModifiers: anEvent modifiers for: osEvent modifiers.
 	
-	
-	
-	"^ osEvent deliver."
+	^ osEvent deliver
 ]
 
 { #category : #'events-processing' }
