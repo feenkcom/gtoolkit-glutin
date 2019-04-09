@@ -57,6 +57,13 @@ OSGlutinWindowHandle >> handle [
 	^ handle
 ]
 
+{ #category : #accessing }
+OSGlutinWindowHandle >> id [
+	<return: #Number>
+
+	^ handle id
+]
+
 { #category : #initialize }
 OSGlutinWindowHandle >> initWithHandle: aHandle [
 	"aHandle is GlutinWindowedContext"
@@ -84,14 +91,6 @@ OSGlutinWindowHandle >> newOpenGLRenderer [
 { #category : #accessing }
 OSGlutinWindowHandle >> platformSpecificHandle [
 	^ nil
-]
-
-{ #category : #'events-processing' }
-OSGlutinWindowHandle >> pollEvents [
-	self isValid
-		ifFalse: [ ^ self ].
-
-	handle pollEvents: [ :aGlutinEvent | aGlutinEvent mapped accept: self ]
 ]
 
 { #category : #accessing }

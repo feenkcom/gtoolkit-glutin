@@ -75,6 +75,16 @@ GlutinWindowedContext >> getProcAddress: aString [
 ]
 
 { #category : #'api - accessing' }
+GlutinWindowedContext >> id [
+	<return: #Number>
+	| aSizeU64 |
+
+	aSizeU64 := WinitSizeU64 new.
+	self primGetId: aSizeU64.
+	^ aSizeU64 asInteger
+]
+
+{ #category : #'api - accessing' }
 GlutinWindowedContext >> innerExtent [
 	<return: #Point>
 	| aSizeF64 |
@@ -98,11 +108,6 @@ GlutinWindowedContext >> isValid [
 { #category : #'api - gl' }
 GlutinWindowedContext >> makeCurrent [
 	self primMakeCurrent
-]
-
-{ #category : #'api - events' }
-GlutinWindowedContext >> pollEvents: aBlock [
-	eventsLoop pollEvents: aBlock
 ]
 
 { #category : #'api - accessing' }
@@ -129,8 +134,8 @@ GlutinWindowedContext >> primGetFramebufferSize: aSizeU32 [
 ]
 
 { #category : #'private - ffi' }
-GlutinWindowedContext >> primGetId [
-	^ self ffiCall: #(uint64 glutin_windowed_context_get_id(GlutinWindowedContext self))
+GlutinWindowedContext >> primGetId: aSizeU64 [
+	^ self ffiCall: #(uint64 glutin_windowed_context_get_id(GlutinWindowedContext self, WinitSizeU64* aSizeU64))
 ]
 
 { #category : #'private - ffi' }
