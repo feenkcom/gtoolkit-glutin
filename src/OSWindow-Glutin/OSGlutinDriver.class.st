@@ -4,6 +4,7 @@ Class {
 	#traits : 'TGlutinLibrary',
 	#classTraits : 'TGlutinLibrary classTrait',
 	#classVars : [
+		'EventLoop',
 		'EventLoopProcess',
 		'WindowsRegistry',
 		'WindowsRegistryMutex'
