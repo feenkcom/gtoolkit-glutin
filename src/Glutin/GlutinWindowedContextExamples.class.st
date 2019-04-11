@@ -26,7 +26,7 @@ GlutinWindowedContextExamples >> liveWindow [
 		isRunning := true.
 		[
 		aWindowedContext makeCurrent.
-		aWindowedContext pollEvents: [ :anEvent |
+		aWindowedContext eventsLoop fetchEvents: [ :anEvent |
 			anEvent mapped logCr.
 			anEvent mapped class = WinitBaseWindowCloseRequested
 				ifTrue: [

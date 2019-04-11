@@ -273,7 +273,7 @@ OSGlutinWindowHandle >> visitWindowRefreshEvent: aWindowRefreshEvent [
 { #category : #'events-processing' }
 OSGlutinWindowHandle >> visitWindowResizedEvent: aWindowResizedEvent [
 	self handle resize: (aWindowResizedEvent width @ aWindowResizedEvent height).
-	
+
 	^ (OSWindowResizeEvent for: osWindow)
 		width: aWindowResizedEvent width;
 		height: aWindowResizedEvent height;

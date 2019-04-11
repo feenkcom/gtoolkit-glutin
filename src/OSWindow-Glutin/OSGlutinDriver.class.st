@@ -88,9 +88,8 @@ OSGlutinDriver >> pollEvents [
 	self ensureEventsLoop.
 
 	WindowsRegistryMutex critical: [
-		EventsLoop pollEvents: [ :aGlutinEvent |
+		EventsLoop fetchEvents: [ :aGlutinEvent |
 		| aWindowId |
-		
 		aWindowId := aGlutinEvent window_id asInteger.
 		WindowsRegistry
 			at: aWindowId

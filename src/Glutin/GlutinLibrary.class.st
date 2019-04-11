@@ -4,6 +4,11 @@ Class {
 	#category : #Glutin
 }
 
+{ #category : #'library path' }
+GlutinLibrary class >> ffiLibraryName [
+	^ self
+]
+
 { #category : #installation }
 GlutinLibrary class >> install [
 	<script: 'self install'>
@@ -18,6 +23,11 @@ GlutinLibrary class >> install [
 	installer works: [ GlutinLibrary uniqueInstance hasModule ].
 
 	installer run
+]
+
+{ #category : #printing }
+GlutinLibrary class >> println: aString [
+	^ self ffiCall: #(void glutin_println (String aString))
 ]
 
 { #category : #'accessing platform' }
