@@ -10,6 +10,11 @@ Class {
 	#category : #'Glutin-OpenGL'
 }
 
+{ #category : #'library path' }
+GlutinGL class >> ffiLibraryName [
+	^ GlutinLibrary
+]
+
 { #category : #'private - ffi' }
 GlutinGL class >> primRelease: aHandle [
 	
