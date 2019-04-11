@@ -3,12 +3,19 @@ Class {
 	#superclass : #FFIExternalObject,
 	#traits : 'TGlutinLibrary + TGlutinPtr',
 	#classTraits : 'TGlutinLibrary classTrait + TGlutinPtr classTrait',
+	#instVars : [
+		'baseEvent',
+		'eventsQueue',
+		'pollCallback'
+	],
 	#category : #Glutin
 }
 
 { #category : #'api - instantiation' }
 GlutinEventsLoop class >> create [
-	^ self primCreate autoRelease
+	^ self primCreate
+		initialize;
+		autoRelease
 ]
 
 { #category : #'library path' }
@@ -33,17 +40,22 @@ GlutinEventsLoop class >> primRelease: aHandle [
 	^ self ffiCall: #(void glutin_destroy_events_loop(void* aHandle))
 ]
 
+{ #category : #initialization }
+GlutinEventsLoop >> initialize [
+	baseEvent := GlutinBaseEvent new.
+	eventsQueue := OrderedCollection new.
+	pollCallback := GlutinEventsLoopCallback on: [ eventsQueue add: baseEvent deepCopy. true ]
+]
+
 { #category : #events }
 GlutinEventsLoop >> pollEvents: aBlock [
-	| aCallback baseEvent |
-
 	self isNull
 		ifTrue: [ ^ self ].
-	
-	baseEvent := GlutinBaseEvent new.
-	aCallback := GlutinEventsLoopCallback on: [ aBlock value: baseEvent. true ].
 
-	self primPollEvents: aCallback event: baseEvent
+	eventsQueue removeAll.
+	self primPollEvents: pollCallback event: baseEvent.
+	eventsQueue do: [ :anEvent | aBlock value: anEvent ].
+	eventsQueue removeAll
 ]
 
 { #category : #'private - ffi' }
@@ -52,27 +64,4 @@ GlutinEventsLoop >> primPollEvents: aCallback event: aGlutinEvent [
 		#GlutinEventsLoop self,
 		#GlutinBaseEvent *aGlutinEvent,
 		#GlutinEventsLoopCallback aCallback))
-]
-
-{ #category : #'private - ffi' }
-GlutinEventsLoop >> primRunForever: aCallback event: aGlutinEvent [
-	^ self ffiCall: #(void glutin_events_loop_run_forever(
-		#GlutinEventsLoop self,
-		#GlutinBaseEvent *aGlutinEvent,
-		#GlutinEventsLoopCallback aCallback))
-]
-
-{ #category : #events }
-GlutinEventsLoop >> runForever: aBlock [
-	| aCallback baseEvent |
-	
-	baseEvent := GlutinBaseEvent new.
-	aCallback := GlutinEventsLoopCallback on: [ 
-		| aResult |
-		aResult := aBlock value: baseEvent.
-		(aResult == true or: [ aResult == false ])
-			ifTrue: [ aResult ]
-			ifFalse: [ self error: 'Result must be a boolean'. false ] ].
-
-	self primRunForever: aCallback event: baseEvent
 ]
