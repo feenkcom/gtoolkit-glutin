@@ -53,6 +53,11 @@ GlutinWindowedContext >> destroy [
 	self release
 ]
 
+{ #category : #'api - accessing' }
+GlutinWindowedContext >> eventsLoop [
+	^ eventsLoop
+]
+
 { #category : #initialization }
 GlutinWindowedContext >> eventsLoop: aGlutinEventsLoop [
 	eventsLoop := aGlutinEventsLoop
