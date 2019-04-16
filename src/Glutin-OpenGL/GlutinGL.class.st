@@ -102,6 +102,11 @@ GlutinGL >> enable_vertex_attrib_array: index [
 ]
 
 { #category : #'generated bindings' }
+GlutinGL >> free_string: aString [
+	^ self ffiCall: #(void glutin_gl_free_cstring(GlutinCString* aString))
+]
+
+{ #category : #'generated bindings' }
 GlutinGL >> gen_texture [
 	^ self ffiCall: #( GLuint glutin_gl_gen_texture ( GlutinGL self ) )
 ]
@@ -111,12 +116,40 @@ GlutinGL >> gen_vertex_array [
 	^ self ffiCall: #( GLuint glutin_gl_gen_vertex_array ( GlutinGL self ) )
 ]
 
+{ #category : #accessing }
+GlutinGL >> getString: which [
+	<return: #String>
+	| aStringBuffer aString |
+
+	aStringBuffer := GlutinCString new.
+	self get_string: which in: aStringBuffer.
+
+	aString := (FFIExternalArray
+		fromHandle: aStringBuffer data getHandle
+		type: FFIUInt8
+		size: aStringBuffer length) asByteArray asString.
+		
+	self free_string: aStringBuffer.
+
+	^ aString
+]
+
 { #category : #'generated bindings' }
 GlutinGL >> get_attribute_location_program: program name: name [
 	^ self ffiCall: #( int32 glutin_gl_get_attribute_location (
 		GlutinGL self,
 		GLuint program,
 		String name) )
+]
+
+{ #category : #'generated bindings' }
+GlutinGL >> get_shader_version [
+	^ self ffiCall: #( uint32 glutin_gl_get_shader_version ( GlutinGL self ) )
+]
+
+{ #category : #'generated bindings' }
+GlutinGL >> get_string: which in: aGlutinCString [
+	^ self ffiCall: #( void glutin_gl_get_string ( GlutinGL self, GLenum which, GlutinCString* aGlutinCString) )
 ]
 
 { #category : #'generated bindings' }
@@ -130,6 +163,13 @@ GlutinGL >> get_uniform_location_program: program name: name [
 { #category : #'generated bindings' }
 GlutinGL >> link_program: program [
 	^ self ffiCall: #( void glutin_gl_link_program ( GlutinGL self, GLuint program ) )
+]
+
+{ #category : #accessing }
+GlutinGL >> shaderVersion [
+	<return: #Number>
+
+	^ self get_shader_version
 ]
 
 { #category : #'generated bindings' }
@@ -164,6 +204,13 @@ GlutinGL >> tex_parameter_i_target: target name: pname param: param [
 { #category : #'generated bindings' }
 GlutinGL >> use_program: program [
 	^ self ffiCall: #( void glutin_gl_use_program ( GlutinGL self, GLuint program ) )
+]
+
+{ #category : #accessing }
+GlutinGL >> version [
+	<return: #String>
+
+	^ self getString: GL_VERSION
 ]
 
 { #category : #'generated bindings' }
