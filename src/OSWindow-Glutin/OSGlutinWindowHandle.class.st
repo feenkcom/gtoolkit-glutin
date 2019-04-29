@@ -81,13 +81,6 @@ OSGlutinWindowHandle >> isValid [
 	^ handle isNotNil and: [ handle isValid ]
 ]
 
-{ #category : #factory }
-OSGlutinWindowHandle >> newOpenGLRenderer [
-	^ renderer := OSGlutinRenderer new 
-		window: self;
-		yourself
-]
-
 { #category : #accessing }
 OSGlutinWindowHandle >> platformSpecificHandle [
 	^ nil

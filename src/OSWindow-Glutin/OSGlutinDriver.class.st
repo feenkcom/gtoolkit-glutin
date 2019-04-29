@@ -5,7 +5,6 @@ Class {
 	#classTraits : 'TGlutinLibrary classTrait',
 	#classVars : [
 		'CurrentSession',
-		'EventLoopProcess',
 		'EventsLoop',
 		'WindowsRegistry',
 		'WindowsRegistryMutex'
@@ -13,13 +12,41 @@ Class {
 	#category : #'OSWindow-Glutin'
 }
 
+{ #category : #'events-processing' }
+OSGlutinDriver class >> ensureEventsLoop [
+	"I make sure that Glutin events loop (external) is valid"
+
+	(CurrentSession == Smalltalk session
+		and: [ EventsLoop isNotNil
+			and: [ EventsLoop isNull not ] ])
+		ifTrue: [ ^ self ].
+
+	CurrentSession := Smalltalk session.
+	EventsLoop := GlutinEventsLoop new
+]
+
+{ #category : #'events-processing' }
+OSGlutinDriver class >> pollEvents [
+	self ensureEventsLoop.
+
+	WindowsRegistryMutex critical: [
+		EventsLoop fetchEvents: [ :aGlutinEvent |
+		| aWindowId |
+		aWindowId := aGlutinEvent window_id asInteger.
+		WindowsRegistry
+			at: aWindowId
+			ifPresent: [ :anOSGlutinWindowHandle |				
+				anOSGlutinWindowHandle isValid
+					ifTrue: [ aGlutinEvent mapped accept: anOSGlutinWindowHandle ] ] ] ]
+]
+
 { #category : #'window creation' }
 OSGlutinDriver >> createWindowWithAttributes: anOSWindowAttributes osWindow: osWindow [
 	| windowBuilder contextBuilder handle window |
 	<return: #OSGlutinWindowHandle>
 
 	WindowsRegistryMutex critical: [
-		self ensureEventsLoop.
+		self class ensureEventsLoop.
 
 		windowBuilder := GlutinWindowBuilder new
 			title: anOSWindowAttributes title;
@@ -46,34 +73,11 @@ OSGlutinDriver >> createWindowWithAttributes: anOSWindowAttributes osWindow: osW
 	^ window
 ]
 
-{ #category : #'events-processing' }
-OSGlutinDriver >> ensureEventsLoop [
-	"I make sure that Glutin events loop (external) is valid"
-
-	(CurrentSession == Smalltalk session
-		and: [ EventsLoop isNotNil
-			and: [ EventsLoop isNull not ] ])
-		ifTrue: [ ^ self ].
-
-	CurrentSession := Smalltalk session.
-	EventsLoop := GlutinEventsLoop new
-]
-
-{ #category : #'events-processing' }
-OSGlutinDriver >> eventLoopProcess [
-	[
-		self pollEvents.
-		(Delay forMilliseconds: 5) wait.
-		Processor yield
-	] repeat
-]
-
 { #category : #initialization }
 OSGlutinDriver >> initialize [
 	super initialize.
 
-	self initializeWindowsRegistry.
-	self setupEventLoop.
+	self initializeWindowsRegistry
 ]
 
 { #category : #initialization }
@@ -83,31 +87,7 @@ OSGlutinDriver >> initializeWindowsRegistry [
 	WindowsRegistryMutex ifNil: [ WindowsRegistryMutex := Semaphore forMutualExclusion ]
 ]
 
-{ #category : #'events-processing' }
-OSGlutinDriver >> pollEvents [
-	self ensureEventsLoop.
-
-	WindowsRegistryMutex critical: [
-		EventsLoop fetchEvents: [ :aGlutinEvent |
-		| aWindowId |
-		aWindowId := aGlutinEvent window_id asInteger.
-		WindowsRegistry
-			at: aWindowId
-			ifPresent: [ :anOSGlutinWindowHandle |				
-				anOSGlutinWindowHandle isValid
-					ifTrue: [ aGlutinEvent mapped accept: anOSGlutinWindowHandle ] ] ] ]
-]
-
 { #category : #'window creation and deletion' }
 OSGlutinDriver >> registerWindow: anOSWinitWindowHandle [
 	WindowsRegistry at: anOSWinitWindowHandle id put: anOSWinitWindowHandle
-]
-
-{ #category : #'events-processing' }
-OSGlutinDriver >> setupEventLoop [
-	EventLoopProcess ifNotNil: [ EventLoopProcess terminate ].
-	EventLoopProcess := [ self eventLoopProcess ] forkAt: Processor lowIOPriority.
-	EventLoopProcess
-		name: 'Glutin Event loop';
-		resume
 ]
