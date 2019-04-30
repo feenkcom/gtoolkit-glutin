@@ -19,7 +19,7 @@ GlutinWindowedContextExamples >> getProcAddress [
 GlutinWindowedContextExamples >> liveWindow [
 	<gtExample>
 	| aWindowedContext aProcess |
-	
+
 	aWindowedContext := self windowedContext.
 	aProcess := [
 		| isRunning |
@@ -27,7 +27,6 @@ GlutinWindowedContextExamples >> liveWindow [
 		[
 		aWindowedContext makeCurrent.
 		aWindowedContext eventsLoop fetchEvents: [ :anEvent |
-			anEvent mapped logCr.
 			anEvent mapped class = WinitBaseWindowCloseRequested
 				ifTrue: [
 					aWindowedContext release.
@@ -52,9 +51,9 @@ GlutinWindowedContextExamples >> windowedContext [
 	aWindowBuilder := GlutinWindowBuilder new.
 	aWindowBuilder
 		title: 'Native Window';
-		withDecorations: false;
+		withDecorations: true;
 		withResizable: true;
-		withTransparency: true.
+		withTransparency: false.
 
 	aContextBuilder := GlutinContextBuilder new.
 

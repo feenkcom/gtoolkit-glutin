@@ -105,6 +105,13 @@ GlutinWindowedContext >> innerExtent: aPoint [
 	self primSetInnerWidth: aPoint x height: aPoint y
 ]
 
+{ #category : #'api - gl' }
+GlutinWindowedContext >> isCurrent [
+	<return: #Boolean>
+	
+	^ self primIsCurrent
+]
+
 { #category : #testing }
 GlutinWindowedContext >> isValid [
 	^ handle isNotNil and: [ handle isNull not ]
@@ -112,7 +119,13 @@ GlutinWindowedContext >> isValid [
 
 { #category : #'api - gl' }
 GlutinWindowedContext >> makeCurrent [
-	self primMakeCurrent
+	| aNewContext |
+	
+	self isCurrent
+		ifTrue: [ ^ self ].
+
+	aNewContext := self primMakeCurrent.
+	self setHandle: aNewContext
 ]
 
 { #category : #'api - accessing' }
@@ -163,8 +176,13 @@ GlutinWindowedContext >> primGetProcAddress: procName [
 ]
 
 { #category : #'private - ffi' }
+GlutinWindowedContext >> primIsCurrent [
+	^ self ffiCall: #(bool glutin_windowed_context_is_current(GlutinWindowedContext self))
+]
+
+{ #category : #'private - ffi' }
 GlutinWindowedContext >> primMakeCurrent [
-	^ self ffiCall: #(void glutin_windowed_context_make_current(GlutinWindowedContext self))
+	^ self ffiCall: #(void* glutin_windowed_context_make_current(GlutinWindowedContext self))
 ]
 
 { #category : #'private - ffi' }
