@@ -38,18 +38,16 @@ GlutinEventsLoop class >> primRelease: aHandle [
 { #category : #events }
 GlutinEventsLoop >> fetchEvents: aBlock [
 	| theEventsBuffer theEvents filteredEvents |
+
 	self isNull
 		ifTrue: [ ^ self ].
 
-	theEventsBuffer := GlutinFetchedEvents externalNew.
-	theEventsBuffer length: 0.
-	theEventsBuffer data: (ExternalData fromHandle: ExternalAddress null type: GlutinBaseEvent).
- 
-	self primFetchEvents: theEventsBuffer.
+	theEventsBuffer := GlutinFetchedEvents fromHandle: self primCreateFetchedEvents getHandle.
+	self primFetchEvents: theEventsBuffer getHandle.
 	
 	theEventsBuffer length isZero
 		ifTrue: [
-			theEventsBuffer free.
+			self primFreeEvents: theEventsBuffer.
 			^ self ].
 		
 	theEvents := FFIExternalArray
@@ -60,9 +58,7 @@ GlutinEventsLoop >> fetchEvents: aBlock [
 	filteredEvents := self filteredEvents: theEvents asArray.
 	filteredEvents do: [ :anEvent | aBlock value: anEvent ].
 	
-	self primFreeEvents: theEventsBuffer.
-	
-	theEventsBuffer free
+	self primFreeEvents: theEventsBuffer
 ]
 
 { #category : #private }
@@ -92,8 +88,13 @@ GlutinEventsLoop >> initialize [
 ]
 
 { #category : #'private - ffi' }
+GlutinEventsLoop >> primCreateFetchedEvents [
+	^ self ffiCall: #(void* glutin_create_fetched_events ())
+]
+
+{ #category : #'private - ffi' }
 GlutinEventsLoop >> primFetchEvents: aBuffer [
-	^ self ffiCall: #(void glutin_events_loop_fetch_events(GlutinEventsLoop self, GlutinFetchedEvents *aBuffer))
+	^ self ffiCall: #(void glutin_events_loop_fetch_events(GlutinEventsLoop self, void* aBuffer))
 ]
 
 { #category : #'private - ffi' }
