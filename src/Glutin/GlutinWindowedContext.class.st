@@ -14,6 +14,25 @@ Class {
 }
 
 { #category : #'instance creation' }
+GlutinWindowedContext class >> create: anEventsLoop windowBuilder: aWindowBuilder [
+	"I choose a context builder so that context creation works"
+	| aWindowedContext theProfiles |
+	
+	theProfiles := GlutinContextBuilder profiles.
+	theProfiles withIndexDo: [ :eachProfile :anIndex |
+		aWindowedContext := self primCreate: anEventsLoop  windowBuilder: aWindowBuilder contextBuilder: eachProfile.
+		aWindowedContext isValid
+			ifTrue: [
+				GlutinLibrary println: '[Glutin] Profile #', anIndex asString, ' worked'.
+				aWindowedContext autoRelease.
+				aWindowedContext eventsLoop: anEventsLoop.
+				aWindowedContext title: aWindowBuilder title.
+				^ aWindowedContext ] ].
+		
+	self error: 'Could not find a suitable OpenGL profile for this system'
+]
+
+{ #category : #'instance creation' }
 GlutinWindowedContext class >> create: anEventsLoop windowBuilder: aWindowBuilder contextBuilder: aContextBuilder [
 	| aWindowedContext |
 	

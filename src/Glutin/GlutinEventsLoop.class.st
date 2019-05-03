@@ -43,6 +43,7 @@ GlutinEventsLoop >> fetchEvents: aBlock [
 
 	theEventsBuffer := GlutinFetchedEvents externalNew.
 	theEventsBuffer length: 0.
+	theEventsBuffer data: (ExternalData fromHandle: ExternalAddress null type: GlutinBaseEvent).
  
 	self primFetchEvents: theEventsBuffer.
 	
@@ -92,7 +93,7 @@ GlutinEventsLoop >> initialize [
 
 { #category : #'private - ffi' }
 GlutinEventsLoop >> primFetchEvents: aBuffer [
-	^ self ffiCall: #(void glutin_events_loop_fetch_events(GlutinEventsLoop self, GlutinFetchedEvents aBuffer))
+	^ self ffiCall: #(void glutin_events_loop_fetch_events(GlutinEventsLoop self, GlutinFetchedEvents *aBuffer))
 ]
 
 { #category : #'private - ffi' }

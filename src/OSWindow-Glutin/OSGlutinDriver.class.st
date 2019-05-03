@@ -42,7 +42,7 @@ OSGlutinDriver class >> pollEvents [
 
 { #category : #'window creation' }
 OSGlutinDriver >> createWindowWithAttributes: anOSWindowAttributes osWindow: osWindow [
-	| windowBuilder contextBuilder handle window |
+	| windowBuilder handle window |
 	<return: #OSGlutinWindowHandle>
 
 	WindowsRegistryMutex critical: [
@@ -55,13 +55,10 @@ OSGlutinDriver >> createWindowWithAttributes: anOSWindowAttributes osWindow: osW
 			withTransparency: false;
 			withResizable: anOSWindowAttributes resizable;
 			withMaximized: anOSWindowAttributes maximized.
-
-		contextBuilder := GlutinContextBuilder create.
 		
 		handle := GlutinWindowedContext
 			create: EventsLoop 
-			windowBuilder: windowBuilder
-			contextBuilder: contextBuilder.
+			windowBuilder: windowBuilder.
 			
 		window := OSGlutinWindowHandle newWithHandle: handle.
 		window osWindow: osWindow.
