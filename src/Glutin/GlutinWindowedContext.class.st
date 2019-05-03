@@ -34,6 +34,14 @@ GlutinWindowedContext class >> primCreate: anEventsLoop windowBuilder: aWindowBu
 ]
 
 { #category : #'private - ffi' }
+GlutinWindowedContext class >> primCreateTest: anEventsLoop windowBuilder: aWindowBuilder contextBuilder: aContextBuilder [
+	^ self ffiCall: #(GlutinWindowedContext glutin_window_test(
+		GlutinEventsLoop anEventsLoop,
+		GlutinWindowBuilder aWindowBuilder,
+		GlutinContextBuilder aContextBuilder))
+]
+
+{ #category : #'private - ffi' }
 GlutinWindowedContext class >> primRelease: aHandle [
 	
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"

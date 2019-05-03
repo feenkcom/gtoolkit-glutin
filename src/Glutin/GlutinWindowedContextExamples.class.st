@@ -49,11 +49,7 @@ GlutinWindowedContextExamples >> windowedContext [
 	anEventsLoop := GlutinEventsLoop new.
 	
 	aWindowBuilder := GlutinWindowBuilder new.
-	aWindowBuilder
-		title: 'Native Window';
-		withDecorations: true;
-		withResizable: true;
-		withTransparency: false.
+	aWindowBuilder title: 'Native Window'.
 
 	aContextBuilder := GlutinContextBuilder new.
 

@@ -3,7 +3,8 @@ Class {
 	#superclass : #WinitEnum,
 	#classVars : [
 		'LineDelta',
-		'PixelDelta'
+		'PixelDelta',
+		'Unknown'
 	],
 	#category : #'Glutin-Enums'
 }
@@ -20,6 +21,12 @@ WinitEventMouseScrollDeltaType class >> PixelDelta [
 	^ PixelDelta
 ]
 
+{ #category : #'accessing enum' }
+WinitEventMouseScrollDeltaType class >> Unknown [
+	"This method was automatically generated"
+	^ Unknown
+]
+
 { #category : #'enum declaration' }
 WinitEventMouseScrollDeltaType class >> externalDeclaration [
 	"
@@ -27,6 +34,7 @@ WinitEventMouseScrollDeltaType class >> externalDeclaration [
 	"
 
 	^ #(
+	 Unknown,
     LineDelta,
     PixelDelta,
 	)
