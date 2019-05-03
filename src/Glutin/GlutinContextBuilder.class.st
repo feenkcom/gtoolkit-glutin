@@ -21,7 +21,7 @@ GlutinContextBuilder class >> linux [
 	<return: #GlutinContextBuilder>
 
 	^ self new
-		withDoubleBuffer: true;
+		withDoubleBuffer: false;
 		withGl: #(3 1) thenGles: #(3 1);
 		withMultisampling: 0;
 		withDepthBuffer: 24;
@@ -69,8 +69,8 @@ GlutinContextBuilder class >> profiles [
 	
 	^ {
 		self osx.
-		self linux.
-		self windows
+		self windows.
+		self linux
 	 }
 ]
 

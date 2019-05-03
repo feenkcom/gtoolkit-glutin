@@ -40,6 +40,13 @@ OSGlutinDriver class >> pollEvents [
 					ifTrue: [ aGlutinEvent mapped accept: anOSGlutinWindowHandle ] ] ] ]
 ]
 
+{ #category : #initialization }
+OSGlutinDriver class >> reset [
+	<script: 'self reset'>
+	
+	EventsLoop := nil
+]
+
 { #category : #'window creation' }
 OSGlutinDriver >> createWindowWithAttributes: anOSWindowAttributes osWindow: osWindow [
 	| windowBuilder handle window |
