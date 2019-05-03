@@ -22,7 +22,7 @@ GlutinContextBuilder class >> linux [
 
 	^ self new
 		withDoubleBuffer: false;
-		withGl: #(3 1) thenGles: #(3 1);
+		withGlLatest;
 		withMultisampling: 0;
 		withDepthBuffer: 24;
 		withStencilBuffer: 8;
