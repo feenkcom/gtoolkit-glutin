@@ -3,9 +3,6 @@ Class {
 	#superclass : #FFIExternalObject,
 	#traits : 'TGlutinLibrary + TGlutinPtr',
 	#classTraits : 'TGlutinLibrary classTrait + TGlutinPtr classTrait',
-	#instVars : [
-		'baseEvent'
-	],
 	#category : #Glutin
 }
 
@@ -41,12 +38,17 @@ GlutinEventsLoop class >> primRelease: aHandle [
 { #category : #events }
 GlutinEventsLoop >> fetchEvents: aBlock [
 	| theEventsBuffer theEvents filteredEvents |
+
 	self isNull
 		ifTrue: [ ^ self ].
 
-	theEventsBuffer := self primFetchEvents.
+	theEventsBuffer := GlutinFetchedEvents fromHandle: self primCreateFetchedEvents getHandle.
+	self primFetchEvents: theEventsBuffer getHandle.
+	
 	theEventsBuffer length isZero
-		ifTrue: [ ^ self ].
+		ifTrue: [
+			self primFreeEvents: theEventsBuffer getHandle.
+			^ self ].
 		
 	theEvents := FFIExternalArray
 		fromHandle: theEventsBuffer data getHandle
@@ -56,7 +58,7 @@ GlutinEventsLoop >> fetchEvents: aBlock [
 	filteredEvents := self filteredEvents: theEvents asArray.
 	filteredEvents do: [ :anEvent | aBlock value: anEvent ].
 	
-	self primFreeEvents: theEventsBuffer
+	self primFreeEvents: theEventsBuffer getHandle
 ]
 
 { #category : #private }
@@ -82,19 +84,39 @@ GlutinEventsLoop >> filteredEvents: theEvents [
 
 { #category : #initialization }
 GlutinEventsLoop >> initialize [
-	baseEvent := GlutinBaseEvent new
+	
 ]
 
 { #category : #'private - ffi' }
-GlutinEventsLoop >> primFetchEvents [
-	^ self ffiCall: #(GlutinFetchedEvents glutin_events_loop_fetch_events(
-		#GlutinEventsLoop self,
-		#GlutinBaseEvent *baseEvent))
+GlutinEventsLoop >> primCreateFetchedEvents [
+	^ self ffiCall: #(void* glutin_create_fetched_events ())
+]
+
+{ #category : #'private - ffi' }
+GlutinEventsLoop >> primFetchEvents: aBuffer [
+	^ self ffiCall: #(void glutin_events_loop_fetch_events(GlutinEventsLoop self, void* aBuffer))
 ]
 
 { #category : #'private - ffi' }
 GlutinEventsLoop >> primFreeEvents: aBuffer [
-	^ self ffiCall: #(void glutin_events_loop_free_events(GlutinFetchedEvents aBuffer))
+	^ self ffiCall: #(void glutin_events_loop_free_events(void* aBuffer))
+]
+
+{ #category : #'private - ffi' }
+GlutinEventsLoop >> primGetPrimaryMonitor [
+	^ self ffiCall: #(GlutinMonitorId glutin_events_loop_get_primary_monitor (GlutinEventsLoop self))
+]
+
+{ #category : #accessing }
+GlutinEventsLoop >> primaryMonitor [
+	<return: #GlutinMonitorId>
+	| aMonitorId |
+	
+	aMonitorId := self primGetPrimaryMonitor.
+	aMonitorId autoRelease.
+	aMonitorId eventsLoop: self.
+	
+	^ aMonitorId
 ]
 
 { #category : #private }

@@ -27,6 +27,7 @@ GlutinWindowedContextExamples >> liveWindow [
 		[
 		aWindowedContext makeCurrent.
 		aWindowedContext eventsLoop fetchEvents: [ :anEvent |
+			anEvent mapped logCr.
 			anEvent mapped class = WinitBaseWindowCloseRequested
 				ifTrue: [
 					aWindowedContext release.
@@ -44,23 +45,16 @@ GlutinWindowedContextExamples >> liveWindow [
 { #category : #'instance creation' }
 GlutinWindowedContextExamples >> windowedContext [
 	<gtExample>
-	| anEventsLoop aWindowBuilder aContextBuilder aWindowedContext |
+	| anEventsLoop aWindowBuilder aWindowedContext |
 	
 	anEventsLoop := GlutinEventsLoop new.
 	
 	aWindowBuilder := GlutinWindowBuilder new.
-	aWindowBuilder
-		title: 'Native Window';
-		withDecorations: true;
-		withResizable: true;
-		withTransparency: false.
-
-	aContextBuilder := GlutinContextBuilder new.
+	aWindowBuilder title: 'Native Window'.
 
 	aWindowedContext := GlutinWindowedContext
 		create: anEventsLoop
-		windowBuilder: aWindowBuilder
-		contextBuilder: aContextBuilder.
+		windowBuilder: aWindowBuilder.
 
 	^ aWindowedContext
 ]

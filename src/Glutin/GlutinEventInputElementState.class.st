@@ -3,7 +3,8 @@ Class {
 	#superclass : #WinitEnum,
 	#classVars : [
 		'Pressed',
-		'Released'
+		'Released',
+		'Unknown'
 	],
 	#category : #'Glutin-Enums'
 }
@@ -20,6 +21,12 @@ GlutinEventInputElementState class >> Released [
 	^ Released
 ]
 
+{ #category : #'accessing enum' }
+GlutinEventInputElementState class >> Unknown [
+	"This method was automatically generated"
+	^ Unknown
+]
+
 { #category : #'enum declaration' }
 GlutinEventInputElementState class >> externalDeclaration [
 	"
@@ -27,6 +34,7 @@ GlutinEventInputElementState class >> externalDeclaration [
 	"
 
 	^ #(
+	 Unknown,
     Pressed,
     Released,
 	)

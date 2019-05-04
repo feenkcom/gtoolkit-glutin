@@ -171,6 +171,9 @@ OSGlutinWindowHandle >> visitKeyboardInputEvent: anEvent [
 		ifNil: [ ^ self ].
 
 	aState := anEvent state.
+
+	aState = GlutinEventInputElementState Unknown
+		ifTrue: [ ^ self ].
 	
 	osEvent := aState = GlutinEventInputElementState Pressed
 		ifTrue: [ OSKeyDownEvent for: osWindow ]
@@ -196,6 +199,9 @@ OSGlutinWindowHandle >> visitMouseInputEvent: aMouseInputEvent [
 	aButton := aMouseInputEvent button.
 	aState := aMouseInputEvent state.
 	
+	aState = GlutinEventInputElementState Unknown
+		ifTrue: [ ^ self ].
+		
 	osEvent := aState = GlutinEventInputElementState Pressed
 		ifTrue: [ OSMouseButtonPressEvent for: osWindow ]
 		ifFalse: [ OSMouseButtonReleaseEvent for: osWindow ].
