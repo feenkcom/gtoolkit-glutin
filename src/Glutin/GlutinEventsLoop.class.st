@@ -18,6 +18,27 @@ GlutinEventsLoop class >> ffiLibraryName [
 	^ GlutinLibrary
 ]
 
+{ #category : #private }
+GlutinEventsLoop class >> filteredEvents: theEvents [
+	"Filter unnecessary duplicated events that we don't have to process within same frame,
+	for example window resize event, window refresh events and mouse move events"
+	| groupedByWindow |
+	
+	groupedByWindow := theEvents groupedBy: [ :anEvent | anEvent window_id asInteger ].
+	groupedByWindow := groupedByWindow collect: [ :aCollectionOfEvents |
+		| groupedByEventType |
+		groupedByEventType := aCollectionOfEvents groupedBy: [ :anEvent | anEvent event_type ].
+		self uniqueEventTypes do: [ :anEventType |
+			groupedByEventType
+				at: anEventType
+				ifPresent: [ :theEventsOfEachType |
+					groupedByEventType
+						at: anEventType
+						put: ({ theEventsOfEachType last }) ] ].	
+		groupedByEventType values ].
+	^ groupedByWindow values flattened
+]
+
 { #category : #'instance creation' }
 GlutinEventsLoop class >> new [
 	^ self create
@@ -33,6 +54,18 @@ GlutinEventsLoop class >> primRelease: aHandle [
 	
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"
 	^ self ffiCall: #(void glutin_destroy_events_loop(void* aHandle))
+]
+
+{ #category : #private }
+GlutinEventsLoop class >> uniqueEventTypes [
+	"Types of events that should be unique per frame.
+	e.g. We don't need multiple window resize or refresh events"
+	^ {
+		WinitEventType WindowEventResized.
+		WinitEventType WindowEventRefresh.
+		WinitEventType WindowEventCursorMoved.
+		WinitEventType WindowEventMoved
+	}
 ]
 
 { #category : #events }
@@ -55,31 +88,10 @@ GlutinEventsLoop >> fetchEvents: aBlock [
 		type: GlutinBaseEvent
 		size: theEventsBuffer length.
 		
-	filteredEvents := self filteredEvents: theEvents asArray.
+	filteredEvents := self class filteredEvents: theEvents asArray.
 	filteredEvents do: [ :anEvent | aBlock value: anEvent ].
 	
 	self primFreeEvents: theEventsBuffer getHandle
-]
-
-{ #category : #private }
-GlutinEventsLoop >> filteredEvents: theEvents [
-	"Filter unnecessary duplicated events that we don't have to process within same frame,
-	for example window resize event, window refresh events and mouse move events"
-	| groupedByWindow |
-	
-	groupedByWindow := theEvents groupedBy: [ :anEvent | anEvent window_id asInteger ].
-	groupedByWindow := groupedByWindow collect: [ :aCollectionOfEvents |
-		| groupedByEventType |
-		groupedByEventType := aCollectionOfEvents groupedBy: [ :anEvent | anEvent event_type ].
-		self uniqueEventTypes do: [ :anEventType |
-			groupedByEventType
-				at: anEventType
-				ifPresent: [ :theEventsOfEachType |
-					groupedByEventType
-						at: anEventType
-						put: ({ theEventsOfEachType last }) ] ].	
-		groupedByEventType values ].
-	^ groupedByWindow values flattened
 ]
 
 { #category : #initialization }
@@ -117,16 +129,4 @@ GlutinEventsLoop >> primaryMonitor [
 	aMonitorId eventsLoop: self.
 	
 	^ aMonitorId
-]
-
-{ #category : #private }
-GlutinEventsLoop >> uniqueEventTypes [
-	"Types of events that should be unique per frame.
-	e.g. We don't need multiple window resize or refresh events"
-	^ {
-		WinitEventType WindowEventResized.
-		WinitEventType WindowEventRefresh.
-		WinitEventType WindowEventCursorMoved.
-		WinitEventType WindowEventMoved
-	}
 ]
