@@ -14,6 +14,25 @@ Class {
 }
 
 { #category : #'instance creation' }
+GlutinWindowedContext class >> create: anEventsLoop windowBuilder: aWindowBuilder [
+	"I choose a context builder so that context creation works"
+	| aWindowedContext theProfiles |
+	
+	theProfiles := GlutinContextBuilder profiles.
+	theProfiles withIndexDo: [ :eachProfile :anIndex |
+		aWindowedContext := self primCreate: anEventsLoop  windowBuilder: aWindowBuilder contextBuilder: eachProfile.
+		aWindowedContext isValid
+			ifTrue: [
+				GlutinLibrary println: '[Glutin] Profile #', anIndex asString, ' worked'.
+				aWindowedContext autoRelease.
+				aWindowedContext eventsLoop: anEventsLoop.
+				aWindowedContext title: aWindowBuilder title.
+				^ aWindowedContext ] ].
+		
+	self error: 'Could not find a suitable OpenGL profile for this system'
+]
+
+{ #category : #'instance creation' }
 GlutinWindowedContext class >> create: anEventsLoop windowBuilder: aWindowBuilder contextBuilder: aContextBuilder [
 	| aWindowedContext |
 	
@@ -31,6 +50,14 @@ GlutinWindowedContext class >> primCreate: anEventsLoop windowBuilder: aWindowBu
 			#GlutinEventsLoop anEventsLoop,
 			#GlutinWindowBuilder aWindowBuilder,
 			#GlutinContextBuilder aContextBuilder))
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowedContext class >> primCreateTest: anEventsLoop windowBuilder: aWindowBuilder contextBuilder: aContextBuilder [
+	^ self ffiCall: #(GlutinWindowedContext glutin_window_test(
+		GlutinEventsLoop anEventsLoop,
+		GlutinWindowBuilder aWindowBuilder,
+		GlutinContextBuilder aContextBuilder))
 ]
 
 { #category : #'private - ffi' }
@@ -105,6 +132,13 @@ GlutinWindowedContext >> innerExtent: aPoint [
 	self primSetInnerWidth: aPoint x height: aPoint y
 ]
 
+{ #category : #'api - gl' }
+GlutinWindowedContext >> isCurrent [
+	<return: #Boolean>
+	
+	^ self primIsCurrent
+]
+
 { #category : #testing }
 GlutinWindowedContext >> isValid [
 	^ handle isNotNil and: [ handle isNull not ]
@@ -112,7 +146,13 @@ GlutinWindowedContext >> isValid [
 
 { #category : #'api - gl' }
 GlutinWindowedContext >> makeCurrent [
-	self primMakeCurrent
+	| aNewContext |
+	
+	self isCurrent
+		ifTrue: [ ^ self ].
+
+	aNewContext := self primMakeCurrent.
+	self setHandle: aNewContext
 ]
 
 { #category : #'api - accessing' }
@@ -163,8 +203,13 @@ GlutinWindowedContext >> primGetProcAddress: procName [
 ]
 
 { #category : #'private - ffi' }
+GlutinWindowedContext >> primIsCurrent [
+	^ self ffiCall: #(bool glutin_windowed_context_is_current(GlutinWindowedContext self))
+]
+
+{ #category : #'private - ffi' }
 GlutinWindowedContext >> primMakeCurrent [
-	^ self ffiCall: #(void glutin_windowed_context_make_current(GlutinWindowedContext self))
+	^ self ffiCall: #(void* glutin_windowed_context_make_current(GlutinWindowedContext self))
 ]
 
 { #category : #'private - ffi' }

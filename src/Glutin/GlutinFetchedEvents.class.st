@@ -14,7 +14,7 @@ GlutinFetchedEvents class >> fieldsDesc [
 	self rebuildFieldAccessors
 	"
 	^ #(
-		void** data
+		void* data
 		size_t length
  	)
 ]

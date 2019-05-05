@@ -81,13 +81,6 @@ OSGlutinWindowHandle >> isValid [
 	^ handle isNotNil and: [ handle isValid ]
 ]
 
-{ #category : #factory }
-OSGlutinWindowHandle >> newOpenGLRenderer [
-	^ renderer := OSGlutinRenderer new 
-		window: self;
-		yourself
-]
-
 { #category : #accessing }
 OSGlutinWindowHandle >> platformSpecificHandle [
 	^ nil
@@ -178,6 +171,9 @@ OSGlutinWindowHandle >> visitKeyboardInputEvent: anEvent [
 		ifNil: [ ^ self ].
 
 	aState := anEvent state.
+
+	aState = GlutinEventInputElementState Unknown
+		ifTrue: [ ^ self ].
 	
 	osEvent := aState = GlutinEventInputElementState Pressed
 		ifTrue: [ OSKeyDownEvent for: osWindow ]
@@ -203,6 +199,9 @@ OSGlutinWindowHandle >> visitMouseInputEvent: aMouseInputEvent [
 	aButton := aMouseInputEvent button.
 	aState := aMouseInputEvent state.
 	
+	aState = GlutinEventInputElementState Unknown
+		ifTrue: [ ^ self ].
+		
 	osEvent := aState = GlutinEventInputElementState Pressed
 		ifTrue: [ OSMouseButtonPressEvent for: osWindow ]
 		ifFalse: [ OSMouseButtonReleaseEvent for: osWindow ].
@@ -282,7 +281,7 @@ OSGlutinWindowHandle >> visitWindowResizedEvent: aWindowResizedEvent [
 
 { #category : #accessing }
 OSGlutinWindowHandle >> winitWindow [
-	<return: #WinitWindow>
+	<return: #GlutinWindowedContext>
 
 	^ self handle
 ]

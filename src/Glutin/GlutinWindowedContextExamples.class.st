@@ -19,7 +19,7 @@ GlutinWindowedContextExamples >> getProcAddress [
 GlutinWindowedContextExamples >> liveWindow [
 	<gtExample>
 	| aWindowedContext aProcess |
-	
+
 	aWindowedContext := self windowedContext.
 	aProcess := [
 		| isRunning |
@@ -45,23 +45,16 @@ GlutinWindowedContextExamples >> liveWindow [
 { #category : #'instance creation' }
 GlutinWindowedContextExamples >> windowedContext [
 	<gtExample>
-	| anEventsLoop aWindowBuilder aContextBuilder aWindowedContext |
+	| anEventsLoop aWindowBuilder aWindowedContext |
 	
 	anEventsLoop := GlutinEventsLoop new.
 	
 	aWindowBuilder := GlutinWindowBuilder new.
-	aWindowBuilder
-		title: 'Native Window';
-		withDecorations: false;
-		withResizable: true;
-		withTransparency: true.
-
-	aContextBuilder := GlutinContextBuilder new.
+	aWindowBuilder title: 'Native Window'.
 
 	aWindowedContext := GlutinWindowedContext
 		create: anEventsLoop
-		windowBuilder: aWindowBuilder
-		contextBuilder: aContextBuilder.
+		windowBuilder: aWindowBuilder.
 
 	^ aWindowedContext
 ]

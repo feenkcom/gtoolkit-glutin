@@ -5,7 +5,8 @@ Class {
 		'Left',
 		'Middle',
 		'Other',
-		'Right'
+		'Right',
+		'Unknown'
 	],
 	#category : #'Glutin-Enums'
 }
@@ -34,6 +35,12 @@ GlutinEventMouseButtonType class >> Right [
 	^ Right
 ]
 
+{ #category : #'accessing enum' }
+GlutinEventMouseButtonType class >> Unknown [
+	"This method was automatically generated"
+	^ Unknown
+]
+
 { #category : #'enum declaration' }
 GlutinEventMouseButtonType class >> externalDeclaration [
 	"
@@ -41,6 +48,7 @@ GlutinEventMouseButtonType class >> externalDeclaration [
 	"
 
 	^ #(
+	 Unknown,
     Left,
     Right,
     Middle,

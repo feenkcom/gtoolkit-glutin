@@ -5,7 +5,8 @@ Class {
 		'Cancelled',
 		'Ended',
 		'Moved',
-		'Started'
+		'Started',
+		'Unknown'
 	],
 	#category : #'Glutin-Enums'
 }
@@ -34,6 +35,12 @@ WinitEventTouchPhase class >> Started [
 	^ Started
 ]
 
+{ #category : #'accessing enum' }
+WinitEventTouchPhase class >> Unknown [
+	"This method was automatically generated"
+	^ Unknown
+]
+
 { #category : #'enum declaration' }
 WinitEventTouchPhase class >> externalDeclaration [
 	"
@@ -41,6 +48,7 @@ WinitEventTouchPhase class >> externalDeclaration [
 	"
 
 	^ #(
+	 Unknown,
     Started,
     Moved,
     Ended,
