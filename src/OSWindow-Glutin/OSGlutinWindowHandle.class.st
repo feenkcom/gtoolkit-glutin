@@ -281,7 +281,7 @@ OSGlutinWindowHandle >> visitWindowResizedEvent: aWindowResizedEvent [
 
 { #category : #accessing }
 OSGlutinWindowHandle >> winitWindow [
-	<return: #WinitWindow>
+	<return: #GlutinWindowedContext>
 
 	^ self handle
 ]
