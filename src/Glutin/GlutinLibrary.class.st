@@ -26,6 +26,11 @@ GlutinLibrary class >> install [
 ]
 
 { #category : #printing }
+GlutinLibrary class >> print: aString [
+	^ self ffiCall: #(void glutin_print (String aString))
+]
+
+{ #category : #printing }
 GlutinLibrary class >> println: aString [
 	^ self ffiCall: #(void glutin_println (String aString))
 ]
