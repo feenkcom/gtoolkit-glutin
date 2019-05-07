@@ -123,18 +123,11 @@ OSGlutinWindowHandle >> title: aTitle [
 
 { #category : #'events-processing' }
 OSGlutinWindowHandle >> visitCharacterReceivedEvent: anEvent [
-	| aText osEvent |
-	
-	aText := ((#[ 0 0 0 0 ]
-		at: 1 put: anEvent byte_1;
-		at: 2 put: anEvent byte_2;
-		at: 3 put: anEvent byte_3;
-		at: 4 put: anEvent byte_4;
-		yourself) first: anEvent length) utf8Decoded.
+	| osEvent |
 		
 	osEvent := OSTextInputEvent for: osWindow.
 	osEvent
-		text: aText;
+		text: anEvent text;
 		position: cursorPosition.
 
 	^ osEvent deliver

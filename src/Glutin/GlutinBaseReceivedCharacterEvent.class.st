@@ -99,3 +99,13 @@ GlutinBaseReceivedCharacterEvent >> length: anObject [
 	"This method was automatically generated"
 	^handle platformSizeTAt: OFFSET_LENGTH put: anObject
 ]
+
+{ #category : #accessing }
+GlutinBaseReceivedCharacterEvent >> text [
+	^ ((#[ 0 0 0 0 ]
+		at: 1 put: self byte_1;
+		at: 2 put: self byte_2;
+		at: 3 put: self byte_3;
+		at: 4 put: self byte_4;
+		yourself) first: self length) utf8Decoded
+]
