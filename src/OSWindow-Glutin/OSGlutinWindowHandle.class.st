@@ -3,7 +3,8 @@ Class {
 	#superclass : #OSWindowHandle,
 	#instVars : [
 		'handle',
-		'cursorPosition'
+		'cursorPosition',
+		'lastModifiers'
 	],
 	#category : #'OSWindow-Glutin'
 }
@@ -123,19 +124,14 @@ OSGlutinWindowHandle >> title: aTitle [
 
 { #category : #'events-processing' }
 OSGlutinWindowHandle >> visitCharacterReceivedEvent: anEvent [
-	| aText osEvent |
-	
-	aText := ((#[ 0 0 0 0 ]
-		at: 1 put: anEvent byte_1;
-		at: 2 put: anEvent byte_2;
-		at: 3 put: anEvent byte_3;
-		at: 4 put: anEvent byte_4;
-		yourself) first: anEvent length) utf8Decoded.
+	| osEvent |
 		
 	osEvent := OSTextInputEvent for: osWindow.
 	osEvent
-		text: aText;
+		text: anEvent text;
 		position: cursorPosition.
+		
+	lastModifiers ifNotNil: [ osEvent modifiers: lastModifiers ].
 
 	^ osEvent deliver
 ]
@@ -157,6 +153,8 @@ OSGlutinWindowHandle >> visitCursorMovedEvent: aCursorMovedEvent [
 	cursorPosition := aNewCursorPosition.
 
 	self convertModifiers: aCursorMovedEvent modifiers for: osEvent modifiers.
+	lastModifiers := osEvent modifiers copy.
+
 	^ osEvent deliver
 ]
 
@@ -184,6 +182,7 @@ OSGlutinWindowHandle >> visitKeyboardInputEvent: anEvent [
 	osEvent position: cursorPosition.
 
 	self convertModifiers: anEvent modifiers for: osEvent modifiers.
+	lastModifiers := osEvent modifiers copy.
 	
 	^ osEvent deliver
 ]
@@ -217,26 +216,35 @@ OSGlutinWindowHandle >> visitMouseInputEvent: aMouseInputEvent [
 	osEvent position: cursorPosition.
 		
 	self convertModifiers: aMouseInputEvent modifiers for: osEvent modifiers.
+	lastModifiers := osEvent modifiers copy.
 
 	^ osEvent deliver.
 ]
 
 { #category : #'events-processing' }
 OSGlutinWindowHandle >> visitMouseWheelEvent: aMouseWheelEvent [
-	| osEvent aDelta |
+	| osEvent aDelta aScrollDistance |
 
 	cursorPosition
 		ifNil: [ ^ self ].
 		
 	aDelta := aMouseWheelEvent delta.
+	
+	aScrollDistance := aDelta type = WinitEventMouseScrollDeltaType PixelDelta
+		ifTrue: [ aDelta x negated @ aDelta y ]
+		ifFalse: [ aDelta type = WinitEventMouseScrollDeltaType LineDelta
+			ifTrue: [ (aDelta x negated @ aDelta y) * (GlutinLibrary mouseWheelScrollSpeed) ]
+			ifFalse: [ 0@0 ] ].
 
 	osEvent := OSMouseWheelEvent for: osWindow.
 	osEvent
 		position: cursorPosition;
-		scrollHorizontal: (aDelta x negated);
-		scrollVertical: (aDelta y).
+		scrollHorizontal: aScrollDistance x;
+		scrollVertical: aScrollDistance y.
 			
 	self convertModifiers: aMouseWheelEvent modifiers for: osEvent modifiers.
+	lastModifiers := osEvent modifiers copy.
+
 	^ osEvent deliver
 ]
 

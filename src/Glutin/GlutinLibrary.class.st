@@ -1,6 +1,9 @@
 Class {
 	#name : #GlutinLibrary,
 	#superclass : #FFILibrary,
+	#classInstVars : [
+		'MouseWheelScrollSpeed'
+	],
 	#category : #Glutin
 }
 
@@ -23,6 +26,41 @@ GlutinLibrary class >> install [
 	installer works: [ GlutinLibrary uniqueInstance hasModule ].
 
 	installer run
+]
+
+{ #category : #settings }
+GlutinLibrary class >> mouseWheelScrollSpeed [
+	"An additional speed factor applied to mouse wheel scroll delta"
+	<return: #Number>
+
+	^ MouseWheelScrollSpeed ifNil: [ 7 ]
+]
+
+{ #category : #settings }
+GlutinLibrary class >> mouseWheelScrollSpeed: aNumber [
+	MouseWheelScrollSpeed := aNumber
+]
+
+{ #category : #settings }
+GlutinLibrary class >> preferencesGroup [
+	^ 	#appearance
+]
+
+{ #category : #settings }
+GlutinLibrary class >> preferencesOn: aBuilder [
+	<systemsettings>
+	(aBuilder group: #Glutin)
+		label: 'Glutin';
+		description: 'Glutin settings';
+		parent: self preferencesGroup;
+		with: [
+			(aBuilder range: #mouseWheelScrollSpeed)
+				parent: #Glutin;
+				order: 1;
+				label: 'Scroll wheel speed';
+				description: 'Specify mouse wheel scroll speed factor for Glutin windows';
+				target: self;
+				range: (0.3 to: 20 by: 0.1) ]
 ]
 
 { #category : #printing }

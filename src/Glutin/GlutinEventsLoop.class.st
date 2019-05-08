@@ -22,7 +22,9 @@ GlutinEventsLoop class >> ffiLibraryName [
 GlutinEventsLoop class >> filteredEvents: theEvents [
 	"Filter unnecessary duplicated events that we don't have to process within same frame,
 	for example window resize event, window refresh events and mouse move events"
-	| groupedByWindow |
+	| groupedByWindow toBeRemoved |
+	
+	toBeRemoved := Set new.
 	
 	groupedByWindow := theEvents groupedBy: [ :anEvent | anEvent window_id asInteger ].
 	groupedByWindow := groupedByWindow collect: [ :aCollectionOfEvents |
@@ -31,17 +33,47 @@ GlutinEventsLoop class >> filteredEvents: theEvents [
 		self uniqueEventTypes do: [ :anEventType |
 			groupedByEventType
 				at: anEventType
-				ifPresent: [ :theEventsOfEachType |
-					groupedByEventType
-						at: anEventType
-						put: ({ theEventsOfEachType last }) ] ].	
+				ifPresent: [ :theEventsOfEachType | toBeRemoved addAll: theEventsOfEachType allButLast ] ].
 		groupedByEventType values ].
-	^ groupedByWindow values flattened
+
+	^ self orderedEvents: (theEvents copyWithoutAll: toBeRemoved)
 ]
 
 { #category : #'instance creation' }
 GlutinEventsLoop class >> new [
 	^ self create
+]
+
+{ #category : #private }
+GlutinEventsLoop class >> orderedEvents: theEvents [
+	| keyEvents groupedByKey toBeRemoved toBeSwapped theOrderedEvents |
+	"I fix the order of some events"
+	
+	theOrderedEvents := theEvents asArray copy.
+
+	toBeRemoved := Set new.
+	toBeSwapped := OrderedCollection new.
+
+	keyEvents := theEvents select: [ :each | each event_type = WinitEventType WindowEventKeyboardInput ].
+	groupedByKey := keyEvents groupedBy: [ :each | each keyboard_input virtual_keycode ] having: [ :each | each size > 1 ].
+
+	groupedByKey do: [ :eachKeyGroup |
+		| groupedByState |
+		groupedByState := eachKeyGroup groupedBy: [ :each | each keyboard_input state ].
+		groupedByState do: [ :each | toBeRemoved addAll: each allButFirst ].
+		groupedByState := groupedByState collect: [ :each | each first ].
+		
+		(groupedByState keys size > 1 and: [ groupedByState keys first = GlutinEventInputElementState Released ])
+			ifTrue: [ toBeSwapped add: (groupedByState values first -> groupedByState values second) ] ].
+
+	toBeSwapped do: [ :eachPair |
+		| oneIndex anotherIndex |
+		
+		oneIndex := theOrderedEvents indexOf: eachPair key.
+		anotherIndex := theOrderedEvents indexOf: eachPair value.
+		theOrderedEvents swap: oneIndex with: anotherIndex ].
+
+	^ theOrderedEvents copyWithoutAll: toBeRemoved
 ]
 
 { #category : #'private - ffi' }
@@ -87,8 +119,8 @@ GlutinEventsLoop >> fetchEvents: aBlock [
 		fromHandle: theEventsBuffer data getHandle
 		type: GlutinBaseEvent
 		size: theEventsBuffer length.
-		
-	filteredEvents := self class filteredEvents: theEvents asArray.
+	
+	filteredEvents := self class filteredEvents: theEvents asArray.	
 	filteredEvents do: [ :anEvent | aBlock value: anEvent ].
 	
 	self primFreeEvents: theEventsBuffer getHandle
@@ -96,7 +128,6 @@ GlutinEventsLoop >> fetchEvents: aBlock [
 
 { #category : #initialization }
 GlutinEventsLoop >> initialize [
-	
 ]
 
 { #category : #'private - ffi' }
