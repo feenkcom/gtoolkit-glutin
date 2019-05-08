@@ -51,6 +51,20 @@ GlutinGL >> bind_vertex_array: vao [
 ]
 
 { #category : #'generated bindings' }
+GlutinGL >> clear: aBufferMask [
+	^ self ffiCall: #( void glutin_gl_clear (
+		GlutinGL self,
+		GLbitfield aBufferMask) )
+]
+
+{ #category : #'generated bindings' }
+GlutinGL >> clear_colorR: r g: g b: b a: a [
+	^ self ffiCall: #( void glutin_gl_clear_color (
+		GlutinGL self,
+		float32 r, float32 g, float32 b, float32 a ) )
+]
+
+{ #category : #'generated bindings' }
 GlutinGL >> compile_shader: shader [
 	^ self ffiCall: #( void glutin_gl_compile_shader ( GlutinGL self, GLuint shader ) )
 ]
