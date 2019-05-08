@@ -3,7 +3,8 @@ Class {
 	#superclass : #OSWindowHandle,
 	#instVars : [
 		'handle',
-		'cursorPosition'
+		'cursorPosition',
+		'lastModifiers'
 	],
 	#category : #'OSWindow-Glutin'
 }
@@ -129,6 +130,8 @@ OSGlutinWindowHandle >> visitCharacterReceivedEvent: anEvent [
 	osEvent
 		text: anEvent text;
 		position: cursorPosition.
+		
+	lastModifiers ifNotNil: [ osEvent modifiers: lastModifiers ].
 
 	^ osEvent deliver
 ]
@@ -150,6 +153,8 @@ OSGlutinWindowHandle >> visitCursorMovedEvent: aCursorMovedEvent [
 	cursorPosition := aNewCursorPosition.
 
 	self convertModifiers: aCursorMovedEvent modifiers for: osEvent modifiers.
+	lastModifiers := osEvent modifiers copy.
+
 	^ osEvent deliver
 ]
 
@@ -177,6 +182,7 @@ OSGlutinWindowHandle >> visitKeyboardInputEvent: anEvent [
 	osEvent position: cursorPosition.
 
 	self convertModifiers: anEvent modifiers for: osEvent modifiers.
+	lastModifiers := osEvent modifiers copy.
 	
 	^ osEvent deliver
 ]
@@ -210,6 +216,7 @@ OSGlutinWindowHandle >> visitMouseInputEvent: aMouseInputEvent [
 	osEvent position: cursorPosition.
 		
 	self convertModifiers: aMouseInputEvent modifiers for: osEvent modifiers.
+	lastModifiers := osEvent modifiers copy.
 
 	^ osEvent deliver.
 ]
@@ -236,6 +243,8 @@ OSGlutinWindowHandle >> visitMouseWheelEvent: aMouseWheelEvent [
 		scrollVertical: aScrollDistance y.
 			
 	self convertModifiers: aMouseWheelEvent modifiers for: osEvent modifiers.
+	lastModifiers := osEvent modifiers copy.
+
 	^ osEvent deliver
 ]
 
