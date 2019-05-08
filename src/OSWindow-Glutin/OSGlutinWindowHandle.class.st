@@ -226,7 +226,7 @@ OSGlutinWindowHandle >> visitMouseWheelEvent: aMouseWheelEvent [
 	aScrollDistance := aDelta type = WinitEventMouseScrollDeltaType PixelDelta
 		ifTrue: [ aDelta x negated @ aDelta y ]
 		ifFalse: [ aDelta type = WinitEventMouseScrollDeltaType LineDelta
-			ifTrue: [ (aDelta x negated @ aDelta y) * 7 ]
+			ifTrue: [ (aDelta x negated @ aDelta y) * (GlutinLibrary mouseWheelScrollSpeed) ]
 			ifFalse: [ 0@0 ] ].
 
 	osEvent := OSMouseWheelEvent for: osWindow.
