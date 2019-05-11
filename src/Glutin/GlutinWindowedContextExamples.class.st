@@ -27,14 +27,14 @@ GlutinWindowedContextExamples >> liveWindow [
 		[
 		aWindowedContext makeCurrent.
 		aWindowedContext eventsLoop fetchEvents: [ :anEvent |
-			anEvent mapped logCr.
 			anEvent mapped class = WinitBaseWindowCloseRequested
 				ifTrue: [
 					aWindowedContext release.
 					isRunning := false.
-				].
-		].
-		isRunning ifTrue: [ aWindowedContext swapBuffers ].
+					aProcess terminate ]. ].
+		
+		aWindowedContext swapBuffers.
+		
 		16 milliSeconds wait.
 		isRunning
 	] whileTrue ] fork. 

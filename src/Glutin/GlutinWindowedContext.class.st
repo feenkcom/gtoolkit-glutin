@@ -44,6 +44,15 @@ GlutinWindowedContext class >> create: anEventsLoop windowBuilder: aWindowBuilde
 	^ aWindowedContext
 ]
 
+{ #category : #'instance creation' }
+GlutinWindowedContext class >> default [
+	<return: #GlutinWindowedContext>
+	
+	^ self
+		create: GlutinEventsLoop new
+		windowBuilder: GlutinWindowBuilder new
+]
+
 { #category : #'private - ffi' }
 GlutinWindowedContext class >> primCreate: anEventsLoop windowBuilder: aWindowBuilder contextBuilder: aContextBuilder [
 	^ self ffiCall: #(GlutinWindowedContext glutin_create_windowed_context(

@@ -26,16 +26,7 @@ OSWebrenderRenderer >> checkThread [
 
 { #category : #misc }
 OSWebrenderRenderer >> createContext [
-	self onRenderThreadBlocking: [
-		| aState |
-		
-		aState := window winitWindow initWebrender.
-		
-		api := aState api.
-		renderer := aState renderer.
-		documentId := api addDocument: self canvasExtent layer: 0.
-		pipelineId := WebrenderPipelineId id: 0@0.
-		epoch := 0 ]
+	
 ]
 
 { #category : #drawing }
