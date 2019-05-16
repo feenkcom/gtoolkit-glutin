@@ -77,8 +77,7 @@ GlutinOpenGLExamples >> clearScreenBlue [
 	canvas flush.
 	
 	gl
-		tex_image_2d_target: GL_TEXTURE_2D
-		level: 0
+		tex_image_2d_level: 0
 		internalformat: GL_RGBA
 		width: extent x
 		height: extent y

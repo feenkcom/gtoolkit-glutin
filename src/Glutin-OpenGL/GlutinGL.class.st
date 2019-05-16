@@ -192,7 +192,7 @@ GlutinGL >> shader_source: shader string: source [
 ]
 
 { #category : #'generated bindings' }
-GlutinGL >> tex_image_2d_target: target level: level internalformat: internalformat width: width height: height border: border format: format type: type pixels: pixels length: length [
+GlutinGL >> tex_image_2d_level: level internalformat: internalformat width: width height: height border: border format: format type: type pixels: pixels length: length [
 	^ self ffiCall: #( void glutin_gl_tex_image_2d (
 		GlutinGL self,
 		GLint level,
@@ -213,6 +213,21 @@ GlutinGL >> tex_parameter_i_target: target name: pname param: param [
 		GLenum target,
 		GLenum pname,
 		GLint param) )
+]
+
+{ #category : #'generated bindings' }
+GlutinGL >> tex_sub_image_2d_level: level xoffset: xoffset yoffset: yoffset width: width height: height format: format type: type pixels: pixels length: length [
+	^ self ffiCall: #( void glutin_gl_tex_sub_image_2d (
+		GlutinGL self,
+		GLint level,
+		GLint xoffset,
+		GLint yoffset,
+		GLsizei width,
+		GLsizei height,
+		GLenum format,
+		GLenum type,
+		uint8* pixels,
+		uint32 length) )
 ]
 
 { #category : #'generated bindings' }
