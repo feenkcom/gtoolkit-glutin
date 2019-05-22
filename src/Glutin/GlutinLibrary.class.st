@@ -33,7 +33,7 @@ GlutinLibrary class >> mouseWheelScrollSpeed [
 	"An additional speed factor applied to mouse wheel scroll delta"
 	<return: #Number>
 
-	^ MouseWheelScrollSpeed ifNil: [ 7 ]
+	^ MouseWheelScrollSpeed ifNil: [ OSPlatform current glutinDefaultMouseWheelScrollSpeed ]
 ]
 
 { #category : #settings }
