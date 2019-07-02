@@ -59,12 +59,12 @@ OSGlutinDriver >> createWindowWithAttributes: anOSWindowAttributes osWindow: osW
 			title: anOSWindowAttributes title;
 			extent: anOSWindowAttributes extent;
 			withDecorations: anOSWindowAttributes borderless not;
-			withTransparency: false;
+			withTransparency: anOSWindowAttributes borderless;
 			withResizable: anOSWindowAttributes resizable;
 			withMaximized: anOSWindowAttributes maximized.
 		
 		handle := GlutinWindowedContext
-			create: EventsLoop 
+			create: EventsLoop
 			windowBuilder: windowBuilder.
 			
 		window := OSGlutinWindowHandle newWithHandle: handle.
