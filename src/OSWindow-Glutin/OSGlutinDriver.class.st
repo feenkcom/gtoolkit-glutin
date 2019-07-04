@@ -59,7 +59,7 @@ OSGlutinDriver >> createWindowWithAttributes: anOSWindowAttributes osWindow: osW
 			title: anOSWindowAttributes title;
 			extent: anOSWindowAttributes extent;
 			withDecorations: anOSWindowAttributes borderless not;
-			withTransparency: false;
+			withTransparency: anOSWindowAttributes borderless;
 			withResizable: anOSWindowAttributes resizable;
 			withMaximized: anOSWindowAttributes maximized.
 		
