@@ -46,7 +46,7 @@ GlutinContextBuilder class >> osx [
 		withMultisampling: 0;
 		withDepthBuffer: 24;
 		withStencilBuffer: 8;
-		withPixelFormatColor: 24 alpha: 0;
+		withPixelFormatColor: 24 alpha: 8;
 		withSrgb: false;
 		withVsync: false
 ]
