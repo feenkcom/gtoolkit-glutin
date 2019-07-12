@@ -82,6 +82,14 @@ OSGlutinWindowHandle >> isValid [
 	^ handle isNotNil and: [ handle isValid ]
 ]
 
+{ #category : #factory }
+OSGlutinWindowHandle >> newFormRenderer: form [
+	^ renderer := OSGlutinFormRenderer new 
+		form: form;
+		window: self;
+		yourself
+]
+
 { #category : #accessing }
 OSGlutinWindowHandle >> platformSpecificHandle [
 	^ nil
