@@ -277,6 +277,14 @@ OSGlutinWindowHandle >> visitWindowDestroyed: aWindowDestroyedEvent [
 ]
 
 { #category : #'events-processing' }
+OSGlutinWindowHandle >> visitWindowFocusedEvent: aWindowFocusedEvent [
+
+	^ (aWindowFocusedEvent is_focused
+		ifTrue: [ OSWindowFocusInEvent for: osWindow ]
+		ifFalse: [ OSWindowFocusOutEvent for: osWindow ]) deliver
+]
+
+{ #category : #'events-processing' }
 OSGlutinWindowHandle >> visitWindowMovedEvent: aWindowMovedEvent [
 	
 ]

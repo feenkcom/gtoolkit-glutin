@@ -9,6 +9,7 @@ Class {
 		'OFFSET_MOUSE_WHEEL',
 		'OFFSET_RECEIVED_CHARACTER',
 		'OFFSET_TOUCH',
+		'OFFSET_WINDOW_FOCUSED',
 		'OFFSET_WINDOW_ID',
 		'OFFSET_WINDOW_MOVED',
 		'OFFSET_WINDOW_RESIZED'
@@ -40,6 +41,7 @@ GlutinBaseEvent class >> fieldsDesc [
 		GlutinBaseReceivedCharacterEvent received_character
 		WinitBaseWindowResizedEvent window_resized
 		WinitBaseWindowMovedEvent window_moved
+		GlutinBaseWindowFocusedEvent window_focused
  	)
 ]
 
@@ -146,6 +148,18 @@ GlutinBaseEvent >> touch [
 GlutinBaseEvent >> touch: anObject [
 	"This method was automatically generated"
 	handle structAt: OFFSET_TOUCH put: anObject getHandle length: WinitBaseTouchEvent byteSize
+]
+
+{ #category : #'accessing structure variables' }
+GlutinBaseEvent >> window_focused [
+	"This method was automatically generated"
+	^ GlutinBaseWindowFocusedEvent fromHandle: (handle referenceStructAt: OFFSET_WINDOW_FOCUSED length: GlutinBaseWindowFocusedEvent byteSize)
+]
+
+{ #category : #'accessing structure variables' }
+GlutinBaseEvent >> window_focused: anObject [
+	"This method was automatically generated"
+	handle structAt: OFFSET_WINDOW_FOCUSED put: anObject getHandle length: GlutinBaseWindowFocusedEvent byteSize
 ]
 
 { #category : #'accessing structure variables' }
