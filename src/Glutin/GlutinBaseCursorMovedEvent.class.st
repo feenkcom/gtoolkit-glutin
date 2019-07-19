@@ -1,6 +1,6 @@
 Class {
 	#name : #GlutinBaseCursorMovedEvent,
-	#superclass : #WinitMappedEvent,
+	#superclass : #GlutinWindowEvent,
 	#classVars : [
 		'OFFSET_DEVICE_ID',
 		'OFFSET_MODIFIERS',

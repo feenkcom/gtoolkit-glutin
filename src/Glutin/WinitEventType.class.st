@@ -2,6 +2,11 @@ Class {
 	#name : #WinitEventType,
 	#superclass : #WinitEnum,
 	#classVars : [
+		'EventsCleared',
+		'LoopDestroyed',
+		'NewEvents',
+		'Resumed',
+		'Suspended',
 		'Unknown',
 		'WindowEventAxisMotion',
 		'WindowEventCloseRequested',
@@ -26,6 +31,36 @@ Class {
 	],
 	#category : #'Glutin-Enums'
 }
+
+{ #category : #'accessing enum' }
+WinitEventType class >> EventsCleared [
+	"This method was automatically generated"
+	^ EventsCleared
+]
+
+{ #category : #'accessing enum' }
+WinitEventType class >> LoopDestroyed [
+	"This method was automatically generated"
+	^ LoopDestroyed
+]
+
+{ #category : #'accessing enum' }
+WinitEventType class >> NewEvents [
+	"This method was automatically generated"
+	^ NewEvents
+]
+
+{ #category : #'accessing enum' }
+WinitEventType class >> Resumed [
+	"This method was automatically generated"
+	^ Resumed
+]
+
+{ #category : #'accessing enum' }
+WinitEventType class >> Suspended [
+	"This method was automatically generated"
+	^ Suspended
+]
 
 { #category : #'accessing enum' }
 WinitEventType class >> Unknown [
@@ -160,27 +195,32 @@ WinitEventType class >> externalDeclaration [
 	"
 
 	^ #(
-    Unknown,
-    WindowEventResized,
-    WindowEventMoved,
-    WindowEventCloseRequested,
-    WindowEventDestroyed,
-    WindowEventDroppedFile,
-    WindowEventHoveredFile,
-    WindowEventHoveredFileCancelled,
-    WindowEventReceivedCharacter,
-    WindowEventFocused,
-    WindowEventKeyboardInput,
-    WindowEventCursorMoved,
-    WindowEventCursorEntered,
-    WindowEventCursorLeft,
-    WindowEventMouseWheel,
-    WindowEventMouseInput,
-    WindowEventTouchpadPressure,
-    WindowEventAxisMotion,
-    WindowEventRefresh,
-    WindowEventTouch,
-    WindowEventHiDpiFactorChanged,
+		Unknown,
+		WindowEventResized,
+		WindowEventMoved,
+		WindowEventCloseRequested,
+		WindowEventDestroyed,
+		WindowEventDroppedFile,
+		WindowEventHoveredFile,
+		WindowEventHoveredFileCancelled,
+		WindowEventReceivedCharacter,
+		WindowEventFocused,
+		WindowEventKeyboardInput,
+		WindowEventCursorMoved,
+		WindowEventCursorEntered,
+		WindowEventCursorLeft,
+		WindowEventMouseWheel,
+		WindowEventMouseInput,
+		WindowEventTouchpadPressure,
+		WindowEventAxisMotion,
+		WindowEventRefresh,
+		WindowEventTouch,
+		WindowEventHiDpiFactorChanged,
+		NewEvents,
+		EventsCleared,
+		LoopDestroyed,
+		Suspended,
+		Resumed,
 	)
 ]
 

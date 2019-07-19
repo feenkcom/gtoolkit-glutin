@@ -1,20 +1,20 @@
 Class {
-	#name : #WinitMappedEvent,
+	#name : #GlutinMappedEvent,
 	#superclass : #FFIExternalStructure,
 	#category : #'Glutin-Events'
 }
 
 { #category : #'event type' }
-WinitMappedEvent class >> eventType [
+GlutinMappedEvent class >> eventType [
 	^ nil
 ]
 
 { #category : #'event type' }
-WinitMappedEvent class >> fromBaseEvent: anEvent [
+GlutinMappedEvent class >> fromBaseEvent: anEvent [
 	^ self subclassResponsibility
 ]
 
 { #category : #visiting }
-WinitMappedEvent >> accept: aVisitor [
+GlutinMappedEvent >> accept: aVisitor [
 	^ self subclassResponsibility
 ]

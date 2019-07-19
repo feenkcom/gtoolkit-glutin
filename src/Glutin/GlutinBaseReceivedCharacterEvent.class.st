@@ -1,6 +1,6 @@
 Class {
 	#name : #GlutinBaseReceivedCharacterEvent,
-	#superclass : #WinitMappedEvent,
+	#superclass : #GlutinWindowEvent,
 	#classVars : [
 		'OFFSET_BYTE_1',
 		'OFFSET_BYTE_2',

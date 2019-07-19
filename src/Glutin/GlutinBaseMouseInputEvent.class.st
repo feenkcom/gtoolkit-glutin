@@ -1,6 +1,6 @@
 Class {
 	#name : #GlutinBaseMouseInputEvent,
-	#superclass : #WinitMappedEvent,
+	#superclass : #GlutinWindowEvent,
 	#classVars : [
 		'OFFSET_BUTTON',
 		'OFFSET_DEVICE_ID',

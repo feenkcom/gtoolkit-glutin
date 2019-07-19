@@ -1,6 +1,6 @@
 Class {
-	#name : #WinitBaseTouchEvent,
-	#superclass : #WinitMappedEvent,
+	#name : #GlutinBaseTouchEvent,
+	#superclass : #GlutinWindowEvent,
 	#classVars : [
 		'OFFSET_DEVICE_ID',
 		'OFFSET_ID',
@@ -12,12 +12,12 @@ Class {
 }
 
 { #category : #'event type' }
-WinitBaseTouchEvent class >> eventType [
+GlutinBaseTouchEvent class >> eventType [
 	^ WinitEventType WindowEventTouch
 ]
 
 { #category : #'field definition' }
-WinitBaseTouchEvent class >> fieldsDesc [
+GlutinBaseTouchEvent class >> fieldsDesc [
 	"
 	self rebuildFieldAccessors
 	"
@@ -31,71 +31,71 @@ WinitBaseTouchEvent class >> fieldsDesc [
 ]
 
 { #category : #'event type' }
-WinitBaseTouchEvent class >> fromBaseEvent: anEvent [
+GlutinBaseTouchEvent class >> fromBaseEvent: anEvent [
 	^ anEvent touch
 ]
 
 { #category : #visiting }
-WinitBaseTouchEvent >> accept: aVisitor [
+GlutinBaseTouchEvent >> accept: aVisitor [
 	^ aVisitor visitTouchEvent: self
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseTouchEvent >> device_id [
+GlutinBaseTouchEvent >> device_id [
 	"This method was automatically generated"
 	^handle signedLongLongAt: OFFSET_DEVICE_ID
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseTouchEvent >> device_id: anObject [
+GlutinBaseTouchEvent >> device_id: anObject [
 	"This method was automatically generated"
 	handle signedLongLongAt: OFFSET_DEVICE_ID put: anObject
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseTouchEvent >> id [
+GlutinBaseTouchEvent >> id [
 	"This method was automatically generated"
 	^handle unsignedLongLongAt: OFFSET_ID
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseTouchEvent >> id: anObject [
+GlutinBaseTouchEvent >> id: anObject [
 	"This method was automatically generated"
 	handle unsignedLongLongAt: OFFSET_ID put: anObject
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseTouchEvent >> phase [
+GlutinBaseTouchEvent >> phase [
 	"This method was automatically generated"
 	^WinitEventTouchPhase fromInteger: (handle unsignedLongAt: OFFSET_PHASE)
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseTouchEvent >> phase: anObject [
+GlutinBaseTouchEvent >> phase: anObject [
 	"This method was automatically generated"
 	handle unsignedLongAt: OFFSET_PHASE put: anObject value
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseTouchEvent >> x [
+GlutinBaseTouchEvent >> x [
 	"This method was automatically generated"
 	^handle doubleAt: OFFSET_X
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseTouchEvent >> x: anObject [
+GlutinBaseTouchEvent >> x: anObject [
 	"This method was automatically generated"
 	handle doubleAt: OFFSET_X put: anObject
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseTouchEvent >> y [
+GlutinBaseTouchEvent >> y [
 	"This method was automatically generated"
 	^handle doubleAt: OFFSET_Y
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseTouchEvent >> y: anObject [
+GlutinBaseTouchEvent >> y: anObject [
 	"This method was automatically generated"
 	handle doubleAt: OFFSET_Y put: anObject
 ]

@@ -27,11 +27,39 @@ GlutinWindowedContextExamples >> liveWindow [
 		[
 		aWindowedContext makeCurrent.
 		aWindowedContext eventsLoop fetchEvents: [ :anEvent |
-			anEvent mapped class = WinitBaseWindowCloseRequested
+			anEvent mapped class = GlutinBaseWindowCloseRequested
 				ifTrue: [
 					aWindowedContext release.
 					isRunning := false.
 					aProcess terminate ]. ].
+		
+		aWindowedContext swapBuffers.
+		
+		16 milliSeconds wait.
+		isRunning
+	] whileTrue ] fork. 
+	
+	^ aWindowedContext
+]
+
+{ #category : #examples }
+GlutinWindowedContextExamples >> liveWindowRunForever [
+	<gtExample>
+	| aWindowedContext aProcess |
+
+	aWindowedContext := self windowedContext.
+	aProcess := [
+		| isRunning |
+		isRunning := true.
+		[
+		aWindowedContext makeCurrent.
+		aWindowedContext eventsLoop run: [ :anEvent |
+			NonInteractiveTranscript stdout show: anEvent mapped; cr.
+			anEvent mapped class = GlutinBaseWindowCloseRequested
+				ifTrue: [
+					aWindowedContext release.
+					isRunning := false.
+					aProcess terminate ] ].
 		
 		aWindowedContext swapBuffers.
 		

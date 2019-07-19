@@ -150,6 +150,11 @@ GlutinEventsLoop >> primGetPrimaryMonitor [
 	^ self ffiCall: #(GlutinMonitorId glutin_events_loop_get_primary_monitor (GlutinEventsLoop self))
 ]
 
+{ #category : #'private - ffi' }
+GlutinEventsLoop >> primRunForever: aCallback [
+	^ self ffiCall: #(void glutin_events_loop_run_forever(GlutinEventsLoop self, GlutinEventCallback aCallback))
+]
+
 { #category : #accessing }
 GlutinEventsLoop >> primaryMonitor [
 	<return: #GlutinMonitorId>
@@ -160,4 +165,17 @@ GlutinEventsLoop >> primaryMonitor [
 	aMonitorId eventsLoop: self.
 	
 	^ aMonitorId
+]
+
+{ #category : #events }
+GlutinEventsLoop >> run: aBlock [
+	| aCallback |
+
+	self isNull
+		ifTrue: [ ^ self ].
+
+	aCallback := GlutinEventCallback on: [ :anAddress |
+		aBlock value: (GlutinBaseEvent fromHandle: anAddress).
+		GlutinControlFlow Poll ].
+	self primRunForever: aCallback
 ]

@@ -1,6 +1,6 @@
 Class {
-	#name : #WinitBaseMouseWheelEvent,
-	#superclass : #WinitMappedEvent,
+	#name : #GlutinBaseMouseWheelEvent,
+	#superclass : #GlutinWindowEvent,
 	#classVars : [
 		'OFFSET_DELTA',
 		'OFFSET_DEVICE_ID',
@@ -11,12 +11,12 @@ Class {
 }
 
 { #category : #'event type' }
-WinitBaseMouseWheelEvent class >> eventType [
+GlutinBaseMouseWheelEvent class >> eventType [
 	^ WinitEventType WindowEventMouseWheel
 ]
 
 { #category : #'field definition' }
-WinitBaseMouseWheelEvent class >> fieldsDesc [
+GlutinBaseMouseWheelEvent class >> fieldsDesc [
 	"
 	self rebuildFieldAccessors
 	"
@@ -29,59 +29,59 @@ WinitBaseMouseWheelEvent class >> fieldsDesc [
 ]
 
 { #category : #'event type' }
-WinitBaseMouseWheelEvent class >> fromBaseEvent: anEvent [
+GlutinBaseMouseWheelEvent class >> fromBaseEvent: anEvent [
 	^ anEvent mouse_wheel
 ]
 
 { #category : #visiting }
-WinitBaseMouseWheelEvent >> accept: aVisitor [
+GlutinBaseMouseWheelEvent >> accept: aVisitor [
 	^ aVisitor visitMouseWheelEvent: self
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseMouseWheelEvent >> delta [
+GlutinBaseMouseWheelEvent >> delta [
 	"This method was automatically generated"
 	^ WinitMouseScrollDelta fromHandle: (handle referenceStructAt: OFFSET_DELTA length: WinitMouseScrollDelta byteSize)
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseMouseWheelEvent >> delta: anObject [
+GlutinBaseMouseWheelEvent >> delta: anObject [
 	"This method was automatically generated"
 	handle structAt: OFFSET_DELTA put: anObject getHandle length: WinitMouseScrollDelta byteSize
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseMouseWheelEvent >> device_id [
+GlutinBaseMouseWheelEvent >> device_id [
 	"This method was automatically generated"
 	^handle signedLongLongAt: OFFSET_DEVICE_ID
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseMouseWheelEvent >> device_id: anObject [
+GlutinBaseMouseWheelEvent >> device_id: anObject [
 	"This method was automatically generated"
 	handle signedLongLongAt: OFFSET_DEVICE_ID put: anObject
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseMouseWheelEvent >> modifiers [
+GlutinBaseMouseWheelEvent >> modifiers [
 	"This method was automatically generated"
 	^ GlutinEventModifiersState fromHandle: (handle referenceStructAt: OFFSET_MODIFIERS length: GlutinEventModifiersState byteSize)
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseMouseWheelEvent >> modifiers: anObject [
+GlutinBaseMouseWheelEvent >> modifiers: anObject [
 	"This method was automatically generated"
 	handle structAt: OFFSET_MODIFIERS put: anObject getHandle length: GlutinEventModifiersState byteSize
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseMouseWheelEvent >> phase [
+GlutinBaseMouseWheelEvent >> phase [
 	"This method was automatically generated"
 	^WinitEventTouchPhase fromInteger: (handle unsignedLongAt: OFFSET_PHASE)
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseMouseWheelEvent >> phase: anObject [
+GlutinBaseMouseWheelEvent >> phase: anObject [
 	"This method was automatically generated"
 	handle unsignedLongAt: OFFSET_PHASE put: anObject value
 ]

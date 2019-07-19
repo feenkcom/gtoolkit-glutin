@@ -1,6 +1,6 @@
 Class {
-	#name : #WinitUnknownEvent,
-	#superclass : #WinitMappedEvent,
+	#name : #GlutinUnknownEvent,
+	#superclass : #GlutinMappedEvent,
 	#instVars : [
 		'baseEvent'
 	],
@@ -8,21 +8,21 @@ Class {
 }
 
 { #category : #'event type' }
-WinitUnknownEvent class >> fromBaseEvent: anEvent [
+GlutinUnknownEvent class >> fromBaseEvent: anEvent [
 	^ self new baseEvent: anEvent
 ]
 
 { #category : #visiting }
-WinitUnknownEvent >> accept: aVisitor [
+GlutinUnknownEvent >> accept: aVisitor [
 	^ aVisitor visitUnknownEvent: self
 ]
 
 { #category : #accessing }
-WinitUnknownEvent >> baseEvent [
+GlutinUnknownEvent >> baseEvent [
 	^ baseEvent
 ]
 
 { #category : #accessing }
-WinitUnknownEvent >> baseEvent: anObject [
+GlutinUnknownEvent >> baseEvent: anObject [
 	baseEvent := anObject
 ]

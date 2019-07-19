@@ -1,6 +1,6 @@
 Class {
-	#name : #WinitBaseWindowMovedEvent,
-	#superclass : #WinitMappedEvent,
+	#name : #GlutinBaseWindowMovedEvent,
+	#superclass : #GlutinWindowEvent,
 	#classVars : [
 		'OFFSET_X',
 		'OFFSET_Y'
@@ -9,12 +9,12 @@ Class {
 }
 
 { #category : #'event type' }
-WinitBaseWindowMovedEvent class >> eventType [
+GlutinBaseWindowMovedEvent class >> eventType [
 	^ WinitEventType WindowEventMoved
 ]
 
 { #category : #'field definition' }
-WinitBaseWindowMovedEvent class >> fieldsDesc [
+GlutinBaseWindowMovedEvent class >> fieldsDesc [
 	"
 	self rebuildFieldAccessors
 	"
@@ -25,35 +25,35 @@ WinitBaseWindowMovedEvent class >> fieldsDesc [
 ]
 
 { #category : #'event type' }
-WinitBaseWindowMovedEvent class >> fromBaseEvent: anEvent [
+GlutinBaseWindowMovedEvent class >> fromBaseEvent: anEvent [
 	^ anEvent window_moved
 ]
 
 { #category : #visiting }
-WinitBaseWindowMovedEvent >> accept: aVisitor [
+GlutinBaseWindowMovedEvent >> accept: aVisitor [
 	^ aVisitor visitWindowMovedEvent: self
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseWindowMovedEvent >> x [
+GlutinBaseWindowMovedEvent >> x [
 	"This method was automatically generated"
 	^handle doubleAt: OFFSET_X
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseWindowMovedEvent >> x: anObject [
+GlutinBaseWindowMovedEvent >> x: anObject [
 	"This method was automatically generated"
 	handle doubleAt: OFFSET_X put: anObject
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseWindowMovedEvent >> y [
+GlutinBaseWindowMovedEvent >> y [
 	"This method was automatically generated"
 	^handle doubleAt: OFFSET_Y
 ]
 
 { #category : #'accessing structure variables' }
-WinitBaseWindowMovedEvent >> y: anObject [
+GlutinBaseWindowMovedEvent >> y: anObject [
 	"This method was automatically generated"
 	handle doubleAt: OFFSET_Y put: anObject
 ]

@@ -1,6 +1,6 @@
 Class {
 	#name : #GlutinBaseWindowFocusedEvent,
-	#superclass : #WinitMappedEvent,
+	#superclass : #GlutinWindowEvent,
 	#classVars : [
 		'OFFSET_IS_FOCUSED'
 	],
