@@ -45,29 +45,27 @@ GlutinWindowedContextExamples >> liveWindow [
 { #category : #examples }
 GlutinWindowedContextExamples >> liveWindowRunForever [
 	<gtExample>
-	| aWindowedContext aProcess |
+	| aWindowedContext |
 
 	aWindowedContext := self windowedContext.
-	aProcess := [
-		| isRunning |
-		isRunning := true.
-		[
-		aWindowedContext makeCurrent.
-		aWindowedContext eventsLoop run: [ :anEvent |
-			NonInteractiveTranscript stdout show: anEvent mapped; cr.
-			anEvent mapped class = GlutinBaseWindowCloseRequested
-				ifTrue: [
-					aWindowedContext release.
-					isRunning := false.
-					aProcess terminate ] ].
+	aWindowedContext eventsLoop run: [ :anEvent |
+		| aControlFlow |
 		
-		aWindowedContext swapBuffers.
+		aControlFlow := GlutinControlFlow Poll.
 		
-		16 milliSeconds wait.
-		isRunning
-	] whileTrue ] fork. 
-	
-	^ aWindowedContext
+		anEvent mapped class = GlutinWindowResizedEvent
+			ifTrue: [ NonInteractiveTranscript stdout show: #GlutinWindowResizedEvent; cr ].
+		
+		anEvent mapped class = GlutinWindowRedrawRequestedEvent
+			ifTrue: [ NonInteractiveTranscript stdout show: #GlutinWindowRedrawRequestedEvent; cr ].
+		
+		anEvent mapped class = GlutinBaseWindowCloseRequested
+			ifTrue: [ aControlFlow := GlutinControlFlow Exit ].
+			
+		Processor yield.
+		ProcessorScheduler relinquishProcessorForMicroseconds: 1.
+		
+		aControlFlow ]
 ]
 
 { #category : #'instance creation' }

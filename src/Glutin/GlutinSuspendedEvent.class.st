@@ -9,7 +9,7 @@ Class {
 
 { #category : #'event type' }
 GlutinSuspendedEvent class >> eventType [
-	^ WinitEventType Suspended
+	^ GlutinEventType Suspended
 ]
 
 { #category : #'event type' }

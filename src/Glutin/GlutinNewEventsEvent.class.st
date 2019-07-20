@@ -9,7 +9,7 @@ Class {
 
 { #category : #'event type' }
 GlutinNewEventsEvent class >> eventType [
-	^ WinitEventType NewEvents
+	^ GlutinEventType NewEvents
 ]
 
 { #category : #'event type' }

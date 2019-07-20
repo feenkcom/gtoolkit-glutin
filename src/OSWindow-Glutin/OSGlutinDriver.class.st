@@ -47,6 +47,29 @@ OSGlutinDriver class >> reset [
 	EventsLoop := nil
 ]
 
+{ #category : #'events-processing' }
+OSGlutinDriver class >> run [
+	self ensureEventsLoop.
+
+	EventsLoop run: [ :aGlutinEvent |
+		| aMappedEvent aWindowId |
+		
+		aMappedEvent := aGlutinEvent mapped.
+		aMappedEvent isWindowEvent
+			ifTrue: [
+				aWindowId := aGlutinEvent window_id asInteger.
+				WindowsRegistry
+					at: aWindowId
+					ifPresent: [ :anOSGlutinWindowHandle |
+						anOSGlutinWindowHandle isValid
+							ifTrue: [ aMappedEvent accept: anOSGlutinWindowHandle ] ] ].
+		
+		aMappedEvent isCommonEvent
+			ifTrue: [ WindowsRegistry valuesDo: [ :anOSGlutinWindowHandle |
+				anOSGlutinWindowHandle isValid
+					ifTrue: [ aMappedEvent accept: anOSGlutinWindowHandle ] ] ] ]
+]
+
 { #category : #'window creation' }
 OSGlutinDriver >> createWindowWithAttributes: anOSWindowAttributes osWindow: osWindow [
 	| windowBuilder handle window |

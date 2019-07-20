@@ -54,7 +54,7 @@ GlutinEventsLoop class >> orderedEvents: theEvents [
 	toBeRemoved := Set new.
 	toBeSwapped := OrderedCollection new.
 
-	keyEvents := theEvents select: [ :each | each event_type = WinitEventType WindowEventKeyboardInput ].
+	keyEvents := theEvents select: [ :each | each event_type = GlutinEventType WindowEventKeyboardInput ].
 	groupedByKey := keyEvents groupedBy: [ :each | each keyboard_input virtual_keycode ] having: [ :each | each size > 1 ].
 
 	groupedByKey do: [ :eachKeyGroup |
@@ -93,10 +93,10 @@ GlutinEventsLoop class >> uniqueEventTypes [
 	"Types of events that should be unique per frame.
 	e.g. We don't need multiple window resize or refresh events"
 	^ {
-		WinitEventType WindowEventResized.
-		WinitEventType WindowEventRefresh.
-		WinitEventType WindowEventCursorMoved.
-		WinitEventType WindowEventMoved
+		GlutinEventType WindowEventResized.
+		GlutinEventType WindowEventRedrawRequested.
+		GlutinEventType WindowEventCursorMoved.
+		GlutinEventType WindowEventMoved
 	}
 ]
 
@@ -175,7 +175,11 @@ GlutinEventsLoop >> run: aBlock [
 		ifTrue: [ ^ self ].
 
 	aCallback := GlutinEventCallback on: [ :anAddress |
-		aBlock value: (GlutinBaseEvent fromHandle: anAddress).
-		GlutinControlFlow Poll ].
+		| aControlFlow |
+		aControlFlow := aBlock value: (GlutinBaseEvent fromHandle: anAddress).
+		(aControlFlow isKindOf: GlutinControlFlow)
+			ifFalse: [ aControlFlow := GlutinControlFlow Poll ].
+		aControlFlow ].
+
 	self primRunForever: aCallback
 ]

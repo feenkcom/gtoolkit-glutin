@@ -12,7 +12,7 @@ Class {
 
 { #category : #'event type' }
 GlutinBaseCursorMovedEvent class >> eventType [
-	^ WinitEventType WindowEventCursorMoved
+	^ GlutinEventType WindowEventCursorMoved
 ]
 
 { #category : #'field definition' }

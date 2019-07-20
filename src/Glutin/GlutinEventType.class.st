@@ -1,5 +1,5 @@
 Class {
-	#name : #WinitEventType,
+	#name : #GlutinEventType,
 	#superclass : #WinitEnum,
 	#classVars : [
 		'EventsCleared',
@@ -24,7 +24,7 @@ Class {
 		'WindowEventMouseWheel',
 		'WindowEventMoved',
 		'WindowEventReceivedCharacter',
-		'WindowEventRefresh',
+		'WindowEventRedrawRequested',
 		'WindowEventResized',
 		'WindowEventTouch',
 		'WindowEventTouchpadPressure'
@@ -33,163 +33,163 @@ Class {
 }
 
 { #category : #'accessing enum' }
-WinitEventType class >> EventsCleared [
+GlutinEventType class >> EventsCleared [
 	"This method was automatically generated"
 	^ EventsCleared
 ]
 
 { #category : #'accessing enum' }
-WinitEventType class >> LoopDestroyed [
+GlutinEventType class >> LoopDestroyed [
 	"This method was automatically generated"
 	^ LoopDestroyed
 ]
 
 { #category : #'accessing enum' }
-WinitEventType class >> NewEvents [
+GlutinEventType class >> NewEvents [
 	"This method was automatically generated"
 	^ NewEvents
 ]
 
 { #category : #'accessing enum' }
-WinitEventType class >> Resumed [
+GlutinEventType class >> Resumed [
 	"This method was automatically generated"
 	^ Resumed
 ]
 
 { #category : #'accessing enum' }
-WinitEventType class >> Suspended [
+GlutinEventType class >> Suspended [
 	"This method was automatically generated"
 	^ Suspended
 ]
 
 { #category : #'accessing enum' }
-WinitEventType class >> Unknown [
+GlutinEventType class >> Unknown [
 	"This method was automatically generated"
 	^ Unknown
 ]
 
 { #category : #'accessing enum' }
-WinitEventType class >> WindowEventAxisMotion [
+GlutinEventType class >> WindowEventAxisMotion [
 	"This method was automatically generated"
 	^ WindowEventAxisMotion
 ]
 
 { #category : #'accessing enum' }
-WinitEventType class >> WindowEventCloseRequested [
+GlutinEventType class >> WindowEventCloseRequested [
 	"This method was automatically generated"
 	^ WindowEventCloseRequested
 ]
 
 { #category : #'accessing enum' }
-WinitEventType class >> WindowEventCursorEntered [
+GlutinEventType class >> WindowEventCursorEntered [
 	"This method was automatically generated"
 	^ WindowEventCursorEntered
 ]
 
 { #category : #'accessing enum' }
-WinitEventType class >> WindowEventCursorLeft [
+GlutinEventType class >> WindowEventCursorLeft [
 	"This method was automatically generated"
 	^ WindowEventCursorLeft
 ]
 
 { #category : #'accessing enum' }
-WinitEventType class >> WindowEventCursorMoved [
+GlutinEventType class >> WindowEventCursorMoved [
 	"This method was automatically generated"
 	^ WindowEventCursorMoved
 ]
 
 { #category : #'accessing enum' }
-WinitEventType class >> WindowEventDestroyed [
+GlutinEventType class >> WindowEventDestroyed [
 	"This method was automatically generated"
 	^ WindowEventDestroyed
 ]
 
 { #category : #'accessing enum' }
-WinitEventType class >> WindowEventDroppedFile [
+GlutinEventType class >> WindowEventDroppedFile [
 	"This method was automatically generated"
 	^ WindowEventDroppedFile
 ]
 
 { #category : #'accessing enum' }
-WinitEventType class >> WindowEventFocused [
+GlutinEventType class >> WindowEventFocused [
 	"This method was automatically generated"
 	^ WindowEventFocused
 ]
 
 { #category : #'accessing enum' }
-WinitEventType class >> WindowEventHiDpiFactorChanged [
+GlutinEventType class >> WindowEventHiDpiFactorChanged [
 	"This method was automatically generated"
 	^ WindowEventHiDpiFactorChanged
 ]
 
 { #category : #'accessing enum' }
-WinitEventType class >> WindowEventHoveredFile [
+GlutinEventType class >> WindowEventHoveredFile [
 	"This method was automatically generated"
 	^ WindowEventHoveredFile
 ]
 
 { #category : #'accessing enum' }
-WinitEventType class >> WindowEventHoveredFileCancelled [
+GlutinEventType class >> WindowEventHoveredFileCancelled [
 	"This method was automatically generated"
 	^ WindowEventHoveredFileCancelled
 ]
 
 { #category : #'accessing enum' }
-WinitEventType class >> WindowEventKeyboardInput [
+GlutinEventType class >> WindowEventKeyboardInput [
 	"This method was automatically generated"
 	^ WindowEventKeyboardInput
 ]
 
 { #category : #'accessing enum' }
-WinitEventType class >> WindowEventMouseInput [
+GlutinEventType class >> WindowEventMouseInput [
 	"This method was automatically generated"
 	^ WindowEventMouseInput
 ]
 
 { #category : #'accessing enum' }
-WinitEventType class >> WindowEventMouseWheel [
+GlutinEventType class >> WindowEventMouseWheel [
 	"This method was automatically generated"
 	^ WindowEventMouseWheel
 ]
 
 { #category : #'accessing enum' }
-WinitEventType class >> WindowEventMoved [
+GlutinEventType class >> WindowEventMoved [
 	"This method was automatically generated"
 	^ WindowEventMoved
 ]
 
 { #category : #'accessing enum' }
-WinitEventType class >> WindowEventReceivedCharacter [
+GlutinEventType class >> WindowEventReceivedCharacter [
 	"This method was automatically generated"
 	^ WindowEventReceivedCharacter
 ]
 
 { #category : #'accessing enum' }
-WinitEventType class >> WindowEventRefresh [
+GlutinEventType class >> WindowEventRedrawRequested [
 	"This method was automatically generated"
-	^ WindowEventRefresh
+	^ WindowEventRedrawRequested
 ]
 
 { #category : #'accessing enum' }
-WinitEventType class >> WindowEventResized [
+GlutinEventType class >> WindowEventResized [
 	"This method was automatically generated"
 	^ WindowEventResized
 ]
 
 { #category : #'accessing enum' }
-WinitEventType class >> WindowEventTouch [
+GlutinEventType class >> WindowEventTouch [
 	"This method was automatically generated"
 	^ WindowEventTouch
 ]
 
 { #category : #'accessing enum' }
-WinitEventType class >> WindowEventTouchpadPressure [
+GlutinEventType class >> WindowEventTouchpadPressure [
 	"This method was automatically generated"
 	^ WindowEventTouchpadPressure
 ]
 
 { #category : #'enum declaration' }
-WinitEventType class >> externalDeclaration [
+GlutinEventType class >> externalDeclaration [
 	"
 	self rebuildEnumAccessors
 	"
@@ -213,7 +213,7 @@ WinitEventType class >> externalDeclaration [
 		WindowEventMouseInput,
 		WindowEventTouchpadPressure,
 		WindowEventAxisMotion,
-		WindowEventRefresh,
+		WindowEventRedrawRequested,
 		WindowEventTouch,
 		WindowEventHiDpiFactorChanged,
 		NewEvents,
@@ -225,11 +225,11 @@ WinitEventType class >> externalDeclaration [
 ]
 
 { #category : #'enum declaration' }
-WinitEventType class >> externalType [
+GlutinEventType class >> externalType [
 	^ FFIUInt32 new
 ]
 
 { #category : #'class initialization' }
-WinitEventType class >> initialize [
+GlutinEventType class >> initialize [
 	super initialize
 ]

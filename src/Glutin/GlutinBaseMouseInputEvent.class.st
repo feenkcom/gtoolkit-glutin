@@ -12,7 +12,7 @@ Class {
 
 { #category : #'event type' }
 GlutinBaseMouseInputEvent class >> eventType [
-	^ WinitEventType WindowEventMouseInput
+	^ GlutinEventType WindowEventMouseInput
 ]
 
 { #category : #'field definition' }

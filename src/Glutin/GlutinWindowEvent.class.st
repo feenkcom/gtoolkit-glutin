@@ -3,3 +3,8 @@ Class {
 	#superclass : #GlutinMappedEvent,
 	#category : #'Glutin-Events'
 }
+
+{ #category : #testing }
+GlutinWindowEvent >> isWindowEvent [
+	^ true
+]

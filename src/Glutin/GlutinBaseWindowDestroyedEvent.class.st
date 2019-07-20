@@ -6,7 +6,7 @@ Class {
 
 { #category : #'event type' }
 GlutinBaseWindowDestroyedEvent class >> eventType [
-	^ WinitEventType WindowEventDestroyed
+	^ GlutinEventType WindowEventDestroyed
 ]
 
 { #category : #'event type' }

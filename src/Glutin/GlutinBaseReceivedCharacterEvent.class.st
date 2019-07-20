@@ -13,7 +13,7 @@ Class {
 
 { #category : #'event type' }
 GlutinBaseReceivedCharacterEvent class >> eventType [
-	^ WinitEventType WindowEventReceivedCharacter
+	^ GlutinEventType WindowEventReceivedCharacter
 ]
 
 { #category : #'field definition' }

@@ -13,7 +13,7 @@ Class {
 
 { #category : #'event type' }
 GlutinBaseTouchEvent class >> eventType [
-	^ WinitEventType WindowEventTouch
+	^ GlutinEventType WindowEventTouch
 ]
 
 { #category : #'field definition' }

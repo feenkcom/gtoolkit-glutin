@@ -32,14 +32,14 @@ GlutinBaseEvent class >> fieldsDesc [
 	"
 	^ #(
 		WinitSizeU64 window_id
-		WinitEventType event_type
+		#GlutinEventType event_type
 		#GlutinBaseTouchEvent touch
 		#GlutinBaseMouseWheelEvent mouse_wheel
 		GlutinBaseMouseInputEvent mouse_input
 		GlutinBaseCursorMovedEvent cursor_moved
 		GlutinBaseKeyboardInputEvent keyboard_input
 		GlutinBaseReceivedCharacterEvent received_character
-		#GlutinBaseWindowResizedEvent window_resized
+		#GlutinWindowResizedEvent window_resized
 		#GlutinBaseWindowMovedEvent window_moved
 		GlutinBaseWindowFocusedEvent window_focused
  	)
@@ -76,7 +76,7 @@ GlutinBaseEvent >> cursor_moved: anObject [
 { #category : #'accessing structure variables' }
 GlutinBaseEvent >> event_type [
 	"This method was automatically generated"
-	^WinitEventType fromInteger: (handle unsignedLongAt: OFFSET_EVENT_TYPE)
+	^GlutinEventType fromInteger: (handle unsignedLongAt: OFFSET_EVENT_TYPE)
 ]
 
 { #category : #'accessing structure variables' }
@@ -189,11 +189,11 @@ GlutinBaseEvent >> window_moved: anObject [
 { #category : #'accessing structure variables' }
 GlutinBaseEvent >> window_resized [
 	"This method was automatically generated"
-	^ GlutinBaseWindowResizedEvent fromHandle: (handle referenceStructAt: OFFSET_WINDOW_RESIZED length: GlutinBaseWindowResizedEvent byteSize)
+	^ GlutinWindowResizedEvent fromHandle: (handle referenceStructAt: OFFSET_WINDOW_RESIZED length: GlutinWindowResizedEvent byteSize)
 ]
 
 { #category : #'accessing structure variables' }
 GlutinBaseEvent >> window_resized: anObject [
 	"This method was automatically generated"
-	handle structAt: OFFSET_WINDOW_RESIZED put: anObject getHandle length: GlutinBaseWindowResizedEvent byteSize
+	handle structAt: OFFSET_WINDOW_RESIZED put: anObject getHandle length: GlutinWindowResizedEvent byteSize
 ]

@@ -1,5 +1,5 @@
 Class {
-	#name : #GlutinBaseWindowResizedEvent,
+	#name : #GlutinWindowResizedEvent,
 	#superclass : #GlutinWindowEvent,
 	#classVars : [
 		'OFFSET_HEIGHT',
@@ -9,12 +9,12 @@ Class {
 }
 
 { #category : #'event type' }
-GlutinBaseWindowResizedEvent class >> eventType [
-	^ WinitEventType WindowEventResized
+GlutinWindowResizedEvent class >> eventType [
+	^ GlutinEventType WindowEventResized
 ]
 
 { #category : #'field definition' }
-GlutinBaseWindowResizedEvent class >> fieldsDesc [
+GlutinWindowResizedEvent class >> fieldsDesc [
 	"
 	self rebuildFieldAccessors
 	"
@@ -25,35 +25,35 @@ GlutinBaseWindowResizedEvent class >> fieldsDesc [
 ]
 
 { #category : #'event type' }
-GlutinBaseWindowResizedEvent class >> fromBaseEvent: anEvent [
+GlutinWindowResizedEvent class >> fromBaseEvent: anEvent [
 	^ anEvent window_resized
 ]
 
 { #category : #visiting }
-GlutinBaseWindowResizedEvent >> accept: aVisitor [
+GlutinWindowResizedEvent >> accept: aVisitor [
 	^ aVisitor visitWindowResizedEvent: self
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseWindowResizedEvent >> height [
+GlutinWindowResizedEvent >> height [
 	"This method was automatically generated"
 	^handle doubleAt: OFFSET_HEIGHT
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseWindowResizedEvent >> height: anObject [
+GlutinWindowResizedEvent >> height: anObject [
 	"This method was automatically generated"
 	handle doubleAt: OFFSET_HEIGHT put: anObject
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseWindowResizedEvent >> width [
+GlutinWindowResizedEvent >> width [
 	"This method was automatically generated"
 	^handle doubleAt: OFFSET_WIDTH
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseWindowResizedEvent >> width: anObject [
+GlutinWindowResizedEvent >> width: anObject [
 	"This method was automatically generated"
 	handle doubleAt: OFFSET_WIDTH put: anObject
 ]

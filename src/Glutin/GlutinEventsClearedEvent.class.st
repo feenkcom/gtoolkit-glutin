@@ -9,7 +9,7 @@ Class {
 
 { #category : #'event type' }
 GlutinEventsClearedEvent class >> eventType [
-	^ WinitEventType EventsCleared
+	^ GlutinEventType EventsCleared
 ]
 
 { #category : #'event type' }
@@ -20,4 +20,9 @@ GlutinEventsClearedEvent class >> fromBaseEvent: anEvent [
 { #category : #visiting }
 GlutinEventsClearedEvent >> accept: aVisitor [
 	^ aVisitor visitEventsCleared: self
+]
+
+{ #category : #testing }
+GlutinEventsClearedEvent >> isCommonEvent [
+	^ true
 ]

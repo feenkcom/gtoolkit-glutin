@@ -14,7 +14,7 @@ Class {
 
 { #category : #'event type' }
 GlutinBaseKeyboardInputEvent class >> eventType [
-	^ WinitEventType WindowEventKeyboardInput
+	^ GlutinEventType WindowEventKeyboardInput
 ]
 
 { #category : #'field definition' }

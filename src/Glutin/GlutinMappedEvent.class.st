@@ -18,3 +18,18 @@ GlutinMappedEvent class >> fromBaseEvent: anEvent [
 GlutinMappedEvent >> accept: aVisitor [
 	^ self subclassResponsibility
 ]
+
+{ #category : #testing }
+GlutinMappedEvent >> isCommonEvent [
+	^ false
+]
+
+{ #category : #testing }
+GlutinMappedEvent >> isDeviceEvent [
+	^ false
+]
+
+{ #category : #testing }
+GlutinMappedEvent >> isWindowEvent [
+	^ false
+]

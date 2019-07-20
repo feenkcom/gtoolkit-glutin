@@ -167,6 +167,11 @@ OSGlutinWindowHandle >> visitCursorMovedEvent: aCursorMovedEvent [
 ]
 
 { #category : #'events-processing' }
+OSGlutinWindowHandle >> visitEventsCleared: anEventsClearedEvent [
+	^ (OSEventsCleared for: osWindow) deliver
+]
+
+{ #category : #'events-processing' }
 OSGlutinWindowHandle >> visitKeyboardInputEvent: anEvent [
 	| osEvent aState |
 
@@ -290,7 +295,7 @@ OSGlutinWindowHandle >> visitWindowMovedEvent: aWindowMovedEvent [
 ]
 
 { #category : #'events-processing' }
-OSGlutinWindowHandle >> visitWindowRefreshEvent: aWindowRefreshEvent [
+OSGlutinWindowHandle >> visitWindowRedrawRequested: aWindowRefreshEvent [
 ]
 
 { #category : #'events-processing' }
