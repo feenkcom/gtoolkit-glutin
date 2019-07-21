@@ -8,7 +8,7 @@ Class {
 		'epoch',
 		'documentId'
 	],
-	#category : #'OSWindow-Glutin'
+	#category : #Glutin
 }
 
 { #category : #geometry }
