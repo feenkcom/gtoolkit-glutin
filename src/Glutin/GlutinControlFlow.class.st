@@ -2,29 +2,17 @@ Class {
 	#name : #GlutinControlFlow,
 	#superclass : #WinitEnum,
 	#classVars : [
-		'Exit',
-		'Poll',
-		'Wait'
+		'exit',
+		'poll',
+		'wait'
 	],
 	#category : #'Glutin-Enums'
 }
 
 { #category : #'accessing enum' }
-GlutinControlFlow class >> Exit [
+GlutinControlFlow class >> exit [
 	"This method was automatically generated"
-	^ Exit
-]
-
-{ #category : #'accessing enum' }
-GlutinControlFlow class >> Poll [
-	"This method was automatically generated"
-	^ Poll
-]
-
-{ #category : #'accessing enum' }
-GlutinControlFlow class >> Wait [
-	"This method was automatically generated"
-	^ Wait
+	^ exit
 ]
 
 { #category : #'enum declaration' }
@@ -34,9 +22,9 @@ GlutinControlFlow class >> externalDeclaration [
 	"
 
 	^ #(
-		Poll,
-		Wait,
-		Exit,
+		poll,
+		wait,
+		exit,
 	)
 ]
 
@@ -48,4 +36,16 @@ GlutinControlFlow class >> externalType [
 { #category : #'class initialization' }
 GlutinControlFlow class >> initialize [
 	super initialize
+]
+
+{ #category : #'accessing enum' }
+GlutinControlFlow class >> poll [
+	"This method was automatically generated"
+	^ poll
+]
+
+{ #category : #'accessing enum' }
+GlutinControlFlow class >> wait [
+	"This method was automatically generated"
+	^ wait
 ]

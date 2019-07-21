@@ -70,6 +70,27 @@ OSGlutinDriver class >> run [
 					ifTrue: [ aMappedEvent accept: anOSGlutinWindowHandle ] ] ] ]
 ]
 
+{ #category : #'events-processing' }
+OSGlutinDriver class >> run: aBlock [
+	"self ensureEventsLoop.
+
+	EventsLoop run: [ :aGlutinEvent |
+		| aMappedEvent aWindowId |
+		
+		aMappedEvent := aGlutinEvent mapped.
+		aMappedEvent isWindowEvent
+			ifTrue: [
+				aWindowId := aGlutinEvent window_id asInteger.
+				WindowsRegistry
+					at: aWindowId
+					ifPresent: [ :anOSGlutinWindowHandle |
+						anOSGlutinWindowHandle isValid
+							ifTrue: [ aBlock value: aMappedEvent value: anOSGlutinWindowHandle ] ] ].
+
+		aMappedEvent isCommonEvent
+			ifTrue: [ aBlock value: aMappedEvent value: anOSGlutinWindowHandle ] ]."
+]
+
 { #category : #'window creation' }
 OSGlutinDriver >> createWindowWithAttributes: anOSWindowAttributes osWindow: osWindow [
 	| windowBuilder handle window |

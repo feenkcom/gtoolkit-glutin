@@ -1,20 +1,20 @@
 Class {
-	#name : #GlutinBaseWindowCloseRequested,
+	#name : #GlutinWindowCloseRequested,
 	#superclass : #GlutinWindowEvent,
 	#category : #'Glutin-Events'
 }
 
 { #category : #'event type' }
-GlutinBaseWindowCloseRequested class >> eventType [
+GlutinWindowCloseRequested class >> eventType [
 	^ GlutinEventType WindowEventCloseRequested
 ]
 
 { #category : #'event type' }
-GlutinBaseWindowCloseRequested class >> fromBaseEvent: anEvent [
+GlutinWindowCloseRequested class >> fromBaseEvent: anEvent [
 	^ self new
 ]
 
 { #category : #visiting }
-GlutinBaseWindowCloseRequested >> accept: aVisitor [
+GlutinWindowCloseRequested >> accept: aVisitor [
 	^ aVisitor visitWindowCloseRequest: self
 ]

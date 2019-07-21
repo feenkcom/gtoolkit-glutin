@@ -27,7 +27,7 @@ GlutinWindowedContextExamples >> liveWindow [
 		[
 		aWindowedContext makeCurrent.
 		aWindowedContext eventsLoop fetchEvents: [ :anEvent |
-			anEvent mapped class = GlutinBaseWindowCloseRequested
+			anEvent mapped class = GlutinWindowCloseRequested
 				ifTrue: [
 					aWindowedContext release.
 					isRunning := false.
@@ -59,7 +59,7 @@ GlutinWindowedContextExamples >> liveWindowRunForever [
 		anEvent mapped class = GlutinWindowRedrawRequestedEvent
 			ifTrue: [ NonInteractiveTranscript stdout show: #GlutinWindowRedrawRequestedEvent; cr ].
 		
-		anEvent mapped class = GlutinBaseWindowCloseRequested
+		anEvent mapped class = GlutinWindowCloseRequested
 			ifTrue: [ aControlFlow := GlutinControlFlow Exit ].
 			
 		Processor yield.

@@ -1,5 +1,5 @@
 Class {
-	#name : #GlutinBaseKeyboardInputEvent,
+	#name : #GlutinKeyboardInputEvent,
 	#superclass : #GlutinWindowEvent,
 	#classVars : [
 		'OFFSET_DEVICE_ID',
@@ -13,12 +13,12 @@ Class {
 }
 
 { #category : #'event type' }
-GlutinBaseKeyboardInputEvent class >> eventType [
+GlutinKeyboardInputEvent class >> eventType [
 	^ GlutinEventType WindowEventKeyboardInput
 ]
 
 { #category : #'field definition' }
-GlutinBaseKeyboardInputEvent class >> fieldsDesc [
+GlutinKeyboardInputEvent class >> fieldsDesc [
 	"
 	self rebuildFieldAccessors
 	"
@@ -33,83 +33,83 @@ GlutinBaseKeyboardInputEvent class >> fieldsDesc [
 ]
 
 { #category : #'event type' }
-GlutinBaseKeyboardInputEvent class >> fromBaseEvent: anEvent [
+GlutinKeyboardInputEvent class >> fromBaseEvent: anEvent [
 	^ anEvent keyboard_input
 ]
 
 { #category : #visiting }
-GlutinBaseKeyboardInputEvent >> accept: aVisitor [
+GlutinKeyboardInputEvent >> accept: aVisitor [
 	^ aVisitor visitKeyboardInputEvent: self
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseKeyboardInputEvent >> device_id [
+GlutinKeyboardInputEvent >> device_id [
 	"This method was automatically generated"
 	^handle signedLongLongAt: OFFSET_DEVICE_ID
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseKeyboardInputEvent >> device_id: anObject [
+GlutinKeyboardInputEvent >> device_id: anObject [
 	"This method was automatically generated"
 	handle signedLongLongAt: OFFSET_DEVICE_ID put: anObject
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseKeyboardInputEvent >> has_virtual_keycode [
+GlutinKeyboardInputEvent >> has_virtual_keycode [
 	"This method was automatically generated"
 	^handle booleanAt: OFFSET_HAS_VIRTUAL_KEYCODE
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseKeyboardInputEvent >> has_virtual_keycode: anObject [
+GlutinKeyboardInputEvent >> has_virtual_keycode: anObject [
 	"This method was automatically generated"
 	handle booleanAt: OFFSET_HAS_VIRTUAL_KEYCODE put: anObject
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseKeyboardInputEvent >> modifiers [
+GlutinKeyboardInputEvent >> modifiers [
 	"This method was automatically generated"
 	^ GlutinEventModifiersState fromHandle: (handle referenceStructAt: OFFSET_MODIFIERS length: GlutinEventModifiersState byteSize)
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseKeyboardInputEvent >> modifiers: anObject [
+GlutinKeyboardInputEvent >> modifiers: anObject [
 	"This method was automatically generated"
 	handle structAt: OFFSET_MODIFIERS put: anObject getHandle length: GlutinEventModifiersState byteSize
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseKeyboardInputEvent >> scan_code [
+GlutinKeyboardInputEvent >> scan_code [
 	"This method was automatically generated"
 	^handle unsignedLongAt: OFFSET_SCAN_CODE
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseKeyboardInputEvent >> scan_code: anObject [
+GlutinKeyboardInputEvent >> scan_code: anObject [
 	"This method was automatically generated"
 	handle unsignedLongAt: OFFSET_SCAN_CODE put: anObject
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseKeyboardInputEvent >> state [
+GlutinKeyboardInputEvent >> state [
 	"This method was automatically generated"
 	^GlutinEventInputElementState fromInteger: (handle unsignedLongAt: OFFSET_STATE)
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseKeyboardInputEvent >> state: anObject [
+GlutinKeyboardInputEvent >> state: anObject [
 	"This method was automatically generated"
 	handle unsignedLongAt: OFFSET_STATE put: anObject value
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseKeyboardInputEvent >> virtual_keycode [
+GlutinKeyboardInputEvent >> virtual_keycode [
 	"This method was automatically generated"
 	^WinitEventVirtualKeyCode fromInteger: (handle unsignedLongAt: OFFSET_VIRTUAL_KEYCODE)
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseKeyboardInputEvent >> virtual_keycode: anObject [
+GlutinKeyboardInputEvent >> virtual_keycode: anObject [
 	"This method was automatically generated"
 	handle unsignedLongAt: OFFSET_VIRTUAL_KEYCODE put: anObject value
 ]

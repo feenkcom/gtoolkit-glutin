@@ -1,5 +1,5 @@
 Class {
-	#name : #GlutinBaseWindowFocusedEvent,
+	#name : #GlutinWindowFocusedEvent,
 	#superclass : #GlutinWindowEvent,
 	#classVars : [
 		'OFFSET_IS_FOCUSED'
@@ -8,12 +8,12 @@ Class {
 }
 
 { #category : #'event type' }
-GlutinBaseWindowFocusedEvent class >> eventType [
+GlutinWindowFocusedEvent class >> eventType [
 	^ GlutinEventType WindowEventFocused
 ]
 
 { #category : #'field definition' }
-GlutinBaseWindowFocusedEvent class >> fieldsDesc [
+GlutinWindowFocusedEvent class >> fieldsDesc [
 	"
 	self rebuildFieldAccessors
 	"
@@ -23,23 +23,23 @@ GlutinBaseWindowFocusedEvent class >> fieldsDesc [
 ]
 
 { #category : #'event type' }
-GlutinBaseWindowFocusedEvent class >> fromBaseEvent: anEvent [
+GlutinWindowFocusedEvent class >> fromBaseEvent: anEvent [
 	^ anEvent window_focused
 ]
 
 { #category : #visiting }
-GlutinBaseWindowFocusedEvent >> accept: aVisitor [
+GlutinWindowFocusedEvent >> accept: aVisitor [
 	^ aVisitor visitWindowFocusedEvent: self
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseWindowFocusedEvent >> is_focused [
+GlutinWindowFocusedEvent >> is_focused [
 	"This method was automatically generated"
 	^handle booleanAt: OFFSET_IS_FOCUSED
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseWindowFocusedEvent >> is_focused: anObject [
+GlutinWindowFocusedEvent >> is_focused: anObject [
 	"This method was automatically generated"
 	handle booleanAt: OFFSET_IS_FOCUSED put: anObject
 ]

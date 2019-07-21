@@ -1,5 +1,5 @@
 Class {
-	#name : #GlutinBaseReceivedCharacterEvent,
+	#name : #GlutinReceivedCharacterEvent,
 	#superclass : #GlutinWindowEvent,
 	#classVars : [
 		'OFFSET_BYTE_1',
@@ -12,12 +12,12 @@ Class {
 }
 
 { #category : #'event type' }
-GlutinBaseReceivedCharacterEvent class >> eventType [
+GlutinReceivedCharacterEvent class >> eventType [
 	^ GlutinEventType WindowEventReceivedCharacter
 ]
 
 { #category : #'field definition' }
-GlutinBaseReceivedCharacterEvent class >> fieldsDesc [
+GlutinReceivedCharacterEvent class >> fieldsDesc [
 	"
 	self rebuildFieldAccessors
 	"
@@ -31,77 +31,77 @@ GlutinBaseReceivedCharacterEvent class >> fieldsDesc [
 ]
 
 { #category : #'event type' }
-GlutinBaseReceivedCharacterEvent class >> fromBaseEvent: anEvent [
+GlutinReceivedCharacterEvent class >> fromBaseEvent: anEvent [
 	^ anEvent received_character
 ]
 
 { #category : #visiting }
-GlutinBaseReceivedCharacterEvent >> accept: aVisitor [
+GlutinReceivedCharacterEvent >> accept: aVisitor [
 	^ aVisitor visitCharacterReceivedEvent: self
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseReceivedCharacterEvent >> byte_1 [
+GlutinReceivedCharacterEvent >> byte_1 [
 	"This method was automatically generated"
 	^handle unsignedByteAt: OFFSET_BYTE_1
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseReceivedCharacterEvent >> byte_1: anObject [
+GlutinReceivedCharacterEvent >> byte_1: anObject [
 	"This method was automatically generated"
 	handle unsignedByteAt: OFFSET_BYTE_1 put: anObject
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseReceivedCharacterEvent >> byte_2 [
+GlutinReceivedCharacterEvent >> byte_2 [
 	"This method was automatically generated"
 	^handle unsignedByteAt: OFFSET_BYTE_2
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseReceivedCharacterEvent >> byte_2: anObject [
+GlutinReceivedCharacterEvent >> byte_2: anObject [
 	"This method was automatically generated"
 	handle unsignedByteAt: OFFSET_BYTE_2 put: anObject
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseReceivedCharacterEvent >> byte_3 [
+GlutinReceivedCharacterEvent >> byte_3 [
 	"This method was automatically generated"
 	^handle unsignedByteAt: OFFSET_BYTE_3
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseReceivedCharacterEvent >> byte_3: anObject [
+GlutinReceivedCharacterEvent >> byte_3: anObject [
 	"This method was automatically generated"
 	handle unsignedByteAt: OFFSET_BYTE_3 put: anObject
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseReceivedCharacterEvent >> byte_4 [
+GlutinReceivedCharacterEvent >> byte_4 [
 	"This method was automatically generated"
 	^handle unsignedByteAt: OFFSET_BYTE_4
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseReceivedCharacterEvent >> byte_4: anObject [
+GlutinReceivedCharacterEvent >> byte_4: anObject [
 	"This method was automatically generated"
 	handle unsignedByteAt: OFFSET_BYTE_4 put: anObject
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseReceivedCharacterEvent >> length [
+GlutinReceivedCharacterEvent >> length [
 	"This method was automatically generated"
 	^handle platformSizeTAt: OFFSET_LENGTH
 ]
 
 { #category : #'accessing structure variables' }
-GlutinBaseReceivedCharacterEvent >> length: anObject [
+GlutinReceivedCharacterEvent >> length: anObject [
 	"This method was automatically generated"
 	^handle platformSizeTAt: OFFSET_LENGTH put: anObject
 ]
 
 { #category : #accessing }
-GlutinBaseReceivedCharacterEvent >> text [
+GlutinReceivedCharacterEvent >> text [
 	^ ((#[ 0 0 0 0 ]
 		at: 1 put: self byte_1;
 		at: 2 put: self byte_2;

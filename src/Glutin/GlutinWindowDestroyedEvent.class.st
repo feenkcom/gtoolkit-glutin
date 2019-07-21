@@ -1,20 +1,20 @@
 Class {
-	#name : #GlutinBaseWindowDestroyedEvent,
+	#name : #GlutinWindowDestroyedEvent,
 	#superclass : #GlutinWindowEvent,
 	#category : #'Glutin-Events'
 }
 
 { #category : #'event type' }
-GlutinBaseWindowDestroyedEvent class >> eventType [
+GlutinWindowDestroyedEvent class >> eventType [
 	^ GlutinEventType WindowEventDestroyed
 ]
 
 { #category : #'event type' }
-GlutinBaseWindowDestroyedEvent class >> fromBaseEvent: anEvent [
+GlutinWindowDestroyedEvent class >> fromBaseEvent: anEvent [
 	^ self new
 ]
 
 { #category : #visiting }
-GlutinBaseWindowDestroyedEvent >> accept: aVisitor [
+GlutinWindowDestroyedEvent >> accept: aVisitor [
 	^ aVisitor visitWindowDestroyed: self
 ]
