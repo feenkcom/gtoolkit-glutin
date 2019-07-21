@@ -1,6 +1,6 @@
 Class {
 	#name : #GlutinControlFlow,
-	#superclass : #WinitEnum,
+	#superclass : #GlutinEnum,
 	#classVars : [
 		'exit',
 		'poll',

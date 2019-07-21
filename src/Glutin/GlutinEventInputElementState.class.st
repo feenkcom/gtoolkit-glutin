@@ -1,6 +1,6 @@
 Class {
 	#name : #GlutinEventInputElementState,
-	#superclass : #WinitEnum,
+	#superclass : #GlutinEnum,
 	#classVars : [
 		'Pressed',
 		'Released',

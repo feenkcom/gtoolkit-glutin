@@ -1,6 +1,6 @@
 Class {
 	#name : #GlutinEventType,
-	#superclass : #WinitEnum,
+	#superclass : #GlutinEnum,
 	#classVars : [
 		'EventsCleared',
 		'LoopDestroyed',

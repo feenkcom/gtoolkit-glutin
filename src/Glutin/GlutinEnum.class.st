@@ -1,17 +1,17 @@
 Class {
-	#name : #WinitEnum,
+	#name : #GlutinEnum,
 	#superclass : #FFIExternalEnumeration,
 	#category : #'Glutin-Enums'
 }
 
 { #category : #'enum declaration' }
-WinitEnum class >> enumDecl [
+GlutinEnum class >> enumDecl [
 	| declaration index |
 	"
 	self rebuildEnumAccessors
 	"
 
-	self = WinitEnum
+	self = GlutinEnum
 		ifTrue: [ ^ #() ].
 		
 	index := -1.
@@ -25,7 +25,7 @@ WinitEnum class >> enumDecl [
 ]
 
 { #category : #'enum declaration' }
-WinitEnum class >> externalDeclaration [
+GlutinEnum class >> externalDeclaration [
 	"
 	self rebuildEnumAccessors
 	"
@@ -34,15 +34,15 @@ WinitEnum class >> externalDeclaration [
 ]
 
 { #category : #'enum declaration' }
-WinitEnum class >> externalType [
+GlutinEnum class >> externalType [
 	^ self subclassResponsibility
 ]
 
 { #category : #'class initialization' }
-WinitEnum class >> initialize [
+GlutinEnum class >> initialize [
 	
 	"Skip initialization of root class"
-	self = WinitEnum
+	self = GlutinEnum
 		ifTrue: [ ^ self ].
 
 	self initializeEnumeration.

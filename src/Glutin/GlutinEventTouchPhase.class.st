@@ -1,6 +1,6 @@
 Class {
-	#name : #WinitEventTouchPhase,
-	#superclass : #WinitEnum,
+	#name : #GlutinEventTouchPhase,
+	#superclass : #GlutinEnum,
 	#classVars : [
 		'Cancelled',
 		'Ended',
@@ -12,37 +12,37 @@ Class {
 }
 
 { #category : #'accessing enum' }
-WinitEventTouchPhase class >> Cancelled [
+GlutinEventTouchPhase class >> Cancelled [
 	"This method was automatically generated"
 	^ Cancelled
 ]
 
 { #category : #'accessing enum' }
-WinitEventTouchPhase class >> Ended [
+GlutinEventTouchPhase class >> Ended [
 	"This method was automatically generated"
 	^ Ended
 ]
 
 { #category : #'accessing enum' }
-WinitEventTouchPhase class >> Moved [
+GlutinEventTouchPhase class >> Moved [
 	"This method was automatically generated"
 	^ Moved
 ]
 
 { #category : #'accessing enum' }
-WinitEventTouchPhase class >> Started [
+GlutinEventTouchPhase class >> Started [
 	"This method was automatically generated"
 	^ Started
 ]
 
 { #category : #'accessing enum' }
-WinitEventTouchPhase class >> Unknown [
+GlutinEventTouchPhase class >> Unknown [
 	"This method was automatically generated"
 	^ Unknown
 ]
 
 { #category : #'enum declaration' }
-WinitEventTouchPhase class >> externalDeclaration [
+GlutinEventTouchPhase class >> externalDeclaration [
 	"
 	self rebuildEnumAccessors
 	"
@@ -57,11 +57,11 @@ WinitEventTouchPhase class >> externalDeclaration [
 ]
 
 { #category : #'enum declaration' }
-WinitEventTouchPhase class >> externalType [
+GlutinEventTouchPhase class >> externalType [
 	^ FFIUInt32 new
 ]
 
 { #category : #'class initialization' }
-WinitEventTouchPhase class >> initialize [
+GlutinEventTouchPhase class >> initialize [
 	super initialize
 ]

@@ -1,5 +1,5 @@
 Class {
-	#name : #WinitSizeF64,
+	#name : #GlutinSizeU64,
 	#superclass : #FFIExternalStructure,
 	#classVars : [
 		'OFFSET_X',
@@ -9,36 +9,41 @@ Class {
 }
 
 { #category : #'field definition' }
-WinitSizeF64 class >> fieldsDesc [
+GlutinSizeU64 class >> fieldsDesc [
 	"
 	self rebuildFieldAccessors
 	"
 	^ #(
-		float64 x
-		float64 y
+		uint64 x
+		uint64 y
  	)
 ]
 
-{ #category : #'accessing structure variables' }
-WinitSizeF64 >> x [
-	"This method was automatically generated"
-	^handle doubleAt: OFFSET_X
+{ #category : #converting }
+GlutinSizeU64 >> asInteger [
+	^ (self y << 32) + self x
 ]
 
 { #category : #'accessing structure variables' }
-WinitSizeF64 >> x: anObject [
+GlutinSizeU64 >> x [
 	"This method was automatically generated"
-	handle doubleAt: OFFSET_X put: anObject
+	^handle unsignedLongLongAt: OFFSET_X
 ]
 
 { #category : #'accessing structure variables' }
-WinitSizeF64 >> y [
+GlutinSizeU64 >> x: anObject [
 	"This method was automatically generated"
-	^handle doubleAt: OFFSET_Y
+	handle unsignedLongLongAt: OFFSET_X put: anObject
 ]
 
 { #category : #'accessing structure variables' }
-WinitSizeF64 >> y: anObject [
+GlutinSizeU64 >> y [
 	"This method was automatically generated"
-	handle doubleAt: OFFSET_Y put: anObject
+	^handle unsignedLongLongAt: OFFSET_Y
+]
+
+{ #category : #'accessing structure variables' }
+GlutinSizeU64 >> y: anObject [
+	"This method was automatically generated"
+	handle unsignedLongLongAt: OFFSET_Y put: anObject
 ]

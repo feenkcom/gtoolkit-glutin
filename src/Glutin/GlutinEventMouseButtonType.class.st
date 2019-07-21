@@ -1,6 +1,6 @@
 Class {
 	#name : #GlutinEventMouseButtonType,
-	#superclass : #WinitEnum,
+	#superclass : #GlutinEnum,
 	#classVars : [
 		'Left',
 		'Middle',

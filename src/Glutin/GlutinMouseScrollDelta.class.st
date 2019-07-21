@@ -1,5 +1,5 @@
 Class {
-	#name : #WinitMouseScrollDelta,
+	#name : #GlutinMouseScrollDelta,
 	#superclass : #FFIExternalStructure,
 	#classVars : [
 		'OFFSET_TYPE',
@@ -10,49 +10,49 @@ Class {
 }
 
 { #category : #'field definition' }
-WinitMouseScrollDelta class >> fieldsDesc [
+GlutinMouseScrollDelta class >> fieldsDesc [
 	"
 	self rebuildFieldAccessors
 	"
 	^ #(
-		WinitEventMouseScrollDeltaType type
+		#GlutinEventMouseScrollDeltaType type
 		float64 x
 		float64 y
  	)
 ]
 
 { #category : #'accessing structure variables' }
-WinitMouseScrollDelta >> type [
+GlutinMouseScrollDelta >> type [
 	"This method was automatically generated"
-	^WinitEventMouseScrollDeltaType fromInteger: (handle unsignedLongAt: OFFSET_TYPE)
+	^GlutinEventMouseScrollDeltaType fromInteger: (handle unsignedLongAt: OFFSET_TYPE)
 ]
 
 { #category : #'accessing structure variables' }
-WinitMouseScrollDelta >> type: anObject [
+GlutinMouseScrollDelta >> type: anObject [
 	"This method was automatically generated"
 	handle unsignedLongAt: OFFSET_TYPE put: anObject value
 ]
 
 { #category : #'accessing structure variables' }
-WinitMouseScrollDelta >> x [
+GlutinMouseScrollDelta >> x [
 	"This method was automatically generated"
 	^handle doubleAt: OFFSET_X
 ]
 
 { #category : #'accessing structure variables' }
-WinitMouseScrollDelta >> x: anObject [
+GlutinMouseScrollDelta >> x: anObject [
 	"This method was automatically generated"
 	handle doubleAt: OFFSET_X put: anObject
 ]
 
 { #category : #'accessing structure variables' }
-WinitMouseScrollDelta >> y [
+GlutinMouseScrollDelta >> y [
 	"This method was automatically generated"
 	^handle doubleAt: OFFSET_Y
 ]
 
 { #category : #'accessing structure variables' }
-WinitMouseScrollDelta >> y: anObject [
+GlutinMouseScrollDelta >> y: anObject [
 	"This method was automatically generated"
 	handle doubleAt: OFFSET_Y put: anObject
 ]

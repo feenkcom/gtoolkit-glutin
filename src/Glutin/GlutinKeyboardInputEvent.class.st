@@ -27,7 +27,7 @@ GlutinKeyboardInputEvent class >> fieldsDesc [
 		uint32 scan_code
 		GlutinEventInputElementState state
 		bool has_virtual_keycode
-		WinitEventVirtualKeyCode virtual_keycode
+		#GlutinEventVirtualKeyCode virtual_keycode
 		GlutinEventModifiersState modifiers
  	)
 ]
@@ -105,7 +105,7 @@ GlutinKeyboardInputEvent >> state: anObject [
 { #category : #'accessing structure variables' }
 GlutinKeyboardInputEvent >> virtual_keycode [
 	"This method was automatically generated"
-	^WinitEventVirtualKeyCode fromInteger: (handle unsignedLongAt: OFFSET_VIRTUAL_KEYCODE)
+	^GlutinEventVirtualKeyCode fromInteger: (handle unsignedLongAt: OFFSET_VIRTUAL_KEYCODE)
 ]
 
 { #category : #'accessing structure variables' }

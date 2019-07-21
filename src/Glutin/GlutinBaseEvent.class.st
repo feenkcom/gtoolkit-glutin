@@ -31,7 +31,7 @@ GlutinBaseEvent class >> fieldsDesc [
 	self rebuildFieldAccessors
 	"
 	^ #(
-		WinitSizeU64 window_id
+		#GlutinSizeU64 window_id
 		#GlutinEventType event_type
 		#GlutinTouchEvent touch
 		#GlutinMouseWheelEvent mouse_wheel
@@ -165,13 +165,13 @@ GlutinBaseEvent >> window_focused: anObject [
 { #category : #'accessing structure variables' }
 GlutinBaseEvent >> window_id [
 	"This method was automatically generated"
-	^ WinitSizeU64 fromHandle: (handle referenceStructAt: OFFSET_WINDOW_ID length: WinitSizeU64 byteSize)
+	^ GlutinSizeU64 fromHandle: (handle referenceStructAt: OFFSET_WINDOW_ID length: GlutinSizeU64 byteSize)
 ]
 
 { #category : #'accessing structure variables' }
 GlutinBaseEvent >> window_id: anObject [
 	"This method was automatically generated"
-	handle structAt: OFFSET_WINDOW_ID put: anObject getHandle length: WinitSizeU64 byteSize
+	handle structAt: OFFSET_WINDOW_ID put: anObject getHandle length: GlutinSizeU64 byteSize
 ]
 
 { #category : #'accessing structure variables' }

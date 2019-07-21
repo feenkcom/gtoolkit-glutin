@@ -22,8 +22,8 @@ GlutinMouseWheelEvent class >> fieldsDesc [
 	"
 	^ #(
 		int64 device_id
-		WinitEventTouchPhase phase
-		WinitMouseScrollDelta delta
+		#GlutinEventTouchPhase phase
+		#GlutinMouseScrollDelta delta
 		#GlutinEventModifiersState modifiers
  	)
 ]
@@ -41,13 +41,13 @@ GlutinMouseWheelEvent >> accept: aVisitor [
 { #category : #'accessing structure variables' }
 GlutinMouseWheelEvent >> delta [
 	"This method was automatically generated"
-	^ WinitMouseScrollDelta fromHandle: (handle referenceStructAt: OFFSET_DELTA length: WinitMouseScrollDelta byteSize)
+	^ GlutinMouseScrollDelta fromHandle: (handle referenceStructAt: OFFSET_DELTA length: GlutinMouseScrollDelta byteSize)
 ]
 
 { #category : #'accessing structure variables' }
 GlutinMouseWheelEvent >> delta: anObject [
 	"This method was automatically generated"
-	handle structAt: OFFSET_DELTA put: anObject getHandle length: WinitMouseScrollDelta byteSize
+	handle structAt: OFFSET_DELTA put: anObject getHandle length: GlutinMouseScrollDelta byteSize
 ]
 
 { #category : #'accessing structure variables' }
@@ -77,7 +77,7 @@ GlutinMouseWheelEvent >> modifiers: anObject [
 { #category : #'accessing structure variables' }
 GlutinMouseWheelEvent >> phase [
 	"This method was automatically generated"
-	^WinitEventTouchPhase fromInteger: (handle unsignedLongAt: OFFSET_PHASE)
+	^GlutinEventTouchPhase fromInteger: (handle unsignedLongAt: OFFSET_PHASE)
 ]
 
 { #category : #'accessing structure variables' }
