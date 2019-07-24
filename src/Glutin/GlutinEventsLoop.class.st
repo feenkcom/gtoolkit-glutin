@@ -178,7 +178,7 @@ GlutinEventsLoop >> run: aBlock [
 		| aControlFlow |
 		aControlFlow := aBlock value: (GlutinBaseEvent fromHandle: anAddress).
 		(aControlFlow isKindOf: GlutinControlFlow)
-			ifFalse: [ aControlFlow := GlutinControlFlow Poll ].
+			ifFalse: [ aControlFlow := GlutinControlFlow poll ].
 		aControlFlow ].
 
 	self primRunForever: aCallback

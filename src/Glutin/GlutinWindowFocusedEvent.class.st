@@ -24,7 +24,7 @@ GlutinWindowFocusedEvent class >> fieldsDesc [
 
 { #category : #'event type' }
 GlutinWindowFocusedEvent class >> fromBaseEvent: anEvent [
-	^ anEvent window_focused
+	^ anEvent window_focused windowId: anEvent window_id asInteger
 ]
 
 { #category : #visiting }

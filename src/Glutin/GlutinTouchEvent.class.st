@@ -32,7 +32,7 @@ GlutinTouchEvent class >> fieldsDesc [
 
 { #category : #'event type' }
 GlutinTouchEvent class >> fromBaseEvent: anEvent [
-	^ anEvent touch
+	^ anEvent touch windowId: anEvent window_id asInteger
 ]
 
 { #category : #visiting }

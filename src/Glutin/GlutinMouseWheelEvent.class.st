@@ -30,7 +30,7 @@ GlutinMouseWheelEvent class >> fieldsDesc [
 
 { #category : #'event type' }
 GlutinMouseWheelEvent class >> fromBaseEvent: anEvent [
-	^ anEvent mouse_wheel
+	^ anEvent mouse_wheel windowId: anEvent window_id asInteger
 ]
 
 { #category : #visiting }

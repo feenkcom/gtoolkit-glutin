@@ -30,7 +30,7 @@ GlutinCursorMovedEvent class >> fieldsDesc [
 
 { #category : #'event type' }
 GlutinCursorMovedEvent class >> fromBaseEvent: anEvent [
-	^ anEvent cursor_moved
+	^ anEvent cursor_moved windowId: anEvent window_id asInteger
 ]
 
 { #category : #visiting }

@@ -11,7 +11,7 @@ GlutinWindowRedrawRequestedEvent class >> eventType [
 
 { #category : #'event type' }
 GlutinWindowRedrawRequestedEvent class >> fromBaseEvent: anEvent [
-	^ self new
+	^ self new windowId: anEvent window_id asInteger
 ]
 
 { #category : #visiting }

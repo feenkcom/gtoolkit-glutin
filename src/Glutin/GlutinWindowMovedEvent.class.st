@@ -26,7 +26,7 @@ GlutinWindowMovedEvent class >> fieldsDesc [
 
 { #category : #'event type' }
 GlutinWindowMovedEvent class >> fromBaseEvent: anEvent [
-	^ anEvent window_moved
+	^ anEvent window_moved windowId: anEvent window_id asInteger
 ]
 
 { #category : #visiting }
