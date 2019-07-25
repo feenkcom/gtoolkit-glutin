@@ -8,7 +8,8 @@ Class {
 	#classTraits : 'TGlutinLibrary classTrait + TGlutinPtr classTrait',
 	#instVars : [
 		'eventsLoop',
-		'title'
+		'title',
+		'id'
 	],
 	#category : #Glutin
 }
@@ -119,10 +120,18 @@ GlutinWindowedContext >> getProcAddress: aString [
 GlutinWindowedContext >> id [
 	<return: #Number>
 	| aSizeU64 |
+	
+	id
+		ifNotNil: [ ^ id ].
+		
+	self isValid
+		ifFalse: [ ^ 0 ].
 
 	aSizeU64 := GlutinSizeU64 new.
 	self primGetId: aSizeU64.
-	^ aSizeU64 asInteger
+	id := aSizeU64 asInteger.
+	
+	^ id
 ]
 
 { #category : #'api - accessing' }

@@ -7,8 +7,21 @@ Class {
 		'currentSession',
 		'eventsLoop'
 	],
+	#classInstVars : [
+		'default'
+	],
 	#category : #'Glutin-Events Fetcher'
 }
+
+{ #category : #accessing }
+GlutinEventsFetcher class >> default [
+	^ default ifNil: [ default := self ]
+]
+
+{ #category : #accessing }
+GlutinEventsFetcher class >> install [
+	self default installEventLoop
+]
 
 { #category : #accessing }
 GlutinEventsFetcher >> ensureEventsLoop [
