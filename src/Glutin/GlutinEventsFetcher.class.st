@@ -87,12 +87,13 @@ GlutinEventsFetcher >> processGlutinEvent: aGlutinEvent [
 
 { #category : #'system startup' }
 GlutinEventsFetcher >> shutDown: isQuitting [
-	eventsLoop shutDown: isQuitting
+	
+	eventsLoop ifNotNil: [ :anEventsLoop | eventsLoop shutDown: isQuitting ]
 ]
 
 { #category : #'system startup' }
 GlutinEventsFetcher >> startUp: isInANewSession [
 	"Here we re-enable the callback"
 	
-	eventsLoop startUp: isInANewSession
+	eventsLoop ifNotNil: [ :anEventsLoop | anEventsLoop startUp: isInANewSession ]
 ]
