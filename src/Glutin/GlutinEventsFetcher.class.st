@@ -15,12 +15,23 @@ Class {
 
 { #category : #accessing }
 GlutinEventsFetcher class >> default [
-	^ default ifNil: [ default := self ]
+	^ default ifNil: [ default := self new ]
 ]
 
 { #category : #accessing }
 GlutinEventsFetcher class >> install [
+	SessionManager default registerUserClassNamed: self name.
 	self default installEventLoop
+]
+
+{ #category : #accessing }
+GlutinEventsFetcher class >> shutDown: isQuitting [
+	self default shutDown: isQuitting
+]
+
+{ #category : #accessing }
+GlutinEventsFetcher class >> startUp: isInANewSession [
+	self default startUp: isInANewSession
 ]
 
 { #category : #accessing }
@@ -46,11 +57,10 @@ GlutinEventsFetcher >> eventLoop [
 	"Fetch pending raw events from the OS.
 	 This method is run at high priority."
 
-	[
-		"I make sure that Glutin events loop (external) is valid"
-		self ensureEventsLoop.
-		eventsLoop run: [ :aGlutinEvent | self processGlutinEvent: aGlutinEvent ]
-	] repeat
+	"I make sure that Glutin events loop (external) is valid"
+	self ensureEventsLoop.
+	eventsLoop run: [ :aGlutinEvent | self processGlutinEvent: aGlutinEvent ].
+	NonInteractiveTranscript stdout show: 'Exited from event loop!'; cr.
 ]
 
 { #category : #initialization }
@@ -73,4 +83,16 @@ GlutinEventsFetcher >> processGlutinEvent: aGlutinEvent [
 	"Send the event to all registered event handlers"
 
 	self eventHandlers do: [ :eachHandler | eachHandler processGlutinEvent: aGlutinEvent mapped ]
+]
+
+{ #category : #'system startup' }
+GlutinEventsFetcher >> shutDown: isQuitting [
+	eventsLoop shutDown: isQuitting
+]
+
+{ #category : #'system startup' }
+GlutinEventsFetcher >> startUp: isInANewSession [
+	"Here we re-enable the callback"
+	
+	eventsLoop startUp: isInANewSession
 ]
