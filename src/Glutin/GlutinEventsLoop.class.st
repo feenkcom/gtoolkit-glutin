@@ -3,7 +3,11 @@ Class {
 	#superclass : #FFIExternalObject,
 	#traits : 'TGlutinLibrary + TGlutinPtr',
 	#classTraits : 'TGlutinLibrary classTrait + TGlutinPtr classTrait',
-	#category : #Glutin
+	#instVars : [
+		'callback',
+		'status'
+	],
+	#category : #'Glutin-Events Fetcher'
 }
 
 { #category : #'api - instantiation' }
@@ -18,62 +22,9 @@ GlutinEventsLoop class >> ffiLibraryName [
 	^ GlutinLibrary
 ]
 
-{ #category : #private }
-GlutinEventsLoop class >> filteredEvents: theEvents [
-	"Filter unnecessary duplicated events that we don't have to process within same frame,
-	for example window resize event, window refresh events and mouse move events"
-	| groupedByWindow toBeRemoved |
-	
-	toBeRemoved := Set new.
-	
-	groupedByWindow := theEvents groupedBy: [ :anEvent | anEvent window_id asInteger ].
-	groupedByWindow := groupedByWindow collect: [ :aCollectionOfEvents |
-		| groupedByEventType |
-		groupedByEventType := aCollectionOfEvents groupedBy: [ :anEvent | anEvent event_type ].
-		self uniqueEventTypes do: [ :anEventType |
-			groupedByEventType
-				at: anEventType
-				ifPresent: [ :theEventsOfEachType | toBeRemoved addAll: theEventsOfEachType allButLast ] ].
-		groupedByEventType values ].
-
-	^ self orderedEvents: (theEvents copyWithoutAll: toBeRemoved)
-]
-
 { #category : #'instance creation' }
 GlutinEventsLoop class >> new [
 	^ self create
-]
-
-{ #category : #private }
-GlutinEventsLoop class >> orderedEvents: theEvents [
-	| keyEvents groupedByKey toBeRemoved toBeSwapped theOrderedEvents |
-	"I fix the order of some events"
-	
-	theOrderedEvents := theEvents asArray copy.
-
-	toBeRemoved := Set new.
-	toBeSwapped := OrderedCollection new.
-
-	keyEvents := theEvents select: [ :each | each event_type = WinitEventType WindowEventKeyboardInput ].
-	groupedByKey := keyEvents groupedBy: [ :each | each keyboard_input virtual_keycode ] having: [ :each | each size > 1 ].
-
-	groupedByKey do: [ :eachKeyGroup |
-		| groupedByState |
-		groupedByState := eachKeyGroup groupedBy: [ :each | each keyboard_input state ].
-		groupedByState do: [ :each | toBeRemoved addAll: each allButFirst ].
-		groupedByState := groupedByState collect: [ :each | each first ].
-		
-		(groupedByState keys size > 1 and: [ groupedByState keys first = GlutinEventInputElementState Released ])
-			ifTrue: [ toBeSwapped add: (groupedByState values first -> groupedByState values second) ] ].
-
-	toBeSwapped do: [ :eachPair |
-		| oneIndex anotherIndex |
-		
-		oneIndex := theOrderedEvents indexOf: eachPair key.
-		anotherIndex := theOrderedEvents indexOf: eachPair value.
-		theOrderedEvents swap: oneIndex with: anotherIndex ].
-
-	^ theOrderedEvents copyWithoutAll: toBeRemoved
 ]
 
 { #category : #'private - ffi' }
@@ -88,42 +39,59 @@ GlutinEventsLoop class >> primRelease: aHandle [
 	^ self ffiCall: #(void glutin_destroy_events_loop(void* aHandle))
 ]
 
-{ #category : #private }
-GlutinEventsLoop class >> uniqueEventTypes [
-	"Types of events that should be unique per frame.
-	e.g. We don't need multiple window resize or refresh events"
-	^ {
-		WinitEventType WindowEventResized.
-		WinitEventType WindowEventRefresh.
-		WinitEventType WindowEventCursorMoved.
-		WinitEventType WindowEventMoved
-	}
+{ #category : #'private - accessing' }
+GlutinEventsLoop >> callback [
+	^ callback
 ]
 
-{ #category : #events }
-GlutinEventsLoop >> fetchEvents: aBlock [
-	| theEventsBuffer theEvents filteredEvents |
-
-	self isNull
-		ifTrue: [ ^ self ].
-
-	theEventsBuffer := GlutinFetchedEvents fromHandle: self primCreateFetchedEvents getHandle.
-	self primFetchEvents: theEventsBuffer getHandle.
+{ #category : #'private - enable / disable' }
+GlutinEventsLoop >> cleanUp [
+	"I am sent when an image starts with a fresh session"
 	
-	theEventsBuffer length isZero
-		ifTrue: [
-			self primFreeEvents: theEventsBuffer getHandle.
-			^ self ].
+	self runScript: 'cleanUp'.
+	
+	callback isValid: false.
+	callback thunk free.
+	status getHandle beNull.
+
+	(Callback respondsTo: #glutinevaluateCallbackForContext:)
+		ifFalse: [
+			Callback class compile: 'glutin', (Callback class >> #evaluateCallbackForContext:) sourceCode.
+			Callback class compile: 'evaluateCallbackForContext: callbackContext
+				Callback class compile: ((Callback class >> #glutinevaluateCallbackForContext:) sourceCode copyReplaceAll: ''glutin'' with: '''').
+				(Callback class >> #glutinevaluateCallbackForContext:) removeFromSystem.
+				^ nil' ].
+
+	(VMCallbackContext64 new respondsTo: #glutinwordResult:)
+		ifFalse: [
+		VMCallbackContext64 compile: 'glutin', (VMCallbackContext64 >> #wordResult:) sourceCode.
+		VMCallbackContext64 compile: 'wordResult: aValue
+			VMCallbackContext64 compile: ((VMCallbackContext64 >> #glutinwordResult:) sourceCode copyReplaceAll: ''glutin'' with: '''').
+			(VMCallbackContext64 >> #glutinwordResult:) removeFromSystem.
+		^ 1' ].
 		
-	theEvents := FFIExternalArray
-		fromHandle: theEventsBuffer data getHandle
-		type: GlutinBaseEvent
-		size: theEventsBuffer length.
+	Alien class compile: 'error: aString
+		(Alien class >> #error:) removeFromSystem'.
 	
-	filteredEvents := self class filteredEvents: theEvents asArray.	
-	filteredEvents do: [ :anEvent | aBlock value: anEvent ].
+	[ (GlutinEventsFetcher default instVarNamed: #fetcherProcess) terminate ] on: Error do: [  ].
 	
-	self primFreeEvents: theEventsBuffer getHandle
+	(Smalltalk os windowSystemName = 'null')
+		ifTrue: [ GlutinEventsFetcher default installEventLoop ]
+]
+
+{ #category : #'private - enable / disable' }
+GlutinEventsLoop >> disable [
+	"disable the callbacks on glutin side. Events will not be sent anymore"
+	
+	(status isNotNil and: [ status isNull not ])
+		ifTrue: [ status is_valid: false ]
+]
+
+{ #category : #'private - enable / disable' }
+GlutinEventsLoop >> enable [	
+	"enable the callbacks on glutin side. Events will be sent now"
+	(status isNotNil and: [ status isNull not ])
+		ifTrue: [ status is_valid: true ]
 ]
 
 { #category : #initialization }
@@ -131,23 +99,13 @@ GlutinEventsLoop >> initialize [
 ]
 
 { #category : #'private - ffi' }
-GlutinEventsLoop >> primCreateFetchedEvents [
-	^ self ffiCall: #(void* glutin_create_fetched_events ())
-]
-
-{ #category : #'private - ffi' }
-GlutinEventsLoop >> primFetchEvents: aBuffer [
-	^ self ffiCall: #(void glutin_events_loop_fetch_events(GlutinEventsLoop self, void* aBuffer))
-]
-
-{ #category : #'private - ffi' }
-GlutinEventsLoop >> primFreeEvents: aBuffer [
-	^ self ffiCall: #(void glutin_events_loop_free_events(void* aBuffer))
-]
-
-{ #category : #'private - ffi' }
 GlutinEventsLoop >> primGetPrimaryMonitor [
 	^ self ffiCall: #(GlutinMonitorId glutin_events_loop_get_primary_monitor (GlutinEventsLoop self))
+]
+
+{ #category : #'private - ffi' }
+GlutinEventsLoop >> primRunForever: aCallback status: aStatus [
+	^ self ffiCall: #(void glutin_events_loop_run_forever(GlutinEventsLoop self, GlutinEventsLoopCallbackWithStatus* aStatus, GlutinEventCallback aCallback))
 ]
 
 { #category : #accessing }
@@ -160,4 +118,70 @@ GlutinEventsLoop >> primaryMonitor [
 	aMonitorId eventsLoop: self.
 	
 	^ aMonitorId
+]
+
+{ #category : #events }
+GlutinEventsLoop >> run: aBlock [
+
+	self isNull
+		ifTrue: [ ^ self ].
+
+	callback := GlutinEventCallback on: [ :anAddress |
+		| aControlFlow |
+		aControlFlow := aBlock value: (GlutinBaseEvent fromHandle: anAddress).
+		(aControlFlow isKindOf: GlutinControlFlow)
+			ifFalse: [ aControlFlow := GlutinControlFlow poll ].
+		aControlFlow ].
+	
+	status := GlutinEventsLoopCallbackWithStatus externalNew.
+	status is_valid: true.
+
+	self primRunForever: callback status: status
+]
+
+{ #category : #'private - enable / disable' }
+GlutinEventsLoop >> runScript: aName [
+	"Is sent when an image is about to close"
+	| aCustomScript aMethodName |
+	
+	[
+		aCustomScript := (Smalltalk image imageDirectory / aName, 'st') asFileReference.
+		aCustomScript exists ifTrue: [
+			NonInteractiveTranscript stdout show: '----------------------------------------------------------------'; cr.
+			NonInteractiveTranscript stdout show: '--------------------------- S C R I P T ------------------------'; cr.
+			NonInteractiveTranscript stdout show: '----------------------------------------------------------------'; cr.
+			NonInteractiveTranscript stdout show: aCustomScript; cr.
+			aMethodName := (#on, aName capitalized) asSymbol.
+			self class compile: aCustomScript contents.
+			(self respondsTo: aMethodName)
+				ifTrue: [
+					self perform: aMethodName.
+					(self class >> aMethodName) removeFromSystem ] ]
+	] on: Error do: [ :e | NonInteractiveTranscript stdout show: e; cr ]
+]
+
+{ #category : #'private - enable / disable' }
+GlutinEventsLoop >> shutDown: isQuitting [
+	isQuitting
+		ifTrue: [ self wrapUp ]
+		ifFalse: [ self disable ]
+]
+
+{ #category : #'private - enable / disable' }
+GlutinEventsLoop >> startUp: isInANewSession [
+	isInANewSession
+		ifTrue: [ self cleanUp ]
+		ifFalse: [ self enable ]
+]
+
+{ #category : #'private - accessing' }
+GlutinEventsLoop >> status [
+	^ status
+]
+
+{ #category : #'private - enable / disable' }
+GlutinEventsLoop >> wrapUp [
+	"Is sent when an image is about to close"
+
+	self runScript: 'wrapUp'
 ]

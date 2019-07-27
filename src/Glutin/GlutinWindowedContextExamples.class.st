@@ -27,7 +27,7 @@ GlutinWindowedContextExamples >> liveWindow [
 		[
 		aWindowedContext makeCurrent.
 		aWindowedContext eventsLoop fetchEvents: [ :anEvent |
-			anEvent mapped class = WinitBaseWindowCloseRequested
+			anEvent mapped class = GlutinWindowCloseRequested
 				ifTrue: [
 					aWindowedContext release.
 					isRunning := false.
@@ -40,6 +40,32 @@ GlutinWindowedContextExamples >> liveWindow [
 	] whileTrue ] fork. 
 	
 	^ aWindowedContext
+]
+
+{ #category : #examples }
+GlutinWindowedContextExamples >> liveWindowRunForever [
+	<gtExample>
+	| aWindowedContext |
+
+	aWindowedContext := self windowedContext.
+	aWindowedContext eventsLoop run: [ :anEvent |
+		| aControlFlow |
+		
+		aControlFlow := GlutinControlFlow Poll.
+		
+		anEvent mapped class = GlutinWindowResizedEvent
+			ifTrue: [ NonInteractiveTranscript stdout show: #GlutinWindowResizedEvent; cr ].
+		
+		anEvent mapped class = GlutinWindowRedrawRequestedEvent
+			ifTrue: [ NonInteractiveTranscript stdout show: #GlutinWindowRedrawRequestedEvent; cr ].
+		
+		anEvent mapped class = GlutinWindowCloseRequested
+			ifTrue: [ aControlFlow := GlutinControlFlow Exit ].
+			
+		Processor yield.
+		ProcessorScheduler relinquishProcessorForMicroseconds: 1.
+		
+		aControlFlow ]
 ]
 
 { #category : #'instance creation' }
