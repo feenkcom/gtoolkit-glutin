@@ -8,7 +8,8 @@ Class {
 	#classTraits : 'TGlutinLibrary classTrait + TGlutinPtr classTrait',
 	#instVars : [
 		'eventsLoop',
-		'title'
+		'title',
+		'id'
 	],
 	#category : #Glutin
 }
@@ -104,7 +105,7 @@ GlutinWindowedContext >> framebufferExtent [
 	<return: #Point>
 	| aSizeU32 |
 	
-	aSizeU32 := WinitSizeU32 new.
+	aSizeU32 := GlutinSizeU32 new.
 	self primGetFramebufferSize: aSizeU32.
 
 	^ aSizeU32 x @ aSizeU32 y
@@ -119,10 +120,18 @@ GlutinWindowedContext >> getProcAddress: aString [
 GlutinWindowedContext >> id [
 	<return: #Number>
 	| aSizeU64 |
+	
+	id
+		ifNotNil: [ ^ id ].
+		
+	self isValid
+		ifFalse: [ ^ 0 ].
 
-	aSizeU64 := WinitSizeU64 new.
+	aSizeU64 := GlutinSizeU64 new.
 	self primGetId: aSizeU64.
-	^ aSizeU64 asInteger
+	id := aSizeU64 asInteger.
+	
+	^ id
 ]
 
 { #category : #'api - accessing' }
@@ -130,7 +139,7 @@ GlutinWindowedContext >> innerExtent [
 	<return: #Point>
 	| aSizeF64 |
 	
-	aSizeF64 := WinitSizeF64 new.
+	aSizeF64 := GlutinSizeF64 new.
 	self primGetInnerSize: aSizeF64.
 
 	^ (aSizeF64 x @ aSizeF64 y) asIntegerPoint
@@ -169,7 +178,7 @@ GlutinWindowedContext >> position [
 	<return: #Point>
 	| aSizeF64 |
 	
-	aSizeF64 := WinitSizeF64 new.
+	aSizeF64 := GlutinSizeF64 new.
 	self primGetPosition: aSizeF64.
 
 	^ (aSizeF64 x @ aSizeF64 y) asIntegerPoint
@@ -184,26 +193,26 @@ GlutinWindowedContext >> position: aPoint [
 GlutinWindowedContext >> primGetFramebufferSize: aSizeU32 [
 	^ self ffiCall: #(void glutin_windowed_context_get_framebuffer_size(
 		GlutinWindowedContext self,
-		WinitSizeU32* aSizeU32))
+		#GlutinSizeU32* aSizeU32))
 ]
 
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primGetId: aSizeU64 [
-	^ self ffiCall: #(uint64 glutin_windowed_context_get_id(GlutinWindowedContext self, WinitSizeU64* aSizeU64))
+	^ self ffiCall: #(uint64 glutin_windowed_context_get_id(GlutinWindowedContext self, #GlutinSizeU64* aSizeU64))
 ]
 
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primGetInnerSize: aSizeF64 [
 	^ self ffiCall: #(void glutin_windowed_context_get_inner_size(
 		GlutinWindowedContext self,
-		WinitSizeF64* aSizeF64))
+		#GlutinSizeF64* aSizeF64))
 ]
 
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primGetPosition: aSizeF64 [
 	^ self ffiCall: #(void glutin_windowed_context_get_position(
 		GlutinWindowedContext self,
-		WinitSizeF64* aSizeF64))
+		#GlutinSizeF64* aSizeF64))
 ]
 
 { #category : #'private - ffi' }
