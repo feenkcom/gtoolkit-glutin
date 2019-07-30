@@ -63,6 +63,11 @@ GlutinEventsFetcher >> eventLoop [
 	NonInteractiveTranscript stdout show: 'Exited from event loop!'; cr.
 ]
 
+{ #category : #accessing }
+GlutinEventsFetcher >> eventsLoop [
+	^ eventsLoop
+]
+
 { #category : #initialization }
 GlutinEventsFetcher >> initialize [
 	super initialize.
@@ -159,4 +164,15 @@ GlutinEventsFetcher >> startUp: isInANewSession [
 	"Here we re-enable the callback"
 	
 	eventsLoop ifNotNil: [ :anEventsLoop | anEventsLoop startUp: isInANewSession ]
+]
+
+{ #category : #accessing }
+GlutinEventsFetcher >> thunkp [
+	eventsLoop
+		ifNil: [ ^ 0 ].
+		
+	eventsLoop callback
+		ifNil: [ ^ 0 ].
+		
+	^ eventsLoop callback thunk address
 ]
