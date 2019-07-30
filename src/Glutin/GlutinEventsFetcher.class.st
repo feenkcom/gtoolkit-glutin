@@ -78,6 +78,69 @@ GlutinEventsFetcher >> installEventLoop [
 	fetcherProcess name: 'Glutin Event Fetcher Process'
 ]
 
+{ #category : #printing }
+GlutinEventsFetcher >> printStatus [
+	| aString |
+		
+	aString := String streamContents: [ :aStream |
+		fetcherProcess
+			ifNil: [ aStream nextPutAll: 'Fetcher process is nil' ]
+			ifNotNil: [ aStream nextPutAll: ('Fetcher process: "{1}"; priority: {2}; terminated: {3}; suspended: {4}; active: {5}'
+				format: {
+					fetcherProcess name.
+					fetcherProcess priority.
+					fetcherProcess isTerminated.
+					fetcherProcess isSuspended.
+					fetcherProcess isActiveProcess }).
+					
+				aStream cr.
+				
+				aStream nextPutAll: fetcherProcess suspendedContext asString; cr.
+				aStream nextPutAll: fetcherProcess suspendingList asString.		
+				
+			].
+			
+		aStream cr.
+		
+		eventsLoop
+			ifNil: [ aStream nextPutAll: 'Events loop is nil' ]
+			ifNotNil: [ :anEventsLoop |
+				aStream nextPutAll: (anEventsLoop isRunning
+					ifTrue: [ 'Rust event loop is running' ]
+					ifFalse: [ 'Rust event loop is NOT running' ]); cr.
+				
+				anEventsLoop status
+					ifNil: [ aStream nextPutAll: 'Callback status is nil' ]
+					ifNotNil: [ 	:aCallbackStatus |
+						aCallbackStatus isNull
+							ifTrue: [ aStream nextPutAll: 'Callback status is NULL' ]
+							ifFalse: [ aStream nextPutAll: ('Callback status is {1}' format: {
+								aCallbackStatus is_valid
+									ifTrue: [ 'valid' ]
+									ifFalse: [ 'invalid' ] }) ] ].
+				aStream cr.
+				anEventsLoop callback
+					ifNil: [ aStream nextPutAll: 'Callback is nil' ]
+					ifNotNil: [ 	:aCallback |
+						aStream nextPutAll: ('Callback thunk: {1}; valid {2}' format: {
+							aCallback thunk.
+							aCallback isValid }) ].
+			].
+			aStream cr.
+		].
+
+	aString linesDo: [ :l | NonInteractiveTranscript stdout show: l logCr; cr ]
+		
+	
+	"(status isNotNil and: [ status isNull not ])
+		ifTrue: [ status is_valid: true ]"
+]
+
+{ #category : #accessing }
+GlutinEventsFetcher >> process [
+	^ fetcherProcess
+]
+
 { #category : #'event - handling' }
 GlutinEventsFetcher >> processGlutinEvent: aGlutinEvent [
 	"Send the event to all registered event handlers"
