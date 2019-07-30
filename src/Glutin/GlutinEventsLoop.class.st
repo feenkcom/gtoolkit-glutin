@@ -98,9 +98,34 @@ GlutinEventsLoop >> enable [
 GlutinEventsLoop >> initialize [
 ]
 
+{ #category : #events }
+GlutinEventsLoop >> isRunning [
+
+	status
+		ifNil: [ ^ false ].
+		
+	status isNull
+		ifTrue: [ ^ false ].
+		
+	status is_valid
+		ifFalse: [ ^ false ].
+		
+	^ status is_running
+]
+
+{ #category : #'private - ffi' }
+GlutinEventsLoop >> primCallCallback: aCallback [
+	^ self ffiCall: #(void glutin_events_loop_call_callback(GlutinEventsLoopCallbackWithStatus* aCallback))
+]
+
 { #category : #'private - ffi' }
 GlutinEventsLoop >> primGetPrimaryMonitor [
 	^ self ffiCall: #(GlutinMonitorId glutin_events_loop_get_primary_monitor (GlutinEventsLoop self))
+]
+
+{ #category : #'private - ffi' }
+GlutinEventsLoop >> primRunForever: aCallback [
+	^ self ffiCall: #(void glutin_events_loop_run_forever(GlutinEventsLoop self, GlutinEventsLoopCallbackWithStatus* aCallback))
 ]
 
 { #category : #'private - ffi' }
@@ -135,8 +160,10 @@ GlutinEventsLoop >> run: aBlock [
 	
 	status := GlutinEventsLoopCallbackWithStatus externalNew.
 	status is_valid: true.
+	status is_running: false.
+	status callback: callback.
 
-	self primRunForever: callback status: status
+	self primRunForever: status
 ]
 
 { #category : #'private - enable / disable' }
