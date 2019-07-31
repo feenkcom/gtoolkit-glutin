@@ -48,10 +48,13 @@ GlutinWindowedContextExamples >> liveWindowRunForever [
 	| aWindowedContext |
 
 	aWindowedContext := self windowedContext.
+	
+	GlutinWindowsRegistry default registerWindow: aWindowedContext.
+	
 	aWindowedContext eventsLoop run: [ :anEvent |
 		| aControlFlow |
 		
-		aControlFlow := GlutinControlFlow Poll.
+		aControlFlow := GlutinControlFlow poll.
 		
 		anEvent mapped class = GlutinWindowResizedEvent
 			ifTrue: [ NonInteractiveTranscript stdout show: #GlutinWindowResizedEvent; cr ].
@@ -60,10 +63,10 @@ GlutinWindowedContextExamples >> liveWindowRunForever [
 			ifTrue: [ NonInteractiveTranscript stdout show: #GlutinWindowRedrawRequestedEvent; cr ].
 		
 		anEvent mapped class = GlutinWindowCloseRequested
-			ifTrue: [ aControlFlow := GlutinControlFlow Exit ].
+			ifTrue: [ aControlFlow := GlutinControlFlow exit ].
 			
-		Processor yield.
-		ProcessorScheduler relinquishProcessorForMicroseconds: 1.
+		"Processor yield.
+		ProcessorScheduler relinquishProcessorForMicroseconds: 1."
 		
 		aControlFlow ]
 ]
