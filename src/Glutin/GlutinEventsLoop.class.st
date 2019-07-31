@@ -128,11 +128,6 @@ GlutinEventsLoop >> primRunForever: aCallback [
 	^ self ffiCall: #(void glutin_events_loop_run_forever(GlutinEventsLoop self, GlutinEventsLoopCallbackWithStatus* aCallback))
 ]
 
-{ #category : #'private - ffi' }
-GlutinEventsLoop >> primRunForever: aCallback status: aStatus [
-	^ self ffiCall: #(void glutin_events_loop_run_forever(GlutinEventsLoop self, GlutinEventsLoopCallbackWithStatus* aStatus, GlutinEventCallback aCallback))
-]
-
 { #category : #accessing }
 GlutinEventsLoop >> primaryMonitor [
 	<return: #GlutinMonitorId>
@@ -150,6 +145,11 @@ GlutinEventsLoop >> run: aBlock [
 
 	self isNull
 		ifTrue: [ ^ self ].
+		
+	self
+		"By design of Winit we must start an events loop only when there is at least one window"
+		assert: [ GlutinWindowsRegistry default hasWindows ]
+		description: [ 'Must have at least one window' ].
 
 	callback := GlutinEventCallback on: [ :anAddress |
 		| aControlFlow |

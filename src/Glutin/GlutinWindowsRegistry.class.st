@@ -42,12 +42,22 @@ GlutinWindowsRegistry >> detectId: aWindowId ifFound: aFoundBlock ifNone: aNoneB
 		ifAbsent: aNoneBlock
 ]
 
+{ #category : #testing }
+GlutinWindowsRegistry >> hasWindows [
+	<return: #Boolean>
+	| hasWindows |
+	
+	hasWindows := false.
+	self critical: [ hasWindows := windows isNotEmpty ].
+	^ hasWindows
+]
+
 { #category : #initialization }
 GlutinWindowsRegistry >> initialize [
 	super initialize.
 	
 	windows := WeakIdentityValueDictionary new.
-	mutex := Semaphore forMutualExclusion
+	mutex := Mutex new
 ]
 
 { #category : #'window creation and deletion' }

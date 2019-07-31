@@ -59,8 +59,11 @@ GlutinEventsFetcher >> eventLoop [
 
 	"I make sure that Glutin events loop (external) is valid"
 	self ensureEventsLoop.
-	eventsLoop run: [ :aGlutinEvent | self processGlutinEvent: aGlutinEvent ].
-	NonInteractiveTranscript stdout show: 'Exited from event loop!'; cr.
+
+	[ GlutinWindowsRegistry default hasWindows ]
+		whileFalse: [ 50 milliSeconds wait ]. 
+
+	eventsLoop run: [ :aGlutinEvent | self processGlutinEvent: aGlutinEvent ]
 ]
 
 { #category : #accessing }
