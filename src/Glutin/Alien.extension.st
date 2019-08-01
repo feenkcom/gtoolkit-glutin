@@ -7,16 +7,20 @@ Alien class >> gtInvokeCallbackContext: vmCallbackContextAddress [ "<Integer>" "
 	 a pointer to a VMCallbackContext32 or VMCallbackContext64, set up by the VM's thunkEntry
 	 routine.  Return to C via primSignal:andReturnAs:fromContext:.  thisContext's sender is the
 	 call-out context."
-	| callbackAlien type myContext |
+	| callbackAlien type originalType myContext count |
 	callbackAlien := (Smalltalk wordSize = 4
 						ifTrue: [VMCallbackContext32]
 						ifFalse: [VMCallbackContext64])
 							atAddress: vmCallbackContextAddress.
+	
+	count := (lifoCallbackSemaphore instVarNamed: #excessSignals).
 							
-	[type := Callback evaluateCallbackForContext: callbackAlien]
+	[type := originalType := Callback evaluateCallbackForContext: callbackAlien]
 		ifCurtailed: [self error: 'attempt to non-local return across a callback'].
+	
 	type ifNil:
-		[type := 1. callbackAlien wordResult: -1].
+		[ type := 1. callbackAlien wordResult: -1].
+	
 	"Now attempt to return to C.  The primitive will answer false if this is not the most recent Callback,
 	 in which case we should wait on the lifoCallbackSemaphore which will be signalled when the most
 	 recent callback successfully returns.  If this is the most recent callback the primitive will signal all
@@ -29,13 +33,30 @@ Alien class >> gtInvokeCallbackContext: vmCallbackContextAddress [ "<Integer>" "
 	therefore if we meet a non-glutin callback we can safely return from it directly"
 	callbackAlien thunkp = GlutinEventsFetcher default thunkp
 		ifFalse: [
+			"try to return normally"
 			callbackAlien primSignal: lifoCallbackSemaphore andReturnAs: type fromContext: myContext.
-			"using primitives does not work here, so we return the type directly"
-			^ type	 ].
+			
+			"nah, we failed. now we have to retrieve callback return value and return it explicitly"
+			originalType
+				"using primitives does not work here, so we return the default type directly"
+				ifNil: [ ^ -1 ].
+			
+			type = 1
+				ifTrue: [
+					^ callbackAlien wordSize = 4
+						ifTrue: [ callbackAlien signedLongAt: 25 ]
+						ifFalse: [ callbackAlien signedLongLongAt: 49 ] ].
+
+			type = 3
+				ifTrue: [
+					^ callbackAlien wordSize = 4
+						ifTrue: [ callbackAlien doubleAt: 25 ]
+						ifFalse: [ callbackAlien doubleAt: 49 ] ].
+
+			^ 0 ].
 	
 	[ callbackAlien primSignal: lifoCallbackSemaphore andReturnAs: type fromContext: myContext] whileFalse: [
-		[ (lifoCallbackSemaphore instVarNamed: #excessSignals) > 0 ]
+		[ (lifoCallbackSemaphore instVarNamed: #excessSignals) > count ]
 				whileTrue: [ lifoCallbackSemaphore wait ].
-
 		callbackAlien primReturnAs: type fromContext: myContext ]
 ]
