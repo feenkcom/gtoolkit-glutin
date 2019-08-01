@@ -6,5 +6,5 @@ Class {
 
 { #category : #tests }
 GlutinCommitTest >> test [
-	^ 5
+	^ 6
 ]
