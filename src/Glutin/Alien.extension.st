@@ -23,7 +23,6 @@ Alien class >> gtInvokeCallbackContext: vmCallbackContextAddress [ "<Integer>" "
 	 Hence all nested callbacks will end up returning in the right order."
 	
 	myContext := thisContext.
-
 	"We know that glutin callback is the root callback while all other ones are nested.
 	therefore if we meet a non-glutin callback we can safely return from it directly"
 	callbackAlien thunkp = GlutinEventsFetcher default thunkp
@@ -31,10 +30,8 @@ Alien class >> gtInvokeCallbackContext: vmCallbackContextAddress [ "<Integer>" "
 			lifoCallbackSemaphore signal.
 			callbackAlien primReturnAs: type fromContext: myContext ].
 
-	[
-		callbackAlien primSignal: lifoCallbackSemaphore andReturnAs: type fromContext: myContext] whileFalse:
-		[
-			lifoCallbackSemaphore wait.		
-			lifoCallbackSemaphore wait.
-			callbackAlien primReturnAs: type fromContext: myContext ]
+	[ callbackAlien primSignal: lifoCallbackSemaphore andReturnAs: type fromContext: myContext] whileFalse: [
+		[ (lifoCallbackSemaphore instVarNamed: #excessSignals) > 0 ]
+				whileTrue: [ lifoCallbackSemaphore wait ].
+		callbackAlien primReturnAs: type fromContext: myContext ]
 ]
