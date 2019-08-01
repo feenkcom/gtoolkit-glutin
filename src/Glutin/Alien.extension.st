@@ -7,13 +7,11 @@ Alien class >> gtInvokeCallbackContext: vmCallbackContextAddress [ "<Integer>" "
 	 a pointer to a VMCallbackContext32 or VMCallbackContext64, set up by the VM's thunkEntry
 	 routine.  Return to C via primSignal:andReturnAs:fromContext:.  thisContext's sender is the
 	 call-out context."
-	| callbackAlien type myContext myInitialExcessSignals |
+	| callbackAlien type myContext |
 	callbackAlien := (Smalltalk wordSize = 4
 						ifTrue: [VMCallbackContext32]
 						ifFalse: [VMCallbackContext64])
 							atAddress: vmCallbackContextAddress.
-							
-	myInitialExcessSignals := lifoCallbackSemaphore instVarNamed: #excessSignals.
 							
 	[type := Callback evaluateCallbackForContext: callbackAlien]
 		ifCurtailed: [self error: 'attempt to non-local return across a callback'].
@@ -26,15 +24,17 @@ Alien class >> gtInvokeCallbackContext: vmCallbackContextAddress [ "<Integer>" "
 	 Hence all nested callbacks will end up returning in the right order."
 	
 	myContext := thisContext.
+	
 	"We know that glutin callback is the root callback while all other ones are nested.
 	therefore if we meet a non-glutin callback we can safely return from it directly"
 	callbackAlien thunkp = GlutinEventsFetcher default thunkp
 		ifFalse: [
-			lifoCallbackSemaphore signal.
-			callbackAlien primReturnAs: type fromContext: myContext ].
-
+			callbackAlien primSignal: lifoCallbackSemaphore andReturnAs: type fromContext: myContext.
+			"using primitives does not work here, so we return the type directly"
+			^ type	 ].
+	
 	[ callbackAlien primSignal: lifoCallbackSemaphore andReturnAs: type fromContext: myContext] whileFalse: [
-		[ (lifoCallbackSemaphore instVarNamed: #excessSignals) > myInitialExcessSignals ]
+		[ (lifoCallbackSemaphore instVarNamed: #excessSignals) > 0 ]
 				whileTrue: [ lifoCallbackSemaphore wait ].
 
 		callbackAlien primReturnAs: type fromContext: myContext ]
