@@ -7,11 +7,14 @@ Alien class >> gtInvokeCallbackContext: vmCallbackContextAddress [ "<Integer>" "
 	 a pointer to a VMCallbackContext32 or VMCallbackContext64, set up by the VM's thunkEntry
 	 routine.  Return to C via primSignal:andReturnAs:fromContext:.  thisContext's sender is the
 	 call-out context."
-	| callbackAlien type myContext |
+	| callbackAlien type myContext myInitialExcessSignals |
 	callbackAlien := (Smalltalk wordSize = 4
 						ifTrue: [VMCallbackContext32]
 						ifFalse: [VMCallbackContext64])
 							atAddress: vmCallbackContextAddress.
+							
+	myInitialExcessSignals := lifoCallbackSemaphore instVarNamed: #excessSignals.
+							
 	[type := Callback evaluateCallbackForContext: callbackAlien]
 		ifCurtailed: [self error: 'attempt to non-local return across a callback'].
 	type ifNil:
@@ -31,7 +34,8 @@ Alien class >> gtInvokeCallbackContext: vmCallbackContextAddress [ "<Integer>" "
 			callbackAlien primReturnAs: type fromContext: myContext ].
 
 	[ callbackAlien primSignal: lifoCallbackSemaphore andReturnAs: type fromContext: myContext] whileFalse: [
-		[ (lifoCallbackSemaphore instVarNamed: #excessSignals) > 0 ]
+		[ (lifoCallbackSemaphore instVarNamed: #excessSignals) > myInitialExcessSignals ]
 				whileTrue: [ lifoCallbackSemaphore wait ].
+
 		callbackAlien primReturnAs: type fromContext: myContext ]
 ]
