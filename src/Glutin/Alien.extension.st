@@ -7,17 +7,22 @@ Alien class >> gtInvokeCallbackContext: vmCallbackContextAddress [ "<Integer>" "
 	 a pointer to a VMCallbackContext32 or VMCallbackContext64, set up by the VM's thunkEntry
 	 routine.  Return to C via primSignal:andReturnAs:fromContext:.  thisContext's sender is the
 	 call-out context."
-	| callbackAlien type originalType myContext count |
+	| callbackAlien type originalType myContext myCount |
 	callbackAlien := (Smalltalk wordSize = 4
 						ifTrue: [VMCallbackContext32]
 						ifFalse: [VMCallbackContext64])
 							atAddress: vmCallbackContextAddress.
 	
-	count := (lifoCallbackSemaphore instVarNamed: #excessSignals).
-							
-	[type := originalType := Callback evaluateCallbackForContext: callbackAlien]
-		ifCurtailed: [self error: 'attempt to non-local return across a callback'].
+	myCount := (lifoCallbackSemaphore instVarNamed: #excessSignals).
 	
+	callbackAlien thunkp = GlutinEventsFetcher default thunkp
+		ifFalse: [ lifoCallbackSemaphore signal ].
+	
+	[type := originalType := Callback evaluateCallbackForContext: callbackAlien]
+		ifCurtailed: [
+			lifoCallbackSemaphore wait.
+			self error: 'attempt to non-local return across a callback'].
+
 	type ifNil:
 		[ type := 1. callbackAlien wordResult: -1].
 	
@@ -32,7 +37,9 @@ Alien class >> gtInvokeCallbackContext: vmCallbackContextAddress [ "<Integer>" "
 	"We know that glutin callback is the root callback while all other ones are nested.
 	therefore if we meet a non-glutin callback we can safely return from it directly"
 	callbackAlien thunkp = GlutinEventsFetcher default thunkp
-		ifFalse: [
+		ifFalse: [		
+			lifoCallbackSemaphore wait.
+
 			"try to return normally"
 			callbackAlien primSignal: lifoCallbackSemaphore andReturnAs: type fromContext: myContext.
 			
@@ -55,8 +62,9 @@ Alien class >> gtInvokeCallbackContext: vmCallbackContextAddress [ "<Integer>" "
 
 			^ 0 ].
 	
-	[ callbackAlien primSignal: lifoCallbackSemaphore andReturnAs: type fromContext: myContext] whileFalse: [
-		[ (lifoCallbackSemaphore instVarNamed: #excessSignals) > count ]
-				whileTrue: [ lifoCallbackSemaphore wait ].
-		callbackAlien primReturnAs: type fromContext: myContext ]
+	[ callbackAlien primSignal: lifoCallbackSemaphore andReturnAs: type fromContext: myContext ]
+		whileFalse: [
+			100 milliSeconds wait.
+			(lifoCallbackSemaphore instVarNamed: #excessSignals) <= myCount
+				ifTrue: [ callbackAlien primReturnAs: type fromContext: myContext ] ].
 ]
