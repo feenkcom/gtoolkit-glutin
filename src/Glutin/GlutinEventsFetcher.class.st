@@ -5,7 +5,9 @@ Class {
 		'eventHandlers',
 		'fetcherProcess',
 		'currentSession',
-		'eventsLoop'
+		'eventsLoop',
+		'idleSemaphore',
+		'idleProcess'
 	],
 	#classInstVars : [
 		'default'
@@ -55,7 +57,8 @@ GlutinEventsFetcher >> eventHandlers [
 { #category : #accessing }
 GlutinEventsFetcher >> eventLoop [
 	"Fetch pending raw events from the OS.
-	 This method is run at high priority."
+	 This method is run at the user interrupt priority."
+	| idlePriority |
 
 	"I make sure that Glutin events loop (external) is valid"
 	self ensureEventsLoop.
@@ -63,11 +66,31 @@ GlutinEventsFetcher >> eventLoop [
 	[ GlutinWindowsRegistry default hasWindows ]
 		whileFalse: [ 50 milliSeconds wait ]. 
 
+	InputEventFetcher deinstall.
+	UIManager default uiProcess terminate.
+
+	idleProcess := [ idleSemaphore signal ].
+	idlePriority := Processor lowestPriority + 1.
+
 	eventsLoop run: [ :aGlutinEvent |
+		| aControlFlow  |
+		aControlFlow := GlutinControlFlow poll.
+	
 		self processGlutinEvent: aGlutinEvent.
+		
+		aGlutinEvent event_type = GlutinEventType EventsCleared
+			ifTrue: [
+				Processor nextReadyProcess priority > idlePriority
+					ifTrue: [
+						idleSemaphore consumeAllSignals.
+						idleProcess forkAt: idlePriority.
+						idleSemaphore waitTimeoutMSecs: 50.
+					] ifFalse: [ aControlFlow := GlutinControlFlow wait ] ].
+
 		GlutinWindowsRegistry default hasWindows
-			ifTrue: [ GlutinControlFlow poll ]
-			ifFalse: [ GlutinControlFlow exit ] ]
+			ifFalse: [ aControlFlow := GlutinControlFlow exit ].
+	
+		aControlFlow ]
 ]
 
 { #category : #accessing }
@@ -79,15 +102,17 @@ GlutinEventsFetcher >> eventsLoop [
 GlutinEventsFetcher >> initialize [
 	super initialize.
 	
-	eventHandlers := OrderedCollection new
+	eventHandlers := OrderedCollection new.
+	idleSemaphore := Semaphore new.
+	idleProcess := nil
 ]
 
 { #category : #accessing }
 GlutinEventsFetcher >> installEventLoop [
 	"Initialize the event loop process"
 
-	fetcherProcess := [ self eventLoop ] forkAt: Processor lowestPriority + 1.
-	fetcherProcess name: 'Glutin Event Fetcher Process'
+	fetcherProcess := [ self eventLoop ] forkAt: Processor userInterruptPriority.
+	fetcherProcess name: 'Glutin Event Fetcher Process'.
 ]
 
 { #category : #printing }
