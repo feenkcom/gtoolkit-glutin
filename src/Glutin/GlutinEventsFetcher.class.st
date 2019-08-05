@@ -7,7 +7,8 @@ Class {
 		'currentSession',
 		'eventsLoop',
 		'idleSemaphore',
-		'idleProcess'
+		'idleProcess',
+		'idleProcessBlock'
 	],
 	#classInstVars : [
 		'default'
@@ -69,7 +70,7 @@ GlutinEventsFetcher >> eventLoop [
 	InputEventFetcher deinstall.
 	UIManager default uiProcess terminate.
 
-	idleProcess := [ idleSemaphore signal ].
+	idleProcessBlock := [ idleSemaphore signal ].
 	idlePriority := Processor lowestPriority + 1.
 
 	eventsLoop run: [ :aGlutinEvent |
@@ -82,8 +83,9 @@ GlutinEventsFetcher >> eventLoop [
 			ifTrue: [
 				Processor nextReadyProcess priority > idlePriority
 					ifTrue: [
+						idleProcess ifNotNil: #terminate.
 						idleSemaphore consumeAllSignals.
-						idleProcess forkAt: idlePriority.
+						idleProcess := idleProcessBlock forkAt: idlePriority.
 						idleSemaphore waitTimeoutMSecs: 50.
 					] ifFalse: [ aControlFlow := GlutinControlFlow wait ] ].
 
