@@ -80,6 +80,35 @@ GlutinEventLoop >> cleanUp [
 ]
 
 { #category : #'api - windows' }
+GlutinEventLoop >> closeWindow: aWindowedContext [
+	GlutinWindowsRegistry default unregisterWindow: aWindowedContext.
+	aWindowedContext release
+]
+
+{ #category : #'api - windows' }
+GlutinEventLoop >> createWindow: aWindowBuilder [
+	"I choose a context builder so that context creation works"
+	| aWindowedContext theProfiles |
+	
+	theProfiles := GlutinContextBuilder profiles.
+	theProfiles withIndexDo: [ :eachProfile :anIndex |
+		aWindowedContext := GlutinWindowedContext primCreate: self windowBuilder: aWindowBuilder contextBuilder: eachProfile.
+		aWindowedContext isValid
+			ifTrue: [
+				GlutinLibrary println: '[Glutin] Profile #', anIndex asString, ' worked'.
+
+				aWindowedContext autoRelease.
+				aWindowedContext eventsLoop: self.
+				aWindowedContext title: aWindowBuilder title.
+				
+				GlutinWindowsRegistry default registerWindow: aWindowedContext.
+				
+				^ aWindowedContext ] ].
+		
+	self error: 'Could not find a suitable OpenGL profile for this system'
+]
+
+{ #category : #'api - windows' }
 GlutinEventLoop >> createWindow: aWindowBuilder context: aContextBuilder [
 	| aWindowedContext |
 	
