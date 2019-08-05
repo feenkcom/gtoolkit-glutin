@@ -12,6 +12,10 @@ TGlutinEventVisitor >> visitCursorMovedEvent: anEvent [
 ]
 
 { #category : #visiting }
+TGlutinEventVisitor >> visitEventsCleared: anEvent [
+]
+
+{ #category : #visiting }
 TGlutinEventVisitor >> visitKeyboardInputEvent: anEvent [
 ]
 
@@ -24,7 +28,23 @@ TGlutinEventVisitor >> visitMouseWheelEvent: anEvent [
 ]
 
 { #category : #visiting }
+TGlutinEventVisitor >> visitNewEvents: anEvent [
+]
+
+{ #category : #visiting }
+TGlutinEventVisitor >> visitResumed: anEvent [
+]
+
+{ #category : #visiting }
+TGlutinEventVisitor >> visitSuspended: anEvent [
+]
+
+{ #category : #visiting }
 TGlutinEventVisitor >> visitTouchEvent: anEvent [
+]
+
+{ #category : #visiting }
+TGlutinEventVisitor >> visitUnknownEvent: anEvent [
 ]
 
 { #category : #visiting }
