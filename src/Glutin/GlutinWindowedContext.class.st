@@ -170,6 +170,11 @@ GlutinWindowedContext >> primMakeCurrent [
 ]
 
 { #category : #'private - ffi' }
+GlutinWindowedContext >> primRequestRedraw [
+	^ self ffiCall: #(void* glutin_windowed_context_request_redraw(GlutinWindowedContext self))
+]
+
+{ #category : #'private - ffi' }
 GlutinWindowedContext >> primResizeLogicalWidth: aWidth height: aHeight [
 	^ self ffiCall: #(void glutin_windowed_context_resize_logical(
 		GlutinWindowedContext self,
@@ -214,6 +219,11 @@ GlutinWindowedContext >> primSwapBuffers [
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primTest [
 	^ self ffiCall: #(void glutin_windowed_context_test(GlutinWindowedContext self))
+]
+
+{ #category : #'api - gl' }
+GlutinWindowedContext >> requestRedraw [
+	self primRequestRedraw
 ]
 
 { #category : #'api - gl' }

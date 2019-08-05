@@ -112,7 +112,10 @@ GlutinEventsFetcher >> initialize [
 { #category : #accessing }
 GlutinEventsFetcher >> installEventLoop [
 	"Initialize the event loop process"
-
+	
+	(fetcherProcess isNotNil and: [ fetcherProcess isTerminated not ])
+		ifTrue: [ ^ self ].
+	
 	fetcherProcess := [ self eventLoop ] forkAt: Processor userInterruptPriority.
 	fetcherProcess name: 'Glutin Event Fetcher Process'.
 ]
