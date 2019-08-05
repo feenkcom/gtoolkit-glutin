@@ -44,7 +44,7 @@ GlutinEventsFetcher >> ensureEventsLoop [
 		ifTrue: [ ^ self ].
 
 	currentSession := Smalltalk session.
-	eventsLoop := GlutinEventsLoop new
+	eventsLoop := GlutinEventLoop new
 ]
 
 { #category : #accessing }
@@ -63,7 +63,11 @@ GlutinEventsFetcher >> eventLoop [
 	[ GlutinWindowsRegistry default hasWindows ]
 		whileFalse: [ 50 milliSeconds wait ]. 
 
-	eventsLoop run: [ :aGlutinEvent | self processGlutinEvent: aGlutinEvent ]
+	eventsLoop run: [ :aGlutinEvent |
+		self processGlutinEvent: aGlutinEvent.
+		GlutinWindowsRegistry default hasWindows
+			ifTrue: [ GlutinControlFlow poll ]
+			ifFalse: [ GlutinControlFlow exit ] ]
 ]
 
 { #category : #accessing }

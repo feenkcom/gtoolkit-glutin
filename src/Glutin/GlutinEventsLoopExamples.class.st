@@ -9,7 +9,7 @@ GlutinEventsLoopExamples >> eventsLoop [
 	<gtExample>
 	| anEventsLoop |
 	
-	anEventsLoop := GlutinEventsLoop new.
+	anEventsLoop := GlutinEventLoop new.
 	
 	^ anEventsLoop
 ]

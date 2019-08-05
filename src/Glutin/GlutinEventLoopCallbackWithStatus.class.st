@@ -1,16 +1,16 @@
 Class {
-	#name : #GlutinEventsLoopCallbackWithStatus,
+	#name : #GlutinEventLoopCallbackWithStatus,
 	#superclass : #FFIExternalStructure,
 	#classVars : [
 		'OFFSET_CALLBACK',
 		'OFFSET_IS_RUNNING',
 		'OFFSET_IS_VALID'
 	],
-	#category : #'Glutin-Events Fetcher'
+	#category : #'Glutin-Event Loop'
 }
 
 { #category : #'field definition' }
-GlutinEventsLoopCallbackWithStatus class >> fieldsDesc [
+GlutinEventLoopCallbackWithStatus class >> fieldsDesc [
 	"
 	self rebuildFieldAccessors
 	"
@@ -22,13 +22,13 @@ GlutinEventsLoopCallbackWithStatus class >> fieldsDesc [
 ]
 
 { #category : #'accessing structure variables' }
-GlutinEventsLoopCallbackWithStatus >> callback [
+GlutinEventLoopCallbackWithStatus >> callback [
 	"This method was automatically generated"
 	^GlutinEventCallback forAddress: ((handle pointerAt: OFFSET_CALLBACK) asInteger)
 ]
 
 { #category : #'accessing structure variables' }
-GlutinEventsLoopCallbackWithStatus >> callback: anObject [
+GlutinEventLoopCallbackWithStatus >> callback: anObject [
 	"This method was automatically generated"
 	handle 
 		pointerAt: OFFSET_CALLBACK
@@ -38,25 +38,25 @@ GlutinEventsLoopCallbackWithStatus >> callback: anObject [
 ]
 
 { #category : #'accessing structure variables' }
-GlutinEventsLoopCallbackWithStatus >> is_running [
+GlutinEventLoopCallbackWithStatus >> is_running [
 	"This method was automatically generated"
 	^handle booleanAt: OFFSET_IS_RUNNING
 ]
 
 { #category : #'accessing structure variables' }
-GlutinEventsLoopCallbackWithStatus >> is_running: anObject [
+GlutinEventLoopCallbackWithStatus >> is_running: anObject [
 	"This method was automatically generated"
 	handle booleanAt: OFFSET_IS_RUNNING put: anObject
 ]
 
 { #category : #'accessing structure variables' }
-GlutinEventsLoopCallbackWithStatus >> is_valid [
+GlutinEventLoopCallbackWithStatus >> is_valid [
 	"This method was automatically generated"
 	^handle booleanAt: OFFSET_IS_VALID
 ]
 
 { #category : #'accessing structure variables' }
-GlutinEventsLoopCallbackWithStatus >> is_valid: anObject [
+GlutinEventLoopCallbackWithStatus >> is_valid: anObject [
 	"This method was automatically generated"
 	handle booleanAt: OFFSET_IS_VALID put: anObject
 ]
