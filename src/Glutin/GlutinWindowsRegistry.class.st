@@ -36,10 +36,18 @@ GlutinWindowsRegistry >> detectId: aWindowId ifFound: aFoundBlock [
 
 { #category : #accessing }
 GlutinWindowsRegistry >> detectId: aWindowId ifFound: aFoundBlock ifNone: aNoneBlock [
-	^ windows
-		at: aWindowId
-		ifPresent: aFoundBlock
-		ifAbsent: aNoneBlock
+	| aWindow |
+	
+	aWindow := nil.
+	
+	self critical: [
+		windows
+			at: aWindowId
+			ifPresent:  [ :each | aWindow := each ] ].
+
+	^ aWindow
+		ifNotNil: aFoundBlock
+		ifNil: aNoneBlock
 ]
 
 { #category : #testing }

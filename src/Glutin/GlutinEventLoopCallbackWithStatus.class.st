@@ -4,7 +4,8 @@ Class {
 	#classVars : [
 		'OFFSET_CALLBACK',
 		'OFFSET_IS_RUNNING',
-		'OFFSET_IS_VALID'
+		'OFFSET_IS_VALID',
+		'OFFSET_WINDOW_COMMANDS'
 	],
 	#category : #'Glutin-Event Loop'
 }
@@ -18,6 +19,7 @@ GlutinEventLoopCallbackWithStatus class >> fieldsDesc [
 		bool is_valid
 		bool is_running
 		GlutinEventCallback callback
+		void* window_commands
  	)
 ]
 
@@ -59,4 +61,16 @@ GlutinEventLoopCallbackWithStatus >> is_valid [
 GlutinEventLoopCallbackWithStatus >> is_valid: anObject [
 	"This method was automatically generated"
 	handle booleanAt: OFFSET_IS_VALID put: anObject
+]
+
+{ #category : #'accessing structure variables' }
+GlutinEventLoopCallbackWithStatus >> window_commands [
+	"This method was automatically generated"
+	^ExternalData fromHandle: (handle pointerAt: OFFSET_WINDOW_COMMANDS) type: ExternalType void asPointerType
+]
+
+{ #category : #'accessing structure variables' }
+GlutinEventLoopCallbackWithStatus >> window_commands: anObject [
+	"This method was automatically generated"
+	handle pointerAt: OFFSET_WINDOW_COMMANDS put: anObject getHandle.
 ]
