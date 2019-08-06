@@ -25,10 +25,10 @@ GlutinWindowedContextExamples >> getProcAddress [
 { #category : #examples }
 GlutinWindowedContextExamples >> liveWindowRunForever [
 	<gtExample>
-	| aWindowedContext |
+	| theWindows |
 
-	aWindowedContext := self windowedContext.	
-	aWindowedContext eventsLoop run: [ :anEvent :anEventLoop |
+	theWindows := self windowedContexts: 3.
+	theWindows anyOne eventsLoop run: [ :anEvent :anEventLoop |
 		| aControlFlow |
 		
 		aControlFlow := GlutinControlFlow poll.
@@ -41,12 +41,17 @@ GlutinWindowedContextExamples >> liveWindowRunForever [
 			
 		anEvent mapped class = GlutinReceivedCharacterEvent
 			ifTrue: [
-				anEventLoop createWindow: (GlutinWindowBuilder new title: 'Window #1').
-				anEventLoop closeWindow: aWindowedContext.
+				anEventLoop createWindow: (GlutinWindowBuilder new title: ('Window #', theWindows size asString)).
+				(theWindows remove: theWindows anyOne) close.
 			].
 		
 		anEvent mapped class = GlutinWindowCloseRequested
-			ifTrue: [ aControlFlow := GlutinControlFlow exit ].
+			ifTrue: [
+				| aWindow |
+				aWindow := theWindows removeKey: anEvent mapped windowId.
+				aWindow close ].
+			
+		theWindows ifEmpty: [ aControlFlow := GlutinControlFlow exit ].
 		
 		aControlFlow ]
 ]
@@ -76,4 +81,19 @@ GlutinWindowedContextExamples >> windowedContext [
 	aWindowedContext := anEventsLoop createWindow: aWindowBuilder context: aContextBuilder.
 
 	^ aWindowedContext
+]
+
+{ #category : #'instance creation' }
+GlutinWindowedContextExamples >> windowedContexts: aNumber [
+	<gtExample>
+	| anEventsLoop aWindowBuilder |
+	
+	anEventsLoop := GlutinEventLoop new.
+	aWindowBuilder := GlutinWindowBuilder new.
+	
+	^ ((1 to: aNumber) collect: [ :i |
+		| aWindow |
+		aWindowBuilder title: 'Window #', i asString.
+		aWindow := anEventsLoop createWindow: aWindowBuilder.
+		aWindow id -> aWindow ]) asDictionary
 ]

@@ -82,6 +82,7 @@ GlutinEventLoop >> cleanUp [
 { #category : #'api - windows' }
 GlutinEventLoop >> closeWindow: aWindowedContext [
 	GlutinWindowsRegistry default unregisterWindow: aWindowedContext.
+	self primDestroyWindow: aWindowedContext.
 	aWindowedContext release
 ]
 
@@ -158,6 +159,11 @@ GlutinEventLoop >> isRunning [
 		ifFalse: [ ^ false ].
 		
 	^ status is_running
+]
+
+{ #category : #'private - ffi' }
+GlutinEventLoop >> primDestroyWindow: anWindowedContext [
+	^ self ffiCall: #(void glutin_events_loop_run_forever_destroy_windowed_context (GlutinWindowedContext anWindowedContext, GlutinEventLoopCallbackWithStatus* status))
 ]
 
 { #category : #'private - ffi' }

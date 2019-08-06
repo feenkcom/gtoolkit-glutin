@@ -24,9 +24,12 @@ GlutinWindowedContext class >> primCreate: anEventsLoop windowBuilder: aWindowBu
 
 { #category : #'private - ffi' }
 GlutinWindowedContext class >> primRelease: aHandle [
-	
-	"Plain pointers must be deleted using delete(), all users must implement a specific method"
-	^ self ffiCall: #(void glutin_destroy_windowed_context(void* aHandle))
+	"windowed context is released through event loop"
+]
+
+{ #category : #'initialize-release' }
+GlutinWindowedContext >> close [
+	self eventsLoop closeWindow: self
 ]
 
 { #category : #'api - accessing' }
