@@ -14,60 +14,12 @@ Class {
 	#category : #Glutin
 }
 
-{ #category : #'instance creation' }
-GlutinWindowedContext class >> create: anEventsLoop windowBuilder: aWindowBuilder [
-	"I choose a context builder so that context creation works"
-	| aWindowedContext theProfiles |
-	
-	theProfiles := GlutinContextBuilder profiles.
-	theProfiles withIndexDo: [ :eachProfile :anIndex |
-		aWindowedContext := self primCreate: anEventsLoop  windowBuilder: aWindowBuilder contextBuilder: eachProfile.
-		aWindowedContext isValid
-			ifTrue: [
-				GlutinLibrary println: '[Glutin] Profile #', anIndex asString, ' worked'.
-				aWindowedContext autoRelease.
-				aWindowedContext eventsLoop: anEventsLoop.
-				aWindowedContext title: aWindowBuilder title.
-				^ aWindowedContext ] ].
-		
-	self error: 'Could not find a suitable OpenGL profile for this system'
-]
-
-{ #category : #'instance creation' }
-GlutinWindowedContext class >> create: anEventsLoop windowBuilder: aWindowBuilder contextBuilder: aContextBuilder [
-	| aWindowedContext |
-	
-	aWindowedContext := self primCreate: anEventsLoop  windowBuilder: aWindowBuilder contextBuilder: aContextBuilder.
-	aWindowedContext autoRelease.
-	aWindowedContext eventsLoop: anEventsLoop.
-	aWindowedContext title: aWindowBuilder title.
-
-	^ aWindowedContext
-]
-
-{ #category : #'instance creation' }
-GlutinWindowedContext class >> default [
-	<return: #GlutinWindowedContext>
-	
-	^ self
-		create: GlutinEventsLoop new
-		windowBuilder: GlutinWindowBuilder new
-]
-
 { #category : #'private - ffi' }
 GlutinWindowedContext class >> primCreate: anEventsLoop windowBuilder: aWindowBuilder contextBuilder: aContextBuilder [
 	^ self ffiCall: #(GlutinWindowedContext glutin_create_windowed_context(
-			#GlutinEventsLoop anEventsLoop,
+			#GlutinEventLoop anEventsLoop,
 			#GlutinWindowBuilder aWindowBuilder,
 			#GlutinContextBuilder aContextBuilder))
-]
-
-{ #category : #'private - ffi' }
-GlutinWindowedContext class >> primCreateTest: anEventsLoop windowBuilder: aWindowBuilder contextBuilder: aContextBuilder [
-	^ self ffiCall: #(GlutinWindowedContext glutin_window_test(
-		GlutinEventsLoop anEventsLoop,
-		GlutinWindowBuilder aWindowBuilder,
-		GlutinContextBuilder aContextBuilder))
 ]
 
 { #category : #'private - ffi' }
@@ -75,19 +27,6 @@ GlutinWindowedContext class >> primRelease: aHandle [
 	
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"
 	^ self ffiCall: #(void glutin_destroy_windowed_context(void* aHandle))
-]
-
-{ #category : #'instance creation' }
-GlutinWindowedContext class >> windowBuilder: aWindowBuilder contextBuilder: aContextBuilder [
-	^ self
-		create: GlutinEventsLoop new
-		windowBuilder: aWindowBuilder
-		contextBuilder: aContextBuilder
-]
-
-{ #category : #'api - accessing' }
-GlutinWindowedContext >> destroy [
-	self release
 ]
 
 { #category : #'api - accessing' }
@@ -231,6 +170,11 @@ GlutinWindowedContext >> primMakeCurrent [
 ]
 
 { #category : #'private - ffi' }
+GlutinWindowedContext >> primRequestRedraw [
+	^ self ffiCall: #(void* glutin_windowed_context_request_redraw(GlutinWindowedContext self))
+]
+
+{ #category : #'private - ffi' }
 GlutinWindowedContext >> primResizeLogicalWidth: aWidth height: aHeight [
 	^ self ffiCall: #(void glutin_windowed_context_resize_logical(
 		GlutinWindowedContext self,
@@ -275,6 +219,11 @@ GlutinWindowedContext >> primSwapBuffers [
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primTest [
 	^ self ffiCall: #(void glutin_windowed_context_test(GlutinWindowedContext self))
+]
+
+{ #category : #'api - gl' }
+GlutinWindowedContext >> requestRedraw [
+	self primRequestRedraw
 ]
 
 { #category : #'api - gl' }

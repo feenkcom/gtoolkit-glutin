@@ -11,7 +11,7 @@ Class {
 { #category : #'callback spec' }
 GlutinEventCallback class >> fnSpec [
 
-	^'GlutinControlFlow ( GlutinBaseEvent* event)'
+	^'GlutinControlFlow ( GlutinBaseEvent* event, void* eventLoopWindowTarget )'
 ]
 
 { #category : #'callback spec' }

@@ -56,7 +56,7 @@ GlutinWindowsRegistry >> hasWindows [
 GlutinWindowsRegistry >> initialize [
 	super initialize.
 	
-	windows := WeakIdentityValueDictionary new.
+	windows := IdentityDictionary new.
 	mutex := Mutex new
 ]
 
