@@ -202,7 +202,8 @@ GlutinEventLoop >> run: aBlock [
 	callback := GlutinEventCallback on: [ :anEventAddress :anEventLoopWindowTargetAddress |
 		| aControlFlow |
 	
-		self getHandle setHandle: anEventLoopWindowTargetAddress.
+		self flag: 'Address received through Callback is wrong'.
+		"self getHandle setHandle: anEventLoopWindowTargetAddress."
 		aControlFlow := aBlock cull: (GlutinBaseEvent fromHandle: anEventAddress) cull: self.
 		(aControlFlow isKindOf: GlutinControlFlow)
 			ifFalse: [ aControlFlow := GlutinControlFlow poll ].
