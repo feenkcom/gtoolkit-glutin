@@ -76,9 +76,9 @@ GlutinEventsFetcher >> eventLoop [
 	eventsLoop run: [ :aGlutinEvent |
 		| aControlFlow  |
 		aControlFlow := GlutinControlFlow poll.
-	
+
 		self processGlutinEvent: aGlutinEvent.
-		
+
 		aGlutinEvent event_type = GlutinEventType EventsCleared
 			ifTrue: [
 				Processor nextReadyProcess priority > idlePriority
