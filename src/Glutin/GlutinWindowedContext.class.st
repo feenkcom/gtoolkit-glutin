@@ -47,6 +47,9 @@ GlutinWindowedContext >> framebufferExtent [
 	<return: #Point>
 	| aSizeU32 |
 	
+	self isValid
+		ifFalse: [ ^ 0@0 ].
+	
 	aSizeU32 := GlutinSizeU32 new.
 	self primGetFramebufferSize: aSizeU32.
 
@@ -81,6 +84,9 @@ GlutinWindowedContext >> innerExtent [
 	<return: #Point>
 	| aSizeF64 |
 	
+	self isValid
+		ifFalse: [ ^ 0@0 ].
+	
 	aSizeF64 := GlutinSizeF64 new.
 	self primGetInnerSize: aSizeF64.
 
@@ -89,6 +95,9 @@ GlutinWindowedContext >> innerExtent [
 
 { #category : #'api - accessing' }
 GlutinWindowedContext >> innerExtent: aPoint [
+	self isValid
+		ifFalse: [ ^ self ].
+
 	self primSetInnerWidth: aPoint x height: aPoint y
 ]
 
@@ -96,7 +105,9 @@ GlutinWindowedContext >> innerExtent: aPoint [
 GlutinWindowedContext >> isCurrent [
 	<return: #Boolean>
 	
-	^ self primIsCurrent
+	^ self isValid
+		ifFalse: [ false ]
+		ifTrue: [ self primIsCurrent ]
 ]
 
 { #category : #testing }
@@ -107,6 +118,9 @@ GlutinWindowedContext >> isValid [
 { #category : #'api - gl' }
 GlutinWindowedContext >> makeCurrent [
 	| aNewContext |
+	
+	self isValid
+		ifFalse: [ ^ self ].
 	
 	self isCurrent
 		ifTrue: [ ^ self ].
@@ -120,6 +134,9 @@ GlutinWindowedContext >> position [
 	<return: #Point>
 	| aSizeF64 |
 	
+	self isValid
+		ifFalse: [ ^ 0@0 ].
+	
 	aSizeF64 := GlutinSizeF64 new.
 	self primGetPosition: aSizeF64.
 
@@ -128,6 +145,9 @@ GlutinWindowedContext >> position [
 
 { #category : #'api - accessing' }
 GlutinWindowedContext >> position: aPoint [
+	self isValid
+		ifFalse: [ ^ self ].
+
 	self primSetPositionX: aPoint x y: aPoint y
 ]
 
@@ -226,16 +246,25 @@ GlutinWindowedContext >> primTest [
 
 { #category : #'api - gl' }
 GlutinWindowedContext >> requestRedraw [
+	self isValid
+		ifFalse: [ ^ self ].
+
 	self primRequestRedraw
 ]
 
 { #category : #'api - gl' }
 GlutinWindowedContext >> resize: aPoint [
+	self isValid
+		ifFalse: [ ^ self ].
+
 	self primResizeLogicalWidth: aPoint x height: aPoint y
 ]
 
 { #category : #'api - gl' }
 GlutinWindowedContext >> swapBuffers [
+	self isValid
+		ifFalse: [ ^ self ].
+
 	self primSwapBuffers
 ]
 
@@ -248,7 +277,9 @@ GlutinWindowedContext >> title [
 
 { #category : #'api - accessing' }
 GlutinWindowedContext >> title: aString [
+	
+	self isValid
+		ifTrue: [ self primSetTitle: aString ].
 
-	self primSetTitle: aString.
 	title := aString
 ]
