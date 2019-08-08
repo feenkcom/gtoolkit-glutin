@@ -50,29 +50,32 @@ GlutinEventLoop >> cleanUp [
 	
 	self runScript: 'cleanUp'.
 	
-	callback isValid: false.
-	callback thunk free.
-	status getHandle beNull.
-
-	(Callback respondsTo: #glutinevaluateCallbackForContext:)
-		ifFalse: [
-			Callback class compile: 'glutin', (Callback class >> #evaluateCallbackForContext:) sourceCode.
-			Callback class compile: 'evaluateCallbackForContext: callbackContext
-				Callback class compile: ((Callback class >> #glutinevaluateCallbackForContext:) sourceCode copyReplaceAll: ''glutin'' with: '''').
-				(Callback class >> #glutinevaluateCallbackForContext:) removeFromSystem.
-				^ nil' ].
-
-	(VMCallbackContext64 new respondsTo: #glutinwordResult:)
-		ifFalse: [
-		VMCallbackContext64 compile: 'glutin', (VMCallbackContext64 >> #wordResult:) sourceCode.
-		VMCallbackContext64 compile: 'wordResult: aValue
-			VMCallbackContext64 compile: ((VMCallbackContext64 >> #glutinwordResult:) sourceCode copyReplaceAll: ''glutin'' with: '''').
-			(VMCallbackContext64 >> #glutinwordResult:) removeFromSystem.
-		^ 1' ].
-		
-	Alien class compile: 'error: aString
-		(Alien class >> #error:) removeFromSystem'.
+	callback ifNotNil: [
+		callback isValid: false.
+		callback thunk free.
 	
+		status ifNotNil: [
+			status getHandle beNull. ].
+	
+		(Callback respondsTo: #glutinevaluateCallbackForContext:)
+			ifFalse: [
+				Callback class compile: 'glutin', (Callback class >> #evaluateCallbackForContext:) sourceCode.
+				Callback class compile: 'evaluateCallbackForContext: callbackContext
+					Callback class compile: ((Callback class >> #glutinevaluateCallbackForContext:) sourceCode copyReplaceAll: ''glutin'' with: '''').
+					(Callback class >> #glutinevaluateCallbackForContext:) removeFromSystem.
+					^ nil' ].
+
+		(VMCallbackContext64 new respondsTo: #glutinwordResult:)
+			ifFalse: [
+			VMCallbackContext64 compile: 'glutin', (VMCallbackContext64 >> #wordResult:) sourceCode.
+			VMCallbackContext64 compile: 'wordResult: aValue
+				VMCallbackContext64 compile: ((VMCallbackContext64 >> #glutinwordResult:) sourceCode copyReplaceAll: ''glutin'' with: '''').
+				(VMCallbackContext64 >> #glutinwordResult:) removeFromSystem.
+			^ 1' ].
+			
+		Alien class compile: 'error: aString
+			(Alien class >> #error:) removeFromSystem' ].
+
 	[ (GlutinEventsFetcher default instVarNamed: #fetcherProcess) terminate ] on: Error do: [  ].
 	
 	(Smalltalk os windowSystemName = 'null')
