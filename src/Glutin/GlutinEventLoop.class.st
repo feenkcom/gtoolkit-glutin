@@ -76,10 +76,8 @@ GlutinEventLoop >> cleanUp [
 		Alien class compile: 'error: aString
 			(Alien class >> #error:) removeFromSystem' ].
 
-	[ (GlutinEventsFetcher default instVarNamed: #fetcherProcess) terminate ] on: Error do: [  ].
-	
 	(Smalltalk os windowSystemName = 'null')
-		ifTrue: [ GlutinEventsFetcher default installEventLoop ]
+		ifTrue: [ GlutinEventsFetcher default reinstallEventLoop ]
 ]
 
 { #category : #'api - windows' }
@@ -93,6 +91,10 @@ GlutinEventLoop >> closeWindow: aWindowedContext [
 GlutinEventLoop >> createWindow: aWindowBuilder [
 	"I choose a context builder so that context creation works"
 	| aWindowedContext theProfiles |
+	
+	self
+		assert: [ self isNull not ]
+		equals: [ 'Can not create a window with invalid event loop' ].
 	
 	theProfiles := GlutinContextBuilder profiles.
 	theProfiles withIndexDo: [ :eachProfile :anIndex |
