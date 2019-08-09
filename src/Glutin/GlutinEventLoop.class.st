@@ -94,7 +94,7 @@ GlutinEventLoop >> createWindow: aWindowBuilder [
 	
 	self
 		assert: [ self isNull not ]
-		equals: [ 'Can not create a window with invalid event loop' ].
+		description: [ 'Can not create a window with invalid event loop' ].
 	
 	theProfiles := GlutinContextBuilder profiles.
 	theProfiles withIndexDo: [ :eachProfile :anIndex |
