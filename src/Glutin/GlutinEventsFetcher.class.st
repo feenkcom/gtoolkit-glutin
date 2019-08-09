@@ -97,6 +97,9 @@ GlutinEventsFetcher >> eventLoop [
 
 { #category : #accessing }
 GlutinEventsFetcher >> eventsLoop [
+	<return: #GlutinEventLoop>
+
+	self ensureEventsLoop.
 	^ eventsLoop
 ]
 
@@ -109,15 +112,14 @@ GlutinEventsFetcher >> initialize [
 	idleProcess := nil
 ]
 
-{ #category : #accessing }
+{ #category : #lifecycle }
 GlutinEventsFetcher >> installEventLoop [
 	"Initialize the event loop process"
 	
 	(fetcherProcess isNotNil and: [ fetcherProcess isTerminated not ])
 		ifTrue: [ ^ self ].
 	
-	fetcherProcess := [ self eventLoop ] forkAt: Processor userInterruptPriority.
-	fetcherProcess name: 'Glutin Event Fetcher Process'.
+	self reinstallEventLoop
 ]
 
 { #category : #printing }
@@ -188,6 +190,21 @@ GlutinEventsFetcher >> processGlutinEvent: aGlutinEvent [
 	"Send the event to all registered event handlers"
 
 	self eventHandlers do: [ :eachHandler | eachHandler processGlutinEvent: aGlutinEvent mapped ]
+]
+
+{ #category : #lifecycle }
+GlutinEventsFetcher >> reinstallEventLoop [
+	"Force initialize a new event fetcher process. It is not possible to do this if Glutin event loop is not nil"
+	
+	self
+		assert: [ eventsLoop isNil or: [ eventsLoop isNull ] ]
+		description: [ 'Events loop must be invalid' ].
+	
+	
+	fetcherProcess ifNotNil: [ :aProcess | [ aProcess terminate ] on: Error do: [  ] ].
+
+	fetcherProcess := [ self eventLoop ] forkAt: Processor userInterruptPriority.
+	fetcherProcess name: 'Glutin Event Fetcher Process'
 ]
 
 { #category : #'system startup' }
