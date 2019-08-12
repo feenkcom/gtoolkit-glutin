@@ -76,7 +76,7 @@ GlutinEventLoop >> cleanUp [
 		Alien class compile: 'error: aString
 			(Alien class >> #error:) removeFromSystem' ].
 
-	(Smalltalk os s isNil or: [ Smalltalk os windowSystemName = 'null' ])
+	(Smalltalk os isNil or: [ Smalltalk os windowSystemName = 'null' ])
 		ifTrue: [ GlutinEventsFetcher default reinstallEventLoop ]
 ]
 
