@@ -65,10 +65,7 @@ GlutinEventsFetcher >> eventLoop [
 	self ensureEventsLoop.
 
 	[ GlutinWindowsRegistry default hasWindows ]
-		whileFalse: [ 50 milliSeconds wait ]. 
-
-	InputEventFetcher deinstall.
-	UIManager default uiProcess terminate.
+		whileFalse: [ 50 milliSeconds wait ].
 
 	idleProcessBlock := [ idleSemaphore signal ].
 	idlePriority := Processor lowestPriority + 1.
