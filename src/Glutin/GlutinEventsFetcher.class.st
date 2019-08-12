@@ -65,11 +65,9 @@ GlutinEventsFetcher >> eventLoop [
 	self ensureEventsLoop.
 
 	[ GlutinWindowsRegistry default hasWindows ]
-		whileFalse: [ 50 milliSeconds wait ]. 
+		whileFalse: [ 50 milliSeconds wait ].
 
-	InputEventFetcher deinstall.
-	UIManager default uiProcess terminate.
-
+	idleSemaphore := Semaphore new.
 	idleProcessBlock := [ idleSemaphore signal ].
 	idlePriority := Processor lowestPriority + 1.
 
@@ -108,7 +106,7 @@ GlutinEventsFetcher >> initialize [
 	super initialize.
 	
 	eventHandlers := OrderedCollection new.
-	idleSemaphore := Semaphore new.
+	idleSemaphore := nil.
 	idleProcess := nil
 ]
 
@@ -200,8 +198,11 @@ GlutinEventsFetcher >> reinstallEventLoop [
 		assert: [ eventsLoop isNil or: [ eventsLoop isNull ] ]
 		description: [ 'Events loop must be invalid' ].
 	
+	'reinstallEventLoop' logCr.
 	
-	fetcherProcess ifNotNil: [ :aProcess | [ aProcess terminate ] on: Error do: [  ] ].
+	fetcherProcess ifNotNil: [ :aProcess | [
+		'terminate process' logCr.
+		aProcess terminate ] on: Error do: [  ] ].
 
 	fetcherProcess := [ self eventLoop ] forkAt: Processor userInterruptPriority.
 	fetcherProcess name: 'Glutin Event Fetcher Process'
