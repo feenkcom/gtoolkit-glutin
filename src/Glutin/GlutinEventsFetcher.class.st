@@ -198,11 +198,7 @@ GlutinEventsFetcher >> reinstallEventLoop [
 		assert: [ eventsLoop isNil or: [ eventsLoop isNull ] ]
 		description: [ 'Events loop must be invalid' ].
 	
-	'reinstallEventLoop' logCr.
-	
-	fetcherProcess ifNotNil: [ :aProcess | [
-		'terminate process' logCr.
-		aProcess terminate ] on: Error do: [  ] ].
+	fetcherProcess ifNotNil: [ :aProcess | [ aProcess terminate ] on: Error do: [  ] ].
 
 	fetcherProcess := [ self eventLoop ] forkAt: Processor userInterruptPriority.
 	fetcherProcess name: 'Glutin Event Fetcher Process'
