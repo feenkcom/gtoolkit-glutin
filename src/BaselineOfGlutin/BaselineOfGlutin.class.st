@@ -37,11 +37,11 @@ BaselineOfGlutin >> postLoadGlutin: spec [
 BaselineOfGlutin >> postLoadHackAlien: aSpec [
 	"nested callbacks don't work. hack around to make glutin callbacks work for now"
 	
-	Author
+	"Author
 		useAuthor: 'GlamorousAuthor'
 		during: [ Alien class compile: ((Alien class >> #gtInvokeCallbackContext:) sourceCode
 			copyReplaceAll: 'gtInvokeCallbackContext:'
-			with: 'invokeCallbackContext:') ]
+			with: 'invokeCallbackContext:') ]"
 ]
 
 { #category : #baselines }
