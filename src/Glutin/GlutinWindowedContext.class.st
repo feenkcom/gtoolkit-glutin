@@ -33,6 +33,11 @@ GlutinWindowedContext >> close [
 ]
 
 { #category : #'api - accessing' }
+GlutinWindowedContext >> cursor: aCursorIcon [
+	self primSetCursor: aCursorIcon
+]
+
+{ #category : #'api - accessing' }
 GlutinWindowedContext >> eventsLoop [
 	^ eventsLoop
 ]
@@ -211,6 +216,13 @@ GlutinWindowedContext >> primResizePhysicalWidth: aWidth height: aHeight [
 		GlutinWindowedContext self,
 		float64 aWidth,
 		float64 aHeight))
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowedContext >> primSetCursor: aCursorIcon [
+	^ self ffiCall: #(void glutin_windowed_context_set_cursor_icon (
+		GlutinWindowedContext self,
+		GlutinCursorIcon aCursorIcon))
 ]
 
 { #category : #'private - ffi' }
