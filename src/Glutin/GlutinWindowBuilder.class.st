@@ -11,7 +11,8 @@ Class {
 		'withResizable',
 		'withMaximized',
 		'alwaysOnTop',
-		'withVisibility'
+		'withVisibility',
+		'withFullSize'
 	],
 	#category : #Glutin
 }
@@ -77,6 +78,7 @@ GlutinWindowBuilder >> initialize [
 	self withResizable: true.
 	self withMaximized: false.
 	self withVisibility: true.
+	self withFullSize: false
 ]
 
 { #category : #'private - ffi' }
@@ -99,6 +101,11 @@ GlutinWindowBuilder >> primWithAlwaysOnTop: aBoolean [
 { #category : #'private - ffi' }
 GlutinWindowBuilder >> primWithDecorations: aBoolean [
 	^ self ffiCall: #(void* glutin_window_builder_with_decorations(#GlutinWindowBuilder self, bool aBoolean))
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowBuilder >> primWithFullSize: aBoolean [
+	^ self ffiCall: #(void* glutin_window_builder_with_full_size(#GlutinWindowBuilder self, bool aBoolean))
 ]
 
 { #category : #'private - ffi' }
@@ -151,6 +158,17 @@ GlutinWindowBuilder >> withDecorations [
 GlutinWindowBuilder >> withDecorations: aBoolean [
 	withDecorations := aBoolean.
 	self mutate: (self primWithDecorations: aBoolean)
+]
+
+{ #category : #accessing }
+GlutinWindowBuilder >> withFullSize [
+	^ withFullSize
+]
+
+{ #category : #accessing }
+GlutinWindowBuilder >> withFullSize: aBoolean [
+	withFullSize := aBoolean.
+	self mutate: (self primWithFullSize: aBoolean)
 ]
 
 { #category : #accessing }
