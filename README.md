@@ -1,11 +1,12 @@
-# OSWindow-Glutin
-Glutin backend for OSWindow
+# GToolkit-Glutin
+
+GToolkit bindings to [Glutin](https://github.com/rust-windowing/glutin) - a low-level library for OpenGL context creation, written in pure Rust.
 
 ## Installation
 
 ```smalltalk
 Metacello new
-   baseline: 'OSWindowGlutin';
-   repository: 'github://feenkcom/oswindow-glutin/src';
+   baseline: 'Glutin';
+   repository: 'github://feenkcom/gtoolkit-glutin/src';
    load
 ```
