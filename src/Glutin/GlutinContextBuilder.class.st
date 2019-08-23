@@ -95,10 +95,9 @@ GlutinContextBuilder >> mutate: aHandle [
 	self
 		assert: [ handle ~= aHandle ]
 		description: [ 'Can not replace a handle with the same one' ].
-
-	self release.
-	handle := aHandle.
-	self autoRelease
+		
+	"we don't release previous pointer manually because it is freed by native methods"
+	handle := aHandle
 ]
 
 { #category : #'private - ffi' }

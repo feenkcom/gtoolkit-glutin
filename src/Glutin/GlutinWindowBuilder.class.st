@@ -88,9 +88,8 @@ GlutinWindowBuilder >> mutate: aHandle [
 		assert: [ handle ~= aHandle ]
 		description: [ 'Can not replace a handle with the same one' ].
 
-	self release.
+	"we don't release previous pointer manually because it is freed by native methods"
 	handle := aHandle.
-	self autoRelease
 ]
 
 { #category : #'private - ffi' }
