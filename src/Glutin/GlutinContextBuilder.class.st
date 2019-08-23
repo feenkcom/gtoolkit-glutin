@@ -95,10 +95,17 @@ GlutinContextBuilder >> mutate: aHandle [
 	self
 		assert: [ handle ~= aHandle ]
 		description: [ 'Can not replace a handle with the same one' ].
-
-	self release.
+	
+	(FFIExternalResourceManager uniqueInstance instVarNamed: #registry) remove: self ifAbsent: [ ].
+	"we don't release previous pointer manually because it is freed by native methods"
 	handle := aHandle.
 	self autoRelease
+]
+
+{ #category : #'private - ffi' }
+GlutinContextBuilder >> nullify [
+	self getHandle beNull.
+	self release
 ]
 
 { #category : #'private - ffi' }

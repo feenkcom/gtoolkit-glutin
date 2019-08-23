@@ -11,7 +11,8 @@ Class {
 		'withResizable',
 		'withMaximized',
 		'alwaysOnTop',
-		'withVisibility'
+		'withVisibility',
+		'withFullSize'
 	],
 	#category : #Glutin
 }
@@ -55,6 +56,20 @@ GlutinWindowBuilder >> alwaysOnTop: aBoolean [
 ]
 
 { #category : #accessing }
+GlutinWindowBuilder >> copy [
+	^ self class new
+		title: self title;
+		extent: self extent;
+		alwaysOnTop: self alwaysOnTop;
+		withDecorations: self withDecorations;
+		withTransparency: self withTransparency;
+		withResizable: self withResizable;
+		withMaximized: self withMaximized;
+		withVisibility: self withVisibility;
+		withFullSize: self withFullSize
+]
+
+{ #category : #accessing }
 GlutinWindowBuilder >> extent [
 	^ extent
 ]
@@ -77,6 +92,7 @@ GlutinWindowBuilder >> initialize [
 	self withResizable: true.
 	self withMaximized: false.
 	self withVisibility: true.
+	self withFullSize: false
 ]
 
 { #category : #'private - ffi' }
@@ -86,9 +102,17 @@ GlutinWindowBuilder >> mutate: aHandle [
 		assert: [ handle ~= aHandle ]
 		description: [ 'Can not replace a handle with the same one' ].
 
-	self release.
+	(FFIExternalResourceManager uniqueInstance instVarNamed: #registry) remove: self ifAbsent: [ ].
+	"we don't release previous pointer manually because it is freed by native methods"
 	handle := aHandle.
 	self autoRelease
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowBuilder >> nullify [
+	self class warning: 'nullify'.
+	self getHandle beNull.
+	self release
 ]
 
 { #category : #'private - ffi' }
@@ -99,6 +123,11 @@ GlutinWindowBuilder >> primWithAlwaysOnTop: aBoolean [
 { #category : #'private - ffi' }
 GlutinWindowBuilder >> primWithDecorations: aBoolean [
 	^ self ffiCall: #(void* glutin_window_builder_with_decorations(#GlutinWindowBuilder self, bool aBoolean))
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowBuilder >> primWithFullSize: aBoolean [
+	^ self ffiCall: #(void* glutin_window_builder_with_full_size(#GlutinWindowBuilder self, bool aBoolean))
 ]
 
 { #category : #'private - ffi' }
@@ -113,7 +142,7 @@ GlutinWindowBuilder >> primWithResizable: aBoolean [
 
 { #category : #'private - ffi' }
 GlutinWindowBuilder >> primWithTitle: aString [
-	^ self ffiCall: #(void* glutin_window_builder_with_title(#GlutinWindowBuilder self, String aString))
+	^ self ffiCall: #(void* glutin_window_builder_with_title(#GlutinWindowBuilder self, ByteArray aString))
 ]
 
 { #category : #'private - ffi' }
@@ -138,8 +167,18 @@ GlutinWindowBuilder >> title [
 
 { #category : #accessing }
 GlutinWindowBuilder >> title: aString [
+	| encodedString |
 	title := aString.
-	self mutate: (self primWithTitle: aString)
+	
+	encodedString := ByteArray streamContents: [ :aStream |
+		ZnUTF8Encoder new 
+			next: aString size 
+			putAll: aString asString
+			startingAt: 1 
+			toStream: aStream.
+		aStream nextPut: 0 ].
+	
+	self mutate: (self primWithTitle: encodedString)
 ]
 
 { #category : #accessing }
@@ -151,6 +190,17 @@ GlutinWindowBuilder >> withDecorations [
 GlutinWindowBuilder >> withDecorations: aBoolean [
 	withDecorations := aBoolean.
 	self mutate: (self primWithDecorations: aBoolean)
+]
+
+{ #category : #accessing }
+GlutinWindowBuilder >> withFullSize [
+	^ withFullSize
+]
+
+{ #category : #accessing }
+GlutinWindowBuilder >> withFullSize: aBoolean [
+	withFullSize := aBoolean.
+	self mutate: (self primWithFullSize: aBoolean)
 ]
 
 { #category : #accessing }

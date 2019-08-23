@@ -29,19 +29,7 @@ BaselineOfGlutin >> postLoadGlutin: spec [
 
 	PostLoaded := true.
 	self postLoadInitializeEventsMap: spec.
-	self postLoadInstallGlutinBinary: spec.
-	self postLoadHackAlien: spec
-]
-
-{ #category : #baselines }
-BaselineOfGlutin >> postLoadHackAlien: aSpec [
-	"nested callbacks don't work. hack around to make glutin callbacks work for now"
-	
-	"Author
-		useAuthor: 'GlamorousAuthor'
-		during: [ Alien class compile: ((Alien class >> #gtInvokeCallbackContext:) sourceCode
-			copyReplaceAll: 'gtInvokeCallbackContext:'
-			with: 'invokeCallbackContext:') ]"
+	self postLoadInstallGlutinBinary: spec
 ]
 
 { #category : #baselines }
