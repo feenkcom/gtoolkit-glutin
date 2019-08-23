@@ -56,6 +56,20 @@ GlutinWindowBuilder >> alwaysOnTop: aBoolean [
 ]
 
 { #category : #accessing }
+GlutinWindowBuilder >> copy [
+	^ self class new
+		title: self title;
+		extent: self extent;
+		alwaysOnTop: self alwaysOnTop;
+		withDecorations: self withDecorations;
+		withTransparency: self withTransparency;
+		withResizable: self withResizable;
+		withMaximized: self withMaximized;
+		withVisibility: self withVisibility;
+		withFullSize: self withFullSize
+]
+
+{ #category : #accessing }
 GlutinWindowBuilder >> extent [
 	^ extent
 ]
@@ -88,8 +102,17 @@ GlutinWindowBuilder >> mutate: aHandle [
 		assert: [ handle ~= aHandle ]
 		description: [ 'Can not replace a handle with the same one' ].
 
+	(FFIExternalResourceManager uniqueInstance instVarNamed: #registry) remove: self ifAbsent: [ ].
 	"we don't release previous pointer manually because it is freed by native methods"
 	handle := aHandle.
+	self autoRelease
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowBuilder >> nullify [
+	self class warning: 'nullify'.
+	self getHandle beNull.
+	self release
 ]
 
 { #category : #'private - ffi' }

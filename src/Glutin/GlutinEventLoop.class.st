@@ -98,14 +98,19 @@ GlutinEventLoop >> createWindow: aWindowBuilder [
 	
 	theProfiles := GlutinContextBuilder profiles.
 	theProfiles withIndexDo: [ :eachProfile :anIndex |
-		aWindowedContext := GlutinWindowedContext primCreate: self windowBuilder: aWindowBuilder contextBuilder: eachProfile.
+		| aBuilderCopy |
+		
+		aBuilderCopy := aWindowBuilder copy.
+		aWindowedContext := GlutinWindowedContext primCreate: self windowBuilder: aBuilderCopy contextBuilder: eachProfile.
+		aBuilderCopy nullify.
+		eachProfile nullify.
+	
 		aWindowedContext isValid
 			ifTrue: [
 				GlutinLibrary println: '[Glutin] Profile #', anIndex asString, ' worked'.
-
 				aWindowedContext autoRelease.
 				aWindowedContext eventsLoop: self.
-				aWindowedContext title: aWindowBuilder title.
+				aWindowedContext title: aBuilderCopy title.
 				
 				GlutinWindowsRegistry default registerWindow: aWindowedContext.
 				
@@ -116,12 +121,17 @@ GlutinEventLoop >> createWindow: aWindowBuilder [
 
 { #category : #'api - windows' }
 GlutinEventLoop >> createWindow: aWindowBuilder context: aContextBuilder [
-	| aWindowedContext |
+	| aWindowedContext aBuilderCopy |
+	
+	aBuilderCopy := aWindowBuilder copy.
 	
 	aWindowedContext := GlutinWindowedContext
 		primCreate: self
-		windowBuilder: aWindowBuilder
+		windowBuilder: aBuilderCopy
 		contextBuilder: aContextBuilder.
+
+	aBuilderCopy nullify.
+	aContextBuilder nullify.
 
 	aWindowedContext autoRelease.
 	aWindowedContext eventsLoop: self.
