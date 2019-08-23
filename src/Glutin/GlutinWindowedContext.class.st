@@ -14,6 +14,11 @@ Class {
 	#category : #Glutin
 }
 
+{ #category : #'library path' }
+GlutinWindowedContext class >> ffiLibraryName [
+	^ GlutinLibrary
+]
+
 { #category : #'private - ffi' }
 GlutinWindowedContext class >> primCreate: anEventsLoop windowBuilder: aWindowBuilder contextBuilder: aContextBuilder [
 	^ self ffiCall: #(GlutinWindowedContext glutin_create_windowed_context(
