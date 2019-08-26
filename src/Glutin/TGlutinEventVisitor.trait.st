@@ -20,6 +20,10 @@ TGlutinEventVisitor >> visitKeyboardInputEvent: anEvent [
 ]
 
 { #category : #visiting }
+TGlutinEventVisitor >> visitLoopDestroyed: anEvent [
+]
+
+{ #category : #visiting }
 TGlutinEventVisitor >> visitMouseInputEvent: anEvent [
 ]
 
