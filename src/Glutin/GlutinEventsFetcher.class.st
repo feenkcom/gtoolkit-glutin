@@ -222,7 +222,7 @@ GlutinEventsFetcher >> reinstallEventLoop [
 GlutinEventsFetcher >> shutDown: isQuitting [
 
 	wantsToShutdown := true.
-	[ shutdownSemaphore wait ]
+	[ isInCallback ifTrue: [ shutdownSemaphore wait ] ]
 		ensure: [ wantsToShutdown := false ].
 
 	idleProcess ifNotNil: #terminate.
@@ -230,7 +230,7 @@ GlutinEventsFetcher >> shutDown: isQuitting [
 	fetcherProcess := nil.
 
 	self
-		assert: isInCallback not
+		assert: [ isInCallback not ]
 		description: [ 'I must not be in a callback' ].
 
 	eventsLoop ifNotNil: [ :anEventsLoop | eventsLoop shutDown: isQuitting ]
