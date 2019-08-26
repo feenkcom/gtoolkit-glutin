@@ -47,7 +47,7 @@ GlutinEventsFetcher >> addEventHandler: anEventHandler [
 	eventHandlers add: anEventHandler
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 GlutinEventsFetcher >> ensureEventsLoop [
 	"I make sure that Glutin events loop (external) is valid"
 
@@ -239,9 +239,10 @@ GlutinEventsFetcher >> shutDown: isQuitting [
 	[ isInCallback ifTrue: [ shutdownSemaphore wait ] ]
 		ensure: [ wantsToShutdown := false ].
 
-	idleProcess ifNotNil: #terminate.
 	fetcherProcess ifNotNil: #terminate.
 	fetcherProcess := nil.
+	idleProcess ifNotNil: #terminate.
+	idleProcess := nil.
 
 	self
 		assert: [ isInCallback not ]
