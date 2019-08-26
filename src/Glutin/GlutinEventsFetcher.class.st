@@ -40,6 +40,13 @@ GlutinEventsFetcher class >> startUp: isInANewSession [
 	self default startUp: isInANewSession
 ]
 
+{ #category : #'api - event handlers' }
+GlutinEventsFetcher >> addEventHandler: anEventHandler [
+	(eventHandlers includes: anEventHandler)
+		ifTrue: [ ^ self ].
+	eventHandlers add: anEventHandler
+]
+
 { #category : #accessing }
 GlutinEventsFetcher >> ensureEventsLoop [
 	"I make sure that Glutin events loop (external) is valid"
@@ -216,6 +223,13 @@ GlutinEventsFetcher >> reinstallEventLoop [
 
 	fetcherProcess := [ self eventLoop ] forkAt: Processor userInterruptPriority.
 	fetcherProcess name: 'Glutin Event Fetcher Process'
+]
+
+{ #category : #'api - event handlers' }
+GlutinEventsFetcher >> removeEventHandler: anEventHandler [
+	(eventHandlers includes: anEventHandler)
+		ifFalse: [ ^ self ].
+	eventHandlers remove: anEventHandler
 ]
 
 { #category : #'system startup' }
