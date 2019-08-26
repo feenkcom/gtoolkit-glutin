@@ -8,7 +8,10 @@ Class {
 		'eventsLoop',
 		'idleSemaphore',
 		'idleProcess',
-		'idleProcessBlock'
+		'idleProcessBlock',
+		'shutdownSemaphore',
+		'wantsToShutdown',
+		'isInCallback'
 	],
 	#classInstVars : [
 		'default'
@@ -67,30 +70,39 @@ GlutinEventsFetcher >> eventLoop [
 	[ GlutinWindowsRegistry default hasWindows ]
 		whileFalse: [ 50 milliSeconds wait ].
 
+	[ wantsToShutdown ]
+		whileTrue: [ 50 milliSeconds wait ].
+
 	idleSemaphore := Semaphore new.
 	idleProcessBlock := [ idleSemaphore signal ].
 	idlePriority := Processor lowestPriority + 1.
 
-	eventsLoop run: [ :aGlutinEvent |
-		| aControlFlow  |
-		aControlFlow := GlutinControlFlow poll.
-
-		self processGlutinEvent: aGlutinEvent.
-
-		aGlutinEvent event_type = GlutinEventType EventsCleared
-			ifTrue: [
-				Processor nextReadyProcess priority > idlePriority
-					ifTrue: [
-						idleProcess ifNotNil: #terminate.
-						idleSemaphore consumeAllSignals.
-						idleProcess := idleProcessBlock forkAt: idlePriority.
-						idleSemaphore waitTimeoutMSecs: 50.
-					] ifFalse: [ aControlFlow := GlutinControlFlow wait ] ].
-
-		GlutinWindowsRegistry default hasWindows
-			ifFalse: [ aControlFlow := GlutinControlFlow exit ].
+	isInCallback := true.
 	
-		aControlFlow ]
+	[
+		eventsLoop run: [ :aGlutinEvent |
+			| aControlFlow  |
+
+			aControlFlow := GlutinControlFlow poll.
+
+			self processGlutinEvent: aGlutinEvent.
+
+			aGlutinEvent event_type = GlutinEventType EventsCleared
+				ifTrue: [
+					Processor nextReadyProcess priority > idlePriority
+						ifTrue: [
+							idleProcess ifNotNil: #terminate.
+							idleSemaphore consumeAllSignals.
+							idleProcess := idleProcessBlock forkAt: idlePriority.
+							idleSemaphore waitTimeoutMSecs: 50.
+						] ifFalse: [ aControlFlow := GlutinControlFlow wait ] ].
+
+			wantsToShutdown
+				ifTrue: [ aControlFlow := GlutinControlFlow exit ].
+			aControlFlow ].
+		] ensure: [
+			isInCallback := false.
+			shutdownSemaphore signal ]
 ]
 
 { #category : #accessing }
@@ -107,16 +119,20 @@ GlutinEventsFetcher >> initialize [
 	
 	eventHandlers := OrderedCollection new.
 	idleSemaphore := nil.
-	idleProcess := nil
+	idleProcess := nil.
+	
+	isInCallback := false.
+	shutdownSemaphore := Semaphore new.
+	wantsToShutdown := false
 ]
 
 { #category : #lifecycle }
 GlutinEventsFetcher >> installEventLoop [
 	"Initialize the event loop process"
-	
+
 	(fetcherProcess isNotNil and: [ fetcherProcess isTerminated not ])
 		ifTrue: [ ^ self ].
-	
+
 	self reinstallEventLoop
 ]
 
@@ -195,10 +211,8 @@ GlutinEventsFetcher >> reinstallEventLoop [
 	"Force initialize a new event fetcher process. It is not possible to do this if Glutin event loop is not nil"
 	
 	self
-		assert: [ eventsLoop isNil or: [ eventsLoop isNull ] ]
-		description: [ 'Events loop must be invalid' ].
-	
-	fetcherProcess ifNotNil: [ :aProcess | [ aProcess terminate ] on: Error do: [  ] ].
+		assert: [ fetcherProcess isNil ]
+		description: [ 'Fetcher process must not exist' ].
 
 	fetcherProcess := [ self eventLoop ] forkAt: Processor userInterruptPriority.
 	fetcherProcess name: 'Glutin Event Fetcher Process'
@@ -206,15 +220,38 @@ GlutinEventsFetcher >> reinstallEventLoop [
 
 { #category : #'system startup' }
 GlutinEventsFetcher >> shutDown: isQuitting [
-	
+
+	wantsToShutdown := true.
+	[ shutdownSemaphore wait ]
+		ensure: [ wantsToShutdown := false ].
+
+	idleProcess ifNotNil: #terminate.
+	fetcherProcess ifNotNil: #terminate.
+	fetcherProcess := nil.
+
+	self
+		assert: isInCallback not
+		description: [ 'I must not be in a callback' ].
+
 	eventsLoop ifNotNil: [ :anEventsLoop | eventsLoop shutDown: isQuitting ]
 ]
 
 { #category : #'system startup' }
 GlutinEventsFetcher >> startUp: isInANewSession [
 	"Here we re-enable the callback"
-	
-	eventsLoop ifNotNil: [ :anEventsLoop | anEventsLoop startUp: isInANewSession ]
+
+	self
+		assert: [ isInCallback not ]
+		description: [ 'I must not be in a callback' ].
+		
+	self
+		assert: [ wantsToShutdown not ]
+		description: [ 'I must not be in the middle of the shutdown' ].
+
+	eventsLoop ifNotNil: [ :anEventsLoop | anEventsLoop startUp: isInANewSession ].
+
+	(Smalltalk os windowSystemName isNil or: [ Smalltalk os windowSystemName = 'null' ])
+		ifTrue: [ self reinstallEventLoop ]
 ]
 
 { #category : #accessing }
