@@ -4,9 +4,12 @@ GToolkit bindings to [Glutin](https://github.com/rust-windowing/glutin) - a low-
 
 ## Installation
 
-```smalltalk
-Metacello new
-   baseline: 'Glutin';
-   repository: 'github://feenkcom/gtoolkit-glutin/src';
-   load
+```smalltalk 
+EpMonitor current disable.
+[ 
+  Metacello new
+    baseline: 'Glutin';
+    repository: 'github://feenkcom/gtoolkit-glutin/src';
+    load
+] ensure: [ EpMonitor current enable ].  
 ```
