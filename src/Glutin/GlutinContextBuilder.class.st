@@ -51,6 +51,34 @@ GlutinContextBuilder class >> osx [
 		withVsync: false
 ]
 
+{ #category : #'instance creation' }
+GlutinContextBuilder class >> possibleAlphaBits [
+	"Without alpha"
+
+	^ #(8 0)
+]
+
+{ #category : #'instance creation' }
+GlutinContextBuilder class >> possibleColorBits [
+	"Without alpha"
+
+	^ #(24 16 8)
+]
+
+{ #category : #'instance creation' }
+GlutinContextBuilder class >> possiblePixelFormats [
+	"Without alpha"
+
+	^ Array streamContents: [ :aStream |
+		| theColorBits theAlphaBits |
+	
+		theColorBits := self possibleColorBits.
+		theAlphaBits := self possibleAlphaBits.
+
+		theColorBits do: [ :eachColorBit | theAlphaBits do: [ :eachAlphaBit |
+			aStream nextPut: { eachColorBit . eachAlphaBit } ] ] ]
+]
+
 { #category : #'private - ffi' }
 GlutinContextBuilder class >> primCreate [
 	^ self ffiCall: #(#GlutinContextBuilder glutin_create_context_builder())
@@ -71,16 +99,41 @@ GlutinContextBuilder class >> profiles [
 		self osx.
 		self windows.
 		self linux
-	 }
+	 } flattened
+]
+
+{ #category : #'instance creation' }
+GlutinContextBuilder class >> profilesDo: aBlock [
+	| thePixelFormats aCounter |
+	
+	aCounter := 0.
+	thePixelFormats := self possiblePixelFormats.
+	thePixelFormats do: [ :eachFormat |
+		| eachProfile |
+		
+		eachProfile := self new
+			withDoubleBuffer: true;
+			withGlLatest;
+			withMultisampling: 0;
+			withDepthBuffer: 24;
+			withStencilBuffer: 8;
+			withPixelFormatColor: eachFormat first alpha: eachFormat second;
+			withSrgb: false;
+			withVsync: false.
+		
+		aCounter := aCounter + 1.
+		aBlock value: eachProfile value: aCounter ]
 ]
 
 { #category : #'instance creation' }
 GlutinContextBuilder class >> windows [
 	<return: #GlutinContextBuilder>
+	
+	
 
 	^ self new
 		withDoubleBuffer: true;
-		withGl: #(3 1) thenGles: #(3 1);
+		withGlLatest;
 		withMultisampling: 0;
 		withDepthBuffer: 24;
 		withStencilBuffer: 8;

@@ -66,14 +66,13 @@ GlutinEventLoop >> closeWindow: aWindowedContext [
 { #category : #'api - windows' }
 GlutinEventLoop >> createWindow: aWindowBuilder [
 	"I choose a context builder so that context creation works"
-	| aWindowedContext theProfiles |
+	| aWindowedContext |
 	
 	self
 		assert: [ self isNull not ]
 		description: [ 'Can not create a window with invalid event loop' ].
 	
-	theProfiles := GlutinContextBuilder profiles.
-	theProfiles withIndexDo: [ :eachProfile :anIndex |
+	GlutinContextBuilder profilesDo: [ :eachProfile :anIndex |
 		| aBuilderCopy |
 		
 		aBuilderCopy := aWindowBuilder copy.
