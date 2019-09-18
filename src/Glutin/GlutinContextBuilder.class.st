@@ -119,7 +119,7 @@ GlutinContextBuilder class >> profilesDo: aBlock [
 				withSrgb: false;
 				withVsync: false.
 				
-			eachProfile perform: eachFormat key withArguments: eachFormat value.
+			eachProfile perform: eachGlRequest key withArguments: eachGlRequest value.
 			
 			aCounter := aCounter + 1.
 			aBlock value: eachProfile value: aCounter ] ]
