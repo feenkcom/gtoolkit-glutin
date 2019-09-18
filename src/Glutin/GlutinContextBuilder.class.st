@@ -17,38 +17,8 @@ GlutinContextBuilder class >> ffiLibraryName [
 ]
 
 { #category : #'instance creation' }
-GlutinContextBuilder class >> linux [
-	<return: #GlutinContextBuilder>
-
-	^ self new
-		withDoubleBuffer: false;
-		withGlLatest;
-		withMultisampling: 0;
-		withDepthBuffer: 24;
-		withStencilBuffer: 8;
-		withPixelFormatColor: 24 alpha: 0;
-		withSrgb: false;
-		withVsync: false
-]
-
-{ #category : #'instance creation' }
 GlutinContextBuilder class >> new [
 	^ self create
-]
-
-{ #category : #'instance creation' }
-GlutinContextBuilder class >> osx [
-	<return: #GlutinContextBuilder>
-	
-	^ self new
-		withDoubleBuffer: true;
-		withGlLatest;
-		withMultisampling: 0;
-		withDepthBuffer: 24;
-		withStencilBuffer: 8;
-		withPixelFormatColor: 24 alpha: 8;
-		withSrgb: false;
-		withVsync: false
 ]
 
 { #category : #'instance creation' }
@@ -63,6 +33,42 @@ GlutinContextBuilder class >> possibleColorBits [
 	"Without alpha"
 
 	^ #(24 16 8)
+]
+
+{ #category : #'instance creation' }
+GlutinContextBuilder class >> possibleGlRequests [
+	
+	^ {
+		#withGlLatest -> #()
+	}, (self possibleOpenGlVersions collect: [ :eachVersion |
+		#withGl:thenGles: -> { eachVersion . eachVersion }
+	])
+]
+
+{ #category : #'instance creation' }
+GlutinContextBuilder class >> possibleOpenGlVersions [
+	^ { 
+		#(4 6).
+		#(4 5).
+		#(4 4).
+		#(4 3).
+		#(4 2).
+		#(4 1).
+		#(4 0).
+		#(3 3).
+		#(3 2).
+		#(3 1).
+		#(3 0).
+		#(2 1).
+		#(2 0).
+		#(1 5).
+		#(1 4).
+		#(1 3).
+		#(1 2).
+		#(1 2).
+		#(1 1).
+		#(1 0)
+	}
 ]
 
 { #category : #'instance creation' }
@@ -92,54 +98,31 @@ GlutinContextBuilder class >> primRelease: aHandle [
 ]
 
 { #category : #'instance creation' }
-GlutinContextBuilder class >> profiles [
-	<return: #Array of: #GlutinContextBuilder>
-	
-	^ {
-		self osx.
-		self windows.
-		self linux
-	 } flattened
-]
-
-{ #category : #'instance creation' }
 GlutinContextBuilder class >> profilesDo: aBlock [
-	| thePixelFormats aCounter |
+	| theGlRequests thePixelFormats aCounter |
 	
 	aCounter := 0.
+	
+	theGlRequests := self possibleGlRequests.
 	thePixelFormats := self possiblePixelFormats.
-	thePixelFormats do: [ :eachFormat |
-		| eachProfile |
-		
-		eachProfile := self new
-			withDoubleBuffer: true;
-			withGlLatest;
-			withMultisampling: 0;
-			withDepthBuffer: 24;
-			withStencilBuffer: 8;
-			withPixelFormatColor: eachFormat first alpha: eachFormat second;
-			withSrgb: false;
-			withVsync: false.
-		
-		aCounter := aCounter + 1.
-		aBlock value: eachProfile value: aCounter ]
-]
-
-{ #category : #'instance creation' }
-GlutinContextBuilder class >> windows [
-	<return: #GlutinContextBuilder>
 	
-	
-
-	^ self new
-		withDoubleBuffer: true;
-		withGlLatest;
-		withMultisampling: 0;
-		withDepthBuffer: 24;
-		withStencilBuffer: 8;
-		withPixelFormatColor: 24 alpha: 0;
-		withSrgb: false;
-		withVsync: false
+	theGlRequests do: [ :eachGlRequest |
+		thePixelFormats do: [ :eachFormat |
+			| eachProfile |
+			
+			eachProfile := self new
+				withDoubleBuffer: true;
+				withMultisampling: 0;
+				withDepthBuffer: 24;
+				withStencilBuffer: 8;
+				withPixelFormatColor: eachFormat first alpha: eachFormat second;
+				withSrgb: false;
+				withVsync: false.
+				
+			eachProfile perform: eachFormat key withArguments: eachFormat value.
+			
+			aCounter := aCounter + 1.
+			aBlock value: eachProfile value: aCounter ] ]
 ]
 
 { #category : #'private - ffi' }
