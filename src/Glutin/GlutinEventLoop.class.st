@@ -89,7 +89,8 @@ GlutinEventLoop >> createWindow: aWindowBuilder [
 				
 				GlutinWindowsRegistry default registerWindow: aWindowedContext.
 				
-				^ aWindowedContext ] ].
+				^ aWindowedContext ]
+			ifFalse: [ GlutinLibrary println: '[Glutin] Profile #', anIndex asString, ' did not work' ] ].
 		
 	self error: 'Could not find a suitable OpenGL profile for this system'
 ]
