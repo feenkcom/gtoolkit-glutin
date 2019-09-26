@@ -102,6 +102,11 @@ GlutinContextBuilder class >> primRelease: aHandle [
 	^ self ffiCall: #(void glutin_destroy_context_builder(void* aHandle))
 ]
 
+{ #category : #'private - ffi' }
+GlutinContextBuilder class >> primTryContext: aContextBuilder eventLoop: anEventLoop [
+	^ self ffiCall: #(bool glutin_try_headless_context(GlutinEventLoop anEventLoop, GlutinContextBuilder aContextBuilder))
+]
+
 { #category : #'instance creation' }
 GlutinContextBuilder class >> profilesDo: aBlock [
 	| theGlRequests thePixelFormats theSrgbValues aCounter |
