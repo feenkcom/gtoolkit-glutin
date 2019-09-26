@@ -73,23 +73,25 @@ GlutinEventLoop >> createWindow: aWindowBuilder [
 		description: [ 'Can not create a window with invalid event loop' ].
 	
 	GlutinContextBuilder profilesDo: [ :eachProfile :anIndex |
-		| aBuilderCopy |
-		
-		aBuilderCopy := aWindowBuilder copy.
-		aWindowedContext := GlutinWindowedContext primCreate: self windowBuilder: aBuilderCopy contextBuilder: eachProfile.
-		aBuilderCopy nullify.
-		eachProfile nullify.
-	
-		aWindowedContext isValid
+		(self tryHeadlessContext: eachProfile)
 			ifTrue: [
-				GlutinLibrary println: '[Glutin] Profile #', anIndex asString, ' worked'.
-				aWindowedContext autoRelease.
-				aWindowedContext eventsLoop: self.
-				aWindowedContext title: aBuilderCopy title.
+				| aBuilderCopy |
 				
-				GlutinWindowsRegistry default registerWindow: aWindowedContext.
-				
-				^ aWindowedContext ]
+				aBuilderCopy := aWindowBuilder copy.
+				aWindowedContext := GlutinWindowedContext primCreate: self windowBuilder: aBuilderCopy contextBuilder: eachProfile.
+				aBuilderCopy nullify.
+				eachProfile nullify.
+			
+				aWindowedContext isValid
+					ifTrue: [
+						GlutinLibrary println: '[Glutin] Profile #', anIndex asString, ' worked'.
+						aWindowedContext autoRelease.
+						aWindowedContext eventsLoop: self.
+						aWindowedContext title: aBuilderCopy title.
+						
+						GlutinWindowsRegistry default registerWindow: aWindowedContext.
+						
+						^ aWindowedContext ] ]
 			ifFalse: [ GlutinLibrary println: '[Glutin] Profile #', anIndex asString, ' did not work' ] ].
 		
 	self error: 'Could not find a suitable OpenGL profile for this system'
@@ -251,6 +253,13 @@ GlutinEventLoop >> startUp: isInANewSession [
 { #category : #'private - accessing' }
 GlutinEventLoop >> status [
 	^ status
+]
+
+{ #category : #'api - windows' }
+GlutinEventLoop >> tryHeadlessContext: aContextBuilder [
+	<return: #Boolean>
+
+	^ GlutinContextBuilder primTryContext: aContextBuilder eventLoop: self
 ]
 
 { #category : #'private - enable / disable' }

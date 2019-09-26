@@ -85,6 +85,11 @@ GlutinContextBuilder class >> possiblePixelFormats [
 			aStream nextPut: { eachColorBit . eachAlphaBit } ] ] ]
 ]
 
+{ #category : #'instance creation' }
+GlutinContextBuilder class >> possibleSrgbValues [
+	^ #(true false)
+]
+
 { #category : #'private - ffi' }
 GlutinContextBuilder class >> primCreate [
 	^ self ffiCall: #(#GlutinContextBuilder glutin_create_context_builder())
@@ -97,32 +102,39 @@ GlutinContextBuilder class >> primRelease: aHandle [
 	^ self ffiCall: #(void glutin_destroy_context_builder(void* aHandle))
 ]
 
+{ #category : #'private - ffi' }
+GlutinContextBuilder class >> primTryContext: aContextBuilder eventLoop: anEventLoop [
+	^ self ffiCall: #(bool glutin_try_headless_context(GlutinEventLoop anEventLoop, GlutinContextBuilder aContextBuilder))
+]
+
 { #category : #'instance creation' }
 GlutinContextBuilder class >> profilesDo: aBlock [
-	| theGlRequests thePixelFormats aCounter |
+	| theGlRequests thePixelFormats theSrgbValues aCounter |
 	
 	aCounter := 0.
 	
 	theGlRequests := self possibleGlRequests.
 	thePixelFormats := self possiblePixelFormats.
+	theSrgbValues := self possibleSrgbValues.
 	
 	theGlRequests do: [ :eachGlRequest |
 		thePixelFormats do: [ :eachFormat |
-			| eachProfile |
-			
-			eachProfile := self new
-				withDoubleBuffer: true;
-				withMultisampling: 0;
-				withDepthBuffer: 24;
-				withStencilBuffer: 8;
-				withPixelFormatColor: eachFormat first alpha: eachFormat second;
-				withSrgb: false;
-				withVsync: false.
+			theSrgbValues do: [ :eachSrgb |
+				| eachProfile |
 				
-			eachProfile perform: eachGlRequest key withArguments: eachGlRequest value.
-			
-			aCounter := aCounter + 1.
-			aBlock value: eachProfile value: aCounter ] ]
+				eachProfile := self new
+					withDoubleBuffer: true;
+					withMultisampling: 0;
+					withDepthBuffer: 24;
+					withStencilBuffer: 8;
+					withPixelFormatColor: eachFormat first alpha: eachFormat second;
+					withSrgb: eachSrgb;
+					withVsync: false.
+					
+				eachProfile perform: eachGlRequest key withArguments: eachGlRequest value.
+				
+				aCounter := aCounter + 1.
+				aBlock value: eachProfile value: aCounter ] ] ]
 ]
 
 { #category : #'private - ffi' }
