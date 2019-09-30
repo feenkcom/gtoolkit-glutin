@@ -61,7 +61,9 @@ GlutinWindowedContext >> framebufferExtent [
 		ifFalse: [ ^ 0@0 ].
 	
 	aSizeU32 := GlutinSizeU32 new.
-	self primGetFramebufferSize: aSizeU32.
+	aSizeU32 pinInMemory.
+	[ self primGetFramebufferSize: aSizeU32 ] ensure: [
+		aSizeU32 unpinInMemory ].
 
 	^ aSizeU32 x @ aSizeU32 y
 ]
@@ -83,7 +85,9 @@ GlutinWindowedContext >> id [
 		ifFalse: [ ^ 0 ].
 
 	aSizeU64 := GlutinSizeU64 new.
-	self primGetId: aSizeU64.
+	aSizeU64 pinInMemory.
+	[ self primGetId: aSizeU64 ] ensure: [ 
+		aSizeU64 unpinInMemory ].
 	id := aSizeU64 asInteger.
 	
 	^ id
@@ -98,7 +102,9 @@ GlutinWindowedContext >> innerExtent [
 		ifFalse: [ ^ 0@0 ].
 	
 	aSizeF64 := GlutinSizeF64 new.
-	self primGetInnerSize: aSizeF64.
+	aSizeF64 pinInMemory.
+	[ self primGetInnerSize: aSizeF64 ] ensure: [
+		aSizeF64 unpinInMemory ].
 
 	^ (aSizeF64 x @ aSizeF64 y) asIntegerPoint
 ]
@@ -148,7 +154,9 @@ GlutinWindowedContext >> position [
 		ifFalse: [ ^ 0@0 ].
 	
 	aSizeF64 := GlutinSizeF64 new.
-	self primGetPosition: aSizeF64.
+	aSizeF64 pinInMemory.
+	[ self primGetPosition: aSizeF64 ] ensure: [ 
+		aSizeF64 unpinInMemory ].
 
 	^ (aSizeF64 x @ aSizeF64 y) asIntegerPoint
 ]
