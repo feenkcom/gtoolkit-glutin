@@ -136,14 +136,18 @@ GlutinGL >> getString: which [
 	| aStringBuffer aString |
 
 	aStringBuffer := GlutinCString new.
-	self get_string: which in: aStringBuffer.
+	aStringBuffer pinInMemory.
+	[ 
+		self get_string: which in: aStringBuffer.
 
-	aString := (FFIExternalArray
-		fromHandle: aStringBuffer data getHandle
-		type: FFIUInt8
-		size: aStringBuffer length) asByteArray asString.
+		aString := (FFIExternalArray
+			fromHandle: aStringBuffer data getHandle
+			type: FFIUInt8
+			size: aStringBuffer length) asByteArray asString.
 		
-	self free_string: aStringBuffer.
+		self free_string: aStringBuffer.
+	] ensure: [
+		aStringBuffer unpinInMemory ].
 
 	^ aString
 ]
