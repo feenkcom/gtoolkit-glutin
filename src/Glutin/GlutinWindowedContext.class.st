@@ -55,17 +55,16 @@ GlutinWindowedContext >> eventsLoop: aGlutinEventsLoop [
 { #category : #'api - accessing' }
 GlutinWindowedContext >> framebufferExtent [
 	<return: #Point>
-	| aSizeU32 |
+	| aSizeF64 |
 	
 	self isValid
 		ifFalse: [ ^ 0@0 ].
+		
+	aSizeF64 := GlutinSizeF64 externalNew.
 	
-	aSizeU32 := GlutinSizeU32 new.
-	aSizeU32 pinInMemory.
-	[ self primGetFramebufferSize: aSizeU32 ] ensure: [
-		aSizeU32 unpinInMemory ].
-
-	^ aSizeU32 x @ aSizeU32 y
+	^ [ self primGetFramebufferSize: aSizeF64.
+		(aSizeF64 x @ aSizeF64 y) asIntegerPoint
+	] ensure: [ aSizeF64 release ]
 ]
 
 { #category : #'api - gl' }
@@ -83,14 +82,12 @@ GlutinWindowedContext >> id [
 		
 	self isValid
 		ifFalse: [ ^ 0 ].
-
-	aSizeU64 := GlutinSizeU64 new.
-	aSizeU64 pinInMemory.
-	[ self primGetId: aSizeU64 ] ensure: [ 
-		aSizeU64 unpinInMemory ].
-	id := aSizeU64 asInteger.
+		
+	aSizeU64 := GlutinSizeU64 externalNew.
 	
-	^ id
+	^ id := [ self primGetId: aSizeU64.
+		aSizeU64 asInteger
+	] ensure: [ aSizeU64 release ]
 ]
 
 { #category : #'api - accessing' }
@@ -100,13 +97,12 @@ GlutinWindowedContext >> innerExtent [
 	
 	self isValid
 		ifFalse: [ ^ 0@0 ].
+		
+	aSizeF64 := GlutinSizeF64 externalNew.
 	
-	aSizeF64 := GlutinSizeF64 new.
-	aSizeF64 pinInMemory.
-	[ self primGetInnerSize: aSizeF64 ] ensure: [
-		aSizeF64 unpinInMemory ].
-
-	^ (aSizeF64 x @ aSizeF64 y) asIntegerPoint
+	^ [ self primGetInnerSize: aSizeF64.
+		(aSizeF64 x @ aSizeF64 y) asIntegerPoint
+	] ensure: [ aSizeF64 release ]
 ]
 
 { #category : #'api - accessing' }
@@ -153,12 +149,11 @@ GlutinWindowedContext >> position [
 	self isValid
 		ifFalse: [ ^ 0@0 ].
 	
-	aSizeF64 := GlutinSizeF64 new.
-	aSizeF64 pinInMemory.
-	[ self primGetPosition: aSizeF64 ] ensure: [ 
-		aSizeF64 unpinInMemory ].
-
-	^ (aSizeF64 x @ aSizeF64 y) asIntegerPoint
+	aSizeF64 := GlutinSizeF64 externalNew.
+	
+	^ [ self primGetPosition: aSizeF64.
+		(aSizeF64 x @ aSizeF64 y) asIntegerPoint
+	] ensure: [ aSizeF64 release ]
 ]
 
 { #category : #'api - accessing' }
@@ -170,29 +165,31 @@ GlutinWindowedContext >> position: aPoint [
 ]
 
 { #category : #'private - ffi' }
-GlutinWindowedContext >> primGetFramebufferSize: aSizeU32 [
+GlutinWindowedContext >> primGetFramebufferSize: aSizeF64 [
 	^ self ffiCall: #(void glutin_windowed_context_get_framebuffer_size(
 		GlutinWindowedContext self,
-		#GlutinSizeU32* aSizeU32))
+		GlutinSizeF64* aSizeF64))
 ]
 
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primGetId: aSizeU64 [
-	^ self ffiCall: #(uint64 glutin_windowed_context_get_id(GlutinWindowedContext self, #GlutinSizeU64* aSizeU64))
+	^ self ffiCall: #(void glutin_windowed_context_get_id(
+		GlutinWindowedContext self,
+		GlutinSizeU64* aSizeU64))
 ]
 
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primGetInnerSize: aSizeF64 [
 	^ self ffiCall: #(void glutin_windowed_context_get_inner_size(
 		GlutinWindowedContext self,
-		#GlutinSizeF64* aSizeF64))
+		GlutinSizeF64* aSizeF64))
 ]
 
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primGetPosition: aSizeF64 [
 	^ self ffiCall: #(void glutin_windowed_context_get_position(
 		GlutinWindowedContext self,
-		#GlutinSizeF64* aSizeF64))
+		GlutinSizeF64* aSizeF64))
 ]
 
 { #category : #'private - ffi' }
@@ -212,7 +209,7 @@ GlutinWindowedContext >> primMakeCurrent [
 
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primRequestRedraw [
-	^ self ffiCall: #(void* glutin_windowed_context_request_redraw(GlutinWindowedContext self))
+	^ self ffiCall: #(void glutin_windowed_context_request_redraw(GlutinWindowedContext self))
 ]
 
 { #category : #'private - ffi' }
