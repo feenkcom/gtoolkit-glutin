@@ -16,7 +16,8 @@ BaselineOfGlutin >> baseline: spec [
 		spec
 			postLoadDoIt: #'postLoadGlutin:';
 			package: 'Glutin' with: [ spec requires: #(GToolkitInstaller) ];
-			package: 'Glutin-OpenGL' with: [ spec requires: #('Glutin') ] ]
+			package: 'Glutin-OpenGL' with: [ spec requires: #('Glutin') ];
+			package: 'Glutin-Morphic' with: [ spec requires: #('Glutin' 'Glutin-OpenGL') ] ]
 ]
 
 { #category : #baselines }
