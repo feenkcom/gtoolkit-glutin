@@ -1,5 +1,5 @@
 Class {
-	#name : #GlutinOpenGLBuffer,
+	#name : #GlutinGLBuffer,
 	#superclass : #Object,
 	#instVars : [
 		'stride',
@@ -10,50 +10,50 @@ Class {
 }
 
 { #category : #accessing }
-GlutinOpenGLBuffer >> extent [
+GlutinGLBuffer >> extent [
 	<return: #Point>
 
 	^ extent
 ]
 
 { #category : #accessing }
-GlutinOpenGLBuffer >> extent: anObject [
+GlutinGLBuffer >> extent: anObject [
 	extent := anObject
 ]
 
 { #category : #accessing }
-GlutinOpenGLBuffer >> height [
+GlutinGLBuffer >> height [
 	<return: #Number>
 
 	^ extent y
 ]
 
 { #category : #accessing }
-GlutinOpenGLBuffer >> pixels [
+GlutinGLBuffer >> pixels [
 	<return: #FFIExternalArray>
 
 	^ pixels
 ]
 
 { #category : #accessing }
-GlutinOpenGLBuffer >> pixels: anObject [
+GlutinGLBuffer >> pixels: anObject [
 	pixels := anObject
 ]
 
 { #category : #accessing }
-GlutinOpenGLBuffer >> stride [
+GlutinGLBuffer >> stride [
 	<return: #Number>
 
 	^ stride
 ]
 
 { #category : #accessing }
-GlutinOpenGLBuffer >> stride: anObject [
+GlutinGLBuffer >> stride: anObject [
 	stride := anObject
 ]
 
 { #category : #accessing }
-GlutinOpenGLBuffer >> width [
+GlutinGLBuffer >> width [
 	<return: #Number>
 
 	^ extent x

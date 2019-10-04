@@ -4,8 +4,8 @@ Class {
 	#traits : 'TGlutinLibrary + TGlutinPtr',
 	#classTraits : 'TGlutinLibrary classTrait + TGlutinPtr classTrait',
 	#pools : [
-		'GlutinOpenGLConstants',
-		'GlutinOpenGLTypes'
+		'GlutinGLConstants',
+		'GlutinGLTypes'
 	],
 	#category : #'Glutin-OpenGL'
 }

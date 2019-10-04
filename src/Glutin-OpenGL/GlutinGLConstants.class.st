@@ -1,5 +1,5 @@
 Class {
-	#name : #GlutinOpenGLConstants,
+	#name : #GlutinGLConstants,
 	#superclass : #SharedPool,
 	#classVars : [
 		'GL_1PASS_EXT',
@@ -5646,7 +5646,7 @@ Class {
 }
 
 { #category : #'constant data' }
-GlutinOpenGLConstants class >> constantData [
+GlutinGLConstants class >> constantData [
 	^ #(
 		GL_CURRENT_BIT	1
 		GL_POINT_BIT	2
@@ -11292,7 +11292,7 @@ GlutinOpenGLConstants class >> constantData [
 ]
 
 { #category : #'class initialization' }
-GlutinOpenGLConstants class >> initialize [
+GlutinGLConstants class >> initialize [
 	"
 	self initialize
 	"

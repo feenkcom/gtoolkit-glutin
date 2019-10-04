@@ -1,5 +1,5 @@
 Class {
-	#name : #GlutinOpenGLTypes,
+	#name : #GlutinGLTypes,
 	#superclass : #SharedPool,
 	#classVars : [
 		'GLUnurbs',
@@ -39,7 +39,7 @@ Class {
 }
 
 { #category : #'class initialization' }
-GlutinOpenGLTypes class >> initialize [
+GlutinGLTypes class >> initialize [
 	"
 	self initialize
 	"

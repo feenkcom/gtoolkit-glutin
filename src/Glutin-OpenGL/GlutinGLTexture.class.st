@@ -1,5 +1,5 @@
 Class {
-	#name : #GlutinOpenGLTexture,
+	#name : #GlutinGLTexture,
 	#superclass : #Object,
 	#instVars : [
 		'id',
@@ -9,21 +9,21 @@ Class {
 }
 
 { #category : #accessing }
-GlutinOpenGLTexture >> extent [
+GlutinGLTexture >> extent [
 	^ extent
 ]
 
 { #category : #accessing }
-GlutinOpenGLTexture >> extent: anObject [
+GlutinGLTexture >> extent: anObject [
 	extent := anObject
 ]
 
 { #category : #accessing }
-GlutinOpenGLTexture >> id [
+GlutinGLTexture >> id [
 	^ id
 ]
 
 { #category : #accessing }
-GlutinOpenGLTexture >> id: anObject [
+GlutinGLTexture >> id: anObject [
 	id := anObject
 ]
