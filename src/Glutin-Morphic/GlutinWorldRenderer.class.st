@@ -133,7 +133,17 @@ GlutinWorldRenderer >> displayWorldState: aWorldState ofWorld: aWorld submorphs:
 	
 	"quickly copy altered rects of canvas to Display:"
 	thePixels := FFIExternalArray fromHandle: buffer pixels type: FFIUInt32 size: display stride * display height.
-	thePixels atAll: (1 to: display bits size) putAll: display bits.
+	
+	allDamage do: [ :eachRectangle |
+		| aDamage h index bits |
+		bits := display bits.
+		aDamage := eachRectangle intersect: (0@0 extent: buffer extent - (1@1)).
+		aDamage top floor to: aDamage bottom ceiling do: [ :y |
+			h := display width * y + 1.
+			aDamage left floor to: aDamage right ceiling do: [ :x |
+				index := h + x.
+				thePixels at: index put: (bits at: index) ] ] ].
+
 	renderer presentBuffer: buffer areas: allDamage.
 
  	handsToDraw do: [:h | h restoreSavedPatchOn: self canvas].  "restore world canvas under hands"

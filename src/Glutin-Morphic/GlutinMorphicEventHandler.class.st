@@ -149,8 +149,6 @@ GlutinMorphicEventHandler >> visitCursorMovedEvent: anEvent [
 	theButtons := (self convertModifiers: anEvent modifiers).
 	buttons ifNotNil: [ theButtons := theButtons | buttons ].
 
-	NonInteractiveTranscript stdout show: buttons; cr.
-
 	mousePosition := aNewCursorPosition.
 
 	morphicWorld beCursorOwner.
@@ -240,14 +238,18 @@ GlutinMorphicEventHandler >> visitMouseInputEvent: anEvent [
 		ifTrue: [ ^ self ].
 
 	anEventType := aState = GlutinEventInputElementState Pressed
-		ifTrue: [ #mouseDown  ]
+		ifTrue: [ #mouseDown ]
 		ifFalse: [ #mouseUp ].
+		
+	 buttons := aState = GlutinEventInputElementState Pressed
+		ifTrue: [ self convertButton: anEvent button ]
+		ifFalse: [ 0 ].
 
 	aMorphicEvent := MouseButtonEvent new
 		setType: anEventType
 		position: mousePosition
-		which: (self convertButton: anEvent button)
-		buttons: (self convertModifiers: anEvent modifiers) | (buttons := self convertButton: anEvent button)
+		which: buttons
+		buttons: (self convertModifiers: anEvent modifiers) | buttons
 		hand: self activeHand
 		stamp: Time millisecondClockValue.
 
