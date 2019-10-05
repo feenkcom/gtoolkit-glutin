@@ -7,19 +7,17 @@ Class {
 	#category : #BaselineOfGlutin
 }
 
-{ #category : #baseline }
+{ #category : #baselines }
 BaselineOfGlutin >> baseline: spec [
 	<baseline>
-	spec for: #'common' do: [
-		spec postLoadDoIt: #'postLoadGlutin:'.
-		spec baseline: 'GToolkitInstaller' with: [
-				spec repository: 'github://feenkcom/gtoolkit-installer:v0.7.8/src' ].
-		spec 
-			package: 'Glutin' with: [
-				spec requires: #(#GToolkitInstaller ). ];
-			package: 'Glutin-OpenGL' with: [
-				spec requires: #('Glutin' ). ]. ].
-
+	spec for: #common do: [
+		spec
+			baseline: 'GToolkitInstaller' with: [ spec repository: 'github://feenkcom/gtoolkit-installer/src' ].
+		spec
+			postLoadDoIt: #'postLoadGlutin:';
+			package: 'Glutin' with: [ spec requires: #(GToolkitInstaller) ];
+			package: 'Glutin-OpenGL' with: [ spec requires: #('Glutin') ];
+			package: 'Glutin-Morphic' with: [ spec requires: #('Glutin' 'Glutin-OpenGL') ] ]
 ]
 
 { #category : #baselines }

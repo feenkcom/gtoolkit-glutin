@@ -1,8 +1,8 @@
 "
-I render a pixel buffer in a glutin window using Gleam API
+I render a pixel buffer ${class:GlutinOpenGLBuffer}$ as a texture ${class:GlutinOpenGLTexture}$ in a glutin window using Gleam API
 "
 Class {
-	#name : #GlutinOpenGLBufferRenderer,
+	#name : #GlutinGLBufferRenderer,
 	#superclass : #Object,
 	#instVars : [
 		'window',
@@ -20,18 +20,18 @@ Class {
 		'session'
 	],
 	#pools : [
-		'GlutinOpenGLConstants'
+		'GlutinGLConstants'
 	],
 	#category : #'Glutin-OpenGL-Renderer'
 }
 
 { #category : #'private - texture' }
-GlutinOpenGLBufferRenderer >> createTexture: aGlutinOpenGLBuffer [
+GlutinGLBufferRenderer >> createTexture: aGlutinOpenGLBuffer [
 	"Create a texture for a given opengl buffer"
-	<return: #GlutinOpenGLTexture>
+	<return: #GlutinGLTexture>
 	| aTexture |
 
-	aTexture := GlutinOpenGLTexture new.
+	aTexture := GlutinGLTexture new.
 	aTexture id: gl gen_texture.
 	aTexture extent: aGlutinOpenGLBuffer extent.
 	
@@ -55,7 +55,7 @@ GlutinOpenGLBufferRenderer >> createTexture: aGlutinOpenGLBuffer [
 ]
 
 { #category : #'private - shader' }
-GlutinOpenGLBufferRenderer >> fragmentShader [
+GlutinGLBufferRenderer >> fragmentShader [
 	| aShaderVersion |
 	
 	aShaderVersion := gl shaderVersion.
@@ -75,7 +75,7 @@ GlutinOpenGLBufferRenderer >> fragmentShader [
 ]
 
 { #category : #'private - shader' }
-GlutinOpenGLBufferRenderer >> fragmentShader120 [
+GlutinGLBufferRenderer >> fragmentShader120 [
 	^ '#version 120
 	
 	varying vec2 vTex;
@@ -87,7 +87,7 @@ GlutinOpenGLBufferRenderer >> fragmentShader120 [
 ]
 
 { #category : #'private - shader' }
-GlutinOpenGLBufferRenderer >> fragmentShader150 [
+GlutinGLBufferRenderer >> fragmentShader150 [
 	^ '#version 150
 	
 	varying vec2 vTex;
@@ -99,7 +99,7 @@ GlutinOpenGLBufferRenderer >> fragmentShader150 [
 ]
 
 { #category : #'private - shader' }
-GlutinOpenGLBufferRenderer >> fragmentShader330 [
+GlutinGLBufferRenderer >> fragmentShader330 [
 	^ '#version 330
 	
 	precision highp float;
@@ -113,7 +113,7 @@ GlutinOpenGLBufferRenderer >> fragmentShader330 [
 ]
 
 { #category : #'private - shader' }
-GlutinOpenGLBufferRenderer >> fragmentShader410 [
+GlutinGLBufferRenderer >> fragmentShader410 [
 	^ '#version 410
 	
 	precision highp float;
@@ -128,7 +128,7 @@ GlutinOpenGLBufferRenderer >> fragmentShader410 [
 ]
 
 { #category : #initialization }
-GlutinOpenGLBufferRenderer >> initializeGL [
+GlutinGLBufferRenderer >> initializeGL [
 	"I initialize an OpenGL context to be ready to render a pixel buffer"
 
 	self isGLValid
@@ -176,7 +176,7 @@ GlutinOpenGLBufferRenderer >> initializeGL [
 ]
 
 { #category : #'private - testing' }
-GlutinOpenGLBufferRenderer >> isGLValid [
+GlutinGLBufferRenderer >> isGLValid [
 	<return: #Boolean>
 
 	session == Smalltalk session
@@ -189,7 +189,7 @@ GlutinOpenGLBufferRenderer >> isGLValid [
 ]
 
 { #category : #'private - testing' }
-GlutinOpenGLBufferRenderer >> isTextureValidFor: aGlutinOpenGLBuffer [
+GlutinGLBufferRenderer >> isTextureValidFor: aGlutinOpenGLBuffer [
 	<return: #Boolean>
 		
 	texture
@@ -202,19 +202,19 @@ GlutinOpenGLBufferRenderer >> isTextureValidFor: aGlutinOpenGLBuffer [
 ]
 
 { #category : #'private - testing' }
-GlutinOpenGLBufferRenderer >> isValidFor: aGlutinOpenGLBuffer [
+GlutinGLBufferRenderer >> isValidFor: aGlutinOpenGLBuffer [
 	<return: #Boolean>
 
 	^ self isGLValid and: [ self isTextureValidFor: aGlutinOpenGLBuffer ]
 ]
 
 { #category : #'api - gl' }
-GlutinOpenGLBufferRenderer >> makeCurrent [	
+GlutinGLBufferRenderer >> makeCurrent [	
 	self window makeCurrent
 ]
 
 { #category : #'api - rendering' }
-GlutinOpenGLBufferRenderer >> prepareForBuffer: aGlutinOpenGLBuffer [	
+GlutinGLBufferRenderer >> prepareForBuffer: aGlutinOpenGLBuffer [	
 	self
 		assert: [ self window isNotNil ]
 		description: [ 'Window must be set!' ].
@@ -230,7 +230,7 @@ GlutinOpenGLBufferRenderer >> prepareForBuffer: aGlutinOpenGLBuffer [
 ]
 
 { #category : #'api - rendering' }
-GlutinOpenGLBufferRenderer >> presentBuffer: aGlutinOpenGLBuffer areas: aCollectionOfAreas [
+GlutinGLBufferRenderer >> presentBuffer: aGlutinOpenGLBuffer areas: aCollectionOfAreas [
 	| vao |
 
 	self window isValid
@@ -271,12 +271,12 @@ GlutinOpenGLBufferRenderer >> presentBuffer: aGlutinOpenGLBuffer areas: aCollect
 ]
 
 { #category : #'api - gl' }
-GlutinOpenGLBufferRenderer >> swapBuffers [
+GlutinGLBufferRenderer >> swapBuffers [
 	self window swapBuffers
 ]
 
 { #category : #'private - texture' }
-GlutinOpenGLBufferRenderer >> updateTexture: aTexture from: aGlutinOpenGLBuffer [
+GlutinGLBufferRenderer >> updateTexture: aTexture from: aGlutinOpenGLBuffer [
 	gl bind_texture_2d: aTexture id.
 	gl tex_parameter_i_target: GL_TEXTURE_2D name: GL_TEXTURE_MIN_FILTER param: GL_NEAREST.
 	gl tex_parameter_i_target: GL_TEXTURE_2D name: GL_TEXTURE_MAG_FILTER param: GL_NEAREST.
@@ -294,7 +294,7 @@ GlutinOpenGLBufferRenderer >> updateTexture: aTexture from: aGlutinOpenGLBuffer 
 ]
 
 { #category : #'private - shader' }
-GlutinOpenGLBufferRenderer >> vertexShader [
+GlutinGLBufferRenderer >> vertexShader [
 	| aShaderVersion |
 	
 	aShaderVersion := gl shaderVersion.
@@ -314,7 +314,7 @@ GlutinOpenGLBufferRenderer >> vertexShader [
 ]
 
 { #category : #'private - shader' }
-GlutinOpenGLBufferRenderer >> vertexShader120 [
+GlutinGLBufferRenderer >> vertexShader120 [
 	^ '#version 120
 	
 	attribute vec2 aVertex;
@@ -328,7 +328,7 @@ GlutinOpenGLBufferRenderer >> vertexShader120 [
 ]
 
 { #category : #'private - shader' }
-GlutinOpenGLBufferRenderer >> vertexShader150 [
+GlutinGLBufferRenderer >> vertexShader150 [
 	^ '#version 150
 	
 	attribute vec2 aVertex;
@@ -342,7 +342,7 @@ GlutinOpenGLBufferRenderer >> vertexShader150 [
 ]
 
 { #category : #'private - shader' }
-GlutinOpenGLBufferRenderer >> vertexShader330 [
+GlutinGLBufferRenderer >> vertexShader330 [
 	^ '#version 330
 	
 	attribute vec2 aVertex;
@@ -356,7 +356,7 @@ GlutinOpenGLBufferRenderer >> vertexShader330 [
 ]
 
 { #category : #'private - shader' }
-GlutinOpenGLBufferRenderer >> vertexShader410 [
+GlutinGLBufferRenderer >> vertexShader410 [
 	^ '#version 410
 	
 	in vec2 aVertex;
@@ -370,13 +370,13 @@ GlutinOpenGLBufferRenderer >> vertexShader410 [
 ]
 
 { #category : #accessing }
-GlutinOpenGLBufferRenderer >> window [
+GlutinGLBufferRenderer >> window [
 	<return: #GlutinWindowedContext>
 
 	^ window
 ]
 
 { #category : #accessing }
-GlutinOpenGLBufferRenderer >> window: aGlutinWindowedContext [
+GlutinGLBufferRenderer >> window: aGlutinWindowedContext [
 	window := aGlutinWindowedContext
 ]
