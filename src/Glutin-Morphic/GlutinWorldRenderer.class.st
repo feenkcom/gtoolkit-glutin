@@ -107,47 +107,48 @@ GlutinWorldRenderer >> displayWorldState: aWorldState ofWorld: aWorld submorphs:
 	"Update this world's display."
 	| handsToDraw allDamage worldDamageRects handDamageRects thePixels |
 
-	 "force re-layout if needed"
-	submorphs do: [ :m | m fullBounds ]. 
+	Glutin critical: [
+		 "force re-layout if needed"
+		submorphs do: [ :m | m fullBounds ]. 
 
-	aWorldState checkIfUpdateNeeded
-		"display is already up-to-date"
-		ifFalse: [ ^ self ].  
+		aWorldState checkIfUpdateNeeded
+			"display is already up-to-date"
+			ifFalse: [ ^ self ].  
 
-	glutinWindow ifNil: [ ^ self ].
+		glutinWindow ifNil: [ ^ self ].
 
-	worldDamageRects := aWorldState drawWorld: aWorld submorphs: submorphs invalidAreasOn: self canvas.  
-	"repair world's damage on canvas"
+		worldDamageRects := aWorldState drawWorld: aWorld submorphs: submorphs invalidAreasOn: self canvas.  
+		"repair world's damage on canvas"
 
-	handsToDraw := aWorldState selectHandsToDrawForDamage: worldDamageRects.
-	handDamageRects := handsToDraw collect: [:h | h savePatchFrom: self canvas].
-	allDamage := worldDamageRects, handDamageRects.
+		handsToDraw := aWorldState selectHandsToDrawForDamage: worldDamageRects.
+		handDamageRects := handsToDraw collect: [:h | h savePatchFrom: self canvas].
+		allDamage := worldDamageRects, handDamageRects.
 
-	handsToDraw reverseDo: [ :h | self canvas fullDrawMorph: h ].  "draw hands onto world canvas"
- 
-	"*make this true to flash damaged areas for testing*"
-	WorldState debugShowDamage
-		ifTrue: [ aWorld flashRects: allDamage color: Color black ].
+		handsToDraw reverseDo: [ :h | self canvas fullDrawMorph: h ].  "draw hands onto world canvas"
+	 
+		"*make this true to flash damaged areas for testing*"
+		WorldState debugShowDamage
+			ifTrue: [ aWorld flashRects: allDamage color: Color black ].
 
-	self canvas finish.
-	
-	"quickly copy altered rects of canvas to Display:"
-	thePixels := FFIExternalArray fromHandle: buffer pixels type: FFIUInt32 size: display stride * display height.
-	
-	allDamage do: [ :eachRectangle |
-		| aDamage h index bits |
-		bits := display bits.
-		aDamage := eachRectangle intersect: (0@0 extent: buffer extent - (1@1)).
-		aDamage top floor to: aDamage bottom ceiling do: [ :y |
-			h := display width * y + 1.
-			aDamage left floor to: aDamage right ceiling do: [ :x |
-				index := h + x.
-				thePixels at: index put: (bits at: index) ] ] ].
+		self canvas finish.
+		
+		"quickly copy altered rects of canvas to Display:"
+		thePixels := FFIExternalArray fromHandle: buffer pixels type: FFIUInt32 size: display stride * display height.
+		
+		allDamage do: [ :eachRectangle |
+			| aDamage h index bits |
+			bits := display bits.
+			aDamage := eachRectangle intersect: (0@0 extent: buffer extent - (1@1)).
+			aDamage top floor to: aDamage bottom ceiling do: [ :y |
+				h := display width * y + 1.
+				aDamage left floor to: aDamage right ceiling do: [ :x |
+					index := h + x.
+					thePixels at: index put: (bits at: index) ] ] ].
 
-	renderer presentBuffer: buffer areas: allDamage.
+		renderer presentBuffer: buffer areas: allDamage.
 
- 	handsToDraw do: [:h | h restoreSavedPatchOn: self canvas].  "restore world canvas under hands"
-	
+	 	handsToDraw do: [:h | h restoreSavedPatchOn: self canvas].  "restore world canvas under hands"
+	]
 ]
 
 { #category : #initialization }
