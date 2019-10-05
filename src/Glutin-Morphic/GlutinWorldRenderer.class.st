@@ -5,7 +5,8 @@ Class {
 		'glutinWindow',
 		'display',
 		'renderer',
-		'buffer'
+		'buffer',
+		'eventHandler'
 	],
 	#category : #'Glutin-Morphic'
 }
@@ -89,7 +90,10 @@ GlutinWorldRenderer >> deactivate [
 	glutinWindow ifNotNil: [ glutinWindow close. glutinWindow := nil ].
 
 	renderer := nil.
-	display := nil
+	display := nil.
+	
+	GlutinEventsFetcher default removeEventHandler: eventHandler.
+	eventHandler := nil
 ]
 
 { #category : #initialization }
@@ -149,6 +153,9 @@ GlutinWorldRenderer >> doActivate [
 		extent: initialExtent.
 		
 	glutinWindow := GlutinEventsFetcher default eventsLoop createWindow: windowBuilder.
+	eventHandler := (GlutinMorphicEventHandler for: world) window: glutinWindow.
+	
+	GlutinEventsFetcher default addEventHandler: eventHandler.
 
 	display := Form extent: initialExtent depth: 32.
 	buffer := self createBufferFor: display.
@@ -156,7 +163,9 @@ GlutinWorldRenderer >> doActivate [
 
 	world extent: initialExtent.
 	world worldState doFullRepaint.
-	world displayWorld
+	world displayWorld.
+	
+	GlutinEventsFetcher install
 ]
 
 { #category : #operations }
