@@ -11,58 +11,53 @@ Class {
 		'buttons'
 	],
 	#classVars : [
-		'SymbolCharacterMapping'
-	],
-	#pools : [
-		'OSKeySymbols'
+		'KeyCharacterMapping'
 	],
 	#category : #'Glutin-Morphic'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 GlutinMorphicEventHandler class >> for: morphicWorld [
 	^ self new morphicWorld: morphicWorld; yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'class initialization' }
 GlutinMorphicEventHandler class >> initialize [
 	"
 	self initialize
 	"
-	super initialize.
-	SymbolCharacterMapping := Dictionary new.
-	{
-	 OSK_RETURN . Character cr.
-	 OSK_BACKSPACE . Character backspace.
-	 OSK_TAB . Character tab.
-	 OSK_HOME . Character home.
-	 OSK_LEFT . Character arrowLeft.
-	 OSK_UP . Character arrowUp.
-	 OSK_RIGHT . Character arrowRight.
-	 OSK_DOWN . Character arrowDown.
-	 OSK_END . Character end.
-	 OSK_INSERT . Character insert.
-	 OSK_PAGEUP . Character pageUp.
-	 OSK_PAGEDOWN . Character pageDown.
-	 OSK_DELETE. Character delete.
+	KeyCharacterMapping := Dictionary new.
 	
-	 OSK_KP_0 . $0.
-	 OSK_KP_1 . $1.
-	 OSK_KP_2 . $2.
-	 OSK_KP_3 . $3.
-	 OSK_KP_4 . $4.
-	 OSK_KP_5 . $5.
-	 OSK_KP_6 . $6.
-	 OSK_KP_7 . $7.
-	 OSK_KP_8 . $8.
-	 OSK_KP_9 . $9.
-	 OSK_KP_DIVIDE . $/.
-	 OSK_KP_MULTIPLY . $*.
-	 OSK_KP_PLUS . $+.
-	 OSK_KP_MINUS . $-.
-	 OSK_KP_ENTER . Character cr.
-	 OSK_KP_PERIOD . $..
-	} pairsDo: [ :key :val | SymbolCharacterMapping at: key put: val charCode ]
+	(($a to: $z) flatCollect: [ :c | { GlutinEventVirtualKeyCode perform: c asString asUppercase asSymbol . c } ]),
+	{
+	GlutinEventVirtualKeyCode Back . Character backspace.
+	GlutinEventVirtualKeyCode Tab . Character tab.
+	GlutinEventVirtualKeyCode Home . Character home.
+	GlutinEventVirtualKeyCode Left . Character arrowLeft.
+	GlutinEventVirtualKeyCode Up . Character arrowUp.
+	GlutinEventVirtualKeyCode Right . Character arrowRight.
+	GlutinEventVirtualKeyCode Down . Character arrowDown.
+	GlutinEventVirtualKeyCode End . Character end.
+	GlutinEventVirtualKeyCode PageUp . Character pageUp.
+	GlutinEventVirtualKeyCode PageDown . Character pageDown.
+	GlutinEventVirtualKeyCode Delete. Character delete.
+	GlutinEventVirtualKeyCode Space. Character space.
+	GlutinEventVirtualKeyCode Key0 . $0.
+	GlutinEventVirtualKeyCode Key1 . $1.
+	GlutinEventVirtualKeyCode Key2 . $2.
+	GlutinEventVirtualKeyCode Key3 . $3.
+	GlutinEventVirtualKeyCode Key4 . $4.
+	GlutinEventVirtualKeyCode Key5 . $5.
+	GlutinEventVirtualKeyCode Key6 . $6.
+	GlutinEventVirtualKeyCode Key7 . $7.
+	GlutinEventVirtualKeyCode Key8 . $8.
+	GlutinEventVirtualKeyCode Key9 . $9.
+	GlutinEventVirtualKeyCode Slash . $/.
+	GlutinEventVirtualKeyCode Backslash . $\.
+	GlutinEventVirtualKeyCode Minus . $-.
+	GlutinEventVirtualKeyCode Return . Character cr.
+	GlutinEventVirtualKeyCode Period . $..
+	} pairsDo: [ :key :val | KeyCharacterMapping at: key put: val ]
 ]
 
 { #category : #private }
@@ -114,11 +109,9 @@ GlutinMorphicEventHandler >> dispatchMorphicEvent: anEvent [
 	
 ]
 
-{ #category : #visiting }
+{ #category : #converting }
 GlutinMorphicEventHandler >> mapSymbolToKeyValue: symbol [
-	^ SymbolCharacterMapping at: symbol ifAbsent: [
-		 "Don't allow symbol values outside the unicode range"
-		 symbol >= 16r400000 ifTrue: [ 0 ] ifFalse: [ symbol ] ]
+	^ KeyCharacterMapping at: symbol ifAbsent: [ Character null ]
 ]
 
 { #category : #accessing }
@@ -140,13 +133,35 @@ GlutinMorphicEventHandler >> processGlutinEvent: aGlutinWindowEvent forWindow: a
 ]
 
 { #category : #visiting }
+GlutinMorphicEventHandler >> visitCharacterReceivedEvent: anEvent [
+	| char keyEvent anInputString |
+
+	anInputString := anEvent text.
+	(anInputString allSatisfy: [ :aCharacter | Unicode isPrintable: aCharacter ])
+		ifFalse: [ ^ self ].
+	
+	char := anInputString first.
+
+	keyEvent := KeyboardEvent new
+		setType: #keystroke
+		buttons: (self convertModifiers: (lastModifiers ifNil: [ GlutinEventModifiersState new ]))
+		position: (mousePosition ifNil: [ 0@0 ])
+		keyValue: char asciiValue
+		charCode: char charCode
+		hand: self activeHand
+		stamp: Time millisecondClockValue.
+	
+	self dispatchMorphicEvent: keyEvent
+]
+
+{ #category : #visiting }
 GlutinMorphicEventHandler >> visitCursorMovedEvent: anEvent [
 	| aMorphicEvent aNewCursorPosition oldPos theButtons |
 
 	aNewCursorPosition := anEvent x @ anEvent y.
 	oldPos := mousePosition ifNil: [ 0@0 ].
 	
-	theButtons := (self convertModifiers: anEvent modifiers).
+	theButtons := (self convertModifiers: (lastModifiers := anEvent modifiers copy)).
 	buttons ifNotNil: [ theButtons := theButtons | buttons ].
 
 	mousePosition := aNewCursorPosition.
@@ -167,61 +182,77 @@ GlutinMorphicEventHandler >> visitCursorMovedEvent: anEvent [
 
 { #category : #visiting }
 GlutinMorphicEventHandler >> visitKeyDownEvent: anEvent [
-	| keyEvent keyEvent2 mods |
+	| aCharacter aKeyValue aCharCode aMorphicEvent |
 
-	mods := anEvent modifiers.
-	keyEvent := KeyboardEvent new
+	aCharacter := self mapSymbolToKeyValue: anEvent virtual_keycode.
+	
+	aKeyValue := aCharacter asciiValue.
+	aCharCode := aCharacter charCode.
+	(aCharCode > 255) ifTrue: [ aKeyValue := 0 ].
+
+	aMorphicEvent := KeyboardEvent new
 		setType: #keyDown
-		buttons: (self convertModifiers: mods)
-		position: anEvent position
-		keyValue: (self mapSymbolToKeyValue: anEvent symbol)
-		charCode: (self mapSymbolToKeyValue: anEvent symbol)
+		buttons: (self convertModifiers: (lastModifiers := anEvent modifiers copy))
+		position: (mousePosition ifNil: [ 0@0 ])
+		keyValue: aKeyValue
+		charCode: aCharCode
 		hand:  self activeHand
 		stamp: Time millisecondClockValue.
-	keyEvent scanCode: anEvent scanCode.
-	self enqueue: keyEvent.
-	
-	"This is for ctrl/alt held alone makes morphic think that null character is good text input"
-	keyEvent keyValue = 0 ifTrue: [ ^ self ]. 
-	
-	
-	"That's stupid and horrible, but that's the way we doing it for now"
-	keyEvent keyValue = 27 "Esc" ifFalse: [
-		anEvent character ifNil: [ 
-			(mods alt or: [ mods ctrl or: [ mods cmd ] ]) ifFalse: [ 
-				^ nil
-			]]
-	].
-		
-	"Workaround for SDL<->Morphic: produce keystroke events
-	if any modifier key held down (for non-modified keys there are OSTextInputEvent)"
-	
-	keyEvent2 := KeyboardEvent new
-		setType: #keystroke
-		buttons: (self convertModifiers: anEvent modifiers)
-		position: anEvent position
-		keyValue: (self mapSymbolToKeyValue: anEvent symbol)
-		charCode: (self mapSymbolToKeyValue: anEvent symbol)
-		hand:  morphicWorld activeHand
-		stamp: Time millisecondClockValue.
-	keyEvent2 scanCode: anEvent scanCode.
+	aMorphicEvent scanCode: anEvent scan_code.
 
-	^ keyEvent2
+	self dispatchMorphicEvent: aMorphicEvent.
+	
+	aCharacter = Character null
+		ifTrue: [ ^ self ].	
+	
+	(Unicode isPrintable: aCharacter)
+		ifTrue: [ ^ self ].
+	
+	aMorphicEvent := KeyboardEvent new
+		setType: #keystroke
+		buttons: (self convertModifiers: (lastModifiers := anEvent modifiers copy))
+		position: (mousePosition ifNil: [ 0@0 ])
+		keyValue: aKeyValue
+		charCode: aCharCode
+		hand: self activeHand
+		stamp: Time millisecondClockValue.
+	
+	self dispatchMorphicEvent: aMorphicEvent
 ]
 
 { #category : #visiting }
 GlutinMorphicEventHandler >> visitKeyUpEvent: anEvent [
-	| keyEvent |
-	keyEvent := KeyboardEvent new
+	| aMorphicEvent |
+
+	aMorphicEvent := KeyboardEvent new
 		setType: #keyUp
-		buttons: (self convertModifiers: anEvent modifiers)
-		position: anEvent position
-		keyValue: (self mapSymbolToKeyValue: anEvent symbol)
-		charCode: (self mapSymbolToKeyValue: anEvent symbol)
-		hand:  self activeHand
+		buttons: (self convertModifiers: (lastModifiers := anEvent modifiers copy))
+		position: (mousePosition ifNil: [ 0@0 ])
+		keyValue: (self mapSymbolToKeyValue: anEvent virtual_keycode) asciiValue
+		charCode: (self mapSymbolToKeyValue: anEvent virtual_keycode) charCode
+		hand: self activeHand
 		stamp: Time millisecondClockValue.
-	keyEvent scanCode: anEvent scanCode.
-	^ keyEvent
+	aMorphicEvent scanCode: anEvent scan_code.
+
+	self dispatchMorphicEvent: aMorphicEvent
+]
+
+{ #category : #visiting }
+GlutinMorphicEventHandler >> visitKeyboardInputEvent: anEvent [
+	| aState |
+
+	anEvent has_virtual_keycode
+		ifFalse: [ ^ self ].
+
+	aState := anEvent state.
+
+	aState = GlutinEventInputElementState Unknown
+		ifTrue: [ ^ self ].
+	
+	aState = GlutinEventInputElementState Pressed
+		ifTrue: [ self visitKeyDownEvent: anEvent ]
+		ifFalse: [ self visitKeyUpEvent: anEvent ]
+	
 ]
 
 { #category : #visiting }
@@ -249,7 +280,7 @@ GlutinMorphicEventHandler >> visitMouseInputEvent: anEvent [
 		setType: anEventType
 		position: mousePosition
 		which: buttons
-		buttons: (self convertModifiers: anEvent modifiers) | buttons
+		buttons: (self convertModifiers: (lastModifiers := anEvent modifiers copy)) | buttons
 		hand: self activeHand
 		stamp: Time millisecondClockValue.
 
@@ -286,34 +317,11 @@ GlutinMorphicEventHandler >> visitMouseWheelEvent: anEvent [
 		setType: #mouseWheel
 		position: mousePosition
 		direction: aDirection
-		buttons: (self convertModifiers: anEvent modifiers)
+		buttons: (self convertModifiers: (lastModifiers := anEvent modifiers copy))
 		hand: self activeHand
 		stamp: Time millisecondClockValue.
 		
 	self dispatchMorphicEvent: aMorphicEvent
-]
-
-{ #category : #visiting }
-GlutinMorphicEventHandler >> visitTextInputEvent: anEvent [
-	| keyEvent char mods |
-	anEvent text ifNil: [ ^ nil ].
-	char := anEvent text first.
-	char ifNil: [ ^ nil ].
-	mods := anEvent modifiers.
-	"If a modifier key is pressed the keystroke event is handled by #visitMouseDownEvent:"
-	(mods alt or: [ mods ctrl or: [ mods cmd ] ])
-		ifTrue: [ ^ nil ].
-		
-	keyEvent := KeyboardEvent new
-		setType: #keystroke
-		buttons: (self convertModifiers: anEvent modifiers)
-		position: anEvent position
-		keyValue: char charCode
-		charCode: char charCode
-		hand: self activeHand
-		stamp: Time millisecondClockValue.
-	
-	^ keyEvent
 ]
 
 { #category : #visiting }
