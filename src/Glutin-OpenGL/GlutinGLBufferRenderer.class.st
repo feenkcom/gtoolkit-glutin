@@ -127,7 +127,7 @@ GlutinGLBufferRenderer >> fragmentShader410 [
 	}'
 ]
 
-{ #category : #initialization }
+{ #category : #'private - rendering' }
 GlutinGLBufferRenderer >> initializeGL [
 	"I initialize an OpenGL context to be ready to render a pixel buffer"
 
@@ -213,8 +213,8 @@ GlutinGLBufferRenderer >> makeCurrent [
 	self window makeCurrent
 ]
 
-{ #category : #'api - rendering' }
-GlutinGLBufferRenderer >> prepareForBuffer: aGlutinOpenGLBuffer [	
+{ #category : #'private - rendering' }
+GlutinGLBufferRenderer >> prepareForBuffer: aGlutinOpenGLBuffer [
 	self
 		assert: [ self window isNotNil ]
 		description: [ 'Window must be set!' ].
