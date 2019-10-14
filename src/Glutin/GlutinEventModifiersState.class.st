@@ -35,6 +35,15 @@ GlutinEventModifiersState >> alt: anObject [
 	handle booleanAt: OFFSET_ALT put: anObject
 ]
 
+{ #category : #copying }
+GlutinEventModifiersState >> copy [
+	^ self class new
+		alt: self alt;
+		ctrl: self ctrl;
+		logo: self logo;
+		shift: self shift
+]
+
 { #category : #'accessing structure variables' }
 GlutinEventModifiersState >> ctrl [
 	"This method was automatically generated"
@@ -57,6 +66,25 @@ GlutinEventModifiersState >> logo [
 GlutinEventModifiersState >> logo: anObject [
 	"This method was automatically generated"
 	handle booleanAt: OFFSET_LOGO put: anObject
+]
+
+{ #category : #printing }
+GlutinEventModifiersState >> printOn: aStream [
+	"Append a sequence of characters to aStream that identify the receiver."
+
+	aStream
+		nextPutAll: '{ shift: ';
+		print: self shift.
+	aStream
+		nextPutAll: ' alt: ';
+		print: self alt.
+	aStream
+		nextPutAll: ' ctrl: ';
+		print: self ctrl.
+	aStream
+		nextPutAll: ' logo: ';
+		print: self logo;
+		nextPutAll: ' }'
 ]
 
 { #category : #'accessing structure variables' }
