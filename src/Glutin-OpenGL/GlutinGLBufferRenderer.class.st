@@ -215,6 +215,7 @@ GlutinGLBufferRenderer >> makeCurrent [
 
 { #category : #'private - rendering' }
 GlutinGLBufferRenderer >> prepareForBuffer: aGlutinOpenGLBuffer [
+	| aFramebufferExtent |
 	self
 		assert: [ self window isNotNil ]
 		description: [ 'Window must be set!' ].
@@ -223,8 +224,10 @@ GlutinGLBufferRenderer >> prepareForBuffer: aGlutinOpenGLBuffer [
 		ifTrue: [ ^ self ].
 
 	self initializeGL.
+	
+	aFramebufferExtent := self window framebufferExtent.
 
-	gl viewport_x: 0 y: 0 width: aGlutinOpenGLBuffer width height: aGlutinOpenGLBuffer height.
+	gl viewport_x: 0 y: 0 width: aFramebufferExtent x height: aFramebufferExtent y.
 
 	texture := self createTexture: aGlutinOpenGLBuffer
 ]
