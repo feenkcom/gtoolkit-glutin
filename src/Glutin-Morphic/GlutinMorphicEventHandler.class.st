@@ -31,6 +31,7 @@ GlutinMorphicEventHandler class >> initialize [
 	(($a to: $z) flatCollect: [ :c | { GlutinEventVirtualKeyCode perform: c asString asUppercase asSymbol . c } ]),
 	{
 	GlutinEventVirtualKeyCode Back . Character backspace.
+	GlutinEventVirtualKeyCode Escape . Character escape.
 	GlutinEventVirtualKeyCode Tab . Character tab.
 	GlutinEventVirtualKeyCode Home . Character home.
 	GlutinEventVirtualKeyCode Left . Character arrowLeft.

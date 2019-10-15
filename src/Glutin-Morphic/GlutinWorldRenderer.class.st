@@ -35,30 +35,32 @@ GlutinWorldRenderer >> actualScreenSize [
 
 	^ glutinWindow
 		ifNil: [ 240@120 ]
-		ifNotNil: [ glutinWindow innerExtent ]
+		ifNotNil: [ glutinWindow innerExtent asIntegerPoint ]
 ]
 
 { #category : #initialization }
 GlutinWorldRenderer >> canvas [ 
-	^ display getCanvas
+	^ display ifNotNil: [ display getCanvas ]
 ]
 
 { #category : #initialization }
-GlutinWorldRenderer >> canvas: x [
-
-	self flag: #jajaja
+GlutinWorldRenderer >> canvas: aCanvas [
+	"nothing we can do here"
 ]
 
 { #category : #initialization }
 GlutinWorldRenderer >> checkForNewScreenSize [
+	| anExtent |
+	
+	anExtent := self actualScreenSize.
 
-	(display isNil or: [display extent = self actualScreenSize]) 
+	(display isNil or: [display extent = anExtent ]) 
 		ifTrue: [ ^ self ].
 
-	display := Form extent: self actualScreenSize depth: 32.
-	buffer := self createBufferFor: display.
+	buffer := self createBufferForExtent: anExtent.
+	display := self createFormForBuffer: buffer extent: anExtent.
 
-	world worldState realWindowExtent: self actualScreenSize.
+	world worldState realWindowExtent: anExtent.
 	world restoreMorphicDisplay
 ]
 
@@ -73,16 +75,25 @@ GlutinWorldRenderer >> clipboardText: aString [
 ]
 
 { #category : #private }
-GlutinWorldRenderer >> createBufferFor: aForm [
+GlutinWorldRenderer >> createBufferForExtent: anExtent [
 	| thePixels |
 
-	thePixels := FFIExternalArray externalNewType: FFIUInt32 size: aForm stride * aForm height.
+	self
+		assert: [ anExtent isIntegerPoint ]
+		description: [ 'Must be an integer point' ].
+
+	thePixels := FFIExternalArray externalNewType: FFIUInt32 size: (anExtent x * anExtent y).
 	thePixels autoRelease.
 	
 	^ GlutinGLBuffer new
-		extent: aForm extent;
-		stride: aForm stride;
-		pixels: thePixels getHandle.
+		extent: anExtent;
+		stride: anExtent x;
+		pixels: thePixels getHandle
+]
+
+{ #category : #private }
+GlutinWorldRenderer >> createFormForBuffer: aBuffer extent: anExtent [
+	^ OSSDL2ExternalForm extent: anExtent depth: 32 bits: aBuffer pixels
 ]
 
 { #category : #initialization }
@@ -105,49 +116,42 @@ GlutinWorldRenderer >> deferUpdates: aBoolean [
 { #category : #operations }
 GlutinWorldRenderer >> displayWorldState: aWorldState ofWorld: aWorld submorphs: submorphs [
 	"Update this world's display."
-	| handsToDraw allDamage worldDamageRects handDamageRects thePixels |
+	| aCanvas |
+		
+	"force re-layout if needed"
+	submorphs do: [ :m | m fullBounds ]. 
+	
+	aCanvas := self canvas.
+	aCanvas
+		ifNil: [ ^ self ].	
+
+	aWorldState checkIfUpdateNeeded
+		ifFalse: [ ^ self ].  
+
+	glutinWindow
+		ifNil: [ ^ self ].
 
 	Glutin critical: [
-		 "force re-layout if needed"
-		submorphs do: [ :m | m fullBounds ]. 
+		| handsToDraw allDamage worldDamageRects handDamageRects |
 
-		aWorldState checkIfUpdateNeeded
-			"display is already up-to-date"
-			ifFalse: [ ^ self ].  
-
-		glutinWindow ifNil: [ ^ self ].
-
-		worldDamageRects := aWorldState drawWorld: aWorld submorphs: submorphs invalidAreasOn: self canvas.  
+		worldDamageRects := aWorldState drawWorld: aWorld submorphs: submorphs invalidAreasOn: aCanvas.  
 		"repair world's damage on canvas"
 
 		handsToDraw := aWorldState selectHandsToDrawForDamage: worldDamageRects.
-		handDamageRects := handsToDraw collect: [:h | h savePatchFrom: self canvas].
+		handDamageRects := handsToDraw collect: [:h | h savePatchFrom: aCanvas ].
 		allDamage := worldDamageRects, handDamageRects.
 
-		handsToDraw reverseDo: [ :h | self canvas fullDrawMorph: h ].  "draw hands onto world canvas"
+		handsToDraw reverseDo: [ :h | aCanvas fullDrawMorph: h ].  "draw hands onto world canvas"
 	 
 		"*make this true to flash damaged areas for testing*"
 		WorldState debugShowDamage
 			ifTrue: [ aWorld flashRects: allDamage color: Color black ].
 
-		self canvas finish.
-		
-		"quickly copy altered rects of canvas to Display:"
-		thePixels := FFIExternalArray fromHandle: buffer pixels type: FFIUInt32 size: display stride * display height.
-		
-		allDamage do: [ :eachRectangle |
-			| aDamage h index bits |
-			bits := display bits.
-			aDamage := eachRectangle intersect: (0@0 extent: buffer extent - (1@1)).
-			aDamage top floor to: aDamage bottom ceiling do: [ :y |
-				h := display width * y + 1.
-				aDamage left floor to: aDamage right ceiling do: [ :x |
-					index := h + x.
-					thePixels at: index put: (bits at: index) ] ] ].
+		aCanvas finish.
 
 		renderer presentBuffer: buffer areas: allDamage.
 
-	 	handsToDraw do: [:h | h restoreSavedPatchOn: self canvas].  "restore world canvas under hands"
+	 	handsToDraw do: [:h | h restoreSavedPatchOn: aCanvas ].  "restore world canvas under hands"
 	]
 ]
 
@@ -155,7 +159,7 @@ GlutinWorldRenderer >> displayWorldState: aWorldState ofWorld: aWorld submorphs:
 GlutinWorldRenderer >> doActivate [
 	| initialExtent windowBuilder |
 
-	initialExtent := world worldState realWindowExtent ifNil: [976@665].
+	initialExtent := world worldState realWindowExtent ifNil: [ 976@665 ].
 
 	GlutinEventsFetcher default ensureEventsLoop.
 
@@ -168,8 +172,9 @@ GlutinWorldRenderer >> doActivate [
 	
 	GlutinEventsFetcher default addEventHandler: eventHandler.
 
-	display := Form extent: initialExtent depth: 32.
-	buffer := self createBufferFor: display.
+	buffer := self createBufferForExtent: initialExtent.
+	display := self createFormForBuffer: buffer extent: initialExtent.
+	
 	renderer := GlutinGLBufferRenderer new window: glutinWindow.
 
 	world extent: initialExtent.
