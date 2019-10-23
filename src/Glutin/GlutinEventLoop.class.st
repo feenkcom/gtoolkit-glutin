@@ -3,18 +3,12 @@ Class {
 	#superclass : #FFIExternalObject,
 	#traits : 'TGlutinLibrary + TGlutinPtr',
 	#classTraits : 'TGlutinLibrary classTrait + TGlutinPtr classTrait',
-	#instVars : [
-		'callback',
-		'status'
-	],
-	#category : #'Glutin-Event Loop'
+	#category : #'Glutin-Events Fetcher'
 }
 
 { #category : #'api - instantiation' }
 GlutinEventLoop class >> create [
-	^ self primCreate
-		initialize;
-		autoRelease
+	^ self primCreate autoRelease
 ]
 
 { #category : #'library path' }
@@ -39,27 +33,9 @@ GlutinEventLoop class >> primRelease: aHandle [
 	^ self ffiCall: #(void glutin_destroy_events_loop(void* aHandle))
 ]
 
-{ #category : #'private - accessing' }
-GlutinEventLoop >> callback [
-	^ callback
-]
-
-{ #category : #'private - enable / disable' }
-GlutinEventLoop >> cleanUp [
-	"I am sent when an image starts with a fresh session"
-	
-	self runScript: 'cleanUp'.
-	
-	callback ifNotNil: [
-		callback isValid: false.
-		callback thunk free.
-		status ifNotNil: [ status getHandle beNull ] ]
-]
-
 { #category : #'api - windows' }
 GlutinEventLoop >> closeWindow: aWindowedContext [
 	GlutinWindowsRegistry default unregisterWindow: aWindowedContext.
-	self primDestroyWindow: aWindowedContext.
 	aWindowedContext release
 ]
 
@@ -120,58 +96,14 @@ GlutinEventLoop >> createWindow: aWindowBuilder context: aContextBuilder [
 	^ aWindowedContext
 ]
 
-{ #category : #'private - enable / disable' }
-GlutinEventLoop >> disable [
-	"disable the callbacks on glutin side. Events will not be sent anymore"
-	
-	(status isNotNil and: [ status isNull not ])
-		ifTrue: [ status is_valid: false ]
-]
-
-{ #category : #'private - enable / disable' }
-GlutinEventLoop >> enable [	
-	"enable the callbacks on glutin side. Events will be sent now"
-	(status isNotNil and: [ status isNull not ])
-		ifTrue: [ status is_valid: true ]
-]
-
-{ #category : #initialization }
-GlutinEventLoop >> initialize [
-]
-
-{ #category : #'api - events' }
-GlutinEventLoop >> isRunning [
-
-	status
-		ifNil: [ ^ false ].
-		
-	status isNull
-		ifTrue: [ ^ false ].
-		
-	status is_valid
-		ifFalse: [ ^ false ].
-		
-	^ status is_running
-]
-
-{ #category : #'private - ffi' }
-GlutinEventLoop >> primDestroyWindow: anWindowedContext [
-	^ self ffiCall: #(void glutin_events_loop_run_forever_destroy_windowed_context (GlutinWindowedContext anWindowedContext, GlutinEventLoopCallbackWithStatus* status))
-]
-
 { #category : #'private - ffi' }
 GlutinEventLoop >> primGetPrimaryMonitor [
 	^ self ffiCall: #(GlutinMonitorId glutin_events_loop_get_primary_monitor (#GlutinEventLoop self))
 ]
 
 { #category : #'private - ffi' }
-GlutinEventLoop >> primRunForever: aCallback [
-	^ self ffiCall: #(void glutin_events_loop_run_forever(#GlutinEventLoop self, #GlutinEventLoopCallbackWithStatus* aCallback))
-]
-
-{ #category : #'private - ffi' }
 GlutinEventLoop >> primRunReturn: aCallback [
-	^ self ffiCall: #(void glutin_events_loop_run_return(#GlutinEventLoop self, #GlutinEventLoopCallbackWithStatus* aCallback))
+	^ self ffiCall: #(void glutin_events_loop_run_return(#GlutinEventLoop self, GlutinEventCallback aCallback))
 ]
 
 { #category : #accessing }
@@ -188,7 +120,7 @@ GlutinEventLoop >> primaryMonitor [
 
 { #category : #'api - events' }
 GlutinEventLoop >> run: aBlock [
-
+	| aCallback |
 	self isNull
 		ifTrue: [ ^ self ].
 		
@@ -196,63 +128,19 @@ GlutinEventLoop >> run: aBlock [
 		"By design of Winit we must start an events loop only when there is at least one window"
 		assert: [ GlutinWindowsRegistry default hasWindows ]
 		description: [ 'Must have at least one window' ].
-
-	callback := GlutinEventCallback on: [ :anEventAddress :anEventLoopWindowTargetAddress |
+	
+	"the callback must overlive an event loop"
+	aCallback := GlutinEventCallback on: [ :anEventAddress |
 		| aControlFlow |
 
-		self flag: 'Address received through Callback is wrong'.
-		"self getHandle setHandle: anEventLoopWindowTargetAddress."
 		aControlFlow := aBlock cull: (GlutinBaseEvent fromHandle: anEventAddress) cull: self.
 		(aControlFlow isKindOf: GlutinControlFlow)
 			ifFalse: [ aControlFlow := GlutinControlFlow poll ].
 		aControlFlow ].
 	
-	status := GlutinEventLoopCallbackWithStatus externalNew.
-	status is_valid: true.
-	status is_running: false.
-	status callback: callback.
-
-	self primRunReturn: status
-]
-
-{ #category : #'private - enable / disable' }
-GlutinEventLoop >> runScript: aName [
-	"Is sent when an image is about to close"
-	| aCustomScript aMethodName |
-	
-	[
-		aCustomScript := (Smalltalk image imageDirectory / aName, 'st') asFileReference.
-		aCustomScript exists ifTrue: [
-			NonInteractiveTranscript stdout show: '----------------------------------------------------------------'; cr.
-			NonInteractiveTranscript stdout show: '--------------------------- S C R I P T ------------------------'; cr.
-			NonInteractiveTranscript stdout show: '----------------------------------------------------------------'; cr.
-			NonInteractiveTranscript stdout show: aCustomScript; cr.
-			aMethodName := (#on, aName capitalized) asSymbol.
-			self class compile: aCustomScript contents.
-			(self respondsTo: aMethodName)
-				ifTrue: [
-					self perform: aMethodName.
-					(self class >> aMethodName) removeFromSystem ] ]
-	] on: Error do: [ :e | NonInteractiveTranscript stdout show: e; cr ]
-]
-
-{ #category : #'private - enable / disable' }
-GlutinEventLoop >> shutDown: isQuitting [
-	isQuitting
-		ifTrue: [ self wrapUp ]
-		ifFalse: [ self disable ]
-]
-
-{ #category : #'private - enable / disable' }
-GlutinEventLoop >> startUp: isInANewSession [
-	isInANewSession
-		ifTrue: [ self cleanUp ]
-		ifFalse: [ self enable ]
-]
-
-{ #category : #'private - accessing' }
-GlutinEventLoop >> status [
-	^ status
+	"the next call will block the current thread and will return only when the callback
+	returns ==GlutinControlFlow exit=="
+	self primRunReturn: aCallback
 ]
 
 { #category : #'api - windows' }
@@ -260,11 +148,4 @@ GlutinEventLoop >> tryHeadlessContext: aContextBuilder [
 	<return: #Boolean>
 
 	^ GlutinContextBuilder primTryContext: aContextBuilder eventLoop: self
-]
-
-{ #category : #'private - enable / disable' }
-GlutinEventLoop >> wrapUp [
-	"Is sent when an image is about to close"
-
-	self runScript: 'wrapUp'
 ]
