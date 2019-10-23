@@ -36,7 +36,6 @@ GlutinEventLoop class >> primRelease: aHandle [
 { #category : #'api - windows' }
 GlutinEventLoop >> closeWindow: aWindowedContext [
 	GlutinWindowsRegistry default unregisterWindow: aWindowedContext.
-	self primDestroyWindow: aWindowedContext.
 	aWindowedContext release
 ]
 
@@ -95,11 +94,6 @@ GlutinEventLoop >> createWindow: aWindowBuilder context: aContextBuilder [
 	GlutinWindowsRegistry default registerWindow: aWindowedContext.
 
 	^ aWindowedContext
-]
-
-{ #category : #'private - ffi' }
-GlutinEventLoop >> primDestroyWindow: anWindowedContext [
-	^ self ffiCall: #(void glutin_destroy_windowed_context (GlutinWindowedContext anWindowedContext))
 ]
 
 { #category : #'private - ffi' }
