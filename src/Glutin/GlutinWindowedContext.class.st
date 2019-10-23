@@ -31,7 +31,7 @@ GlutinWindowedContext class >> primCreate: anEventsLoop windowBuilder: aWindowBu
 GlutinWindowedContext class >> primRelease: aHandle [
 
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"
-	self ffiCall: #(void glutin_destroy_windowed_context (void* aWindowedContext))
+	self ffiCall: #(void glutin_destroy_windowed_context (void* aHandle))
 ]
 
 { #category : #'initialize-release' }
