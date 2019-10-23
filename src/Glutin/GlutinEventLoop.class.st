@@ -8,9 +8,7 @@ Class {
 
 { #category : #'api - instantiation' }
 GlutinEventLoop class >> create [
-	^ self primCreate
-		initialize;
-		autoRelease
+	^ self primCreate autoRelease
 ]
 
 { #category : #'library path' }
@@ -138,7 +136,7 @@ GlutinEventLoop >> run: aBlock [
 		description: [ 'Must have at least one window' ].
 	
 	"the callback must overlive an event loop"
-	aCallback := GlutinEventCallback on: [ :anEventAddress :anEventLoopWindowTargetAddress |
+	aCallback := GlutinEventCallback on: [ :anEventAddress |
 		| aControlFlow |
 
 		aControlFlow := aBlock cull: (GlutinBaseEvent fromHandle: anEventAddress) cull: self.
