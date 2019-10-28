@@ -6,7 +6,7 @@ Class {
 
 { #category : #'callback spec' }
 GlutinEventCallback class >> fnSpec [
-	^ #(GlutinControlFlow ( GlutinBaseEvent* event ))
+	^ #(GlutinControlFlow ( void* event ))
 ]
 
 { #category : #'callback spec' }
