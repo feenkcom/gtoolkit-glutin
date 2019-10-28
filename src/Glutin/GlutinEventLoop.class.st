@@ -132,7 +132,7 @@ GlutinEventLoop >> run: aBlock [
 	"the callback must overlive an event loop"
 	aCallback := GlutinEventCallback on: [ :anEventAddress |
 		| aControlFlow |
-
+		
 		aControlFlow := aBlock cull: (GlutinBaseEvent fromHandle: anEventAddress) cull: self.
 		(aControlFlow isKindOf: GlutinControlFlow)
 			ifFalse: [ aControlFlow := GlutinControlFlow poll ].
