@@ -63,14 +63,32 @@ GlutinLibrary class >> preferencesOn: aBuilder [
 				range: (0.3 to: 20 by: 0.1) ]
 ]
 
+{ #category : #'private - ffi' }
+GlutinLibrary class >> primPrint: aString [
+	^ self ffiCall: #(void glutin_print (GtBoxerString aString))
+]
+
+{ #category : #'private - ffi' }
+GlutinLibrary class >> primPrintln: aString [
+	^ self ffiCall: #(void glutin_println (GtBoxerString aString))
+]
+
 { #category : #printing }
 GlutinLibrary class >> print: aString [
-	^ self ffiCall: #(void glutin_print (String aString))
+	| aBoxerString |
+	
+	aBoxerString := GtBoxerString fromString: aString.
+	[ self primPrint: aBoxerString ]
+		ensure: [ aBoxerString release ]
 ]
 
 { #category : #printing }
 GlutinLibrary class >> println: aString [
-	^ self ffiCall: #(void glutin_println (String aString))
+	| aBoxerString |
+	
+	aBoxerString := GtBoxerString fromString: aString.
+	[ self primPrintln: aBoxerString ]
+		ensure: [ aBoxerString release ]
 ]
 
 { #category : #'accessing platform' }
