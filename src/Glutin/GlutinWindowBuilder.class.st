@@ -168,6 +168,8 @@ GlutinWindowBuilder >> title [
 { #category : #accessing }
 GlutinWindowBuilder >> title: aString [
 	| aGtBoxerString |
+	
+	title := aString.
 	aGtBoxerString := GtBoxerString fromString: aString.	
 	[ self mutate: (self primWithTitle: aGtBoxerString) ]
 		ensure: [ aGtBoxerString release ]
