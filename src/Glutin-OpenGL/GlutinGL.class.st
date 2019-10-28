@@ -116,11 +116,6 @@ GlutinGL >> enable_vertex_attrib_array: index [
 ]
 
 { #category : #'generated bindings' }
-GlutinGL >> free_string: aString [
-	^ self ffiCall: #(void glutin_gl_free_cstring(GlutinCString* aString))
-]
-
-{ #category : #'generated bindings' }
 GlutinGL >> gen_texture [
 	^ self ffiCall: #( GLuint glutin_gl_gen_texture ( GlutinGL self ) )
 ]
@@ -133,31 +128,20 @@ GlutinGL >> gen_vertex_array [
 { #category : #accessing }
 GlutinGL >> getString: which [
 	<return: #String>
-	| aStringBuffer aString |
+	| aStringBuffer |
 
-	aStringBuffer := GlutinCString new.
-	aStringBuffer pinInMemory.
-	[ 
-		self get_string: which in: aStringBuffer.
-
-		aString := (FFIExternalArray
-			fromHandle: aStringBuffer data getHandle
-			type: FFIUInt8
-			size: aStringBuffer length) asByteArray asString.
-		
-		self free_string: aStringBuffer.
-	] ensure: [
-		aStringBuffer unpinInMemory ].
-
-	^ aString
+	aStringBuffer := GtBoxerString new.
+	^ [ self get_string: which in: aStringBuffer.
+		aStringBuffer string
+	] ensure: [ aStringBuffer release ]
 ]
 
 { #category : #'generated bindings' }
-GlutinGL >> get_attribute_location_program: program name: name [
+GlutinGL >> get_attribute_location_program: program name: aGtBoxerString [
 	^ self ffiCall: #( int32 glutin_gl_get_attribute_location (
 		GlutinGL self,
 		GLuint program,
-		String name) )
+		GtBoxerString aGtBoxerString) )
 ]
 
 { #category : #'generated bindings' }
@@ -166,16 +150,16 @@ GlutinGL >> get_shader_version [
 ]
 
 { #category : #'generated bindings' }
-GlutinGL >> get_string: which in: aGlutinCString [
-	^ self ffiCall: #( void glutin_gl_get_string ( GlutinGL self, GLenum which, GlutinCString* aGlutinCString) )
+GlutinGL >> get_string: which in: aGtBoxerString [
+	^ self ffiCall: #( void glutin_gl_get_string ( GlutinGL self, GLenum which, GtBoxerString aGtBoxerString) )
 ]
 
 { #category : #'generated bindings' }
-GlutinGL >> get_uniform_location_program: program name: name [
+GlutinGL >> get_uniform_location_program: program name: aGtBoxerString [
 	^ self ffiCall: #( int32 glutin_gl_get_uniform_location (
 		GlutinGL self,
 		GLuint program,
-		String name) )
+		GtBoxerString aGtBoxerString) )
 ]
 
 { #category : #'generated bindings' }
@@ -191,8 +175,8 @@ GlutinGL >> shaderVersion [
 ]
 
 { #category : #'generated bindings' }
-GlutinGL >> shader_source: shader string: source [
-	^ self ffiCall: #( void glutin_gl_shader_source ( GlutinGL self, GLuint shader, String source ) )
+GlutinGL >> shader_source: shader string: aGtBoxerString [
+	^ self ffiCall: #( void glutin_gl_shader_source ( GlutinGL self, GLuint shader, GtBoxerString aGtBoxerString ) )
 ]
 
 { #category : #'generated bindings' }

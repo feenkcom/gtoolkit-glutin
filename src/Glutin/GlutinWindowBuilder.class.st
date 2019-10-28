@@ -141,8 +141,8 @@ GlutinWindowBuilder >> primWithResizable: aBoolean [
 ]
 
 { #category : #'private - ffi' }
-GlutinWindowBuilder >> primWithTitle: aString [
-	^ self ffiCall: #(void* glutin_window_builder_with_title(#GlutinWindowBuilder self, ByteArray aString))
+GlutinWindowBuilder >> primWithTitle: aGtBoxerString [
+	^ self ffiCall: #(void* glutin_window_builder_with_title(GlutinWindowBuilder self, GtBoxerString aGtBoxerString))
 ]
 
 { #category : #'private - ffi' }
@@ -167,18 +167,12 @@ GlutinWindowBuilder >> title [
 
 { #category : #accessing }
 GlutinWindowBuilder >> title: aString [
-	| encodedString |
+	| aGtBoxerString |
+	
 	title := aString.
-	
-	encodedString := ByteArray streamContents: [ :aStream |
-		ZnUTF8Encoder new 
-			next: aString size 
-			putAll: aString asString
-			startingAt: 1 
-			toStream: aStream.
-		aStream nextPut: 0 ].
-	
-	self mutate: (self primWithTitle: encodedString)
+	aGtBoxerString := GtBoxerString fromString: aString.	
+	[ self mutate: (self primWithTitle: aGtBoxerString) ]
+		ensure: [ aGtBoxerString release ]
 ]
 
 { #category : #accessing }
