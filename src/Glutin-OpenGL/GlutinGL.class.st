@@ -137,11 +137,11 @@ GlutinGL >> getString: which [
 ]
 
 { #category : #'generated bindings' }
-GlutinGL >> get_attribute_location_program: program name: name [
+GlutinGL >> get_attribute_location_program: program name: aGtBoxerString [
 	^ self ffiCall: #( int32 glutin_gl_get_attribute_location (
 		GlutinGL self,
 		GLuint program,
-		String name) )
+		GtBoxerString aGtBoxerString) )
 ]
 
 { #category : #'generated bindings' }
@@ -155,11 +155,11 @@ GlutinGL >> get_string: which in: aGtBoxerString [
 ]
 
 { #category : #'generated bindings' }
-GlutinGL >> get_uniform_location_program: program name: name [
+GlutinGL >> get_uniform_location_program: program name: aGtBoxerString [
 	^ self ffiCall: #( int32 glutin_gl_get_uniform_location (
 		GlutinGL self,
 		GLuint program,
-		String name) )
+		GtBoxerString aGtBoxerString) )
 ]
 
 { #category : #'generated bindings' }
@@ -175,8 +175,8 @@ GlutinGL >> shaderVersion [
 ]
 
 { #category : #'generated bindings' }
-GlutinGL >> shader_source: shader string: source [
-	^ self ffiCall: #( void glutin_gl_shader_source ( GlutinGL self, GLuint shader, String source ) )
+GlutinGL >> shader_source: shader string: aGtBoxerString [
+	^ self ffiCall: #( void glutin_gl_shader_source ( GlutinGL self, GLuint shader, GtBoxerString aGtBoxerString ) )
 ]
 
 { #category : #'generated bindings' }

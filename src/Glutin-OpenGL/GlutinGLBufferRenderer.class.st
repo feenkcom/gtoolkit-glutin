@@ -131,6 +131,7 @@ GlutinGLBufferRenderer >> fragmentShader410 [
 GlutinGLBufferRenderer >> initializeGL [
 	"I initialize an OpenGL context to be ready to render a pixel buffer"
 
+	| aStringBuffer |
 	self isGLValid
 		ifTrue: [ ^ self ].
 
@@ -142,8 +143,10 @@ GlutinGLBufferRenderer >> initializeGL [
 
 	vertShaderObj := gl create_vertex_shader.
 	fragShaderObj := gl create_fragment_shader.
-	gl shader_source: vertShaderObj string: (self vertexShader withLineEndings: OSPlatform current lineEnding).
-	gl shader_source: fragShaderObj string: (self fragmentShader withLineEndings: OSPlatform current lineEnding).
+
+	aStringBuffer := GtBoxerString new.
+	gl shader_source: vertShaderObj string: (aStringBuffer string: (self vertexShader withLineEndings: OSPlatform current lineEnding)).
+	gl shader_source: fragShaderObj string: (aStringBuffer string: (self fragmentShader withLineEndings: OSPlatform current lineEnding)).
 	gl compile_shader: vertShaderObj.
 	gl compile_shader: fragShaderObj.
 	
@@ -170,9 +173,11 @@ GlutinGLBufferRenderer >> initializeGL [
 	gl array_buffer_data_static_draw: (buffData getHandle) length: buffData size.
 	buffData free.
 
-	vloc := gl get_attribute_location_program: progObj name: 'aVertex'.
-	tloc := gl get_attribute_location_program: progObj name: 'aUV'.
-	uLoc := gl get_attribute_location_program: progObj name: 'pos'.
+	vloc := gl get_attribute_location_program: progObj name: (aStringBuffer string: 'aVertex').
+	tloc := gl get_attribute_location_program: progObj name: (aStringBuffer string: 'aUV').
+	uLoc := gl get_attribute_location_program: progObj name: (aStringBuffer string: 'pose').
+	
+	aStringBuffer release
 ]
 
 { #category : #'private - testing' }
