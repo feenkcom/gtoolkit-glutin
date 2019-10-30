@@ -12,17 +12,6 @@ GlutinWindowedContextExamples class >> ffiLibraryName [
 ]
 
 { #category : #examples }
-GlutinWindowedContextExamples >> getProcAddress [
-	<gtExample>
-	| aWindowedContext anAddress |
-	
-	aWindowedContext := self windowedContext.
-	anAddress := aWindowedContext getProcAddress: 'glActiveTexture'.
-	
-	^ anAddress
-]
-
-{ #category : #examples }
 GlutinWindowedContextExamples >> liveWindowRunForever [
 	<gtExample>
 	| theWindows |
