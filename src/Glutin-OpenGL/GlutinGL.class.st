@@ -128,12 +128,8 @@ GlutinGL >> gen_vertex_array [
 { #category : #accessing }
 GlutinGL >> getString: which [
 	<return: #String>
-	| aStringBuffer |
-
-	aStringBuffer := GtBoxerString new.
-	^ [ self get_string: which in: aStringBuffer.
-		aStringBuffer string
-	] ensure: [ aStringBuffer release ]
+	
+	^ GtBoxerString getStringFrom: [ :aBoxerString | self get_string: which in: aBoxerString ]
 ]
 
 { #category : #'generated bindings' }
