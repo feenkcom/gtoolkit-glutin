@@ -58,20 +58,11 @@ GlutinWindowedContext >> eventsLoop: aGlutinEventsLoop [
 GlutinWindowedContext >> framebufferExtent [
 	<return: #Point>
 	| aSizeF64 |
-	
-	self isValid
-		ifFalse: [ ^ 0@0 ].
-		
+
 	aSizeF64 := GtBoxerSizeF64 new.
-	
 	^ [ self primGetFramebufferSize: aSizeF64.
 		aSizeF64 asPoint asIntegerPoint
 	] ensure: [ aSizeF64 release ]
-]
-
-{ #category : #'api - gl' }
-GlutinWindowedContext >> getProcAddress: aString [
-	^ self primGetProcAddress: aString
 ]
 
 { #category : #'api - accessing' }
@@ -81,13 +72,11 @@ GlutinWindowedContext >> id [
 	
 	id
 		ifNotNil: [ ^ id ].
-		
-	self isValid
-		ifFalse: [ ^ 0 ].
-		
+
 	aUint128 := GtBoxerUint128 new.
 	
-	^ id := [ self primGetId: aUint128.
+	^ id := [
+		self primGetId: aUint128.
 		aUint128 asInteger
 	] ensure: [ aUint128 release ]
 ]
@@ -96,10 +85,7 @@ GlutinWindowedContext >> id [
 GlutinWindowedContext >> innerExtent [
 	<return: #Point>
 	| aSizeF64 |
-	
-	self isValid
-		ifFalse: [ ^ 0@0 ].
-		
+
 	aSizeF64 := GtBoxerSizeF64 new.
 	
 	^ [ self primGetInnerSize: aSizeF64.
@@ -109,9 +95,6 @@ GlutinWindowedContext >> innerExtent [
 
 { #category : #'api - accessing' }
 GlutinWindowedContext >> innerExtent: aPoint [
-	self isValid
-		ifFalse: [ ^ self ].
-
 	self primSetInnerWidth: aPoint x height: aPoint y
 ]
 
@@ -148,9 +131,6 @@ GlutinWindowedContext >> position [
 	<return: #Point>
 	| aPointF64 |
 	
-	self isValid
-		ifFalse: [ ^ 0@0 ].
-	
 	aPointF64 := GtBoxerPointF64 new.
 	
 	^ [ self primGetPosition: aPointF64.
@@ -160,9 +140,6 @@ GlutinWindowedContext >> position [
 
 { #category : #'api - accessing' }
 GlutinWindowedContext >> position: aPoint [
-	self isValid
-		ifFalse: [ ^ self ].
-
 	self primSetPositionX: aPoint x y: aPoint y
 ]
 
@@ -192,11 +169,6 @@ GlutinWindowedContext >> primGetPosition: aPointF64 [
 	^ self ffiCall: #(void glutin_windowed_context_get_position(
 		GlutinWindowedContext self,
 		GtBoxerPointF64 aPointF64))
-]
-
-{ #category : #'private - ffi' }
-GlutinWindowedContext >> primGetProcAddress: procName [
-	^ self ffiCall: #( void* glutin_windowed_context_get_proc_address ( GlutinWindowedContext self, String procName ) )
 ]
 
 { #category : #'private - ffi' }
@@ -304,10 +276,6 @@ GlutinWindowedContext >> title: aString [
 	| aGtBoxerString |
 
 	title := aString.
-	
-	self isValid
-		ifFalse: [ ^ self ].
-	
 	aGtBoxerString := GtBoxerString fromString: aString.
 	[self primSetTitle: aGtBoxerString ]
 		ensure: [ aGtBoxerString release ]
