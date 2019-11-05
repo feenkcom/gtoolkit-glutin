@@ -113,17 +113,14 @@ GlutinWindowedContext >> isValid [
 ]
 
 { #category : #'api - gl' }
-GlutinWindowedContext >> makeCurrent [
-	| aNewContext |
-	
+GlutinWindowedContext >> makeCurrent [	
 	self isValid
 		ifFalse: [ ^ self ].
 	
 	self isCurrent
 		ifTrue: [ ^ self ].
 
-	aNewContext := self primMakeCurrent.
-	self setHandle: aNewContext
+	self primMakeCurrent
 ]
 
 { #category : #'api - accessing' }
@@ -178,7 +175,7 @@ GlutinWindowedContext >> primIsCurrent [
 
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primMakeCurrent [
-	^ self ffiCall: #(void* glutin_windowed_context_make_current(GlutinWindowedContext self))
+	^ self ffiCall: #(void glutin_windowed_context_make_current(GlutinWindowedContext self))
 ]
 
 { #category : #'private - ffi' }
