@@ -16,7 +16,7 @@ BaselineOfGlutin >> baseline: spec [
 			baseline: 'GToolkitInstaller' with: [
 				spec repository: 'github://feenkcom/gtoolkit-installer:v0.7.10/src' ];
 			baseline: 'GToolkitBoxer' with: [
-				spec repository: 'github://feenkcom/gtoolkit-boxer:v0.6.19/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-boxer:v0.6.20/src' ].
 		spec 
 			package: 'Glutin' with: [
 				spec requires: #(#GToolkitInstaller #GToolkitBoxer ). ];
