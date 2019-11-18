@@ -13,5 +13,5 @@ GlutinWindowedContext >> gl [
 
 { #category : #'*Glutin-OpenGL' }
 GlutinWindowedContext >> primLoadGL [
-	^ self ffiCall: #(GlutinGL glutin_windowed_context_load_gl(GlutinWindowedContext self))
+	^ self ffiCall: #(GlutinGL glutin_windowed_context_load_gl(self))
 ]

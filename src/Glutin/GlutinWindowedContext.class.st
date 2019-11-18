@@ -3,25 +3,18 @@ Represents an OpenGL context and the Window with which it is associated.
 "
 Class {
 	#name : #GlutinWindowedContext,
-	#superclass : #FFIExternalObject,
-	#traits : 'TGlutinLibrary + TGlutinPtr',
-	#classTraits : 'TGlutinLibrary classTrait + TGlutinPtr classTrait',
+	#superclass : #GlutinExternalObject,
 	#instVars : [
 		'eventsLoop',
 		'title',
 		'id'
 	],
-	#category : #Glutin
+	#category : #'Glutin-External'
 }
-
-{ #category : #'library path' }
-GlutinWindowedContext class >> ffiLibraryName [
-	^ GlutinLibrary
-]
 
 { #category : #'private - ffi' }
 GlutinWindowedContext class >> primCreate: anEventsLoop windowBuilder: aWindowBuilder contextBuilder: aContextBuilder [
-	^ self ffiCall: #(GlutinWindowedContext glutin_create_windowed_context(
+	^ self ffiCall: #(void* glutin_create_windowed_context(
 			#GlutinEventLoop anEventsLoop,
 			#GlutinWindowBuilder aWindowBuilder,
 			#GlutinContextBuilder aContextBuilder))
@@ -143,50 +136,50 @@ GlutinWindowedContext >> position: aPoint [
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primGetFramebufferSize: aSizeF64 [
 	^ self ffiCall: #(void glutin_windowed_context_get_framebuffer_size(
-		GlutinWindowedContext self,
+		self,
 		GtBoxerSizeF64 aSizeF64))
 ]
 
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primGetId: aUint128 [
 	^ self ffiCall: #(void glutin_windowed_context_get_id(
-		GlutinWindowedContext self,
+		self,
 		GtBoxerUint128 aUint128))
 ]
 
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primGetInnerSize: aSizeF64 [
 	^ self ffiCall: #(void glutin_windowed_context_get_inner_size(
-		GlutinWindowedContext self,
+		self,
 		GtBoxerSizeF64 aSizeF64))
 ]
 
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primGetPosition: aPointF64 [
 	^ self ffiCall: #(void glutin_windowed_context_get_position(
-		GlutinWindowedContext self,
+		self,
 		GtBoxerPointF64 aPointF64))
 ]
 
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primIsCurrent [
-	^ self ffiCall: #(bool glutin_windowed_context_is_current(GlutinWindowedContext self))
+	^ self ffiCall: #(bool glutin_windowed_context_is_current(self))
 ]
 
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primMakeCurrent [
-	^ self ffiCall: #(void glutin_windowed_context_make_current(GlutinWindowedContext self))
+	^ self ffiCall: #(void glutin_windowed_context_make_current(self))
 ]
 
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primRequestRedraw [
-	^ self ffiCall: #(void glutin_windowed_context_request_redraw(GlutinWindowedContext self))
+	^ self ffiCall: #(void glutin_windowed_context_request_redraw(self))
 ]
 
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primResizeLogicalWidth: aWidth height: aHeight [
 	^ self ffiCall: #(void glutin_windowed_context_resize_logical(
-		GlutinWindowedContext self,
+		self,
 		float64 aWidth,
 		float64 aHeight))
 ]
@@ -194,7 +187,7 @@ GlutinWindowedContext >> primResizeLogicalWidth: aWidth height: aHeight [
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primResizePhysicalWidth: aWidth height: aHeight [
 	^ self ffiCall: #(void glutin_windowed_context_resize_physical(
-		GlutinWindowedContext self,
+		self,
 		float64 aWidth,
 		float64 aHeight))
 ]
@@ -202,14 +195,14 @@ GlutinWindowedContext >> primResizePhysicalWidth: aWidth height: aHeight [
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primSetCursor: aCursorIcon [
 	^ self ffiCall: #(void glutin_windowed_context_set_cursor_icon (
-		GlutinWindowedContext self,
+		self,
 		GlutinCursorIcon aCursorIcon))
 ]
 
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primSetInnerWidth: aWidth height: aHeight [
 	^ self ffiCall: #(void glutin_windowed_context_set_inner_size(
-		GlutinWindowedContext self,
+		self,
 		float64 aWidth,
 		float64 aHeight))
 ]
@@ -217,24 +210,19 @@ GlutinWindowedContext >> primSetInnerWidth: aWidth height: aHeight [
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primSetPositionX: aX y: aY [
 	^ self ffiCall: #(void glutin_windowed_context_set_position(
-		GlutinWindowedContext self,
+		self,
 		float64 aX,
 		float64 aY))
 ]
 
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primSetTitle: aGtBoxerString [
-	^ self ffiCall: #(void glutin_windowed_context_set_title(GlutinWindowedContext self, GtBoxerString aGtBoxerString))
+	^ self ffiCall: #(void glutin_windowed_context_set_title(self, GtBoxerString aGtBoxerString))
 ]
 
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primSwapBuffers [
-	^ self ffiCall: #(void glutin_windowed_context_swap_buffers(GlutinWindowedContext self))
-]
-
-{ #category : #'private - ffi' }
-GlutinWindowedContext >> primTest [
-	^ self ffiCall: #(void glutin_windowed_context_test(GlutinWindowedContext self))
+	^ self ffiCall: #(void glutin_windowed_context_swap_buffers(self))
 ]
 
 { #category : #'api - gl' }

@@ -1,8 +1,6 @@
 Class {
 	#name : #GlutinWindowedContextExamples,
-	#superclass : #Object,
-	#traits : 'TGlutinLibrary',
-	#classTraits : 'TGlutinLibrary classTrait',
+	#superclass : #GlutinExternalObjectExamples,
 	#category : #'Glutin-Examples'
 }
 
@@ -48,11 +46,6 @@ GlutinWindowedContextExamples >> liveWindowRunForever [
 { #category : #examples }
 GlutinWindowedContextExamples >> liveWindowTest [
 	self primTest
-]
-
-{ #category : #examples }
-GlutinWindowedContextExamples >> primTest [
-	^ self ffiCall: #(void glutin_create_windowed_context_test())
 ]
 
 { #category : #'instance creation' }

@@ -1,6 +1,6 @@
 Class {
 	#name : #GlutinWindowBuilderExamples,
-	#superclass : #Object,
+	#superclass : #GlutinExternalObjectExamples,
 	#category : #'Glutin-Examples'
 }
 
