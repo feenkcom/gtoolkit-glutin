@@ -150,6 +150,31 @@ GlutinPixelFormat >> primIsStereoscopy [
 	^ self ffiCall: #(bool glutin_pixel_format_is_stereoscopy(self))
 ]
 
+{ #category : #printing }
+GlutinPixelFormat >> printOn: aStream [
+	"Append a sequence of characters to aStream that identify the receiver."
+
+	aStream
+		nextPut: ${;
+		nextPutAll: ' alphaBits: ';
+		print: self alphaBits.
+	aStream
+		nextPutAll: ' colorBits: ';
+		print: self colorBits.
+	aStream
+		nextPutAll: ' depthBits: ';
+		print: self depthBits.
+	aStream
+		nextPutAll: ' stencilBits: ';
+		print: self stencilBits.
+	aStream
+		nextPutAll: ' multisapling: ';
+		print: self multisapling.
+	aStream
+		space;
+		nextPut: $}
+]
+
 { #category : #accessing }
 GlutinPixelFormat >> stencilBits [
 	<return: #Number>
