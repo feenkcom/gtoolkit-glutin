@@ -115,6 +115,13 @@ GlutinGL >> enable_vertex_attrib_array: index [
 		GLuint index) )
 ]
 
+{ #category : #accessing }
+GlutinGL >> framebufferId [
+	<return: #Number>
+	
+	^ self get_integer: GL_FRAMEBUFFER_BINDING
+]
+
 { #category : #'generated bindings' }
 GlutinGL >> gen_texture [
 	^ self ffiCall: #( GLuint glutin_gl_gen_texture ( GlutinGL self ) )
@@ -138,6 +145,11 @@ GlutinGL >> get_attribute_location_program: program name: aGtBoxerString [
 		GlutinGL self,
 		GLuint program,
 		GtBoxerString aGtBoxerString) )
+]
+
+{ #category : #'generated bindings' }
+GlutinGL >> get_integer: which [
+	^ self ffiCall: #( GLint glutin_gl_get_integer ( GlutinGL self, GLenum which) )
 ]
 
 { #category : #'generated bindings' }
