@@ -117,6 +117,13 @@ GlutinWindowedContext >> makeCurrent [
 ]
 
 { #category : #'api - accessing' }
+GlutinWindowedContext >> pixelFormat [
+	<return: #GlutinPixelFormat>
+	
+	^ GlutinPixelFormat fromNativeHandle: self primGetPixelFormat
+]
+
+{ #category : #'api - accessing' }
 GlutinWindowedContext >> position [
 	<return: #Point>
 	| aPointF64 |
@@ -152,6 +159,11 @@ GlutinWindowedContext >> primGetInnerSize: aSizeF64 [
 	^ self ffiCall: #(void glutin_windowed_context_get_inner_size(
 		self,
 		GtBoxerSizeF64 aSizeF64))
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowedContext >> primGetPixelFormat [
+	^ self ffiCall: #(void* glutin_windowed_context_get_pixel_format(self))
 ]
 
 { #category : #'private - ffi' }
