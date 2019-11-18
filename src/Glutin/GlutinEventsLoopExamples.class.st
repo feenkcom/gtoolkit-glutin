@@ -1,6 +1,6 @@
 Class {
 	#name : #GlutinEventsLoopExamples,
-	#superclass : #Object,
+	#superclass : #GlutinExternalObjectExamples,
 	#category : #'Glutin-Examples'
 }
 

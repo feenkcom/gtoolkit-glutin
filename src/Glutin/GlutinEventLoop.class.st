@@ -54,7 +54,7 @@ GlutinEventLoop >> createWindow: aWindowBuilder [
 				| aBuilderCopy |
 				
 				aBuilderCopy := aWindowBuilder copy.
-				aWindowedContext := GlutinWindowedContext primCreate: self windowBuilder: aBuilderCopy contextBuilder: eachProfile.
+				aWindowedContext := GlutinWindowedContext fromNativeHandle: (GlutinWindowedContext primCreate: self windowBuilder: aBuilderCopy contextBuilder: eachProfile).
 				aBuilderCopy nullify.
 				eachProfile nullify.
 			
@@ -79,10 +79,11 @@ GlutinEventLoop >> createWindow: aWindowBuilder context: aContextBuilder [
 	
 	aBuilderCopy := aWindowBuilder copy.
 	
-	aWindowedContext := GlutinWindowedContext
-		primCreate: self
-		windowBuilder: aBuilderCopy
-		contextBuilder: aContextBuilder.
+	aWindowedContext := GlutinWindowedContext fromNativeHandle: (
+		GlutinWindowedContext
+			primCreate: self
+			windowBuilder: aBuilderCopy
+			contextBuilder: aContextBuilder).
 
 	aBuilderCopy nullify.
 	aContextBuilder nullify.

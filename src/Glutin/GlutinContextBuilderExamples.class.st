@@ -1,6 +1,6 @@
 Class {
 	#name : #GlutinContextBuilderExamples,
-	#superclass : #Object,
+	#superclass : #GlutinExternalObjectExamples,
 	#category : #'Glutin-Examples'
 }
 
