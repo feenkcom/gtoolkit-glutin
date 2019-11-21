@@ -6,6 +6,11 @@ Class {
 	#category : #Glutin
 }
 
+{ #category : #'instance creation' }
+GlutinContextBuilder class >> allProfiles [
+	^ Array streamContents: [ :aStream | self profilesDo: [ :eachProfile :eachIndex | aStream nextPut: eachProfile ] ]
+]
+
 { #category : #'api - instantiation' }
 GlutinContextBuilder class >> create [
 	^ self primCreate autoRelease
@@ -33,6 +38,16 @@ GlutinContextBuilder class >> possibleColorBits [
 	"Without alpha"
 
 	^ #(24 16 8)
+]
+
+{ #category : #'instance creation' }
+GlutinContextBuilder class >> possibleDepthBufferValues [
+	^ #(32 24 16 8 0)
+]
+
+{ #category : #'instance creation' }
+GlutinContextBuilder class >> possibleDoubleBufferValues [
+	^ #(true false)
 ]
 
 { #category : #'instance creation' }
@@ -90,6 +105,11 @@ GlutinContextBuilder class >> possibleSrgbValues [
 	^ #(true false)
 ]
 
+{ #category : #'instance creation' }
+GlutinContextBuilder class >> possibleStencilBufferValues [
+	^ #(8 0)
+]
+
 { #category : #'private - ffi' }
 GlutinContextBuilder class >> primCreate [
 	^ self ffiCall: #(#GlutinContextBuilder glutin_create_context_builder())
@@ -109,32 +129,38 @@ GlutinContextBuilder class >> primTryContext: aContextBuilder eventLoop: anEvent
 
 { #category : #'instance creation' }
 GlutinContextBuilder class >> profilesDo: aBlock [
-	| theGlRequests thePixelFormats theSrgbValues aCounter |
+	| theGlRequests thePixelFormats theSrgbValues theDoubleBufferValues theDepthBufferValues theStencilBufferValues aCounter |
 	
 	aCounter := 0.
 	
 	theGlRequests := self possibleGlRequests.
 	thePixelFormats := self possiblePixelFormats.
 	theSrgbValues := self possibleSrgbValues.
+	theDoubleBufferValues := self possibleDoubleBufferValues.
+	theDepthBufferValues := self possibleDepthBufferValues.
+	theStencilBufferValues := self possibleStencilBufferValues.
 	
-	theGlRequests do: [ :eachGlRequest |
-		thePixelFormats do: [ :eachFormat |
-			theSrgbValues do: [ :eachSrgb |
-				| eachProfile |
-				
-				eachProfile := self new
-					withDoubleBuffer: true;
-					withMultisampling: 0;
-					withDepthBuffer: 24;
-					withStencilBuffer: 8;
-					withPixelFormatColor: eachFormat first alpha: eachFormat second;
-					withSrgb: eachSrgb;
-					withVsync: false.
-					
-				eachProfile perform: eachGlRequest key withArguments: eachGlRequest value.
-				
-				aCounter := aCounter + 1.
-				aBlock value: eachProfile value: aCounter ] ] ]
+	theDoubleBufferValues do: [ :eachDoubleBuffer |
+		theDepthBufferValues do: [ :eachDepthBuffer |
+			theStencilBufferValues do: [ :eachStencilBuffer |
+				theGlRequests do: [ :eachGlRequest |
+					thePixelFormats do: [ :eachFormat |
+						theSrgbValues do: [ :eachSrgb |
+							| eachProfile |
+							
+							eachProfile := self new
+								withDoubleBuffer: eachDoubleBuffer;
+								withMultisampling: 0;
+								withDepthBuffer: eachDepthBuffer;
+								withStencilBuffer: eachStencilBuffer;
+								withPixelFormatColor: eachFormat first alpha: eachFormat second;
+								withSrgb: eachSrgb;
+								withVsync: false.
+								
+							eachProfile perform: eachGlRequest key withArguments: eachGlRequest value.
+							
+							aCounter := aCounter + 1.
+							aBlock value: eachProfile value: aCounter ] ] ] ] ] ]
 ]
 
 { #category : #'private - ffi' }
