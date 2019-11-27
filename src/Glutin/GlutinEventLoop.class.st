@@ -47,6 +47,9 @@ GlutinEventLoop >> createWindow: aWindowBuilder [
 	self
 		assert: [ self isNull not ]
 		description: [ 'Can not create a window with invalid event loop' ].
+		
+		
+	
 	
 	GlutinContextBuilder profilesDo: [ :eachProfile :anIndex |
 		(self tryHeadlessContext: eachProfile)
@@ -67,8 +70,7 @@ GlutinEventLoop >> createWindow: aWindowBuilder [
 						
 						GlutinWindowsRegistry default registerWindow: aWindowedContext.
 						
-						^ aWindowedContext ] ]
-			ifFalse: [ GlutinLibrary println: '[Glutin] Profile #', anIndex asString, ' did not work' ] ].
+						^ aWindowedContext ] ] ].
 		
 	self error: 'Could not find a suitable OpenGL profile for this system'
 ]
