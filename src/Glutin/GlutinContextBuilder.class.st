@@ -1,29 +1,12 @@
 Class {
 	#name : #GlutinContextBuilder,
-	#superclass : #FFIExternalObject,
-	#traits : 'TGlutinLibrary + TGlutinPtr',
-	#classTraits : 'TGlutinLibrary classTrait + TGlutinPtr classTrait',
-	#category : #Glutin
+	#superclass : #GlutinExternalObject,
+	#category : #'Glutin-External'
 }
 
 { #category : #'instance creation' }
 GlutinContextBuilder class >> allProfiles [
 	^ Array streamContents: [ :aStream | self profilesDo: [ :eachProfile :eachIndex | aStream nextPut: eachProfile ] ]
-]
-
-{ #category : #'api - instantiation' }
-GlutinContextBuilder class >> create [
-	^ self primCreate autoRelease
-]
-
-{ #category : #'library path' }
-GlutinContextBuilder class >> ffiLibraryName [
-	^ GlutinLibrary
-]
-
-{ #category : #'instance creation' }
-GlutinContextBuilder class >> new [
-	^ self create
 ]
 
 { #category : #'instance creation' }
@@ -112,7 +95,7 @@ GlutinContextBuilder class >> possibleStencilBufferValues [
 
 { #category : #'private - ffi' }
 GlutinContextBuilder class >> primCreate [
-	^ self ffiCall: #(#GlutinContextBuilder glutin_create_context_builder())
+	^ self ffiCall: #(#void* glutin_context_builder_default())
 ]
 
 { #category : #'private - ffi' }
@@ -132,6 +115,9 @@ GlutinContextBuilder class >> profilesDo: aBlock [
 	| theGlRequests thePixelFormats theSrgbValues theDoubleBufferValues theDepthBufferValues theStencilBufferValues aCounter |
 	
 	aCounter := 0.
+	
+	"let's try a default profile first"
+	aBlock value: self new value: aCounter.
 	
 	theGlRequests := self possibleGlRequests.
 	thePixelFormats := self possiblePixelFormats.
@@ -163,47 +149,49 @@ GlutinContextBuilder class >> profilesDo: aBlock [
 							aBlock value: eachProfile value: aCounter ] ] ] ] ] ]
 ]
 
-{ #category : #'private - ffi' }
-GlutinContextBuilder >> mutate: aHandle [
-
-	self
-		assert: [ handle ~= aHandle ]
-		description: [ 'Can not replace a handle with the same one' ].
+{ #category : #'gt-extension' }
+GlutinContextBuilder >> gtPixelFormatRequirementsFor: aView [
+	<gtView>
 	
-	(FFIExternalResourceManager uniqueInstance instVarNamed: #registry) remove: self ifAbsent: [ ].
-	"we don't release previous pointer manually because it is freed by native methods"
-	handle := aHandle.
-	self autoRelease
+	^ (self pixelFormatRequirements gtInforFor: aView) title: 'Pixel format'
 ]
 
 { #category : #'private - ffi' }
 GlutinContextBuilder >> nullify [
-	self getHandle beNull.
 	self release
+]
+
+{ #category : #accesssing }
+GlutinContextBuilder >> pixelFormatRequirements [
+	<return: #GlutinPixelFormatRequirements>
+
+	^ GlutinPixelFormatRequirements fromNativeHandle: self primGetPixelFormatRequirements
+]
+
+{ #category : #'private - ffi' }
+GlutinContextBuilder >> primGetPixelFormatRequirements [
+	^ self ffiCall: #(void* glutin_context_builder_get_pixel_format_requirements(self))
 ]
 
 { #category : #'private - ffi' }
 GlutinContextBuilder >> primWithDepthBuffer: bits [
-	^ self ffiCall: #(void* glutin_context_builder_with_depth_buffer(
-		GlutinContextBuilder self,
-		uint8 bits))
+	^ self ffiCall: #(void glutin_context_builder_with_depth_buffer(self, uint8 bits))
 ]
 
 { #category : #'private - ffi' }
 GlutinContextBuilder >> primWithDoubleBuffer: aBoolean [
-	^ self ffiCall: #(void* glutin_context_builder_with_double_buffer(GlutinContextBuilder self, bool aBoolean))
+	^ self ffiCall: #(void glutin_context_builder_with_double_buffer(self, bool aBoolean))
 ]
 
 { #category : #'private - ffi' }
 GlutinContextBuilder >> primWithGlLatest [
-	^ self ffiCall: #(void* glutin_context_builder_with_gl_latest(
-		GlutinContextBuilder self))
+	^ self ffiCall: #(void glutin_context_builder_with_gl_latest(self))
 ]
 
 { #category : #'private - ffi' }
 GlutinContextBuilder >> primWithGlMajor: openglMajor minor: openglMinor glesMajor: glesMajor minor: glesMinor [
-	^ self ffiCall: #(void* glutin_context_builder_with_gl_then_gles(
-		GlutinContextBuilder self,
+	^ self ffiCall: #(void glutin_context_builder_with_gl_then_gles(
+		self,
 		uint8 openglMajor,
 		uint8 openglMinor,
 		uint8 glesMajor,
@@ -212,92 +200,84 @@ GlutinContextBuilder >> primWithGlMajor: openglMajor minor: openglMinor glesMajo
 
 { #category : #'private - ffi' }
 GlutinContextBuilder >> primWithGlProfileCore [
-	^ self ffiCall: #(void* glutin_context_builder_with_gl_profile_core(
-		GlutinContextBuilder self))
+	^ self ffiCall: #(void glutin_context_builder_with_gl_profile_core(self))
 ]
 
 { #category : #'private - ffi' }
 GlutinContextBuilder >> primWithMultisampling: samples [
-	^ self ffiCall: #(void* glutin_context_builder_with_multisampling(
-		GlutinContextBuilder self,
-		uint16 samples))
+	^ self ffiCall: #(void glutin_context_builder_with_multisampling(self, uint16 samples))
 ]
 
 { #category : #'private - ffi' }
 GlutinContextBuilder >> primWithPixelFormatColor: colorBits alpha: alphaBits [
-	^ self ffiCall: #(void* glutin_context_builder_with_pixel_format(
-		GlutinContextBuilder self,
-		uint8 colorBits,
-		uint8 alphaBits))
+	^ self ffiCall: #(void glutin_context_builder_with_pixel_format(self, uint8 colorBits, uint8 alphaBits))
 ]
 
 { #category : #'private - ffi' }
 GlutinContextBuilder >> primWithSrgb: aBoolean [
-	^ self ffiCall: #(void* glutin_context_builder_with_srgb(GlutinContextBuilder self, bool aBoolean))
+	^ self ffiCall: #(void glutin_context_builder_with_srgb(self, bool aBoolean))
 ]
 
 { #category : #'private - ffi' }
 GlutinContextBuilder >> primWithStencilBuffer: bits [
-	^ self ffiCall: #(void* glutin_context_builder_with_stencil_buffer(
-		GlutinContextBuilder self,
-		uint8 bits))
+	^ self ffiCall: #(void glutin_context_builder_with_stencil_buffer(self, uint8 bits))
 ]
 
 { #category : #'private - ffi' }
 GlutinContextBuilder >> primWithVsync: aBoolean [
-	^ self ffiCall: #(void* glutin_context_builder_with_vsync(GlutinContextBuilder self, bool aBoolean))
+	^ self ffiCall: #(void glutin_context_builder_with_vsync(self, bool aBoolean))
 ]
 
 { #category : #accesssing }
 GlutinContextBuilder >> withDepthBuffer: aNumber [
-	self mutate: (self primWithDepthBuffer: aNumber)
+	self primWithDepthBuffer: aNumber
 ]
 
 { #category : #accesssing }
 GlutinContextBuilder >> withDoubleBuffer: aBoolean [
-	self mutate: (self primWithDoubleBuffer: aBoolean)
+	self primWithDoubleBuffer: aBoolean
 ]
 
 { #category : #accesssing }
 GlutinContextBuilder >> withGl: aGlVersionArray thenGles: aGlesVersionArray [
-	self mutate: (self
+	self
 		primWithGlMajor: aGlVersionArray first
 		minor: aGlVersionArray second
 		glesMajor: aGlesVersionArray first
-		minor: aGlesVersionArray second)
+		minor: aGlesVersionArray second
 ]
 
 { #category : #accesssing }
 GlutinContextBuilder >> withGlLatest [
-	self mutate: (self primWithGlLatest)
+	self primWithGlLatest
 ]
 
 { #category : #accesssing }
 GlutinContextBuilder >> withGlProfileCore [
-	self mutate: (self primWithGlProfileCore)
+	self primWithGlProfileCore
 ]
 
 { #category : #accesssing }
 GlutinContextBuilder >> withMultisampling: aNumber [
-	self mutate: (self primWithMultisampling: aNumber)
+	self primWithMultisampling: aNumber
 ]
 
 { #category : #accesssing }
 GlutinContextBuilder >> withPixelFormatColor: theColorBits alpha: theAlphaBits [
-	self mutate: (self primWithPixelFormatColor: theColorBits alpha: theAlphaBits)
+	self primWithPixelFormatColor: theColorBits alpha: theAlphaBits
 ]
 
 { #category : #accesssing }
 GlutinContextBuilder >> withSrgb: aBoolean [
-	self mutate: (self primWithSrgb: aBoolean)
+	self primWithSrgb: aBoolean
 ]
 
 { #category : #accesssing }
 GlutinContextBuilder >> withStencilBuffer: aNumber [
-	self mutate: (self primWithStencilBuffer: aNumber)
+	self primWithStencilBuffer: aNumber
 ]
 
 { #category : #accesssing }
 GlutinContextBuilder >> withVsync: aBoolean [
-	self mutate: (self primWithVsync: aBoolean)
+	self primWithVsync: aBoolean
 ]
