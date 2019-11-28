@@ -1,25 +1,8 @@
 Class {
 	#name : #GlutinEventLoop,
-	#superclass : #FFIExternalObject,
-	#traits : 'TGlutinLibrary + TGlutinPtr',
-	#classTraits : 'TGlutinLibrary classTrait + TGlutinPtr classTrait',
+	#superclass : #GlutinExternalObject,
 	#category : #'Glutin-Events Fetcher'
 }
-
-{ #category : #'api - instantiation' }
-GlutinEventLoop class >> create [
-	^ self primCreate autoRelease
-]
-
-{ #category : #'library path' }
-GlutinEventLoop class >> ffiLibraryName [
-	^ GlutinLibrary
-]
-
-{ #category : #'instance creation' }
-GlutinEventLoop class >> new [
-	^ self create
-]
 
 { #category : #'private - ffi' }
 GlutinEventLoop class >> primCreate [
