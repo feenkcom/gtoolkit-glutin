@@ -8,3 +8,8 @@ Class {
 GlutinExternalObject class >> ffiLibraryName [
 	^ GlutinLibrary
 ]
+
+{ #category : #testing }
+GlutinExternalObject >> isValid [
+	^ handle isNotNil and: [ handle isNull not ]
+]
