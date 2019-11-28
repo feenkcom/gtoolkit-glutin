@@ -1,8 +1,6 @@
 Class {
 	#name : #GlutinGL,
-	#superclass : #FFIExternalObject,
-	#traits : 'TGlutinLibrary + TGlutinPtr',
-	#classTraits : 'TGlutinLibrary classTrait + TGlutinPtr classTrait',
+	#superclass : #GlutinExternalObject,
 	#pools : [
 		'GlutinGLConstants',
 		'GlutinGLTypes'
@@ -10,16 +8,11 @@ Class {
 	#category : #'Glutin-OpenGL'
 }
 
-{ #category : #'library path' }
-GlutinGL class >> ffiLibraryName [
-	^ GlutinLibrary
-]
-
 { #category : #'private - ffi' }
 GlutinGL class >> primRelease: aHandle [
 	
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"
-	^ self ffiCall: #(void glutin_gl_release(void* aHandle))
+	^ self ffiCall: #(void glutin_gl_drop(void* aHandle))
 ]
 
 { #category : #'generated bindings' }
