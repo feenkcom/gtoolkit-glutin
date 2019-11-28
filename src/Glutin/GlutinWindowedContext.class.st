@@ -100,11 +100,6 @@ GlutinWindowedContext >> isCurrent [
 		ifTrue: [ self primIsCurrent ]
 ]
 
-{ #category : #testing }
-GlutinWindowedContext >> isValid [
-	^ handle isNotNil and: [ handle isNull not ]
-]
-
 { #category : #'api - gl' }
 GlutinWindowedContext >> makeCurrent [	
 	self isValid

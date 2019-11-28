@@ -10,6 +10,29 @@ GlutinContextBuilder class >> allProfiles [
 ]
 
 { #category : #'instance creation' }
+GlutinContextBuilder class >> headless [
+	"Create a headless context"
+	| anEventLoop |
+	
+	anEventLoop := GlutinEventLoop new.
+
+	GlutinContextBuilder profilesDo: [ :eachProfile :anIndex |
+		(anEventLoop tryHeadlessContext: eachProfile)
+			ifTrue: [
+				| aHeadlessContext |
+				aHeadlessContext := GlutinHeadlessContext fromNativeHandle: (GlutinHeadlessContext primCreate: anEventLoop contextBuilder: eachProfile).
+				eachProfile nullify.
+			
+				aHeadlessContext isValid
+					ifTrue: [
+						GlutinLibrary println: '[Glutin] Profile #', anIndex asString, ' worked'.
+						aHeadlessContext eventsLoop: self.
+						^ aHeadlessContext ] ] ].
+		
+	self error: 'Could not find a suitable OpenGL profile for this system'
+]
+
+{ #category : #'instance creation' }
 GlutinContextBuilder class >> possibleAlphaBits [
 	"Without alpha"
 

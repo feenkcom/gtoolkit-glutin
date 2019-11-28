@@ -1,25 +1,8 @@
 Class {
 	#name : #GlutinEventLoop,
-	#superclass : #FFIExternalObject,
-	#traits : 'TGlutinLibrary + TGlutinPtr',
-	#classTraits : 'TGlutinLibrary classTrait + TGlutinPtr classTrait',
+	#superclass : #GlutinExternalObject,
 	#category : #'Glutin-Events Fetcher'
 }
-
-{ #category : #'api - instantiation' }
-GlutinEventLoop class >> create [
-	^ self primCreate autoRelease
-]
-
-{ #category : #'library path' }
-GlutinEventLoop class >> ffiLibraryName [
-	^ GlutinLibrary
-]
-
-{ #category : #'instance creation' }
-GlutinEventLoop class >> new [
-	^ self create
-]
 
 { #category : #'private - ffi' }
 GlutinEventLoop class >> primCreate [
@@ -47,10 +30,7 @@ GlutinEventLoop >> createWindow: aWindowBuilder [
 	self
 		assert: [ self isNull not ]
 		description: [ 'Can not create a window with invalid event loop' ].
-		
-		
-	
-	
+
 	GlutinContextBuilder profilesDo: [ :eachProfile :anIndex |
 		(self tryHeadlessContext: eachProfile)
 			ifTrue: [
@@ -73,30 +53,6 @@ GlutinEventLoop >> createWindow: aWindowBuilder [
 						^ aWindowedContext ] ] ].
 		
 	self error: 'Could not find a suitable OpenGL profile for this system'
-]
-
-{ #category : #'api - windows' }
-GlutinEventLoop >> createWindow: aWindowBuilder context: aContextBuilder [
-	| aWindowedContext aBuilderCopy |
-	
-	aBuilderCopy := aWindowBuilder copy.
-	
-	aWindowedContext := GlutinWindowedContext fromNativeHandle: (
-		GlutinWindowedContext
-			primCreate: self
-			windowBuilder: aBuilderCopy
-			contextBuilder: aContextBuilder).
-
-	aBuilderCopy nullify.
-	aContextBuilder nullify.
-
-	aWindowedContext autoRelease.
-	aWindowedContext eventsLoop: self.
-	aWindowedContext title: aWindowBuilder title.
-	
-	GlutinWindowsRegistry default registerWindow: aWindowedContext.
-
-	^ aWindowedContext
 ]
 
 { #category : #'private - ffi' }
