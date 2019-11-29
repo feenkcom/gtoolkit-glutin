@@ -39,7 +39,7 @@ GlutinPixelFormat >> depthBits [
 ]
 
 { #category : #'gt-extension' }
-GlutinPixelFormat >> gtInforFor: aView [
+GlutinPixelFormat >> gtInfoFor: aView [
 	<gtView>
 
 	^ ({
