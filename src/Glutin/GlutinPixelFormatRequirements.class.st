@@ -65,7 +65,7 @@ GlutinPixelFormatRequirements >> doubleBufferDo: aBlock ifNone: aNoneBlock [
 ]
 
 { #category : #'gt-extension' }
-GlutinPixelFormatRequirements >> gtInforFor: aView [
+GlutinPixelFormatRequirements >> gtInfoFor: aView [
 	<gtView>
 
 	^ ({

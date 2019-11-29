@@ -176,7 +176,7 @@ GlutinContextBuilder class >> profilesDo: aBlock [
 GlutinContextBuilder >> gtPixelFormatRequirementsFor: aView [
 	<gtView>
 	
-	^ (self pixelFormatRequirements gtInforFor: aView) title: 'Pixel format'
+	^ (self pixelFormatRequirements gtInfoFor: aView) title: 'Pixel format'
 ]
 
 { #category : #'private - ffi' }
