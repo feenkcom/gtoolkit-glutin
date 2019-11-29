@@ -4,6 +4,7 @@ Class {
 	#instVars : [
 		'id',
 		'extent',
+		'internalFormat',
 		'format',
 		'type',
 		'target',
@@ -36,13 +37,13 @@ GlutinGLTexture >> format: anObject [
 ]
 
 { #category : #properties }
-GlutinGLTexture >> formatBGRA [
-	self format: GL_BGRA
+GlutinGLTexture >> formatBGRA8888 [
+	self format: GL_BGRA8_EXT
 ]
 
 { #category : #properties }
-GlutinGLTexture >> formatRGBA [
-	self format: GL_RGBA
+GlutinGLTexture >> formatRGBA8888 [
+	self format: GL_RGBA8
 ]
 
 { #category : #testing }
@@ -71,6 +72,26 @@ GlutinGLTexture >> initialize [
 	
 	target := GL_TEXTURE_2D.
 	mipMapped := false
+]
+
+{ #category : #accessing }
+GlutinGLTexture >> internalFormat [
+	^ internalFormat
+]
+
+{ #category : #accessing }
+GlutinGLTexture >> internalFormat: aNumber [
+	internalFormat := aNumber
+]
+
+{ #category : #properties }
+GlutinGLTexture >> internalFormatBGRA [
+	self internalFormat: GL_BGRA
+]
+
+{ #category : #properties }
+GlutinGLTexture >> internalFormatRGBA [
+	self internalFormat: GL_RGBA
 ]
 
 { #category : #accessing }
