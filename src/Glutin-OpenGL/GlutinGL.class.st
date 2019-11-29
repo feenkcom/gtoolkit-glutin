@@ -1,6 +1,9 @@
 Class {
 	#name : #GlutinGL,
 	#superclass : #GlutinExternalObject,
+	#instVars : [
+		'context'
+	],
 	#pools : [
 		'GlutinGLConstants',
 		'GlutinGLTypes'
@@ -60,6 +63,16 @@ GlutinGL >> clear_colorR: r g: g b: b a: a [
 { #category : #'generated bindings' }
 GlutinGL >> compile_shader: shader [
 	^ self ffiCall: #( void glutin_gl_compile_shader ( GlutinGL self, GLuint shader ) )
+]
+
+{ #category : #accessing }
+GlutinGL >> context [
+	^ context
+]
+
+{ #category : #accessing }
+GlutinGL >> context: anObject [
+	context := anObject
 ]
 
 { #category : #'generated bindings' }

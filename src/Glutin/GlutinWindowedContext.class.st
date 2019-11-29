@@ -3,9 +3,8 @@ Represents an OpenGL context and the Window with which it is associated.
 "
 Class {
 	#name : #GlutinWindowedContext,
-	#superclass : #GlutinExternalObject,
+	#superclass : #GlutinContext,
 	#instVars : [
-		'eventsLoop',
 		'title',
 		'id'
 	],
@@ -35,16 +34,6 @@ GlutinWindowedContext >> close [
 { #category : #'api - accessing' }
 GlutinWindowedContext >> cursor: aCursorIcon [
 	self primSetCursor: aCursorIcon
-]
-
-{ #category : #'api - accessing' }
-GlutinWindowedContext >> eventsLoop [
-	^ eventsLoop
-]
-
-{ #category : #initialization }
-GlutinWindowedContext >> eventsLoop: aGlutinEventsLoop [
-	eventsLoop := aGlutinEventsLoop
 ]
 
 { #category : #'api - accessing' }
@@ -89,26 +78,6 @@ GlutinWindowedContext >> innerExtent [
 { #category : #'api - accessing' }
 GlutinWindowedContext >> innerExtent: aPoint [
 	self primSetInnerWidth: aPoint x height: aPoint y
-]
-
-{ #category : #'api - gl' }
-GlutinWindowedContext >> isCurrent [
-	<return: #Boolean>
-	
-	^ self isValid
-		ifFalse: [ false ]
-		ifTrue: [ self primIsCurrent ]
-]
-
-{ #category : #'api - gl' }
-GlutinWindowedContext >> makeCurrent [	
-	self isValid
-		ifFalse: [ ^ self ].
-	
-	self isCurrent
-		ifTrue: [ ^ self ].
-
-	self primMakeCurrent
 ]
 
 { #category : #'api - accessing' }

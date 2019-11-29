@@ -1,9 +1,6 @@
 Class {
 	#name : #GlutinHeadlessContext,
-	#superclass : #GlutinExternalObject,
-	#instVars : [
-		'eventsLoop'
-	],
+	#superclass : #GlutinContext,
 	#category : #'Glutin-External'
 }
 
@@ -19,36 +16,6 @@ GlutinHeadlessContext class >> primRelease: aHandle [
 	
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"
 	self ffiCall: #(void glutin_destroy_context(void* aHandle))
-]
-
-{ #category : #accessing }
-GlutinHeadlessContext >> eventsLoop [
-	^ eventsLoop
-]
-
-{ #category : #accessing }
-GlutinHeadlessContext >> eventsLoop: anObject [
-	eventsLoop := anObject
-]
-
-{ #category : #'api - gl' }
-GlutinHeadlessContext >> isCurrent [
-	<return: #Boolean>
-	
-	^ self isValid
-		ifFalse: [ false ]
-		ifTrue: [ self primIsCurrent ]
-]
-
-{ #category : #'api - gl' }
-GlutinHeadlessContext >> makeCurrent [	
-	self isValid
-		ifFalse: [ ^ self ].
-	
-	self isCurrent
-		ifTrue: [ ^ self ].
-
-	self primMakeCurrent
 ]
 
 { #category : #'private - ffi' }
