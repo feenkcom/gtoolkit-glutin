@@ -48,6 +48,13 @@ GlutinWindowedContext >> framebufferExtent [
 ]
 
 { #category : #'api - accessing' }
+GlutinWindowedContext >> hdpiFactor [
+	<return: #Number>
+
+	^ self primGetHdpiFactor
+]
+
+{ #category : #'api - accessing' }
 GlutinWindowedContext >> id [
 	<return: #Number>
 	| aUint128 |
@@ -109,6 +116,11 @@ GlutinWindowedContext >> primGetFramebufferSize: aSizeF64 [
 	^ self ffiCall: #(void glutin_windowed_context_get_framebuffer_size(
 		self,
 		GtBoxerSizeF64 aSizeF64))
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowedContext >> primGetHdpiFactor [
+	^ self ffiCall: #(float64 glutin_windowed_context_get_hdpi_factor(self))
 ]
 
 { #category : #'private - ffi' }
