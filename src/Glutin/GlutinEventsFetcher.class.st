@@ -96,13 +96,13 @@ GlutinEventsFetcher >> eventLoop [
 
 			aGlutinEvent event_type = GlutinEventType EventsCleared
 				ifTrue: [
-					Processor nextReadyProcess priority > idlePriority
-						ifTrue: [
+					Processor gtNextReadyProcess ifNotNil: [ :proc | 
+						proc priority > idlePriority ifTrue: [
 							idleProcess ifNotNil: #terminate.
 							idleSemaphore consumeAllSignals.
 							idleProcess := idleProcessBlock forkAt: idlePriority.
 							idleSemaphore waitTimeoutMSecs: 50.
-						] ifFalse: [ aControlFlow := GlutinControlFlow wait ] ].
+						] ifFalse: [ aControlFlow := GlutinControlFlow wait ] ] ].
 
 			wantsToShutdown
 				ifTrue: [ aControlFlow := GlutinControlFlow exit ].
