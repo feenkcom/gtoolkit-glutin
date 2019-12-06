@@ -18,6 +18,16 @@ GlutinContext >> eventsLoop: anObject [
 ]
 
 { #category : #'api - gl' }
+GlutinContext >> getProcAddress: aProcNameString [
+	"Gets an OpenGL procedure address."
+	<return: #ExternalAddress>
+	
+	^ GtBoxerString
+		fromString: aProcNameString
+		during: [ :aGtBoxerString | self primGetProcAddress: aGtBoxerString ]
+]
+
+{ #category : #'api - gl' }
 GlutinContext >> isCurrent [
 	<return: #Boolean>
 	
@@ -35,6 +45,11 @@ GlutinContext >> makeCurrent [
 		ifTrue: [ ^ self ].
 
 	self primMakeCurrent
+]
+
+{ #category : #'private - ffi' }
+GlutinContext >> primGetProcAddress: aGtBoxerString [
+	^ self subclassResponsibility
 ]
 
 { #category : #'private - ffi' }
