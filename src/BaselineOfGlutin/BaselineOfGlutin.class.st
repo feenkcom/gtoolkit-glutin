@@ -13,11 +13,12 @@ BaselineOfGlutin >> baseline: spec [
 	spec for: #common do: [
 		spec
 			baseline: 'GToolkitInstaller' with: [ spec repository: 'github://feenkcom/gtoolkit-installer/src' ];
-			baseline: 'GToolkitBoxer' with: [ spec repository: 'github://feenkcom/gtoolkit-boxer/src' ].
+			baseline: 'GToolkitBoxer' with: [ spec repository: 'github://feenkcom/gtoolkit-boxer/src' ];
+			baseline: 'GToolkitGleam' with: [ spec repository: 'github://feenkcom/gtoolkit-gleam/src' ].
 		spec
 			postLoadDoIt: #'postLoadGlutin:';
 			package: 'Glutin' with: [ spec requires: #(GToolkitInstaller GToolkitBoxer) ];
-			package: 'Glutin-OpenGL' with: [ spec requires: #('Glutin') ];
+			package: 'Glutin-OpenGL' with: [ spec requires: #('Glutin' 'GToolkitGleam') ];
 			package: 'Glutin-Morphic' with: [ spec requires: #('Glutin' 'Glutin-OpenGL') ] ]
 ]
 

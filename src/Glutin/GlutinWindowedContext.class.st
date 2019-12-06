@@ -112,6 +112,11 @@ GlutinWindowedContext >> position: aPoint [
 ]
 
 { #category : #'private - ffi' }
+GlutinWindowedContext >> primGetApi [
+	^ self ffiCall: #(GlutinContextApi glutin_windowed_context_get_api(self))
+]
+
+{ #category : #'private - ffi' }
 GlutinWindowedContext >> primGetFramebufferSize: aSizeF64 [
 	^ self ffiCall: #(void glutin_windowed_context_get_framebuffer_size(
 		self,

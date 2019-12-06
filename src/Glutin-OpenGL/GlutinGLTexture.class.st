@@ -11,7 +11,7 @@ Class {
 		'mipMapped'
 	],
 	#pools : [
-		'GlutinGLConstants'
+		'AnObsoleteGlutinGLConstants'
 	],
 	#category : #'Glutin-OpenGL-Renderer'
 }

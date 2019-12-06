@@ -19,9 +19,6 @@ Class {
 		'texture',
 		'session'
 	],
-	#pools : [
-		'GlutinGLConstants'
-	],
 	#category : #'Glutin-OpenGL-Renderer'
 }
 
@@ -37,19 +34,21 @@ GlutinGLBufferRenderer >> createTexture: aGlutinOpenGLBuffer [
 	
 	gl bind_texture_2d: aTexture id.
 
-	gl tex_parameter_i_target: GL_TEXTURE_2D name: GL_TEXTURE_MIN_FILTER param: GL_NEAREST.
-	gl tex_parameter_i_target: GL_TEXTURE_2D name: GL_TEXTURE_MAG_FILTER param: GL_NEAREST.
+	gl tex_parameter_i_target: gl GL_TEXTURE_2D name: gl GL_TEXTURE_MIN_FILTER param: gl GL_NEAREST.
+	gl tex_parameter_i_target: gl GL_TEXTURE_2D name: gl GL_TEXTURE_MAG_FILTER param: gl GL_NEAREST.
 
 	gl
-		tex_image_2d_level: 0
-		internalformat: GL_RGBA
+		tex_image_2d: gl GL_TEXTURE_2D
+		level: 0
+		internalformat: gl GL_RGBA
 		width: aGlutinOpenGLBuffer width
 		height: aGlutinOpenGLBuffer height
 		border: 0
-		format: GL_BGRA
-		type: GL_UNSIGNED_INT_8_8_8_8_REV
-		pixels: aGlutinOpenGLBuffer pixels
-		length: aGlutinOpenGLBuffer stride * aGlutinOpenGLBuffer height * 4.
+		format: gl RGBA8
+		type: gl GL_UNSIGNED_INT_8_8_8_8_REV
+		pixels: (GtBoxerArrayU8
+			fromHandle: aGlutinOpenGLBuffer pixels
+			size: aGlutinOpenGLBuffer stride * aGlutinOpenGLBuffer height * 4).
 		
 	^ aTexture
 ]
@@ -130,16 +129,23 @@ GlutinGLBufferRenderer >> fragmentShader410 [
 { #category : #'private - rendering' }
 GlutinGLBufferRenderer >> initializeGL [
 	"I initialize an OpenGL context to be ready to render a pixel buffer"
+	| aStringBuffer aContextApi |
 
-	| aStringBuffer |
 	self isGLValid
 		ifTrue: [ ^ self ].
+		
+	aContextApi := self window api.
 
-	gl := self window gl.
+	gl := aContextApi = GlutinContextApi OpenGl
+		ifTrue: [ GtGleamGL loadGl: [ :aSymbol | window getProcAddress: aSymbol ] ]
+		ifFalse: [ aContextApi = GlutinContextApi OpenGlEs
+			ifTrue: [ GtGleamGL loadGles: [ :aSymbol | window getProcAddress: aSymbol ] ]
+			ifFalse: [ self error: 'Unsupported API' ] ].
+
 	session := Smalltalk session.
 	
-	gl clear_colorR: 1 g: 1 b: 1 a: 1.
-	gl clear: GL_COLOR_BUFFER_BIT.
+	gl clear_color: Color white.
+	gl clear: gl GL_COLOR_BUFFER_BIT.
 
 	vertShaderObj := gl create_vertex_shader.
 	fragShaderObj := gl create_fragment_shader.
@@ -232,7 +238,7 @@ GlutinGLBufferRenderer >> prepareForBuffer: aGlutinOpenGLBuffer [
 	
 	aFramebufferExtent := self window framebufferExtent.
 
-	gl viewport_x: 0 y: 0 width: aFramebufferExtent x height: aFramebufferExtent y.
+	gl viewport: (0@0 extent: aFramebufferExtent).
 
 	texture := self createTexture: aGlutinOpenGLBuffer
 ]
@@ -258,7 +264,7 @@ GlutinGLBufferRenderer >> presentBuffer: aGlutinOpenGLBuffer areas: aCollectionO
 	gl
 		vertex_attrib_pointer_index: vloc
 		size: 2
-		type: GL_FLOAT
+		type: gl GL_FLOAT
 		normalized: false
 		stride: 0
 		offset: 0.
@@ -268,12 +274,12 @@ GlutinGLBufferRenderer >> presentBuffer: aGlutinOpenGLBuffer areas: aCollectionO
 	gl
 		vertex_attrib_pointer_index: tloc
 		size: 2
-		type: GL_FLOAT
+		type: gl GL_FLOAT
 		normalized: false
 		stride: 0
 		offset: 0.
 		
-	gl draw_arrays_mode: GL_TRIANGLE_FAN first: 0 count: 4.	
+	gl draw_arrays_mode: gl GL_TRIANGLE_FAN first: 0 count: 4.	
 	
 	self swapBuffers
 ]
@@ -286,8 +292,8 @@ GlutinGLBufferRenderer >> swapBuffers [
 { #category : #'private - texture' }
 GlutinGLBufferRenderer >> updateTexture: aTexture from: aGlutinOpenGLBuffer [
 	gl bind_texture_2d: aTexture id.
-	gl tex_parameter_i_target: GL_TEXTURE_2D name: GL_TEXTURE_MIN_FILTER param: GL_NEAREST.
-	gl tex_parameter_i_target: GL_TEXTURE_2D name: GL_TEXTURE_MAG_FILTER param: GL_NEAREST.
+	gl tex_parameter_i_target: gl GL_TEXTURE_2D name: gl GL_TEXTURE_MIN_FILTER param: gl GL_NEAREST.
+	gl tex_parameter_i_target: gl GL_TEXTURE_2D name: gl GL_TEXTURE_MAG_FILTER param: gl GL_NEAREST.
 	
 	gl
 		tex_sub_image_2d_level: 0
@@ -295,8 +301,8 @@ GlutinGLBufferRenderer >> updateTexture: aTexture from: aGlutinOpenGLBuffer [
 		yoffset: 0
 		width: aGlutinOpenGLBuffer width
 		height: aGlutinOpenGLBuffer height
-		format: GL_BGRA
-		type: GL_UNSIGNED_INT_8_8_8_8_REV
+		format: gl GL_BGRA
+		type: gl GL_UNSIGNED_INT_8_8_8_8_REV
 		pixels: aGlutinOpenGLBuffer pixels
 		length: aGlutinOpenGLBuffer stride * aGlutinOpenGLBuffer height * 4
 ]

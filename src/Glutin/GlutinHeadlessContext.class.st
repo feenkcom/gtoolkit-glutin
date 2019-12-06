@@ -19,6 +19,11 @@ GlutinHeadlessContext class >> primRelease: aHandle [
 ]
 
 { #category : #'private - ffi' }
+GlutinHeadlessContext >> primGetApi [
+	^ self ffiCall: #(GlutinContextApi glutin_context_get_api(self))
+]
+
+{ #category : #'private - ffi' }
 GlutinHeadlessContext >> primGetProcAddress: aGtBoxerString [
 	^ self ffiCall: #(void* glutin_context_get_proc_address(self, GtBoxerString aGtBoxerString))
 ]
