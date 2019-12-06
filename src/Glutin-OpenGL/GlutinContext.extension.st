@@ -4,11 +4,11 @@ Extension { #name : #GlutinContext }
 GlutinContext >> gl [
 	<return: #GlutinGL>
 	
-	^ (GlutinGL fromNativeHandle: self primLoadGL) context: self
+	^ (GlutinGL fromNativeHandle: self primLoadGleamGL) context: self
 ]
 
 { #category : #'*Glutin-OpenGL' }
-GlutinContext >> primLoadGL [
+GlutinContext >> primLoadGleamGL [
 	"^ self ffiCall: #(void* glutin_context_load_gl(self))"
 	^ self subclassResponsibility
 ]
