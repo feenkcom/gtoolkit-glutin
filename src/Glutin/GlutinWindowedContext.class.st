@@ -150,6 +150,11 @@ GlutinWindowedContext >> primGetPosition: aPointF64 [
 ]
 
 { #category : #'private - ffi' }
+GlutinWindowedContext >> primGetProcAddress: aGtBoxerString [
+	^ self ffiCall: #(void* glutin_windowed_context_get_proc_address(self, GtBoxerString aGtBoxerString))
+]
+
+{ #category : #'private - ffi' }
 GlutinWindowedContext >> primIsCurrent [
 	^ self ffiCall: #(bool glutin_windowed_context_is_current(self))
 ]
