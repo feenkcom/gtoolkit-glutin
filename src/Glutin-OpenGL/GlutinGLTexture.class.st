@@ -11,7 +11,7 @@ Class {
 		'mipMapped'
 	],
 	#pools : [
-		'GlutinGLConstants'
+		'GtGleamGLConstants'
 	],
 	#category : #'Glutin-OpenGL-Renderer'
 }
@@ -38,7 +38,7 @@ GlutinGLTexture >> format: anObject [
 
 { #category : #properties }
 GlutinGLTexture >> formatBGRA8888 [
-	self format: GL_BGRA8_EXT
+	self format: GL_BGRA_INTEGER
 ]
 
 { #category : #properties }

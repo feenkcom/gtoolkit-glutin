@@ -7,6 +7,13 @@ Class {
 	#category : #'Glutin-External'
 }
 
+{ #category : #'api - gl' }
+GlutinContext >> api [
+	<return: #GlutinContextApi>
+
+	^ self primGetApi
+]
+
 { #category : #accessing }
 GlutinContext >> eventsLoop [
 	^ eventsLoop
@@ -45,6 +52,11 @@ GlutinContext >> makeCurrent [
 		ifTrue: [ ^ self ].
 
 	self primMakeCurrent
+]
+
+{ #category : #'private - ffi' }
+GlutinContext >> primGetApi [
+	^ self subclassResponsibility
 ]
 
 { #category : #'private - ffi' }
