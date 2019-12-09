@@ -40,11 +40,11 @@ GlutinGLBufferRenderer >> createTexture: aGlutinOpenGLBuffer [
 	gl
 		tex_image_2d: gl GL_TEXTURE_2D
 		level: 0
-		internalformat: gl GL_RGBA
+		internalFormat: gl GL_RGBA
 		width: aGlutinOpenGLBuffer width
 		height: aGlutinOpenGLBuffer height
 		border: 0
-		format: gl RGBA8
+		format: gl GL_RGBA8
 		type: gl GL_UNSIGNED_INT_8_8_8_8_REV
 		pixels: (GtBoxerArrayU8
 			fromHandle: aGlutinOpenGLBuffer pixels
