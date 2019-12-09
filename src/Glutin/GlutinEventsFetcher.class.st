@@ -69,7 +69,7 @@ GlutinEventsFetcher >> eventHandlers [
 GlutinEventsFetcher >> eventLoop [
 	"Fetch pending raw events from the OS.
 	 This method is run at the user interrupt priority."
-	| idlePriority |
+	| idlePriority userInterruptPriority lowIOPriority prioritySempahore |
 
 	"I make sure that Glutin events loop (external) is valid"
 	self ensureEventsLoop.
@@ -83,6 +83,9 @@ GlutinEventsFetcher >> eventLoop [
 	idleSemaphore := Semaphore new.
 	idleProcessBlock := [ idleSemaphore signal ].
 	idlePriority := Processor lowestPriority + 1.
+	prioritySempahore := Semaphore new.
+	userInterruptPriority := Processor userInterruptPriority.
+	lowIOPriority := Processor lowIOPriority.
 
 	isInCallback := true.
 	
@@ -90,22 +93,32 @@ GlutinEventsFetcher >> eventLoop [
 		eventsLoop run: [ :aGlutinEvent |
 			| aControlFlow  |
 
+			Processor activeProcess priority: userInterruptPriority.
+			"Force the process to adopt its new lower priority.
+			The #yield primitive won't do this for us"
+			[prioritySempahore signal] fork.
+			prioritySempahore wait.
+
 			aControlFlow := GlutinControlFlow poll.
 
 			self processGlutinEvent: aGlutinEvent.
 
 			aGlutinEvent event_type = GlutinEventType EventsCleared
 				ifTrue: [
-					Processor gtNextReadyProcess ifNotNil: [ :proc | 
-						proc priority > idlePriority ifTrue: [
+					Processor nextReadyProcess priority > idlePriority ifTrue: [
+							"There's a process with priority between: 12 and: 50 wanting to run"
 							idleProcess ifNotNil: #terminate.
 							idleSemaphore consumeAllSignals.
 							idleProcess := idleProcessBlock forkAt: idlePriority.
 							idleSemaphore waitTimeoutMSecs: 50.
-						] ifFalse: [ aControlFlow := GlutinControlFlow wait ] ] ].
+						] ifFalse: [ 
+							"Only the idleProcess wants the CPU, wait"
+							aControlFlow := GlutinControlFlow wait ] ].
 
 			wantsToShutdown
 				ifTrue: [ aControlFlow := GlutinControlFlow exit ].
+			"Ensure that the current callback process terminates before the next one runs"
+			Processor activeProcess priority: lowIOPriority.
 			aControlFlow ].
 		] ensure: [
 			isInCallback := false.
