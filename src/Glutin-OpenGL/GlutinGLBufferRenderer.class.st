@@ -15,7 +15,6 @@ Class {
 		'texBuff',
 		'vloc',
 		'tloc',
-		'uLoc',
 		'texture',
 		'session'
 	],
@@ -31,11 +30,11 @@ GlutinGLBufferRenderer >> createTexture: aGlutinOpenGLBuffer [
 	aTexture := GlutinGLTexture new.
 	aTexture id: gl gen_texture.
 	aTexture extent: aGlutinOpenGLBuffer extent.
-	
+
 	gl bind_texture_2d: aTexture id.
 
-	gl tex_parameter_i_target: gl GL_TEXTURE_2D name: gl GL_TEXTURE_MIN_FILTER param: gl GL_NEAREST.
-	gl tex_parameter_i_target: gl GL_TEXTURE_2D name: gl GL_TEXTURE_MAG_FILTER param: gl GL_NEAREST.
+	gl tex_parameter_i: gl GL_TEXTURE_2D name: gl GL_TEXTURE_MIN_FILTER param: gl GL_NEAREST.
+	gl tex_parameter_i: gl GL_TEXTURE_2D name: gl GL_TEXTURE_MAG_FILTER param: gl GL_NEAREST.
 
 	gl
 		tex_image_2d: gl GL_TEXTURE_2D
@@ -44,12 +43,12 @@ GlutinGLBufferRenderer >> createTexture: aGlutinOpenGLBuffer [
 		width: aGlutinOpenGLBuffer width
 		height: aGlutinOpenGLBuffer height
 		border: 0
-		format: gl GL_RGBA8
-		type: gl GL_UNSIGNED_INT_8_8_8_8_REV
+		format: gl GL_BGRA
+		type: gl GL_UNSIGNED_BYTE
 		pixels: (GtBoxerArrayU8
 			fromHandle: aGlutinOpenGLBuffer pixels
 			size: aGlutinOpenGLBuffer stride * aGlutinOpenGLBuffer height * 4).
-		
+
 	^ aTexture
 ]
 
@@ -143,9 +142,6 @@ GlutinGLBufferRenderer >> initializeGL [
 			ifFalse: [ self error: 'Unsupported API' ] ].
 
 	session := Smalltalk session.
-	
-	gl clear_color: Color white.
-	gl clear: gl GL_COLOR_BUFFER_BIT.
 
 	vertShaderObj := gl create_vertex_shader.
 	fragShaderObj := gl create_fragment_shader.
@@ -181,7 +177,6 @@ GlutinGLBufferRenderer >> initializeGL [
 
 	vloc := gl get_attribute_location_program: progObj name: (aStringBuffer string: 'aVertex').
 	tloc := gl get_attribute_location_program: progObj name: (aStringBuffer string: 'aUV').
-	uLoc := gl get_attribute_location_program: progObj name: (aStringBuffer string: 'pose').
 	
 	aStringBuffer release
 ]
@@ -225,22 +220,24 @@ GlutinGLBufferRenderer >> makeCurrent [
 ]
 
 { #category : #'private - rendering' }
-GlutinGLBufferRenderer >> prepareForBuffer: aGlutinOpenGLBuffer [
-	| aFramebufferExtent |
+GlutinGLBufferRenderer >> prepareForBuffer: aGlutinGLBuffer [
 	self
 		assert: [ self window isNotNil ]
 		description: [ 'Window must be set!' ].
 
-	(self isValidFor: aGlutinOpenGLBuffer)
+	(self isValidFor: aGlutinGLBuffer)
 		ifTrue: [ ^ self ].
 
 	self initializeGL.
 	
-	aFramebufferExtent := self window framebufferExtent.
+	(gl check_frame_buffer_status: gl GL_FRAMEBUFFER) = gl GL_FRAMEBUFFER_COMPLETE
+		ifFalse: [
+			NonInteractiveTranscript stdout
+				show: ('[GL] Framebuffer is incomplete {1}' format: { gl check_frame_buffer_status: gl GL_FRAMEBUFFER });
+				cr ].
 
-	gl viewport: (0@0 extent: aFramebufferExtent).
-
-	texture := self createTexture: aGlutinOpenGLBuffer
+	gl viewport: (0@0 extent: self window framebufferExtent).
+	texture := self createTexture: aGlutinGLBuffer
 ]
 
 { #category : #'api - rendering' }
@@ -292,19 +289,22 @@ GlutinGLBufferRenderer >> swapBuffers [
 { #category : #'private - texture' }
 GlutinGLBufferRenderer >> updateTexture: aTexture from: aGlutinOpenGLBuffer [
 	gl bind_texture_2d: aTexture id.
-	gl tex_parameter_i_target: gl GL_TEXTURE_2D name: gl GL_TEXTURE_MIN_FILTER param: gl GL_NEAREST.
-	gl tex_parameter_i_target: gl GL_TEXTURE_2D name: gl GL_TEXTURE_MAG_FILTER param: gl GL_NEAREST.
+
+	gl tex_parameter_i: gl GL_TEXTURE_2D name: gl GL_TEXTURE_MIN_FILTER param: gl GL_NEAREST.
+	gl tex_parameter_i: gl GL_TEXTURE_2D name: gl GL_TEXTURE_MAG_FILTER param: gl GL_NEAREST.
 	
 	gl
-		tex_sub_image_2d_level: 0
+		tex_sub_image_2d: gl GL_TEXTURE_2D
+		level: 0
 		xoffset: 0
 		yoffset: 0
 		width: aGlutinOpenGLBuffer width
 		height: aGlutinOpenGLBuffer height
 		format: gl GL_BGRA
-		type: gl GL_UNSIGNED_INT_8_8_8_8_REV
-		pixels: aGlutinOpenGLBuffer pixels
-		length: aGlutinOpenGLBuffer stride * aGlutinOpenGLBuffer height * 4
+		type: gl GL_UNSIGNED_BYTE
+		pixels: (GtBoxerArrayU8
+			fromHandle: aGlutinOpenGLBuffer pixels
+			size: aGlutinOpenGLBuffer stride * aGlutinOpenGLBuffer height * 4)
 ]
 
 { #category : #'private - shader' }
