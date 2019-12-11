@@ -91,6 +91,13 @@ GlutinLibrary class >> println: aString [
 		ensure: [ aBoxerString release ]
 ]
 
+{ #category : #'private - ffi' }
+GlutinLibrary >> calloutAPIClass [
+	^ ThreadedFFIMigration threadedFFIAvailable
+		ifTrue: [ TFCalloutAPI ]
+		ifFalse: [ super calloutAPIClass ]
+]
+
 { #category : #'accessing platform' }
 GlutinLibrary >> detectLibrary: aFileName [
 	^ ({ Smalltalk imageDirectory . Smalltalk vmDirectory . FileSystem workingDirectory }
@@ -123,6 +130,15 @@ GlutinLibrary >> macModuleName [
 { #category : #'private - ffi' }
 GlutinLibrary >> primTest [
 	^ self ffiCall: #(bool glutin_test())
+]
+
+{ #category : #'private - ffi' }
+GlutinLibrary >> runner [ 
+
+	^ ThreadedFFIMigration threadedFFIAvailable
+		ifTrue: [ TFSameThreadRunner uniqueInstance ]
+		ifFalse: [ super runner ]
+
 ]
 
 { #category : #'accessing platform' }
