@@ -14,9 +14,9 @@ Class {
 { #category : #'private - ffi' }
 GlutinWindowedContext class >> primCreate: anEventsLoop windowBuilder: aWindowBuilder contextBuilder: aContextBuilder [
 	^ self ffiCall: #(void* glutin_create_windowed_context(
-			#GlutinEventLoop anEventsLoop,
-			#GlutinWindowBuilder aWindowBuilder,
-			#GlutinContextBuilder aContextBuilder))
+			GlutinEventLoop anEventsLoop,
+			GlutinWindowBuilder aWindowBuilder,
+			GlutinContextBuilder aContextBuilder))
 ]
 
 { #category : #'private - ffi' }
