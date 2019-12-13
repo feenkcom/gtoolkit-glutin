@@ -118,7 +118,7 @@ GlutinContextBuilder class >> possibleStencilBufferValues [
 
 { #category : #'private - ffi' }
 GlutinContextBuilder class >> primCreate [
-	^ self ffiCall: #(#void* glutin_context_builder_default())
+	^ self ffiCall: #(void* glutin_context_builder_default())
 ]
 
 { #category : #'private - ffi' }
