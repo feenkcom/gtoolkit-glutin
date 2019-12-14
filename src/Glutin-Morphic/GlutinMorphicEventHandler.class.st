@@ -72,10 +72,10 @@ GlutinMorphicEventHandler >> convertButton: aGlutinButton [
 		ifTrue: [ ^ MouseButtonEvent redButton ].
 
 	aGlutinButton button_type = GlutinEventMouseButtonType Middle
-		ifTrue: [ ^ MouseButtonEvent yellowButton ].
+		ifTrue: [ ^ MouseButtonEvent blueButton ].
 
 	aGlutinButton button_type = GlutinEventMouseButtonType Right
-		ifTrue: [ ^ MouseButtonEvent blueButton ].
+		ifTrue: [ ^ MouseButtonEvent yellowButton ].
 
 	^ 0
 ]
