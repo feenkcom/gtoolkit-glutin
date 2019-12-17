@@ -100,6 +100,21 @@ GlutinMorphicEventHandler >> convertModifiers: theGlutinModifiers [
 	^ buttons
 ]
 
+{ #category : #converting }
+GlutinMorphicEventHandler >> convertModifiers: theGlutinModifiers event: aGlutinEvent [
+	| modifiedButtons |
+
+	modifiedButtons := self convertModifiers: theGlutinModifiers.
+
+	"On linux the ctrl modifier is not set if the control key is pressed by itself"
+	(aGlutinEvent has_virtual_keycode and:
+		[ aGlutinEvent virtual_keycode = GlutinEventVirtualKeyCode LControl or: [ 
+			aGlutinEvent virtual_keycode = GlutinEventVirtualKeyCode RControl ] ]) ifTrue:
+				[ modifiedButtons := modifiedButtons | 2r00110000 ].
+
+	^ modifiedButtons
+]
+
 { #category : #events }
 GlutinMorphicEventHandler >> dispatchMorphicEvent: anEvent [
 	morphicWorld defer: [
@@ -193,25 +208,32 @@ GlutinMorphicEventHandler >> visitKeyDownEvent: anEvent [
 
 	aMorphicEvent := KeyboardEvent new
 		setType: #keyDown
-		buttons: (self convertModifiers: (lastModifiers := anEvent modifiers copy))
+		buttons: (self convertModifiers: (lastModifiers := anEvent modifiers copy)
+								event: anEvent)
 		position: (mousePosition ifNil: [ 0@0 ])
 		keyValue: aKeyValue
 		charCode: aCharCode
 		hand:  self activeHand
 		stamp: Time millisecondClockValue.
 	aMorphicEvent scanCode: anEvent scan_code.
-
 	self dispatchMorphicEvent: aMorphicEvent.
 	
 	aCharacter = Character null
 		ifTrue: [ ^ self ].	
 	
-	(Unicode isPrintable: aCharacter)
-		ifTrue: [ ^ self ].
+	"This stupid and horrible and not event completely correct, 
+	but that's the way we doing it for now.
+	All improvements gratefully accepted.
+	Linux requires that keystroke events (that aren't Esc) that involve a modifier are sent through #tvisitCharacterReceivedEvent: only.  Mac has different rules."
+	(OSPlatform current isMacOS or: [ aKeyValue = 27 "Esc" ]) ifFalse: [
+		(aKeyValue between: 32 and: 126) ifTrue: [ 
+			(lastModifiers alt or: [ lastModifiers ctrl or: [ lastModifiers logo ] ]) ifFalse: [ 
+				^ nil	] ] ].
 	
 	aMorphicEvent := KeyboardEvent new
 		setType: #keystroke
-		buttons: (self convertModifiers: (lastModifiers := anEvent modifiers copy))
+		buttons: (self convertModifiers: (lastModifiers := anEvent modifiers copy)
+								event: anEvent)
 		position: (mousePosition ifNil: [ 0@0 ])
 		keyValue: aKeyValue
 		charCode: aCharCode
