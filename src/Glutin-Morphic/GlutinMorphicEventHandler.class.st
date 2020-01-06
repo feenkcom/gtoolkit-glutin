@@ -361,7 +361,7 @@ GlutinMorphicEventHandler >> visitUnknownEvent: anEvent [
 
 { #category : #visiting }
 GlutinMorphicEventHandler >> visitWindowCloseRequest: anEvent [
-	self currentWorld defer: [ WorldState quitSession ]
+	morphicWorld worldState worldRenderer deactivate
 ]
 
 { #category : #visiting }
