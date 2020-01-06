@@ -98,11 +98,13 @@ GlutinWorldRenderer >> createFormForBuffer: aBuffer extent: anExtent [
 
 { #category : #initialization }
 GlutinWorldRenderer >> deactivate [
+	world worldState worldRenderer: (NullWorldRenderer forWorld: world).
+	
 	glutinWindow ifNotNil: [ glutinWindow close. glutinWindow := nil ].
 
 	renderer := nil.
 	display := nil.
-	
+
 	GlutinEventsFetcher default removeEventHandler: eventHandler.
 	eventHandler := nil
 ]
