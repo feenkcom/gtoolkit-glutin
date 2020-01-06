@@ -8,7 +8,8 @@ Class {
 		'window',
 		'mousePosition',
 		'lastModifiers',
-		'buttons'
+		'buttons',
+		'eventQueue'
 	],
 	#classVars : [
 		'KeyCharacterMapping'
@@ -117,12 +118,14 @@ GlutinMorphicEventHandler >> convertModifiers: theGlutinModifiers event: aGlutin
 
 { #category : #events }
 GlutinMorphicEventHandler >> dispatchMorphicEvent: anEvent [
-	morphicWorld defer: [
-		(morphicWorld activeHand isNotNil and: [ anEvent hand isNotNil ]) ifTrue: [
-			morphicWorld activeHand handleEvent: anEvent
-		]
-	]
+	eventQueue nextPut: anEvent.
+]
+
+{ #category : #initialization }
+GlutinMorphicEventHandler >> initialize [
+	super initialize.
 	
+	eventQueue := WaitfreeQueue new
 ]
 
 { #category : #converting }
@@ -137,7 +140,8 @@ GlutinMorphicEventHandler >> morphicWorld [
 
 { #category : #accessing }
 GlutinMorphicEventHandler >> morphicWorld: aMorphicWorld [
-	morphicWorld := aMorphicWorld
+	morphicWorld := aMorphicWorld.
+	morphicWorld startStepping: self at: Time millisecondClockValue selector: #sendEvents arguments: nil stepTime: 0
 ]
 
 { #category : #'event - handling' }
@@ -146,6 +150,22 @@ GlutinMorphicEventHandler >> processGlutinEvent: aGlutinWindowEvent forWindow: a
 		ifFalse: [ ^ self ].
 		
 	aGlutinWindowEvent accept: self
+]
+
+{ #category : #events }
+GlutinMorphicEventHandler >> sendEvents [
+	| anEvent |
+	
+	[ anEvent := eventQueue nextOrNil ]
+		whileNotNil: [
+			(morphicWorld activeHand isNotNil and: [ anEvent hand isNotNil ]) ifTrue: [
+				morphicWorld activeHand handleEvent: anEvent
+			] ]
+]
+
+{ #category : #accessing }
+GlutinMorphicEventHandler >> shouldGetStepsFrom: aWorld [
+	^ true
 ]
 
 { #category : #visiting }
