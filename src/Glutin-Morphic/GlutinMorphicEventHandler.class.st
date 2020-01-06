@@ -8,8 +8,7 @@ Class {
 		'window',
 		'mousePosition',
 		'lastModifiers',
-		'buttons',
-		'eventQueue'
+		'buttons'
 	],
 	#classVars : [
 		'KeyCharacterMapping'
@@ -118,14 +117,11 @@ GlutinMorphicEventHandler >> convertModifiers: theGlutinModifiers event: aGlutin
 
 { #category : #events }
 GlutinMorphicEventHandler >> dispatchMorphicEvent: anEvent [
-	eventQueue nextPut: anEvent
-]
-
-{ #category : #initialization }
-GlutinMorphicEventHandler >> initialize [
-	super initialize.
-	
-	eventQueue := WaitfreeQueue new
+	morphicWorld defer: [
+		(morphicWorld activeHand isNotNil and: [ anEvent hand isNotNil ]) ifTrue: [
+			morphicWorld activeHand handleEvent: anEvent
+		]
+	]
 ]
 
 { #category : #converting }
@@ -150,17 +146,6 @@ GlutinMorphicEventHandler >> processGlutinEvent: aGlutinWindowEvent forWindow: a
 		ifFalse: [ ^ self ].
 		
 	aGlutinWindowEvent accept: self
-]
-
-{ #category : #events }
-GlutinMorphicEventHandler >> sendEvents [
-	| anEvent |
-	
-	[ anEvent := eventQueue nextOrNil ]
-		whileNotNil: [
-			(morphicWorld activeHand isNotNil and: [ anEvent hand isNotNil ]) ifTrue: [
-				morphicWorld activeHand handleEvent: anEvent
-			] ]
 ]
 
 { #category : #accessing }
