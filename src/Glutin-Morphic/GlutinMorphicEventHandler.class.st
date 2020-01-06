@@ -136,8 +136,7 @@ GlutinMorphicEventHandler >> morphicWorld [
 
 { #category : #accessing }
 GlutinMorphicEventHandler >> morphicWorld: aMorphicWorld [
-	morphicWorld := aMorphicWorld.
-	morphicWorld startStepping: self at: Time millisecondClockValue selector: #sendEvents arguments: nil stepTime: 16
+	morphicWorld := aMorphicWorld
 ]
 
 { #category : #'event - handling' }
