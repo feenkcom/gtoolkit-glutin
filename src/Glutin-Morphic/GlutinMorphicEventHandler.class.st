@@ -118,7 +118,7 @@ GlutinMorphicEventHandler >> convertModifiers: theGlutinModifiers event: aGlutin
 
 { #category : #events }
 GlutinMorphicEventHandler >> dispatchMorphicEvent: anEvent [
-	eventQueue nextPut: anEvent.
+	eventQueue nextPut: anEvent
 ]
 
 { #category : #initialization }
@@ -141,7 +141,7 @@ GlutinMorphicEventHandler >> morphicWorld [
 { #category : #accessing }
 GlutinMorphicEventHandler >> morphicWorld: aMorphicWorld [
 	morphicWorld := aMorphicWorld.
-	morphicWorld startStepping: self at: Time millisecondClockValue selector: #sendEvents arguments: nil stepTime: 0
+	morphicWorld startStepping: self at: Time millisecondClockValue selector: #sendEvents arguments: nil stepTime: 16
 ]
 
 { #category : #'event - handling' }
@@ -248,7 +248,11 @@ GlutinMorphicEventHandler >> visitKeyDownEvent: anEvent [
 	(OSPlatform current isMacOS or: [ aKeyValue = 27 "Esc" ]) ifFalse: [
 		(aKeyValue between: 32 and: 126) ifTrue: [ 
 			(lastModifiers alt or: [ lastModifiers ctrl or: [ lastModifiers logo ] ]) ifFalse: [ 
-				^ nil	] ] ].
+				^ self	] ] ].
+	
+	"on platform except linux, keydown must not send keystroke event if a character is printable"
+	(OSPlatform current isUnix not and: [ Unicode isPrintable: aCharacter ])
+		ifTrue: [ ^ self ].
 	
 	aMorphicEvent := KeyboardEvent new
 		setType: #keystroke
