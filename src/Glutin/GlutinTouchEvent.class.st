@@ -23,7 +23,7 @@ GlutinTouchEvent class >> fieldsDesc [
 	"
 	^ #(
 		int64 device_id
-		#GlutinEventTouchPhase phase
+		GlutinEventTouchPhase phase
 		float64 x
 		float64 y
 		uint64 id

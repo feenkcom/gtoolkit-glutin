@@ -3,74 +3,78 @@ Trait {
 	#category : #'Glutin-Events'
 }
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 TGlutinEventVisitor >> visitCharacterReceivedEvent: anEvent [
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 TGlutinEventVisitor >> visitCursorMovedEvent: anEvent [
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 TGlutinEventVisitor >> visitEventsCleared: anEvent [
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 TGlutinEventVisitor >> visitKeyboardInputEvent: anEvent [
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 TGlutinEventVisitor >> visitLoopDestroyed: anEvent [
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
+TGlutinEventVisitor >> visitModifiersChanged: anEvent [
+]
+
+{ #category : #'event - visiting' }
 TGlutinEventVisitor >> visitMouseInputEvent: anEvent [
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 TGlutinEventVisitor >> visitMouseWheelEvent: anEvent [
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 TGlutinEventVisitor >> visitNewEvents: anEvent [
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 TGlutinEventVisitor >> visitResumed: anEvent [
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 TGlutinEventVisitor >> visitSuspended: anEvent [
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 TGlutinEventVisitor >> visitTouchEvent: anEvent [
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 TGlutinEventVisitor >> visitUnknownEvent: anEvent [
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 TGlutinEventVisitor >> visitWindowCloseRequest: anEvent [
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 TGlutinEventVisitor >> visitWindowDestroyed: anEvent [
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 TGlutinEventVisitor >> visitWindowFocusedEvent: anEvent [
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 TGlutinEventVisitor >> visitWindowMovedEvent: anEvent [
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 TGlutinEventVisitor >> visitWindowRedrawRequested: anEvent [
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 TGlutinEventVisitor >> visitWindowResizedEvent: anEvent [
 ]

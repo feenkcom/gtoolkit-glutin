@@ -76,7 +76,7 @@ GlutinUserInterruptHandler >> uiProcessBlock: aBlock [
 	uiProcessBlock := aBlock
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 GlutinUserInterruptHandler >> visitKeyboardInputEvent: anEvent [
 	
 	anEvent has_virtual_keycode
@@ -92,7 +92,7 @@ GlutinUserInterruptHandler >> visitKeyboardInputEvent: anEvent [
 		ifTrue: [ self handleUserInterrupt ]
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 GlutinUserInterruptHandler >> visitWindowFocusedEvent: anEvent [
 	buffer removeAll
 ]

@@ -2,27 +2,27 @@
 Emitted when all of the event loop's events have been processed and control flow is about to be taken away from the program.
 "
 Class {
-	#name : #GlutinEventsClearedEvent,
+	#name : #GlutinMainEventsClearedEvent,
 	#superclass : #GlutinMappedEvent,
 	#category : #'Glutin-Events'
 }
 
 { #category : #'event type' }
-GlutinEventsClearedEvent class >> eventType [
-	^ GlutinEventType EventsCleared
+GlutinMainEventsClearedEvent class >> eventType [
+	^ GlutinEventType MainEventsCleared
 ]
 
 { #category : #'event type' }
-GlutinEventsClearedEvent class >> fromBaseEvent: anEvent [
+GlutinMainEventsClearedEvent class >> fromBaseEvent: anEvent [
 	^ self new
 ]
 
 { #category : #visiting }
-GlutinEventsClearedEvent >> accept: aVisitor [
+GlutinMainEventsClearedEvent >> accept: aVisitor [
 	^ aVisitor visitEventsCleared: self
 ]
 
 { #category : #testing }
-GlutinEventsClearedEvent >> isCommonEvent [
+GlutinMainEventsClearedEvent >> isCommonEvent [
 	^ true
 ]

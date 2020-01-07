@@ -6,7 +6,7 @@ Class {
 
 { #category : #'event type' }
 GlutinWindowRedrawRequestedEvent class >> eventType [
-	^ GlutinEventType WindowEventRedrawRequested
+	^ GlutinEventType RedrawRequested
 ]
 
 { #category : #'event type' }
