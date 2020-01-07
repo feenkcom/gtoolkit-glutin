@@ -11,7 +11,8 @@ Class {
 		'buttons'
 	],
 	#classVars : [
-		'KeyCharacterMapping'
+		'KeyCharacterMapping',
+		'WindowsKeyValueMapping'
 	],
 	#category : #'Glutin-Morphic'
 }
@@ -26,6 +27,13 @@ GlutinMorphicEventHandler class >> initialize [
 	"
 	self initialize
 	"
+	self initializeKeyCharacterMapping.
+	self initializeWindowsKeyValueMapping
+]
+
+{ #category : #'class initialization' }
+GlutinMorphicEventHandler class >> initializeKeyCharacterMapping [
+	<script: 'self initializeKeyCharacterMapping'>
 	KeyCharacterMapping := Dictionary new.
 	
 	(($a to: $z) flatCollect: [ :c | { GlutinEventVirtualKeyCode perform: c asString asUppercase asSymbol . c } ]),
@@ -61,6 +69,95 @@ GlutinMorphicEventHandler class >> initialize [
 	} pairsDo: [ :key :val | KeyCharacterMapping at: key put: val ]
 ]
 
+{ #category : #'class initialization' }
+GlutinMorphicEventHandler class >> initializeWindowsKeyValueMapping [
+	<script: 'self initializeWindowsKeyValueMapping'>
+	WindowsKeyValueMapping := Dictionary new.
+	
+	(($a to: $z) flatCollect: [ :c | { GlutinEventVirtualKeyCode perform: c asString asUppercase asSymbol . c asUppercase asInteger } ]),
+	{
+	GlutinEventVirtualKeyCode Escape . #ESCAPE.
+	GlutinEventVirtualKeyCode Tab . #TAB.
+	GlutinEventVirtualKeyCode Home . #HOME.
+	GlutinEventVirtualKeyCode Left . #KP_LEFT.
+	GlutinEventVirtualKeyCode Up . #KP_UP.
+	GlutinEventVirtualKeyCode Right . #KP_RIGHT.
+	GlutinEventVirtualKeyCode Down . #KP_DOWN.
+	GlutinEventVirtualKeyCode End . #END.
+	GlutinEventVirtualKeyCode PageUp . #PAGE_UP.
+	GlutinEventVirtualKeyCode PageDown . #PAGE_DOWN.
+	GlutinEventVirtualKeyCode Space. #KP_SPACE.
+	GlutinEventVirtualKeyCode Key0 . #ZERO.
+	GlutinEventVirtualKeyCode Key1 . #ONE.
+	GlutinEventVirtualKeyCode Key2 . #TWO.
+	GlutinEventVirtualKeyCode Key3 . #THREE.
+	GlutinEventVirtualKeyCode Key4 . #FOUR.
+	GlutinEventVirtualKeyCode Key5 . #FIVE.
+	GlutinEventVirtualKeyCode Key6 . #SIX.
+	GlutinEventVirtualKeyCode Key7 . #SEVEN.
+	GlutinEventVirtualKeyCode Key8 . #EIGHT.
+	GlutinEventVirtualKeyCode Key9 . #NINE.
+	GlutinEventVirtualKeyCode Return . #KP_ENTER.
+	GlutinEventVirtualKeyCode LShift . #SHIFT_L.
+	GlutinEventVirtualKeyCode RShift . #SHIFT_R.
+	GlutinEventVirtualKeyCode LControl . #CONTROL_L.
+	GlutinEventVirtualKeyCode RControl . #CONTROL_R.
+	GlutinEventVirtualKeyCode LAlt . #ALT_L.
+	GlutinEventVirtualKeyCode RAlt . #ALT_R.
+	GlutinEventVirtualKeyCode LWin . #META_L.
+	GlutinEventVirtualKeyCode Capital . #CAPS_LOCK.
+	GlutinEventVirtualKeyCode F1 . #F1.
+	GlutinEventVirtualKeyCode F2 . #F2.
+	GlutinEventVirtualKeyCode F3 . #F3.
+	GlutinEventVirtualKeyCode F4 . #F4.
+	GlutinEventVirtualKeyCode F5 . #F5.
+	GlutinEventVirtualKeyCode F6 . #F6.
+	GlutinEventVirtualKeyCode F7 . #F7.
+	GlutinEventVirtualKeyCode F8 . #F8.
+	GlutinEventVirtualKeyCode F9 . #F9.
+	GlutinEventVirtualKeyCode F10 . #F10.
+	GlutinEventVirtualKeyCode F11 . #F11.
+	GlutinEventVirtualKeyCode F12 . #F12.
+	GlutinEventVirtualKeyCode Numpad0 . #KP_0.
+	GlutinEventVirtualKeyCode Numpad1 . #KP_1.
+	GlutinEventVirtualKeyCode Numpad2 . #KP_2.
+	GlutinEventVirtualKeyCode Numpad3 . #KP_3.
+	GlutinEventVirtualKeyCode Numpad4 . #KP_4.
+	GlutinEventVirtualKeyCode Numpad5 . #KP_5.
+	GlutinEventVirtualKeyCode Numpad6 . #KP_6.
+	GlutinEventVirtualKeyCode Numpad7 . #KP_7.
+	GlutinEventVirtualKeyCode Numpad8 . #KP_8.
+	GlutinEventVirtualKeyCode Numpad9 . #KP_9.
+	GlutinEventVirtualKeyCode Minus . 223.
+	GlutinEventVirtualKeyCode Comma . 222.
+	GlutinEventVirtualKeyCode Semicolon . 188.
+	GlutinEventVirtualKeyCode Equals . 200.
+	GlutinEventVirtualKeyCode Grave . 203.
+	GlutinEventVirtualKeyCode LBracket . 243.
+	GlutinEventVirtualKeyCode RBracket . 250.
+	GlutinEventVirtualKeyCode Period . 240.
+	GlutinEventVirtualKeyCode Slash . 192.
+	GlutinEventVirtualKeyCode Backslash . 134.
+	GlutinEventVirtualKeyCode Apostrophe . 251.
+	GlutinEventVirtualKeyCode Back . 8.
+	GlutinEventVirtualKeyCode Delete. 127.
+	GlutinEventVirtualKeyCode NumpadEquals . #KP_EQUAL.
+	GlutinEventVirtualKeyCode Divide . #KP_DIVIDE.
+	GlutinEventVirtualKeyCode Decimal . #KP_DECIMAL.
+	GlutinEventVirtualKeyCode Add . #KP_ADD.
+	GlutinEventVirtualKeyCode Multiply . #KP_MULTIPLY.
+	GlutinEventVirtualKeyCode Subtract . #KP_SUBTRACT.
+	} pairsDo: [ :key :val |
+		val isNumber
+			ifTrue: [ WindowsKeyValueMapping at: key put: val ]
+			ifFalse: [ WindowsKeyValueMapping at: key put: (KeyboardKey windowsVirtualKeyTable keyAtValue: (KeyboardKey named: val)) ] ]
+]
+
+{ #category : #accessing }
+GlutinMorphicEventHandler class >> windowsKeyValueMapping [
+	^ WindowsKeyValueMapping
+]
+
 { #category : #private }
 GlutinMorphicEventHandler >> activeHand [
 	^ self morphicWorld activeHand
@@ -82,22 +179,22 @@ GlutinMorphicEventHandler >> convertButton: aGlutinButton [
 
 { #category : #converting }
 GlutinMorphicEventHandler >> convertModifiers: theGlutinModifiers [
-	| buttons |
+	| theButtons |
 
-	buttons := 0.
+	theButtons := 0.
 	
 	"Alt/Option key"
 	theGlutinModifiers alt ifTrue: [
 		"On windows and unix, treat alt key as command key"
-		buttons := Smalltalk os isWin32 | Smalltalk os isUnix
-			ifTrue: [ buttons | 2r01000000 ]
-			ifFalse: [ buttons | 2r00100000 ] ].
+		theButtons := Smalltalk os isWin32 | Smalltalk os isUnix
+			ifTrue: [ theButtons | 2r01000000 ]
+			ifFalse: [ theButtons | 2r00100000 ] ].
 
-	theGlutinModifiers ctrl ifTrue: [ buttons := buttons | 2r00010000 ]. "Control key"
-	theGlutinModifiers shift ifTrue: [ buttons := buttons | 8 ]. "Shift key"
-	theGlutinModifiers logo ifTrue: [ buttons := buttons | 2r01000000 ]. "Cmd key"
+	theGlutinModifiers ctrl ifTrue: [ theButtons := theButtons | 2r00010000 ]. "Control key"
+	theGlutinModifiers shift ifTrue: [ theButtons := theButtons | 8 ]. "Shift key"
+	theGlutinModifiers logo ifTrue: [ theButtons := theButtons | 2r01000000 ]. "Cmd key"
 
-	^ buttons
+	^ theButtons
 ]
 
 { #category : #converting }
@@ -117,6 +214,16 @@ GlutinMorphicEventHandler >> convertModifiers: theGlutinModifiers event: aGlutin
 
 { #category : #events }
 GlutinMorphicEventHandler >> dispatchMorphicEvent: anEvent [
+
+	"anEvent isKeyboard
+		ifTrue: [ Stdio stdout nextPutAll: ('type: {1} buttons: {2} keyValue: {3} charCode: {4} scanCode: {5}' format: {
+			anEvent type.
+			anEvent buttons.
+			anEvent keyValue.
+			anEvent instVarNamed: #charCode.
+			anEvent scanCode	
+		}); crlf]."
+
 	morphicWorld defer: [
 		(morphicWorld activeHand isNotNil and: [ anEvent hand isNotNil ]) ifTrue: [
 			morphicWorld activeHand handleEvent: anEvent
@@ -157,6 +264,12 @@ GlutinMorphicEventHandler >> visitCharacterReceivedEvent: anEvent [
 	| char keyEvent anInputString |
 
 	anInputString := anEvent text.
+	"Stdio stdout
+		nextPutAll: anInputString;
+		nextPutAll: ' -> ';
+		nextPutAll: (anInputString allSatisfy: [ :aCharacter | Unicode isPrintable: aCharacter ]) asString;
+		crlf."
+	
 	(anInputString allSatisfy: [ :aCharacter | Unicode isPrintable: aCharacter ])
 		ifFalse: [ ^ self ].
 	
@@ -202,6 +315,16 @@ GlutinMorphicEventHandler >> visitCursorMovedEvent: anEvent [
 
 { #category : #visiting }
 GlutinMorphicEventHandler >> visitKeyDownEvent: anEvent [
+	OSPlatform current isUnix
+		ifTrue: [ self visitKeyDownEventUnix: anEvent ].
+	OSPlatform current isWindows
+		ifTrue: [ self visitKeyDownEventWindows: anEvent ].
+	OSPlatform current isMacOS
+		ifTrue: [ self visitKeyDownEventMac: anEvent ]
+]
+
+{ #category : #visiting }
+GlutinMorphicEventHandler >> visitKeyDownEventMac: anEvent [
 	| aCharacter aKeyValue aCharCode aMorphicEvent |
 
 	aCharacter := self mapSymbolToKeyValue: anEvent virtual_keycode.
@@ -252,8 +375,109 @@ GlutinMorphicEventHandler >> visitKeyDownEvent: anEvent [
 ]
 
 { #category : #visiting }
+GlutinMorphicEventHandler >> visitKeyDownEventUnix: anEvent [
+	| aCharacter aKeyValue aCharCode aMorphicEvent |
+
+	aCharacter := self mapSymbolToKeyValue: anEvent virtual_keycode.
+	
+	aKeyValue := aCharacter asciiValue.
+	aCharCode := aCharacter charCode.
+	(aCharCode > 255) ifTrue: [ aKeyValue := 0 ].
+
+	aMorphicEvent := KeyboardEvent new
+		setType: #keyDown
+		buttons: (self convertModifiers: (lastModifiers := anEvent modifiers copy)
+								event: anEvent)
+		position: (mousePosition ifNil: [ 0@0 ])
+		keyValue: aKeyValue
+		charCode: aCharCode
+		hand:  self activeHand
+		stamp: Time millisecondClockValue.
+	aMorphicEvent scanCode: anEvent scan_code.
+	self dispatchMorphicEvent: aMorphicEvent.
+	
+	aCharacter = Character null
+		ifTrue: [ ^ self ].	
+	
+	"This stupid and horrible and not event completely correct, 
+	but that's the way we doing it for now.
+	All improvements gratefully accepted.
+	Linux requires that keystroke events (that aren't Esc) that involve a modifier are sent through #tvisitCharacterReceivedEvent: only.  Mac has different rules."
+	(OSPlatform current isMacOS or: [ aKeyValue = 27 "Esc" ]) ifFalse: [
+		(aKeyValue between: 32 and: 126) ifTrue: [ 
+			(lastModifiers alt or: [ lastModifiers ctrl or: [ lastModifiers logo ] ]) ifFalse: [ 
+				^ self	] ] ].
+	
+	"on platform except linux, keydown must not send keystroke event if a character is printable"
+	(OSPlatform current isUnix not and: [ Unicode isPrintable: aCharacter ])
+		ifTrue: [ ^ self ].
+	
+	aMorphicEvent := KeyboardEvent new
+		setType: #keystroke
+		buttons: (self convertModifiers: (lastModifiers := anEvent modifiers copy)
+								event: anEvent)
+		position: (mousePosition ifNil: [ 0@0 ])
+		keyValue: aKeyValue
+		charCode: aCharCode
+		hand: self activeHand
+		stamp: Time millisecondClockValue.
+	
+	self dispatchMorphicEvent: aMorphicEvent
+]
+
+{ #category : #'events - windows' }
+GlutinMorphicEventHandler >> visitKeyDownEventWindows: anEvent [
+	| aCharacter aKeyValue aMorphicEvent |
+
+	aCharacter := self mapSymbolToKeyValue: anEvent virtual_keycode.
+	
+	"In case of windows the keyValue, charCode and scanCode are the same"
+	aKeyValue := self windowsVirtualKeycodeToKeyValue: anEvent virtual_keycode.
+
+	aMorphicEvent := KeyboardEvent new
+		setType: #keyDown
+		buttons: (self convertModifiers: (lastModifiers := anEvent modifiers copy) event: anEvent)
+		position: (mousePosition ifNil: [ 0@0 ])
+		keyValue: aKeyValue
+		charCode: aKeyValue
+		hand:  self activeHand
+		stamp: Time millisecondClockValue.
+	aMorphicEvent scanCode: aKeyValue.
+	self dispatchMorphicEvent: aMorphicEvent.
+	
+	aCharacter = Character null
+		ifTrue: [ ^ self ].	
+	
+	"This stupid and horrible and not event completely correct, 
+	but that's the way we doing it for now.
+	All improvements gratefully accepted.
+	Linux requires that keystroke events (that aren't Esc) that involve a modifier are sent through #tvisitCharacterReceivedEvent: only.  Mac has different rules."
+	"(OSPlatform current isMacOS or: [ aKeyValue = 27 ]) ifFalse: [
+		(aKeyValue between: 32 and: 126) ifTrue: [ 
+			(lastModifiers alt or: [ lastModifiers ctrl or: [ lastModifiers logo ] ]) ifFalse: [ 
+				^ self	] ] ]."
+
+	(Unicode isPrintable: aCharacter)
+		ifTrue: [ ^ self ].
+
+	aMorphicEvent := KeyboardEvent new
+		setType: #keystroke
+		buttons: (self convertModifiers: (lastModifiers := anEvent modifiers copy) event: anEvent)
+		position: (mousePosition ifNil: [ 0@0 ])
+		keyValue: aKeyValue
+		charCode: aKeyValue
+		hand: self activeHand
+		stamp: Time millisecondClockValue.
+	
+	self dispatchMorphicEvent: aMorphicEvent
+]
+
+{ #category : #visiting }
 GlutinMorphicEventHandler >> visitKeyUpEvent: anEvent [
 	| aMorphicEvent |
+	
+	OSPlatform current isWindows
+		ifTrue: [ ^ self visitKeyUpEventWindows: anEvent ].
 
 	aMorphicEvent := KeyboardEvent new
 		setType: #keyUp
@@ -264,6 +488,25 @@ GlutinMorphicEventHandler >> visitKeyUpEvent: anEvent [
 		hand: self activeHand
 		stamp: Time millisecondClockValue.
 	aMorphicEvent scanCode: anEvent scan_code.
+
+	self dispatchMorphicEvent: aMorphicEvent
+]
+
+{ #category : #'events - windows' }
+GlutinMorphicEventHandler >> visitKeyUpEventWindows: anEvent [
+	| aMorphicEvent aKeyValue |
+
+	aKeyValue := self windowsVirtualKeycodeToKeyValue: anEvent virtual_keycode.
+
+	aMorphicEvent := KeyboardEvent new
+		setType: #keyUp
+		buttons: (self convertModifiers: (lastModifiers := anEvent modifiers copy))
+		position: (mousePosition ifNil: [ 0@0 ])
+		keyValue: aKeyValue
+		charCode: aKeyValue
+		hand: self activeHand
+		stamp: Time millisecondClockValue.
+	aMorphicEvent scanCode: aKeyValue.
 
 	self dispatchMorphicEvent: aMorphicEvent
 ]
@@ -380,4 +623,13 @@ GlutinMorphicEventHandler >> window [
 { #category : #accessing }
 GlutinMorphicEventHandler >> window: anObject [
 	window := anObject
+]
+
+{ #category : #'events - windows' }
+GlutinMorphicEventHandler >> windowsVirtualKeycodeToKeyValue: aGlutinEventVirtualKeyCode [
+	<return: #Number>
+
+	^ WindowsKeyValueMapping
+		at: aGlutinEventVirtualKeyCode
+		ifAbsent: [ 0 ]
 ]
