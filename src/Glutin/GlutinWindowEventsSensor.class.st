@@ -7,7 +7,8 @@ Class {
 { #category : #'event - handling' }
 GlutinWindowEventsSensor >> processDeviceEvent: aGlutinDeviceEvent [
 	GlutinWindowsRegistry default windowsDo: [ :aGlutinWindow |
-		self processDeviceEvent: aGlutinDeviceEvent forWindow: aGlutinWindow ]
+		aGlutinWindow isValid
+			ifTrue: [ self processDeviceEvent: aGlutinDeviceEvent forWindow: aGlutinWindow ] ]
 ]
 
 { #category : #'event - handling' }
