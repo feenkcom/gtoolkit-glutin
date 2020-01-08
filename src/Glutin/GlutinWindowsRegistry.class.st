@@ -83,3 +83,8 @@ GlutinWindowsRegistry >> unregisterWindow: aGlutinWindow [
 			removeKey: aGlutinWindow id
 			ifAbsent: [  ] ]
 ]
+
+{ #category : #accessing }
+GlutinWindowsRegistry >> windowsDo: aBlock [
+	self critical: [ windows do: aBlock ]
+]

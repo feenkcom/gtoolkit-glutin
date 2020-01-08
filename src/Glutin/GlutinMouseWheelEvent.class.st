@@ -4,7 +4,6 @@ Class {
 	#classVars : [
 		'OFFSET_DELTA',
 		'OFFSET_DEVICE_ID',
-		'OFFSET_MODIFIERS',
 		'OFFSET_PHASE'
 	],
 	#category : #'Glutin-Events'
@@ -22,9 +21,8 @@ GlutinMouseWheelEvent class >> fieldsDesc [
 	"
 	^ #(
 		int64 device_id
-		#GlutinEventTouchPhase phase
-		#GlutinMouseScrollDelta delta
-		#GlutinEventModifiersState modifiers
+		GlutinEventTouchPhase phase
+		GlutinMouseScrollDelta delta
  	)
 ]
 
@@ -60,18 +58,6 @@ GlutinMouseWheelEvent >> device_id [
 GlutinMouseWheelEvent >> device_id: anObject [
 	"This method was automatically generated"
 	handle signedLongLongAt: OFFSET_DEVICE_ID put: anObject
-]
-
-{ #category : #'accessing structure variables' }
-GlutinMouseWheelEvent >> modifiers [
-	"This method was automatically generated"
-	^ GlutinEventModifiersState fromHandle: (handle referenceStructAt: OFFSET_MODIFIERS length: GlutinEventModifiersState byteSize)
-]
-
-{ #category : #'accessing structure variables' }
-GlutinMouseWheelEvent >> modifiers: anObject [
-	"This method was automatically generated"
-	handle structAt: OFFSET_MODIFIERS put: anObject getHandle length: GlutinEventModifiersState byteSize
 ]
 
 { #category : #'accessing structure variables' }

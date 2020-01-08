@@ -4,6 +4,7 @@ Class {
 	#classVars : [
 		'OFFSET_DEVICE_ID',
 		'OFFSET_HAS_VIRTUAL_KEYCODE',
+		'OFFSET_IS_SYNTHETIC',
 		'OFFSET_MODIFIERS',
 		'OFFSET_SCAN_CODE',
 		'OFFSET_STATE',
@@ -27,8 +28,8 @@ GlutinKeyboardInputEvent class >> fieldsDesc [
 		uint32 scan_code
 		GlutinEventInputElementState state
 		bool has_virtual_keycode
-		#GlutinEventVirtualKeyCode virtual_keycode
-		GlutinEventModifiersState modifiers
+		GlutinEventVirtualKeyCode virtual_keycode
+		bool is_synthetic
  	)
 ]
 
@@ -67,15 +68,15 @@ GlutinKeyboardInputEvent >> has_virtual_keycode: anObject [
 ]
 
 { #category : #'accessing structure variables' }
-GlutinKeyboardInputEvent >> modifiers [
+GlutinKeyboardInputEvent >> is_synthetic [
 	"This method was automatically generated"
-	^ GlutinEventModifiersState fromHandle: (handle referenceStructAt: OFFSET_MODIFIERS length: GlutinEventModifiersState byteSize)
+	^handle booleanAt: OFFSET_IS_SYNTHETIC
 ]
 
 { #category : #'accessing structure variables' }
-GlutinKeyboardInputEvent >> modifiers: anObject [
+GlutinKeyboardInputEvent >> is_synthetic: anObject [
 	"This method was automatically generated"
-	handle structAt: OFFSET_MODIFIERS put: anObject getHandle length: GlutinEventModifiersState byteSize
+	handle booleanAt: OFFSET_IS_SYNTHETIC put: anObject
 ]
 
 { #category : #'accessing structure variables' }

@@ -19,8 +19,8 @@ GlutinWindowResizedEvent class >> fieldsDesc [
 	self rebuildFieldAccessors
 	"
 	^ #(
-		float64 width
-		float64 height
+		uint32 width
+		uint32 height
  	)
 ]
 
@@ -37,23 +37,23 @@ GlutinWindowResizedEvent >> accept: aVisitor [
 { #category : #'accessing structure variables' }
 GlutinWindowResizedEvent >> height [
 	"This method was automatically generated"
-	^handle doubleAt: OFFSET_HEIGHT
+	^handle unsignedLongAt: OFFSET_HEIGHT
 ]
 
 { #category : #'accessing structure variables' }
 GlutinWindowResizedEvent >> height: anObject [
 	"This method was automatically generated"
-	handle doubleAt: OFFSET_HEIGHT put: anObject
+	handle unsignedLongAt: OFFSET_HEIGHT put: anObject
 ]
 
 { #category : #'accessing structure variables' }
 GlutinWindowResizedEvent >> width [
 	"This method was automatically generated"
-	^handle doubleAt: OFFSET_WIDTH
+	^handle unsignedLongAt: OFFSET_WIDTH
 ]
 
 { #category : #'accessing structure variables' }
 GlutinWindowResizedEvent >> width: anObject [
 	"This method was automatically generated"
-	handle doubleAt: OFFSET_WIDTH put: anObject
+	handle unsignedLongAt: OFFSET_WIDTH put: anObject
 ]

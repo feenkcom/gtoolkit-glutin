@@ -2,9 +2,11 @@ Class {
 	#name : #GlutinEventType,
 	#superclass : #GlutinEnum,
 	#classVars : [
-		'EventsCleared',
 		'LoopDestroyed',
+		'MainEventsCleared',
+		'ModifiersChanged',
 		'NewEvents',
+		'RedrawRequested',
 		'Resumed',
 		'Suspended',
 		'Unknown',
@@ -24,7 +26,6 @@ Class {
 		'WindowEventMouseWheel',
 		'WindowEventMoved',
 		'WindowEventReceivedCharacter',
-		'WindowEventRedrawRequested',
 		'WindowEventResized',
 		'WindowEventTouch',
 		'WindowEventTouchpadPressure'
@@ -33,21 +34,33 @@ Class {
 }
 
 { #category : #'accessing enum' }
-GlutinEventType class >> EventsCleared [
-	"This method was automatically generated"
-	^ EventsCleared
-]
-
-{ #category : #'accessing enum' }
 GlutinEventType class >> LoopDestroyed [
 	"This method was automatically generated"
 	^ LoopDestroyed
 ]
 
 { #category : #'accessing enum' }
+GlutinEventType class >> MainEventsCleared [
+	"This method was automatically generated"
+	^ MainEventsCleared
+]
+
+{ #category : #'accessing enum' }
+GlutinEventType class >> ModifiersChanged [
+	"This method was automatically generated"
+	^ ModifiersChanged
+]
+
+{ #category : #'accessing enum' }
 GlutinEventType class >> NewEvents [
 	"This method was automatically generated"
 	^ NewEvents
+]
+
+{ #category : #'accessing enum' }
+GlutinEventType class >> RedrawRequested [
+	"This method was automatically generated"
+	^ RedrawRequested
 ]
 
 { #category : #'accessing enum' }
@@ -165,12 +178,6 @@ GlutinEventType class >> WindowEventReceivedCharacter [
 ]
 
 { #category : #'accessing enum' }
-GlutinEventType class >> WindowEventRedrawRequested [
-	"This method was automatically generated"
-	^ WindowEventRedrawRequested
-]
-
-{ #category : #'accessing enum' }
 GlutinEventType class >> WindowEventResized [
 	"This method was automatically generated"
 	^ WindowEventResized
@@ -213,14 +220,15 @@ GlutinEventType class >> externalDeclaration [
 		WindowEventMouseInput,
 		WindowEventTouchpadPressure,
 		WindowEventAxisMotion,
-		WindowEventRedrawRequested,
 		WindowEventTouch,
 		WindowEventHiDpiFactorChanged,
 		NewEvents,
-		EventsCleared,
+		MainEventsCleared,
 		LoopDestroyed,
 		Suspended,
 		Resumed,
+		RedrawRequested,
+		ModifiersChanged,
 	)
 ]
 

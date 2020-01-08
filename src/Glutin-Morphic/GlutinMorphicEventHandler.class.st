@@ -7,8 +7,8 @@ Class {
 		'morphicWorld',
 		'window',
 		'mousePosition',
-		'lastModifiers',
-		'buttons'
+		'buttons',
+		'modifiers'
 	],
 	#classVars : [
 		'KeyCharacterMapping',
@@ -231,6 +231,13 @@ GlutinMorphicEventHandler >> dispatchMorphicEvent: anEvent [
 	]
 ]
 
+{ #category : #initialization }
+GlutinMorphicEventHandler >> initialize [
+	super initialize.
+	
+	modifiers := 0
+]
+
 { #category : #converting }
 GlutinMorphicEventHandler >> mapSymbolToKeyValue: symbol [
 	^ KeyCharacterMapping at: symbol ifAbsent: [ Character null ]
@@ -247,7 +254,15 @@ GlutinMorphicEventHandler >> morphicWorld: aMorphicWorld [
 ]
 
 { #category : #'event - handling' }
-GlutinMorphicEventHandler >> processGlutinEvent: aGlutinWindowEvent forWindow: aWindow [
+GlutinMorphicEventHandler >> processDeviceEvent: aGlutinDeviceEvent forWindow: aWindow [
+	self window == aWindow
+		ifFalse: [ ^ self ].
+
+	aGlutinDeviceEvent accept: self
+]
+
+{ #category : #'event - handling' }
+GlutinMorphicEventHandler >> processWindowEvent: aGlutinWindowEvent forWindow: aWindow [
 	self window == aWindow
 		ifFalse: [ ^ self ].
 		
@@ -259,7 +274,7 @@ GlutinMorphicEventHandler >> shouldGetStepsFrom: aWorld [
 	^ true
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 GlutinMorphicEventHandler >> visitCharacterReceivedEvent: anEvent [
 	| char keyEvent anInputString |
 
@@ -277,7 +292,7 @@ GlutinMorphicEventHandler >> visitCharacterReceivedEvent: anEvent [
 
 	keyEvent := KeyboardEvent new
 		setType: #keystroke
-		buttons: (self convertModifiers: (lastModifiers ifNil: [ GlutinEventModifiersState new ]))
+		buttons: modifiers
 		position: (mousePosition ifNil: [ 0@0 ])
 		keyValue: char asciiValue
 		charCode: char charCode
@@ -287,14 +302,14 @@ GlutinMorphicEventHandler >> visitCharacterReceivedEvent: anEvent [
 	self dispatchMorphicEvent: keyEvent
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 GlutinMorphicEventHandler >> visitCursorMovedEvent: anEvent [
 	| aMorphicEvent aNewCursorPosition oldPos theButtons |
 
 	aNewCursorPosition := anEvent x @ anEvent y.
 	oldPos := mousePosition ifNil: [ 0@0 ].
 	
-	theButtons := (self convertModifiers: (lastModifiers := anEvent modifiers copy)).
+	theButtons := modifiers.
 	buttons ifNotNil: [ theButtons := theButtons | buttons ].
 
 	mousePosition := aNewCursorPosition.
@@ -335,8 +350,7 @@ GlutinMorphicEventHandler >> visitKeyDownEventMac: anEvent [
 
 	aMorphicEvent := KeyboardEvent new
 		setType: #keyDown
-		buttons: (self convertModifiers: (lastModifiers := anEvent modifiers copy)
-								event: anEvent)
+		buttons: modifiers
 		position: (mousePosition ifNil: [ 0@0 ])
 		keyValue: aKeyValue
 		charCode: aCharCode
@@ -353,9 +367,8 @@ GlutinMorphicEventHandler >> visitKeyDownEventMac: anEvent [
 	All improvements gratefully accepted.
 	Linux requires that keystroke events (that aren't Esc) that involve a modifier are sent through #tvisitCharacterReceivedEvent: only.  Mac has different rules."
 	(OSPlatform current isMacOS or: [ aKeyValue = 27 "Esc" ]) ifFalse: [
-		(aKeyValue between: 32 and: 126) ifTrue: [ 
-			(lastModifiers alt or: [ lastModifiers ctrl or: [ lastModifiers logo ] ]) ifFalse: [ 
-				^ self	] ] ].
+		(aKeyValue between: 32 and: 126) ifTrue: [ modifiers isZero
+			ifFalse: [ ^ self ] ] ].
 	
 	"on platform except linux, keydown must not send keystroke event if a character is printable"
 	(OSPlatform current isUnix not and: [ Unicode isPrintable: aCharacter ])
@@ -363,8 +376,7 @@ GlutinMorphicEventHandler >> visitKeyDownEventMac: anEvent [
 	
 	aMorphicEvent := KeyboardEvent new
 		setType: #keystroke
-		buttons: (self convertModifiers: (lastModifiers := anEvent modifiers copy)
-								event: anEvent)
+		buttons: modifiers
 		position: (mousePosition ifNil: [ 0@0 ])
 		keyValue: aKeyValue
 		charCode: aCharCode
@@ -386,8 +398,7 @@ GlutinMorphicEventHandler >> visitKeyDownEventUnix: anEvent [
 
 	aMorphicEvent := KeyboardEvent new
 		setType: #keyDown
-		buttons: (self convertModifiers: (lastModifiers := anEvent modifiers copy)
-								event: anEvent)
+		buttons: modifiers
 		position: (mousePosition ifNil: [ 0@0 ])
 		keyValue: aKeyValue
 		charCode: aCharCode
@@ -405,7 +416,7 @@ GlutinMorphicEventHandler >> visitKeyDownEventUnix: anEvent [
 	Linux requires that keystroke events (that aren't Esc) that involve a modifier are sent through #tvisitCharacterReceivedEvent: only.  Mac has different rules."
 	(OSPlatform current isMacOS or: [ aKeyValue = 27 "Esc" ]) ifFalse: [
 		(aKeyValue between: 32 and: 126) ifTrue: [ 
-			(lastModifiers alt or: [ lastModifiers ctrl or: [ lastModifiers logo ] ]) ifFalse: [ 
+			modifiers isZero ifFalse: [ 
 				^ self	] ] ].
 	
 	"on platform except linux, keydown must not send keystroke event if a character is printable"
@@ -414,8 +425,7 @@ GlutinMorphicEventHandler >> visitKeyDownEventUnix: anEvent [
 	
 	aMorphicEvent := KeyboardEvent new
 		setType: #keystroke
-		buttons: (self convertModifiers: (lastModifiers := anEvent modifiers copy)
-								event: anEvent)
+		buttons: modifiers
 		position: (mousePosition ifNil: [ 0@0 ])
 		keyValue: aKeyValue
 		charCode: aCharCode
@@ -436,7 +446,7 @@ GlutinMorphicEventHandler >> visitKeyDownEventWindows: anEvent [
 
 	aMorphicEvent := KeyboardEvent new
 		setType: #keyDown
-		buttons: (self convertModifiers: (lastModifiers := anEvent modifiers copy) event: anEvent)
+		buttons: modifiers
 		position: (mousePosition ifNil: [ 0@0 ])
 		keyValue: aKeyValue
 		charCode: aKeyValue
@@ -462,7 +472,7 @@ GlutinMorphicEventHandler >> visitKeyDownEventWindows: anEvent [
 
 	aMorphicEvent := KeyboardEvent new
 		setType: #keystroke
-		buttons: (self convertModifiers: (lastModifiers := anEvent modifiers copy) event: anEvent)
+		buttons: modifiers
 		position: (mousePosition ifNil: [ 0@0 ])
 		keyValue: aKeyValue
 		charCode: aKeyValue
@@ -481,7 +491,7 @@ GlutinMorphicEventHandler >> visitKeyUpEvent: anEvent [
 
 	aMorphicEvent := KeyboardEvent new
 		setType: #keyUp
-		buttons: (self convertModifiers: (lastModifiers := anEvent modifiers copy))
+		buttons: modifiers
 		position: (mousePosition ifNil: [ 0@0 ])
 		keyValue: (self mapSymbolToKeyValue: anEvent virtual_keycode) asciiValue
 		charCode: (self mapSymbolToKeyValue: anEvent virtual_keycode) charCode
@@ -500,7 +510,7 @@ GlutinMorphicEventHandler >> visitKeyUpEventWindows: anEvent [
 
 	aMorphicEvent := KeyboardEvent new
 		setType: #keyUp
-		buttons: (self convertModifiers: (lastModifiers := anEvent modifiers copy))
+		buttons: modifiers
 		position: (mousePosition ifNil: [ 0@0 ])
 		keyValue: aKeyValue
 		charCode: aKeyValue
@@ -511,7 +521,7 @@ GlutinMorphicEventHandler >> visitKeyUpEventWindows: anEvent [
 	self dispatchMorphicEvent: aMorphicEvent
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 GlutinMorphicEventHandler >> visitKeyboardInputEvent: anEvent [
 	| aState |
 
@@ -529,7 +539,12 @@ GlutinMorphicEventHandler >> visitKeyboardInputEvent: anEvent [
 	
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
+GlutinMorphicEventHandler >> visitModifiersChanged: anEvent [
+	modifiers := self convertModifiers: anEvent
+]
+
+{ #category : #'event - visiting' }
 GlutinMorphicEventHandler >> visitMouseInputEvent: anEvent [
 	| aState aMorphicEvent anEventType |
 	
@@ -554,14 +569,14 @@ GlutinMorphicEventHandler >> visitMouseInputEvent: anEvent [
 		setType: anEventType
 		position: mousePosition
 		which: buttons
-		buttons: (self convertModifiers: (lastModifiers := anEvent modifiers copy)) | buttons
+		buttons: modifiers | buttons
 		hand: self activeHand
 		stamp: Time millisecondClockValue.
 
 	self dispatchMorphicEvent: aMorphicEvent
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 GlutinMorphicEventHandler >> visitMouseWheelEvent: anEvent [
 	| aMorphicEvent aDelta aScrollDistance  aDirection |
 
@@ -591,23 +606,23 @@ GlutinMorphicEventHandler >> visitMouseWheelEvent: anEvent [
 		setType: #mouseWheel
 		position: mousePosition
 		direction: aDirection
-		buttons: (self convertModifiers: (lastModifiers := anEvent modifiers copy))
+		buttons: modifiers
 		hand: self activeHand
 		stamp: Time millisecondClockValue.
 		
 	self dispatchMorphicEvent: aMorphicEvent
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 GlutinMorphicEventHandler >> visitUnknownEvent: anEvent [
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 GlutinMorphicEventHandler >> visitWindowCloseRequest: anEvent [
 	morphicWorld worldState worldRenderer deactivate
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 GlutinMorphicEventHandler >> visitWindowResizedEvent: anEvent [
 	window resize: anEvent width @ anEvent height.
 	

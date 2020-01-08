@@ -5,17 +5,32 @@ Class {
 }
 
 { #category : #'event - handling' }
-GlutinWindowEventsSensor >> processGlutinEvent: aGlutinMappedEvent [
-
-	aGlutinMappedEvent isWindowEvent
-		ifFalse: [ ^ self ].
-
-	GlutinWindowsRegistry default
-		detectId: aGlutinMappedEvent windowId
-		ifFound: [ :aGlutinWindow | self processGlutinEvent: aGlutinMappedEvent forWindow: aGlutinWindow ]
+GlutinWindowEventsSensor >> processDeviceEvent: aGlutinDeviceEvent [
+	GlutinWindowsRegistry default windowsDo: [ :aGlutinWindow |
+		self processDeviceEvent: aGlutinDeviceEvent forWindow: aGlutinWindow ]
 ]
 
 { #category : #'event - handling' }
-GlutinWindowEventsSensor >> processGlutinEvent: aGlutinWindowEvent forWindow: aWindow [
+GlutinWindowEventsSensor >> processDeviceEvent: aGlutinDeviceEvent forWindow: aGlutinWindow [
+]
+
+{ #category : #'event - handling' }
+GlutinWindowEventsSensor >> processGlutinEvent: aGlutinMappedEvent [
+	aGlutinMappedEvent isDeviceEvent
+		ifTrue: [ ^ self processDeviceEvent: aGlutinMappedEvent ].
+
+	aGlutinMappedEvent isWindowEvent
+		ifTrue: [ ^ self processWindowEvent: aGlutinMappedEvent ]
+]
+
+{ #category : #'event - handling' }
+GlutinWindowEventsSensor >> processWindowEvent: aGlutinMappedEvent [
+	GlutinWindowsRegistry default
+		detectId: aGlutinMappedEvent windowId
+		ifFound: [ :aGlutinWindow | self processWindowEvent: aGlutinMappedEvent forWindow: aGlutinWindow ]
+]
+
+{ #category : #'event - handling' }
+GlutinWindowEventsSensor >> processWindowEvent: aGlutinWindowEvent forWindow: aWindow [
 	
 ]

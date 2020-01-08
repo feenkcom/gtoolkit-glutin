@@ -5,6 +5,7 @@ Class {
 		'OFFSET_CURSOR_MOVED',
 		'OFFSET_EVENT_TYPE',
 		'OFFSET_KEYBOARD_INPUT',
+		'OFFSET_MODIFIERS',
 		'OFFSET_MOUSE_INPUT',
 		'OFFSET_MOUSE_WHEEL',
 		'OFFSET_RECEIVED_CHARACTER',
@@ -31,17 +32,18 @@ GlutinBaseEvent class >> fieldsDesc [
 	self rebuildFieldAccessors
 	"
 	^ #(
-		#GtBoxerUint128Structure window_id
-		#GlutinEventType event_type
-		#GlutinTouchEvent touch
-		#GlutinMouseWheelEvent mouse_wheel
-		#GlutinMouseInputEvent mouse_input
-		#GlutinCursorMovedEvent cursor_moved
-		#GlutinKeyboardInputEvent keyboard_input
-		#GlutinReceivedCharacterEvent received_character
-		#GlutinWindowResizedEvent window_resized
-		#GlutinWindowMovedEvent window_moved
-		#GlutinWindowFocusedEvent window_focused
+		GtBoxerUint128Structure window_id
+		GlutinEventType event_type
+		GlutinTouchEvent touch
+		GlutinMouseWheelEvent mouse_wheel
+		GlutinMouseInputEvent mouse_input
+		GlutinCursorMovedEvent cursor_moved
+		GlutinKeyboardInputEvent keyboard_input
+		GlutinReceivedCharacterEvent received_character
+		GlutinWindowResizedEvent window_resized
+		GlutinWindowMovedEvent window_moved
+		GlutinWindowFocusedEvent window_focused
+		GlutinDeviceEventModifiersChangedEvent modifiers
  	)
 ]
 
@@ -98,8 +100,20 @@ GlutinBaseEvent >> keyboard_input: anObject [
 ]
 
 { #category : #accessing }
-GlutinBaseEvent >> mapped [
+GlutinBaseEvent >> mapped [	
 	^ (self class eventMap at: self event_type ifAbsent: [ GlutinUnknownEvent ]) fromBaseEvent: self
+]
+
+{ #category : #'accessing structure variables' }
+GlutinBaseEvent >> modifiers [
+	"This method was automatically generated"
+	^ GlutinDeviceEventModifiersChangedEvent fromHandle: (handle referenceStructAt: OFFSET_MODIFIERS length: GlutinDeviceEventModifiersChangedEvent byteSize)
+]
+
+{ #category : #'accessing structure variables' }
+GlutinBaseEvent >> modifiers: anObject [
+	"This method was automatically generated"
+	handle structAt: OFFSET_MODIFIERS put: anObject getHandle length: GlutinDeviceEventModifiersChangedEvent byteSize
 ]
 
 { #category : #'accessing structure variables' }

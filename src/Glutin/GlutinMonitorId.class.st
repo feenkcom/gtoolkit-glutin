@@ -29,10 +29,10 @@ GlutinMonitorId >> eventsLoop: anObject [
 { #category : #accessing }
 GlutinMonitorId >> hdpi [
 	<return: #Number>
-	^ self primGetHdpiFactor
+	^ self primGetScaleFactor
 ]
 
 { #category : #'private - ffi' }
-GlutinMonitorId >> primGetHdpiFactor [
+GlutinMonitorId >> primGetScaleFactor [
 	^ self ffiCall: #(float64 glutin_primary_monitor_get_hidpi_factor (GlutinMonitorId self))
 ]

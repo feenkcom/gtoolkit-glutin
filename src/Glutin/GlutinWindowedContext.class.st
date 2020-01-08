@@ -38,20 +38,12 @@ GlutinWindowedContext >> cursor: aCursorIcon [
 
 { #category : #'api - accessing' }
 GlutinWindowedContext >> framebufferExtent [
+	"Return the size of the content area in physical pixels (without scale factor)"
 	<return: #Point>
-	| aSizeF64 |
 
-	aSizeF64 := GtBoxerSizeF64 new.
-	^ [ self primGetFramebufferSize: aSizeF64.
-		aSizeF64 asPoint asIntegerPoint
-	] ensure: [ aSizeF64 release ]
-]
-
-{ #category : #'api - accessing' }
-GlutinWindowedContext >> hdpiFactor [
-	<return: #Number>
-
-	^ self primGetHdpiFactor
+	^ GtBoxerSizeU32 newDuring: [ :aSizeU32 |
+		self primGetFramebufferSize: aSizeU32.
+		aSizeU32 asPoint ]
 ]
 
 { #category : #'api - accessing' }
@@ -72,18 +64,18 @@ GlutinWindowedContext >> id [
 
 { #category : #'api - accessing' }
 GlutinWindowedContext >> innerExtent [
+	"Return the size of the content area in logical pixels (accounting the scale factor)"
 	<return: #Point>
-	| aSizeF64 |
 
-	aSizeF64 := GtBoxerSizeF64 new.
-	
-	^ [ self primGetInnerSize: aSizeF64.
-		aSizeF64 asPoint asIntegerPoint
-	] ensure: [ aSizeF64 release ]
+	^ GtBoxerSizeF64 newDuring: [ :aSizeF64 |
+		self primGetInnerSize: aSizeF64.
+		aSizeF64 asPoint asIntegerPoint ]
 ]
 
 { #category : #'api - accessing' }
 GlutinWindowedContext >> innerExtent: aPoint [
+	"Change the size of the content area in logical pixels (accounting the scale factor)"
+
 	self primSetInnerWidth: aPoint x height: aPoint y
 ]
 
@@ -96,14 +88,12 @@ GlutinWindowedContext >> pixelFormat [
 
 { #category : #'api - accessing' }
 GlutinWindowedContext >> position [
+	"Return the window position in physical pixels"
 	<return: #Point>
-	| aPointF64 |
 	
-	aPointF64 := GtBoxerPointF64 new.
-	
-	^ [ self primGetPosition: aPointF64.
-		aPointF64 asPoint asIntegerPoint
-	] ensure: [ aPointF64 release ]
+	^ GtBoxerPointI32 newDuring: [ :aPointI32 |
+		self primGetPosition: aPointI32.
+		aPointI32 asPoint ]
 ]
 
 { #category : #'api - accessing' }
@@ -117,15 +107,10 @@ GlutinWindowedContext >> primGetApi [
 ]
 
 { #category : #'private - ffi' }
-GlutinWindowedContext >> primGetFramebufferSize: aSizeF64 [
+GlutinWindowedContext >> primGetFramebufferSize: aSizeU32 [
 	^ self ffiCall: #(void glutin_windowed_context_get_framebuffer_size(
 		self,
-		GtBoxerSizeF64 aSizeF64))
-]
-
-{ #category : #'private - ffi' }
-GlutinWindowedContext >> primGetHdpiFactor [
-	^ self ffiCall: #(float64 glutin_windowed_context_get_hdpi_factor(self))
+		GtBoxerSizeU32 aSizeU32))
 ]
 
 { #category : #'private - ffi' }
@@ -148,15 +133,20 @@ GlutinWindowedContext >> primGetPixelFormat [
 ]
 
 { #category : #'private - ffi' }
-GlutinWindowedContext >> primGetPosition: aPointF64 [
+GlutinWindowedContext >> primGetPosition: aPointI32 [
 	^ self ffiCall: #(void glutin_windowed_context_get_position(
 		self,
-		GtBoxerPointF64 aPointF64))
+		GtBoxerPointI32 aPointI32))
 ]
 
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primGetProcAddress: aGtBoxerString [
 	^ self ffiCall: #(void* glutin_windowed_context_get_proc_address(self, GtBoxerString aGtBoxerString))
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowedContext >> primGetScaleFactor [
+	^ self ffiCall: #(float64 glutin_windowed_context_get_scale_factor(self))
 ]
 
 { #category : #'private - ffi' }
@@ -209,8 +199,8 @@ GlutinWindowedContext >> primSetInnerWidth: aWidth height: aHeight [
 GlutinWindowedContext >> primSetPositionX: aX y: aY [
 	^ self ffiCall: #(void glutin_windowed_context_set_position(
 		self,
-		float64 aX,
-		float64 aY))
+		i32 aX,
+		i32 aY))
 ]
 
 { #category : #'private - ffi' }
@@ -237,6 +227,13 @@ GlutinWindowedContext >> resize: aPoint [
 		ifFalse: [ ^ self ].
 
 	self primResizeLogicalWidth: aPoint x height: aPoint y
+]
+
+{ #category : #'api - accessing' }
+GlutinWindowedContext >> scaleFactor [
+	<return: #Number>
+
+	^ self primGetScaleFactor
 ]
 
 { #category : #'api - gl' }
