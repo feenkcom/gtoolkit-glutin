@@ -176,8 +176,8 @@ GlutinWindowedContext >> primResizeLogicalWidth: aWidth height: aHeight [
 GlutinWindowedContext >> primResizePhysicalWidth: aWidth height: aHeight [
 	^ self ffiCall: #(void glutin_windowed_context_resize_physical(
 		self,
-		float64 aWidth,
-		float64 aHeight))
+		uint32 aWidth,
+		uint32 aHeight))
 ]
 
 { #category : #'private - ffi' }
@@ -226,7 +226,7 @@ GlutinWindowedContext >> resize: aPoint [
 	self isValid
 		ifFalse: [ ^ self ].
 
-	self primResizeLogicalWidth: aPoint x height: aPoint y
+	self primResizePhysicalWidth: aPoint x height: aPoint y
 ]
 
 { #category : #'api - accessing' }
