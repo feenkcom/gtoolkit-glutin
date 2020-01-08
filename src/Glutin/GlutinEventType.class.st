@@ -18,7 +18,6 @@ Class {
 		'WindowEventDestroyed',
 		'WindowEventDroppedFile',
 		'WindowEventFocused',
-		'WindowEventHiDpiFactorChanged',
 		'WindowEventHoveredFile',
 		'WindowEventHoveredFileCancelled',
 		'WindowEventKeyboardInput',
@@ -27,6 +26,7 @@ Class {
 		'WindowEventMoved',
 		'WindowEventReceivedCharacter',
 		'WindowEventResized',
+		'WindowEventScaleFactorChanged',
 		'WindowEventTouch',
 		'WindowEventTouchpadPressure'
 	],
@@ -130,12 +130,6 @@ GlutinEventType class >> WindowEventFocused [
 ]
 
 { #category : #'accessing enum' }
-GlutinEventType class >> WindowEventHiDpiFactorChanged [
-	"This method was automatically generated"
-	^ WindowEventHiDpiFactorChanged
-]
-
-{ #category : #'accessing enum' }
 GlutinEventType class >> WindowEventHoveredFile [
 	"This method was automatically generated"
 	^ WindowEventHoveredFile
@@ -184,6 +178,12 @@ GlutinEventType class >> WindowEventResized [
 ]
 
 { #category : #'accessing enum' }
+GlutinEventType class >> WindowEventScaleFactorChanged [
+	"This method was automatically generated"
+	^ WindowEventScaleFactorChanged
+]
+
+{ #category : #'accessing enum' }
 GlutinEventType class >> WindowEventTouch [
 	"This method was automatically generated"
 	^ WindowEventTouch
@@ -221,7 +221,7 @@ GlutinEventType class >> externalDeclaration [
 		WindowEventTouchpadPressure,
 		WindowEventAxisMotion,
 		WindowEventTouch,
-		WindowEventHiDpiFactorChanged,
+		WindowEventScaleFactorChanged,
 		NewEvents,
 		MainEventsCleared,
 		LoopDestroyed,
