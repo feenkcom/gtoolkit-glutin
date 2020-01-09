@@ -37,16 +37,6 @@ GlutinWindowedContext >> cursor: aCursorIcon [
 ]
 
 { #category : #'api - accessing' }
-GlutinWindowedContext >> framebufferExtent [
-	"Return the size of the content area in physical pixels (without scale factor)"
-	<return: #Point>
-
-	^ GtBoxerSizeU32 newDuring: [ :aSizeU32 |
-		self primGetFramebufferSize: aSizeU32.
-		aSizeU32 asPoint ]
-]
-
-{ #category : #'api - accessing' }
 GlutinWindowedContext >> id [
 	<return: #Number>
 	| aUint128 |
@@ -64,7 +54,7 @@ GlutinWindowedContext >> id [
 
 { #category : #'api - accessing' }
 GlutinWindowedContext >> innerExtent [
-	"Return the size of the content area in logical pixels (accounting the scale factor)"
+	"Return the size of the content area in physical pixels"
 	<return: #Point>
 
 	^ GtBoxerSizeF64 newDuring: [ :aSizeF64 |
@@ -74,7 +64,7 @@ GlutinWindowedContext >> innerExtent [
 
 { #category : #'api - accessing' }
 GlutinWindowedContext >> innerExtent: aPoint [
-	"Change the size of the content area in logical pixels (accounting the scale factor)"
+	"Change the size of the content area in physical pixels"
 
 	self primSetInnerWidth: aPoint x height: aPoint y
 ]
@@ -121,10 +111,10 @@ GlutinWindowedContext >> primGetId: aUint128 [
 ]
 
 { #category : #'private - ffi' }
-GlutinWindowedContext >> primGetInnerSize: aSizeF64 [
+GlutinWindowedContext >> primGetInnerSize: aSizeU32 [
 	^ self ffiCall: #(void glutin_windowed_context_get_inner_size(
 		self,
-		GtBoxerSizeF64 aSizeF64))
+		GtBoxerSizeU32 aSizeU32))
 ]
 
 { #category : #'private - ffi' }
@@ -165,16 +155,8 @@ GlutinWindowedContext >> primRequestRedraw [
 ]
 
 { #category : #'private - ffi' }
-GlutinWindowedContext >> primResizeLogicalWidth: aWidth height: aHeight [
-	^ self ffiCall: #(void glutin_windowed_context_resize_logical(
-		self,
-		float64 aWidth,
-		float64 aHeight))
-]
-
-{ #category : #'private - ffi' }
-GlutinWindowedContext >> primResizePhysicalWidth: aWidth height: aHeight [
-	^ self ffiCall: #(void glutin_windowed_context_resize_physical(
+GlutinWindowedContext >> primResizeWidth: aWidth height: aHeight [
+	^ self ffiCall: #(void glutin_windowed_context_resize (
 		self,
 		uint32 aWidth,
 		uint32 aHeight))
@@ -191,8 +173,8 @@ GlutinWindowedContext >> primSetCursor: aCursorIcon [
 GlutinWindowedContext >> primSetInnerWidth: aWidth height: aHeight [
 	^ self ffiCall: #(void glutin_windowed_context_set_inner_size(
 		self,
-		float64 aWidth,
-		float64 aHeight))
+		uint32 aWidth,
+		uint32 aHeight))
 ]
 
 { #category : #'private - ffi' }
@@ -226,7 +208,7 @@ GlutinWindowedContext >> resize: aPoint [
 	self isValid
 		ifFalse: [ ^ self ].
 
-	self primResizePhysicalWidth: aPoint x height: aPoint y
+	self primResizeWidth: aPoint x height: aPoint y
 ]
 
 { #category : #'api - accessing' }

@@ -236,7 +236,7 @@ GlutinGLBufferRenderer >> prepareForBuffer: aGlutinGLBuffer [
 				show: ('[GL] Framebuffer is incomplete {1}' format: { gl check_frame_buffer_status: gl GL_FRAMEBUFFER });
 				cr ].
 
-	gl viewport: (0@0 extent: self window framebufferExtent).
+	gl viewport: (0@0 extent: self window innerExtent).
 	texture := self createTexture: aGlutinGLBuffer
 ]
 
