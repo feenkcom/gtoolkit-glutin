@@ -57,9 +57,9 @@ GlutinWindowedContext >> innerExtent [
 	"Return the size of the content area in physical pixels"
 	<return: #Point>
 
-	^ GtBoxerSizeF64 newDuring: [ :aSizeF64 |
-		self primGetInnerSize: aSizeF64.
-		aSizeF64 asPoint asIntegerPoint ]
+	^ GtBoxerSizeU32 newDuring: [ :aSizeU32 |
+		self primGetInnerSize: aSizeU32.
+		aSizeU32 asPoint asIntegerPoint ]
 ]
 
 { #category : #'api - accessing' }
