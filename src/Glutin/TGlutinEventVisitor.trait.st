@@ -78,3 +78,7 @@ TGlutinEventVisitor >> visitWindowRedrawRequested: anEvent [
 { #category : #'event - visiting' }
 TGlutinEventVisitor >> visitWindowResizedEvent: anEvent [
 ]
+
+{ #category : #'event - visiting' }
+TGlutinEventVisitor >> visitWindowScaleFactorChangedEvent: anEvent [
+]
