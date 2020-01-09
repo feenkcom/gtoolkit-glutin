@@ -9,6 +9,7 @@ Class {
 		'OFFSET_MOUSE_INPUT',
 		'OFFSET_MOUSE_WHEEL',
 		'OFFSET_RECEIVED_CHARACTER',
+		'OFFSET_SCALE_FACTOR',
 		'OFFSET_TOUCH',
 		'OFFSET_WINDOW_FOCUSED',
 		'OFFSET_WINDOW_ID',
@@ -41,6 +42,7 @@ GlutinBaseEvent class >> fieldsDesc [
 		GlutinKeyboardInputEvent keyboard_input
 		GlutinReceivedCharacterEvent received_character
 		GlutinWindowResizedEvent window_resized
+		GlutinWindowScaleFactorChangedEvent scale_factor
 		GlutinWindowMovedEvent window_moved
 		GlutinWindowFocusedEvent window_focused
 		GlutinDeviceEventModifiersChangedEvent modifiers
@@ -150,6 +152,18 @@ GlutinBaseEvent >> received_character [
 GlutinBaseEvent >> received_character: anObject [
 	"This method was automatically generated"
 	handle structAt: OFFSET_RECEIVED_CHARACTER put: anObject getHandle length: GlutinReceivedCharacterEvent byteSize
+]
+
+{ #category : #'accessing structure variables' }
+GlutinBaseEvent >> scale_factor [
+	"This method was automatically generated"
+	^ GlutinWindowScaleFactorChangedEvent fromHandle: (handle referenceStructAt: OFFSET_SCALE_FACTOR length: GlutinWindowScaleFactorChangedEvent byteSize)
+]
+
+{ #category : #'accessing structure variables' }
+GlutinBaseEvent >> scale_factor: anObject [
+	"This method was automatically generated"
+	handle structAt: OFFSET_SCALE_FACTOR put: anObject getHandle length: GlutinWindowScaleFactorChangedEvent byteSize
 ]
 
 { #category : #'accessing structure variables' }
