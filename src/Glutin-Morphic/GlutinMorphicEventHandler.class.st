@@ -6,9 +6,10 @@ Class {
 	#instVars : [
 		'morphicWorld',
 		'window',
-		'mousePosition',
 		'buttons',
-		'modifiers'
+		'modifiers',
+		'cursorPosition',
+		'scaleFactor'
 	],
 	#classVars : [
 		'KeyCharacterMapping',
@@ -235,7 +236,9 @@ GlutinMorphicEventHandler >> dispatchMorphicEvent: anEvent [
 GlutinMorphicEventHandler >> initialize [
 	super initialize.
 	
-	modifiers := 0
+	modifiers := 0.
+	scaleFactor := nil.
+	cursorPosition := GtFensterPhysicalPosition new
 ]
 
 { #category : #converting }
@@ -270,6 +273,15 @@ GlutinMorphicEventHandler >> processWindowEvent: aGlutinWindowEvent forWindow: a
 ]
 
 { #category : #accessing }
+GlutinMorphicEventHandler >> scaleFactor [
+	"Return a scaling dpi factor from logical to physical coordinates.
+	On high dpi (retina) displays scaling factor is > 1"
+	<return: #Number>
+
+	^ scaleFactor ifNil: [ scaleFactor := window scaleFactor ]
+]
+
+{ #category : #accessing }
 GlutinMorphicEventHandler >> shouldGetStepsFrom: aWorld [
 	^ true
 ]
@@ -293,7 +305,7 @@ GlutinMorphicEventHandler >> visitCharacterReceivedEvent: anEvent [
 	keyEvent := KeyboardEvent new
 		setType: #keystroke
 		buttons: modifiers
-		position: (mousePosition ifNil: [ 0@0 ])
+		position: (cursorPosition asLogical: self scaleFactor) asPoint
 		keyValue: char asciiValue
 		charCode: char charCode
 		hand: self activeHand
@@ -304,23 +316,24 @@ GlutinMorphicEventHandler >> visitCharacterReceivedEvent: anEvent [
 
 { #category : #'event - visiting' }
 GlutinMorphicEventHandler >> visitCursorMovedEvent: anEvent [
-	| aMorphicEvent aNewCursorPosition oldPos theButtons |
-
-	aNewCursorPosition := anEvent x @ anEvent y.
-	oldPos := mousePosition ifNil: [ 0@0 ].
+	| aMorphicEvent oldPos theButtons |
+	
+	oldPos := cursorPosition.
+	cursorPosition := OSPlatform current isMacOS
+		"see https://github.com/rust-windowing/winit/issues/1371"
+		ifTrue: [ (GtFensterLogicalPosition x: anEvent x y: anEvent y) asPhysical: self scaleFactor ]
+		ifFalse: [ GtFensterPhysicalPosition x: anEvent x y: anEvent y ].
 	
 	theButtons := modifiers.
 	buttons ifNotNil: [ theButtons := theButtons | buttons ].
-
-	mousePosition := aNewCursorPosition.
 
 	morphicWorld beCursorOwner.
 	
 	aMorphicEvent := MouseMoveEvent basicNew
 		setType: #mouseMove 
-		startPoint: oldPos
-		endPoint: aNewCursorPosition
-		trail: { oldPos. aNewCursorPosition }
+		startPoint: (oldPos asLogical: self scaleFactor) asPoint
+		endPoint: (cursorPosition asLogical: self scaleFactor) asPoint
+		trail: { (oldPos asLogical: self scaleFactor) asPoint. (cursorPosition asLogical: self scaleFactor) asPoint }
 		buttons: theButtons
 		hand: self activeHand
 		stamp: Time millisecondClockValue.
@@ -351,7 +364,7 @@ GlutinMorphicEventHandler >> visitKeyDownEventMac: anEvent [
 	aMorphicEvent := KeyboardEvent new
 		setType: #keyDown
 		buttons: modifiers
-		position: (mousePosition ifNil: [ 0@0 ])
+		position: (cursorPosition asLogical: self scaleFactor) asPoint
 		keyValue: aKeyValue
 		charCode: aCharCode
 		hand:  self activeHand
@@ -377,7 +390,7 @@ GlutinMorphicEventHandler >> visitKeyDownEventMac: anEvent [
 	aMorphicEvent := KeyboardEvent new
 		setType: #keystroke
 		buttons: modifiers
-		position: (mousePosition ifNil: [ 0@0 ])
+		position: (cursorPosition asLogical: self scaleFactor) asPoint
 		keyValue: aKeyValue
 		charCode: aCharCode
 		hand: self activeHand
@@ -399,7 +412,7 @@ GlutinMorphicEventHandler >> visitKeyDownEventUnix: anEvent [
 	aMorphicEvent := KeyboardEvent new
 		setType: #keyDown
 		buttons: modifiers
-		position: (mousePosition ifNil: [ 0@0 ])
+		position: (cursorPosition asLogical: self scaleFactor) asPoint
 		keyValue: aKeyValue
 		charCode: aCharCode
 		hand:  self activeHand
@@ -426,7 +439,7 @@ GlutinMorphicEventHandler >> visitKeyDownEventUnix: anEvent [
 	aMorphicEvent := KeyboardEvent new
 		setType: #keystroke
 		buttons: modifiers
-		position: (mousePosition ifNil: [ 0@0 ])
+		position: (cursorPosition asLogical: self scaleFactor) asPoint
 		keyValue: aKeyValue
 		charCode: aCharCode
 		hand: self activeHand
@@ -447,7 +460,7 @@ GlutinMorphicEventHandler >> visitKeyDownEventWindows: anEvent [
 	aMorphicEvent := KeyboardEvent new
 		setType: #keyDown
 		buttons: modifiers
-		position: (mousePosition ifNil: [ 0@0 ])
+		position: (cursorPosition asLogical: self scaleFactor) asPoint
 		keyValue: aKeyValue
 		charCode: aKeyValue
 		hand:  self activeHand
@@ -473,7 +486,7 @@ GlutinMorphicEventHandler >> visitKeyDownEventWindows: anEvent [
 	aMorphicEvent := KeyboardEvent new
 		setType: #keystroke
 		buttons: modifiers
-		position: (mousePosition ifNil: [ 0@0 ])
+		position: (cursorPosition asLogical: self scaleFactor) asPoint
 		keyValue: aKeyValue
 		charCode: aKeyValue
 		hand: self activeHand
@@ -492,7 +505,7 @@ GlutinMorphicEventHandler >> visitKeyUpEvent: anEvent [
 	aMorphicEvent := KeyboardEvent new
 		setType: #keyUp
 		buttons: modifiers
-		position: (mousePosition ifNil: [ 0@0 ])
+		position: (cursorPosition asLogical: self scaleFactor) asPoint
 		keyValue: (self mapSymbolToKeyValue: anEvent virtual_keycode) asciiValue
 		charCode: (self mapSymbolToKeyValue: anEvent virtual_keycode) charCode
 		hand: self activeHand
@@ -511,7 +524,7 @@ GlutinMorphicEventHandler >> visitKeyUpEventWindows: anEvent [
 	aMorphicEvent := KeyboardEvent new
 		setType: #keyUp
 		buttons: modifiers
-		position: (mousePosition ifNil: [ 0@0 ])
+		position: (cursorPosition asLogical: self scaleFactor) asPoint
 		keyValue: aKeyValue
 		charCode: aKeyValue
 		hand: self activeHand
@@ -547,10 +560,6 @@ GlutinMorphicEventHandler >> visitModifiersChanged: anEvent [
 { #category : #'event - visiting' }
 GlutinMorphicEventHandler >> visitMouseInputEvent: anEvent [
 	| aState aMorphicEvent anEventType |
-	
-	"cursor position is unknown, we can not properly handle mouse input event, therefore ignore it"
-	mousePosition
-		ifNil: [ ^ self ].
 
 	aState := anEvent state.
 	
@@ -567,7 +576,7 @@ GlutinMorphicEventHandler >> visitMouseInputEvent: anEvent [
 
 	aMorphicEvent := MouseButtonEvent new
 		setType: anEventType
-		position: mousePosition
+		position: (cursorPosition asLogical: self scaleFactor) asPoint
 		which: buttons
 		buttons: modifiers | buttons
 		hand: self activeHand
@@ -579,9 +588,6 @@ GlutinMorphicEventHandler >> visitMouseInputEvent: anEvent [
 { #category : #'event - visiting' }
 GlutinMorphicEventHandler >> visitMouseWheelEvent: anEvent [
 	| aMorphicEvent aDelta aScrollDistance  aDirection |
-
-	mousePosition
-		ifNil: [ ^ self ].
 	
 	aDelta := anEvent delta.
 	
@@ -604,7 +610,7 @@ GlutinMorphicEventHandler >> visitMouseWheelEvent: anEvent [
 
 	aMorphicEvent := MouseWheelEvent new 
 		setType: #mouseWheel
-		position: mousePosition
+		position: (cursorPosition asLogical: self scaleFactor) asPoint
 		direction: aDirection
 		buttons: modifiers
 		hand: self activeHand
@@ -619,7 +625,8 @@ GlutinMorphicEventHandler >> visitUnknownEvent: anEvent [
 
 { #category : #'event - visiting' }
 GlutinMorphicEventHandler >> visitWindowCloseRequest: anEvent [
-	morphicWorld worldState worldRenderer deactivate
+	morphicWorld defer: [
+		morphicWorld worldState worldRenderer deactivate ]
 ]
 
 { #category : #'event - visiting' }
@@ -627,7 +634,17 @@ GlutinMorphicEventHandler >> visitWindowResizedEvent: anEvent [
 	window resize: anEvent width @ anEvent height.
 	
 	"window resized"
-	morphicWorld worldState worldRenderer checkForNewScreenSize
+	morphicWorld defer: [
+		morphicWorld worldState worldRenderer checkForNewScreenSize ]
+]
+
+{ #category : #'event - visiting' }
+GlutinMorphicEventHandler >> visitWindowScaleFactorChangedEvent: anEvent [
+	scaleFactor := anEvent scale_factor.
+	window resize: anEvent width @ anEvent height.
+	
+	morphicWorld defer: [
+		morphicWorld worldState worldRenderer scaleFactor: scaleFactor ]
 ]
 
 { #category : #accessing }

@@ -6,7 +6,8 @@ Class {
 		'display',
 		'renderer',
 		'buffer',
-		'eventHandler'
+		'eventHandler',
+		'scaleFactor'
 	],
 	#category : #'Glutin-Morphic'
 }
@@ -35,7 +36,7 @@ GlutinWorldRenderer >> actualScreenSize [
 
 	^ glutinWindow
 		ifNil: [ 240@120 ]
-		ifNotNil: [ glutinWindow innerExtent asIntegerPoint ]
+		ifNotNil: [ ((GtFensterPhysicalSize fromPoint: glutinWindow innerExtent) asLogical: self scaleFactor) asPoint asIntegerPoint ]
 ]
 
 { #category : #initialization }
@@ -54,7 +55,7 @@ GlutinWorldRenderer >> checkForNewScreenSize [
 	
 	anExtent := self actualScreenSize.
 
-	(display isNil or: [display extent = anExtent ]) 
+	(display isNil or: [ display extent = anExtent ]) 
 		ifTrue: [ ^ self ].
 
 	buffer := self createBufferForExtent: anExtent.
@@ -197,6 +198,27 @@ GlutinWorldRenderer >> fullscreenMode: aValue [
 GlutinWorldRenderer >> icon: aForm [ 
 
 	"osWindow icon: aForm"
+]
+
+{ #category : #initialization }
+GlutinWorldRenderer >> initialize [
+	super initialize.
+	
+	scaleFactor := nil
+]
+
+{ #category : #accessing }
+GlutinWorldRenderer >> scaleFactor [
+	^ scaleFactor ifNil: [
+		glutinWindow
+			ifNil: [ 1 ]
+			ifNotNil: [ glutinWindow scaleFactor ] ]
+]
+
+{ #category : #accessing }
+GlutinWorldRenderer >> scaleFactor: aNumber [
+	scaleFactor := aNumber.
+	self checkForNewScreenSize
 ]
 
 { #category : #initialization }
