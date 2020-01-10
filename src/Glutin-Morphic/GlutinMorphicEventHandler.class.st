@@ -198,32 +198,22 @@ GlutinMorphicEventHandler >> convertModifiers: theGlutinModifiers [
 	^ theButtons
 ]
 
-{ #category : #converting }
-GlutinMorphicEventHandler >> convertModifiers: theGlutinModifiers event: aGlutinEvent [
-	| modifiedButtons |
-
-	modifiedButtons := self convertModifiers: theGlutinModifiers.
-
-	"On linux the ctrl modifier is not set if the control key is pressed by itself"
-	(aGlutinEvent has_virtual_keycode and:
-		[ aGlutinEvent virtual_keycode = GlutinEventVirtualKeyCode LControl or: [ 
-			aGlutinEvent virtual_keycode = GlutinEventVirtualKeyCode RControl ] ]) ifTrue:
-				[ modifiedButtons := modifiedButtons | 2r00110000 ].
-
-	^ modifiedButtons
-]
-
 { #category : #events }
 GlutinMorphicEventHandler >> dispatchMorphicEvent: anEvent [
 
-	"anEvent isKeyboard
-		ifTrue: [ Stdio stdout nextPutAll: ('type: {1} buttons: {2} keyValue: {3} charCode: {4} scanCode: {5}' format: {
-			anEvent type.
-			anEvent buttons.
-			anEvent keyValue.
-			anEvent instVarNamed: #charCode.
-			anEvent scanCode	
-		}); crlf]."
+	"anEvent isKeyboard ifTrue:[
+		Stdio stdout
+			nextPutAll: '[glutin] type: ';
+			nextPutAll: anEvent type asString;
+			nextPutAll: ' buttons: ';
+			nextPutAll: anEvent buttons asString;
+			nextPutAll: ' keyValue: ';
+			nextPutAll: anEvent keyValue asString;
+			nextPutAll: ' charCode: ';
+			nextPutAll: (anEvent instVarNamed: #charCode) asString;
+			nextPutAll: ' scanCode: ';
+			nextPutAll: anEvent scanCode asString;
+			lf ]."
 
 	morphicWorld defer: [
 		(morphicWorld activeHand isNotNil and: [ anEvent hand isNotNil ]) ifTrue: [
@@ -236,7 +226,7 @@ GlutinMorphicEventHandler >> dispatchMorphicEvent: anEvent [
 GlutinMorphicEventHandler >> initialize [
 	super initialize.
 	
-	modifiers := 0.
+	modifiers := GlutinDeviceEventModifiersChangedEvent new.
 	scaleFactor := nil.
 	cursorPosition := GtFensterPhysicalPosition new
 ]
@@ -290,29 +280,15 @@ GlutinMorphicEventHandler >> shouldGetStepsFrom: aWorld [
 GlutinMorphicEventHandler >> visitCharacterReceivedEvent: anEvent [
 	| char keyEvent anInputString |
 
-	anInputString := anEvent text.
-	"Stdio stdout
-		nextPutAll: anInputString;
-		nextPutAll: ' -> ';
-		nextPutAll: (anInputString allSatisfy: [ :aCharacter | Unicode isPrintable: aCharacter ]) asString;
-		lf."
-		
-	"Stdio stdout
-		nextPutAll: '[keystroke] ';
-		nextPutAll: 'input string: ';
-		nextPutAll: anInputString asString;
-		nextPutAll: ' modifiers: ';
-		nextPutAll: modifiers asString;
-		lf."
-	
-	(anInputString allSatisfy: [ :aCharacter | Unicode isPrintable: aCharacter ])
+	anInputString := anEvent text.	
+	(modifiers ctrl not and: [ (anInputString allSatisfy: [ :aCharacter | Unicode isPrintable: aCharacter ]) ])
 		ifFalse: [ ^ self ].
 	
 	char := anInputString first.
 
 	keyEvent := KeyboardEvent new
 		setType: #keystroke
-		buttons: modifiers
+		buttons: (self convertModifiers: modifiers)
 		position: (cursorPosition asLogical: self scaleFactor) asPoint
 		keyValue: char asciiValue
 		charCode: char charCode
@@ -332,7 +308,7 @@ GlutinMorphicEventHandler >> visitCursorMovedEvent: anEvent [
 		ifTrue: [ (GtFensterLogicalPosition x: anEvent x y: anEvent y) asPhysical: self scaleFactor ]
 		ifFalse: [ GtFensterPhysicalPosition x: anEvent x y: anEvent y ].
 	
-	theButtons := modifiers.
+	theButtons := (self convertModifiers: modifiers).
 	buttons ifNotNil: [ theButtons := theButtons | buttons ].
 
 	morphicWorld beCursorOwner.
@@ -371,7 +347,7 @@ GlutinMorphicEventHandler >> visitKeyDownEventMac: anEvent [
 
 	aMorphicEvent := KeyboardEvent new
 		setType: #keyDown
-		buttons: modifiers
+		buttons: (self convertModifiers: modifiers)
 		position: (cursorPosition asLogical: self scaleFactor) asPoint
 		keyValue: aKeyValue
 		charCode: aCharCode
@@ -383,21 +359,13 @@ GlutinMorphicEventHandler >> visitKeyDownEventMac: anEvent [
 	aCharacter = Character null
 		ifTrue: [ ^ self ].	
 	
-	"This stupid and horrible and not event completely correct, 
-	but that's the way we doing it for now.
-	All improvements gratefully accepted.
-	Linux requires that keystroke events (that aren't Esc) that involve a modifier are sent through #tvisitCharacterReceivedEvent: only.  Mac has different rules."
-	(OSPlatform current isMacOS or: [ aKeyValue = 27 "Esc" ]) ifFalse: [
-		(aKeyValue between: 32 and: 126) ifTrue: [ modifiers isZero
-			ifFalse: [ ^ self ] ] ].
-	
-	"on platform except linux, keydown must not send keystroke event if a character is printable"
-	(OSPlatform current isUnix not and: [ Unicode isPrintable: aCharacter ])
+	"if a character is printable and ctrl is not pressed we let visitCharacterReceivedEvent: to handle the event"
+	((Unicode isPrintable: aCharacter) and: [ modifiers ctrl not ])
 		ifTrue: [ ^ self ].
 	
 	aMorphicEvent := KeyboardEvent new
 		setType: #keystroke
-		buttons: modifiers
+		buttons: (self convertModifiers: modifiers)
 		position: (cursorPosition asLogical: self scaleFactor) asPoint
 		keyValue: aKeyValue
 		charCode: aCharCode
@@ -407,7 +375,7 @@ GlutinMorphicEventHandler >> visitKeyDownEventMac: anEvent [
 	self dispatchMorphicEvent: aMorphicEvent
 ]
 
-{ #category : #'events - linux' }
+{ #category : #'events - unix' }
 GlutinMorphicEventHandler >> visitKeyDownEventUnix: anEvent [
 	| aCharacter aKeyValue aCharCode aMorphicEvent |
 
@@ -419,48 +387,32 @@ GlutinMorphicEventHandler >> visitKeyDownEventUnix: anEvent [
 
 	aMorphicEvent := KeyboardEvent new
 		setType: #keyDown
-		buttons: modifiers
-		position: (cursorPosition asLogical: self scaleFactor) asPoint
-		keyValue: aKeyValue
-		charCode: aCharCode
-		hand:  self activeHand
-		stamp: Time millisecondClockValue.
-	aMorphicEvent scanCode: anEvent scan_code.
-	self dispatchMorphicEvent: aMorphicEvent.
-	
-	aCharacter = Character null
-		ifTrue: [ ^ self ].	
-	
-	"This stupid and horrible and not event completely correct, 
-	but that's the way we doing it for now.
-	All improvements gratefully accepted.
-	Linux requires that keystroke events (that aren't Esc) that involve a modifier are sent through #tvisitCharacterReceivedEvent: only.  Mac has different rules."
-	
-	"Stdio stdout
-		nextPutAll: '[keyDown] ';
-		nextPutAll: 'key value: ';
-		nextPutAll: aKeyValue asString;
-		nextPutAll: ' modifiers: ';
-		nextPutAll: modifiers asString;
-		lf."
-	
-	(aKeyValue = 27 "Esc") ifFalse: [
-		(aKeyValue between: 32 and: 126) ifTrue: [ 
-			modifiers isZero ifFalse: [ 
-				^ self	] ] ].
-	
-	"keydown must not send keystroke event if a character is printable"
-	(Unicode isPrintable: aCharacter)
-		ifTrue: [ ^ self ].
-	
-	aMorphicEvent := KeyboardEvent new
-		setType: #keystroke
-		buttons: modifiers
+		buttons: (self convertModifiers: modifiers)
 		position: (cursorPosition asLogical: self scaleFactor) asPoint
 		keyValue: aKeyValue
 		charCode: aCharCode
 		hand: self activeHand
 		stamp: Time millisecondClockValue.
+	aMorphicEvent scanCode: aCharCode.
+
+	self dispatchMorphicEvent: aMorphicEvent.
+	
+	aCharacter = Character null
+		ifTrue: [ ^ self ].	
+	
+	"if a character is printable and ctrl is not pressed we let visitCharacterReceivedEvent: to handle the event"
+	((Unicode isPrintable: aCharacter) and: [ modifiers ctrl not ])
+		ifTrue: [ ^ self ].
+	
+	aMorphicEvent := KeyboardEvent new
+		setType: #keystroke
+		buttons: (self convertModifiers: modifiers)
+		position: (cursorPosition asLogical: self scaleFactor) asPoint
+		keyValue: aKeyValue
+		charCode: aCharCode
+		hand: self activeHand
+		stamp: Time millisecondClockValue.
+	aMorphicEvent scanCode: aKeyValue.
 	
 	self dispatchMorphicEvent: aMorphicEvent
 ]
@@ -476,7 +428,7 @@ GlutinMorphicEventHandler >> visitKeyDownEventWindows: anEvent [
 
 	aMorphicEvent := KeyboardEvent new
 		setType: #keyDown
-		buttons: modifiers
+		buttons: (self convertModifiers: modifiers)
 		position: (cursorPosition asLogical: self scaleFactor) asPoint
 		keyValue: aKeyValue
 		charCode: aKeyValue
@@ -488,21 +440,13 @@ GlutinMorphicEventHandler >> visitKeyDownEventWindows: anEvent [
 	aCharacter = Character null
 		ifTrue: [ ^ self ].	
 	
-	"This stupid and horrible and not event completely correct, 
-	but that's the way we doing it for now.
-	All improvements gratefully accepted.
-	Linux requires that keystroke events (that aren't Esc) that involve a modifier are sent through #tvisitCharacterReceivedEvent: only.  Mac has different rules."
-	"(OSPlatform current isMacOS or: [ aKeyValue = 27 ]) ifFalse: [
-		(aKeyValue between: 32 and: 126) ifTrue: [ 
-			(lastModifiers alt or: [ lastModifiers ctrl or: [ lastModifiers logo ] ]) ifFalse: [ 
-				^ self	] ] ]."
-
-	(Unicode isPrintable: aCharacter)
+	"if a character is printable and ctrl is not pressed we let visitCharacterReceivedEvent: to handle the event"
+	((Unicode isPrintable: aCharacter) and: [ modifiers ctrl not ])
 		ifTrue: [ ^ self ].
 
 	aMorphicEvent := KeyboardEvent new
 		setType: #keystroke
-		buttons: modifiers
+		buttons: (self convertModifiers: modifiers)
 		position: (cursorPosition asLogical: self scaleFactor) asPoint
 		keyValue: aKeyValue
 		charCode: aKeyValue
@@ -513,21 +457,53 @@ GlutinMorphicEventHandler >> visitKeyDownEventWindows: anEvent [
 ]
 
 { #category : #'event - visiting' }
-GlutinMorphicEventHandler >> visitKeyUpEvent: anEvent [
-	| aMorphicEvent |
-	
+GlutinMorphicEventHandler >> visitKeyUpEvent: anEvent [	
 	OSPlatform current isWindows
-		ifTrue: [ ^ self visitKeyUpEventWindows: anEvent ].
+		ifTrue: [ self visitKeyUpEventWindows: anEvent ].
+	OSPlatform current isUnix
+		ifTrue: [ self visitKeyUpEventUnix: anEvent ].
+	OSPlatform current isMacOS
+		ifTrue: [ self visitKeyUpEventMac: anEvent ]
+]
+
+{ #category : #'events - mac' }
+GlutinMorphicEventHandler >> visitKeyUpEventMac: anEvent [
+	| aMorphicEvent aCharacter aKeyValue aCharCode |
+
+	aCharacter := self mapSymbolToKeyValue: anEvent virtual_keycode.
+	aKeyValue := aCharacter asciiValue.
+	aCharCode := aCharacter charCode.
 
 	aMorphicEvent := KeyboardEvent new
 		setType: #keyUp
-		buttons: modifiers
+		buttons: (self convertModifiers: modifiers)
 		position: (cursorPosition asLogical: self scaleFactor) asPoint
-		keyValue: (self mapSymbolToKeyValue: anEvent virtual_keycode) asciiValue
-		charCode: (self mapSymbolToKeyValue: anEvent virtual_keycode) charCode
+		keyValue: aKeyValue
+		charCode: aCharCode
 		hand: self activeHand
 		stamp: Time millisecondClockValue.
-	aMorphicEvent scanCode: anEvent scan_code.
+	aMorphicEvent scanCode: aCharCode.
+
+	self dispatchMorphicEvent: aMorphicEvent
+]
+
+{ #category : #'events - unix' }
+GlutinMorphicEventHandler >> visitKeyUpEventUnix: anEvent [
+	| aMorphicEvent aCharacter aKeyValue aCharCode |
+
+	aCharacter := self mapSymbolToKeyValue: anEvent virtual_keycode.
+	aKeyValue := aCharacter asciiValue.
+	aCharCode := aCharacter charCode.
+
+	aMorphicEvent := KeyboardEvent new
+		setType: #keyUp
+		buttons: (self convertModifiers: modifiers)
+		position: (cursorPosition asLogical: self scaleFactor) asPoint
+		keyValue: aKeyValue
+		charCode: aCharCode
+		hand: self activeHand
+		stamp: Time millisecondClockValue.
+	aMorphicEvent scanCode: aCharCode.
 
 	self dispatchMorphicEvent: aMorphicEvent
 ]
@@ -540,7 +516,7 @@ GlutinMorphicEventHandler >> visitKeyUpEventWindows: anEvent [
 
 	aMorphicEvent := KeyboardEvent new
 		setType: #keyUp
-		buttons: modifiers
+		buttons: (self convertModifiers: modifiers)
 		position: (cursorPosition asLogical: self scaleFactor) asPoint
 		keyValue: aKeyValue
 		charCode: aKeyValue
@@ -571,7 +547,7 @@ GlutinMorphicEventHandler >> visitKeyboardInputEvent: anEvent [
 
 { #category : #'event - visiting' }
 GlutinMorphicEventHandler >> visitModifiersChanged: anEvent [
-	modifiers := self convertModifiers: anEvent
+	modifiers := anEvent copy
 ]
 
 { #category : #'event - visiting' }
@@ -595,7 +571,7 @@ GlutinMorphicEventHandler >> visitMouseInputEvent: anEvent [
 		setType: anEventType
 		position: (cursorPosition asLogical: self scaleFactor) asPoint
 		which: buttons
-		buttons: modifiers | buttons
+		buttons: (self convertModifiers: modifiers) | buttons
 		hand: self activeHand
 		stamp: Time millisecondClockValue.
 
@@ -629,7 +605,7 @@ GlutinMorphicEventHandler >> visitMouseWheelEvent: anEvent [
 		setType: #mouseWheel
 		position: (cursorPosition asLogical: self scaleFactor) asPoint
 		direction: aDirection
-		buttons: modifiers
+		buttons: (self convertModifiers: modifiers)
 		hand: self activeHand
 		stamp: Time millisecondClockValue.
 		
