@@ -295,7 +295,15 @@ GlutinMorphicEventHandler >> visitCharacterReceivedEvent: anEvent [
 		nextPutAll: anInputString;
 		nextPutAll: ' -> ';
 		nextPutAll: (anInputString allSatisfy: [ :aCharacter | Unicode isPrintable: aCharacter ]) asString;
-		crlf."
+		lf."
+		
+	"Stdio stdout
+		nextPutAll: '[keystroke] ';
+		nextPutAll: 'input string: ';
+		nextPutAll: anInputString asString;
+		nextPutAll: ' modifiers: ';
+		nextPutAll: modifiers asString;
+		lf."
 	
 	(anInputString allSatisfy: [ :aCharacter | Unicode isPrintable: aCharacter ])
 		ifFalse: [ ^ self ].
@@ -341,7 +349,7 @@ GlutinMorphicEventHandler >> visitCursorMovedEvent: anEvent [
 	self dispatchMorphicEvent: aMorphicEvent
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 GlutinMorphicEventHandler >> visitKeyDownEvent: anEvent [
 	OSPlatform current isUnix
 		ifTrue: [ self visitKeyDownEventUnix: anEvent ].
@@ -351,7 +359,7 @@ GlutinMorphicEventHandler >> visitKeyDownEvent: anEvent [
 		ifTrue: [ self visitKeyDownEventMac: anEvent ]
 ]
 
-{ #category : #visiting }
+{ #category : #'events - mac' }
 GlutinMorphicEventHandler >> visitKeyDownEventMac: anEvent [
 	| aCharacter aKeyValue aCharCode aMorphicEvent |
 
@@ -399,7 +407,7 @@ GlutinMorphicEventHandler >> visitKeyDownEventMac: anEvent [
 	self dispatchMorphicEvent: aMorphicEvent
 ]
 
-{ #category : #visiting }
+{ #category : #'events - linux' }
 GlutinMorphicEventHandler >> visitKeyDownEventUnix: anEvent [
 	| aCharacter aKeyValue aCharCode aMorphicEvent |
 
@@ -427,13 +435,22 @@ GlutinMorphicEventHandler >> visitKeyDownEventUnix: anEvent [
 	but that's the way we doing it for now.
 	All improvements gratefully accepted.
 	Linux requires that keystroke events (that aren't Esc) that involve a modifier are sent through #tvisitCharacterReceivedEvent: only.  Mac has different rules."
-	(OSPlatform current isMacOS or: [ aKeyValue = 27 "Esc" ]) ifFalse: [
+	
+	"Stdio stdout
+		nextPutAll: '[keyDown] ';
+		nextPutAll: 'key value: ';
+		nextPutAll: aKeyValue asString;
+		nextPutAll: ' modifiers: ';
+		nextPutAll: modifiers asString;
+		lf."
+	
+	(aKeyValue = 27 "Esc") ifFalse: [
 		(aKeyValue between: 32 and: 126) ifTrue: [ 
 			modifiers isZero ifFalse: [ 
 				^ self	] ] ].
 	
-	"on platform except linux, keydown must not send keystroke event if a character is printable"
-	(OSPlatform current isUnix not and: [ Unicode isPrintable: aCharacter ])
+	"keydown must not send keystroke event if a character is printable"
+	(Unicode isPrintable: aCharacter)
 		ifTrue: [ ^ self ].
 	
 	aMorphicEvent := KeyboardEvent new
@@ -495,7 +512,7 @@ GlutinMorphicEventHandler >> visitKeyDownEventWindows: anEvent [
 	self dispatchMorphicEvent: aMorphicEvent
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 GlutinMorphicEventHandler >> visitKeyUpEvent: anEvent [
 	| aMorphicEvent |
 	
