@@ -165,7 +165,10 @@ GlutinEventsFetcher >> process [
 GlutinEventsFetcher >> processGlutinEvent: aGlutinEvent [
 	"Send the event to all registered event handlers"
 
-	self eventHandlers do: [ :eachHandler | eachHandler processGlutinEvent: aGlutinEvent mapped ]
+	| mappedEvent |
+
+	mappedEvent := aGlutinEvent mapped.
+	self eventHandlers do: [ :eachHandler | eachHandler processGlutinEvent: mappedEvent ]
 ]
 
 { #category : #lifecycle }
