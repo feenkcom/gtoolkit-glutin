@@ -6,6 +6,7 @@ Class {
 		'MainEventsCleared',
 		'ModifiersChanged',
 		'NewEvents',
+		'RedrawEventsCleared',
 		'RedrawRequested',
 		'Resumed',
 		'Suspended',
@@ -55,6 +56,12 @@ GlutinEventType class >> ModifiersChanged [
 GlutinEventType class >> NewEvents [
 	"This method was automatically generated"
 	^ NewEvents
+]
+
+{ #category : #'accessing enum' }
+GlutinEventType class >> RedrawEventsCleared [
+	"This method was automatically generated"
+	^ RedrawEventsCleared
 ]
 
 { #category : #'accessing enum' }
@@ -228,6 +235,7 @@ GlutinEventType class >> externalDeclaration [
 		Suspended,
 		Resumed,
 		RedrawRequested,
+		RedrawEventsCleared,
 		ModifiersChanged,
 	)
 ]

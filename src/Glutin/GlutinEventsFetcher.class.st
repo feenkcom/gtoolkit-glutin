@@ -103,7 +103,7 @@ GlutinEventsFetcher >> eventLoop [
 
 			self processGlutinEvent: aGlutinEvent.
 
-			aGlutinEvent event_type = GlutinEventType MainEventsCleared
+			aGlutinEvent event_type = GlutinEventType RedrawEventsCleared
 				ifTrue: [
 					Processor nextReadyProcess priority > idlePriority ifTrue: [
 							"There's a process with priority between: 12 and: 50 wanting to run"
