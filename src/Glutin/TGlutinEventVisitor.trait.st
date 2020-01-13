@@ -12,15 +12,15 @@ TGlutinEventVisitor >> visitCursorMovedEvent: anEvent [
 ]
 
 { #category : #'event - visiting' }
-TGlutinEventVisitor >> visitEventsCleared: anEvent [
-]
-
-{ #category : #'event - visiting' }
 TGlutinEventVisitor >> visitKeyboardInputEvent: anEvent [
 ]
 
 { #category : #'event - visiting' }
 TGlutinEventVisitor >> visitLoopDestroyed: anEvent [
+]
+
+{ #category : #'event - visiting' }
+TGlutinEventVisitor >> visitMainEventsCleared: anEvent [
 ]
 
 { #category : #'event - visiting' }
@@ -37,6 +37,10 @@ TGlutinEventVisitor >> visitMouseWheelEvent: anEvent [
 
 { #category : #'event - visiting' }
 TGlutinEventVisitor >> visitNewEvents: anEvent [
+]
+
+{ #category : #'event - visiting' }
+TGlutinEventVisitor >> visitRedrawEventsCleared: anEvent [
 ]
 
 { #category : #'event - visiting' }

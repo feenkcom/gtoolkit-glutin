@@ -19,7 +19,7 @@ GlutinMainEventsClearedEvent class >> fromBaseEvent: anEvent [
 
 { #category : #visiting }
 GlutinMainEventsClearedEvent >> accept: aVisitor [
-	^ aVisitor visitEventsCleared: self
+	^ aVisitor visitMainEventsCleared: self
 ]
 
 { #category : #testing }
