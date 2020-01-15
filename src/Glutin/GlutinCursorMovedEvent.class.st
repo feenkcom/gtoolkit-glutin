@@ -21,8 +21,8 @@ GlutinCursorMovedEvent class >> fieldsDesc [
 	"
 	^ #(
 		int64 device_id
-		int32 x
-		int32 y
+		float64 x
+		float64 y
  	)
 ]
 
@@ -51,23 +51,23 @@ GlutinCursorMovedEvent >> device_id: anObject [
 { #category : #'accessing structure variables' }
 GlutinCursorMovedEvent >> x [
 	"This method was automatically generated"
-	^handle signedLongAt: OFFSET_X
+	^handle doubleAt: OFFSET_X
 ]
 
 { #category : #'accessing structure variables' }
 GlutinCursorMovedEvent >> x: anObject [
 	"This method was automatically generated"
-	handle signedLongAt: OFFSET_X put: anObject
+	handle doubleAt: OFFSET_X put: anObject
 ]
 
 { #category : #'accessing structure variables' }
 GlutinCursorMovedEvent >> y [
 	"This method was automatically generated"
-	^handle signedLongAt: OFFSET_Y
+	^handle doubleAt: OFFSET_Y
 ]
 
 { #category : #'accessing structure variables' }
 GlutinCursorMovedEvent >> y: anObject [
 	"This method was automatically generated"
-	handle signedLongAt: OFFSET_Y put: anObject
+	handle doubleAt: OFFSET_Y put: anObject
 ]

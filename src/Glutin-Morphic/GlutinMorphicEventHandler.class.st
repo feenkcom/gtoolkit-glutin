@@ -303,10 +303,7 @@ GlutinMorphicEventHandler >> visitCursorMovedEvent: anEvent [
 	| aMorphicEvent oldPos theButtons |
 	
 	oldPos := cursorPosition.
-	cursorPosition := OSPlatform current isMacOS
-		"see https://github.com/rust-windowing/winit/issues/1371"
-		ifTrue: [ (GtFensterLogicalPosition x: anEvent x y: anEvent y) asPhysical: self scaleFactor ]
-		ifFalse: [ GtFensterPhysicalPosition x: anEvent x y: anEvent y ].
+	cursorPosition := GtFensterPhysicalPosition x: anEvent x y: anEvent y.
 	
 	theButtons := (self convertModifiers: modifiers).
 	buttons ifNotNil: [ theButtons := theButtons | buttons ].
