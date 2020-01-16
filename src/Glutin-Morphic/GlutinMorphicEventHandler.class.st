@@ -356,8 +356,8 @@ GlutinMorphicEventHandler >> visitKeyDownEventMac: anEvent [
 	aCharacter = Character null
 		ifTrue: [ ^ self ].	
 	
-	"if a character is printable and ctrl is not pressed we let visitCharacterReceivedEvent: to handle the event"
-	((Unicode isPrintable: aCharacter) and: [ modifiers ctrl not ])
+	"if a character is printable and logo is not pressed we let visitCharacterReceivedEvent: to handle the event"
+	((Unicode isPrintable: aCharacter) and: [ modifiers logo not ])
 		ifTrue: [ ^ self ].
 	
 	aMorphicEvent := KeyboardEvent new
