@@ -1,6 +1,6 @@
 Class {
 	#name : #GlutinRedrawEventsClearedEvent,
-	#superclass : #GlutinMappedEvent,
+	#superclass : #GlutinCommonEvent,
 	#category : #'Glutin-Events'
 }
 

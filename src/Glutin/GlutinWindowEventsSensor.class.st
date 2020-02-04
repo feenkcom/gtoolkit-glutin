@@ -5,6 +5,17 @@ Class {
 }
 
 { #category : #'event - handling' }
+GlutinWindowEventsSensor >> processCommonEvent: aGlutinCommonEvent [
+	GlutinWindowsRegistry default windowsDo: [ :aGlutinWindow |
+		aGlutinWindow isValid
+			ifTrue: [ self processCommonEvent: aGlutinCommonEvent forWindow: aGlutinWindow ] ]
+]
+
+{ #category : #'event - handling' }
+GlutinWindowEventsSensor >> processCommonEvent: aGlutinCommonEvent forWindow: aGlutinWindow [
+]
+
+{ #category : #'event - handling' }
 GlutinWindowEventsSensor >> processDeviceEvent: aGlutinDeviceEvent [
 	GlutinWindowsRegistry default windowsDo: [ :aGlutinWindow |
 		aGlutinWindow isValid
@@ -21,7 +32,10 @@ GlutinWindowEventsSensor >> processGlutinEvent: aGlutinMappedEvent [
 		ifTrue: [ ^ self processDeviceEvent: aGlutinMappedEvent ].
 
 	aGlutinMappedEvent isWindowEvent
-		ifTrue: [ ^ self processWindowEvent: aGlutinMappedEvent ]
+		ifTrue: [ ^ self processWindowEvent: aGlutinMappedEvent ].
+		
+	aGlutinMappedEvent isCommonEvent
+		ifTrue: [ ^ self processCommonEvent: aGlutinMappedEvent ]
 ]
 
 { #category : #'event - handling' }

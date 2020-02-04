@@ -60,6 +60,10 @@ TGlutinEventVisitor >> visitUnknownEvent: anEvent [
 ]
 
 { #category : #'event - visiting' }
+TGlutinEventVisitor >> visitUserEvent: anEvent [
+]
+
+{ #category : #'event - visiting' }
 TGlutinEventVisitor >> visitWindowCloseRequest: anEvent [
 ]
 

@@ -3,7 +3,7 @@ Emitted when all of the event loop's events have been processed and control flow
 "
 Class {
 	#name : #GlutinMainEventsClearedEvent,
-	#superclass : #GlutinMappedEvent,
+	#superclass : #GlutinCommonEvent,
 	#category : #'Glutin-Events'
 }
 
