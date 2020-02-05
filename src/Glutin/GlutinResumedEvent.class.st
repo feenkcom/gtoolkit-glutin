@@ -3,7 +3,7 @@ Emitted when the application has been resumed.
 "
 Class {
 	#name : #GlutinResumedEvent,
-	#superclass : #GlutinMappedEvent,
+	#superclass : #GlutinCommonEvent,
 	#category : #'Glutin-Events'
 }
 

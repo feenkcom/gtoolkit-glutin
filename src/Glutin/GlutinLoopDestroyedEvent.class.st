@@ -3,7 +3,7 @@ Emitted when the event loop is being shut down. This is irreversable - if this e
 "
 Class {
 	#name : #GlutinLoopDestroyedEvent,
-	#superclass : #GlutinMappedEvent,
+	#superclass : #GlutinCommonEvent,
 	#category : #'Glutin-Events'
 }
 

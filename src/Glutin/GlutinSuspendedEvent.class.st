@@ -3,7 +3,7 @@ Emitted when the application has been suspended.
 "
 Class {
 	#name : #GlutinSuspendedEvent,
-	#superclass : #GlutinMappedEvent,
+	#superclass : #GlutinCommonEvent,
 	#category : #'Glutin-Events'
 }
 

@@ -3,7 +3,7 @@ Emitted when new events arrive from the OS to be processed.
 "
 Class {
 	#name : #GlutinNewEventsEvent,
-	#superclass : #GlutinMappedEvent,
+	#superclass : #GlutinCommonEvent,
 	#category : #'Glutin-Events'
 }
 

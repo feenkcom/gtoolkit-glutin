@@ -11,6 +11,7 @@ Class {
 		'Resumed',
 		'Suspended',
 		'Unknown',
+		'UserEvent',
 		'WindowEventAxisMotion',
 		'WindowEventCloseRequested',
 		'WindowEventCursorEntered',
@@ -86,6 +87,12 @@ GlutinEventType class >> Suspended [
 GlutinEventType class >> Unknown [
 	"This method was automatically generated"
 	^ Unknown
+]
+
+{ #category : #'accessing enum' }
+GlutinEventType class >> UserEvent [
+	"This method was automatically generated"
+	^ UserEvent
 ]
 
 { #category : #'accessing enum' }
@@ -237,6 +244,7 @@ GlutinEventType class >> externalDeclaration [
 		RedrawRequested,
 		RedrawEventsCleared,
 		ModifiersChanged,
+		UserEvent,
 	)
 ]
 

@@ -22,6 +22,13 @@ GlutinEventLoop >> closeWindow: aWindowedContext [
 	aWindowedContext release
 ]
 
+{ #category : #'api - events' }
+GlutinEventLoop >> createProxy [
+	<return: #GlutinEventLoopProxy>
+
+	^ GlutinEventLoopProxy fromNativeHandle: self primCreateProxy
+]
+
 { #category : #'api - windows' }
 GlutinEventLoop >> createWindow: aWindowBuilder [
 	"I choose a context builder so that context creation works"
@@ -56,13 +63,18 @@ GlutinEventLoop >> createWindow: aWindowBuilder [
 ]
 
 { #category : #'private - ffi' }
+GlutinEventLoop >> primCreateProxy [
+	^ self ffiCall: #(void* glutin_events_loop_create_proxy(self))
+]
+
+{ #category : #'private - ffi' }
 GlutinEventLoop >> primGetPrimaryMonitor [
-	^ self ffiCall: #(GlutinMonitorId glutin_events_loop_get_primary_monitor (#GlutinEventLoop self))
+	^ self ffiCall: #(GlutinMonitorId glutin_events_loop_get_primary_monitor (self))
 ]
 
 { #category : #'private - ffi' }
 GlutinEventLoop >> primRunReturn: aCallback [
-	^ self ffiCall: #(void glutin_events_loop_run_return(#GlutinEventLoop self, GlutinEventCallback aCallback))
+	^ self ffiCall: #(void glutin_events_loop_run_return(self, GlutinEventCallback aCallback))
 ]
 
 { #category : #accessing }
