@@ -5,17 +5,10 @@ Class {
 	#name : #GlutinGLBufferRenderer,
 	#superclass : #GlutinGLRenderer,
 	#instVars : [
-		'vertShaderObj',
-		'fragShaderObj',
-		'progObj',
-		'vertexBuff',
-		'buffData',
-		'texBuff',
-		'vloc',
-		'tloc',
+		'program',
 		'texture'
 	],
-	#category : #'Glutin-OpenGL-Renderer'
+	#category : #'Glutin-OpenGL-Renderer - Buffer'
 }
 
 { #category : #'private - texture' }
@@ -49,120 +42,30 @@ GlutinGLBufferRenderer >> createTexture: aGlutinOpenGLBuffer [
 	^ aTexture
 ]
 
-{ #category : #'private - shader' }
-GlutinGLBufferRenderer >> fragmentShader [
-	| aShaderVersion |
-	
-	aShaderVersion := gl shaderVersion.
-	aShaderVersion >= 410
-		ifTrue: [ ^ self fragmentShader410 ].
+{ #category : #'private - texture' }
+GlutinGLBufferRenderer >> deleteTexture [
+	texture
+		ifNil: [ ^ self ].
 
-	aShaderVersion >= 330
-		ifTrue: [ ^ self fragmentShader330 ].
-	
-	aShaderVersion >= 150
-		ifTrue: [ ^ self fragmentShader150 ].
+	gl delete_texture: texture id.
+	texture := nil
+]
 
-	aShaderVersion >= 120
-		ifTrue: [ ^ self fragmentShader120 ].
+{ #category : #initialization }
+GlutinGLBufferRenderer >> ensureProgram [
+	program
+		ifNotNil: [ ^ self ].
+
+	self initializeProgram
+]
+
+{ #category : #initialization }
+GlutinGLBufferRenderer >> initializeProgram [
+	self
+		assert: [ program isNil ]
+		description: [ 'Program must be nil' ].
 		
-	^ self error: 'No fragment shader for version ', aShaderVersion asString
-]
-
-{ #category : #'private - shader' }
-GlutinGLBufferRenderer >> fragmentShader120 [
-	^ '#version 120
-	
-	varying vec2 vTex;
-	uniform sampler2D sampler0;
-
-	void main(void) {
-		gl_FragColor = texture2D(sampler0, vTex);
-	}'
-]
-
-{ #category : #'private - shader' }
-GlutinGLBufferRenderer >> fragmentShader150 [
-	^ '#version 150
-	
-	varying vec2 vTex;
-	uniform sampler2D sampler0;
-
-	void main(void) {
-		gl_FragColor = texture2D(sampler0, vTex);
-	}'
-]
-
-{ #category : #'private - shader' }
-GlutinGLBufferRenderer >> fragmentShader330 [
-	^ '#version 330
-	
-	precision highp float;
-	
-	varying vec2 vTex;
-	uniform sampler2D sampler0;
-
-	void main(void) {
-		gl_FragColor = texture2D(sampler0, vTex);
-	}'
-]
-
-{ #category : #'private - shader' }
-GlutinGLBufferRenderer >> fragmentShader410 [
-	^ '#version 410
-	
-	precision highp float;
-	
-	in vec2 vTex;
-	uniform sampler2D sampler0;
-	
-	out vec4 fragColor;
-	void main(void) {
-		fragColor = texture(sampler0, vTex);
-	}'
-]
-
-{ #category : #'private - rendering' }
-GlutinGLBufferRenderer >> initializeShaders [
-	"I initialize an OpenGL context to be ready to render a pixel buffer"
-	| aStringBuffer |
-
-	vertShaderObj := gl create_vertex_shader.
-	fragShaderObj := gl create_fragment_shader.
-
-	aStringBuffer := GtBoxerString new.
-	gl shader_source: vertShaderObj string: (aStringBuffer string: (self vertexShader withLineEndings: OSPlatform current lineEnding)).
-	gl shader_source: fragShaderObj string: (aStringBuffer string: (self fragmentShader withLineEndings: OSPlatform current lineEnding)).
-	gl compile_shader: vertShaderObj.
-	gl compile_shader: fragShaderObj.
-	
-	progObj := gl create_program.
-	gl attach_shader: vertShaderObj program: progObj.
-	gl attach_shader: fragShaderObj program: progObj.
-	
-	gl link_program: progObj.
-	gl use_program: progObj.
-	
-	vertexBuff := gl create_buffer.
-	gl bind_array_buffer: vertexBuff.
-
-	buffData := FFIExternalArray externalNewType: FFIFloat32 size: 8.
-	buffData atAll: (1 to: 8) putAll: #(-1 1 -1 -1 1 -1 1 1).
-	gl array_buffer_data_static_draw: (buffData getHandle) length: buffData size.
-	buffData free.
-	
-	texBuff := gl create_buffer.
-	gl bind_array_buffer: texBuff.
-
-	buffData := FFIExternalArray externalNewType: FFIFloat32 size: 8.
-	buffData atAll: (1 to: 8) putAll: #(0 1 0 0 1 0 1 1).
-	gl array_buffer_data_static_draw: (buffData getHandle) length: buffData size.
-	buffData free.
-
-	vloc := gl get_attribute_location_program: progObj name: (aStringBuffer string: 'aVertex').
-	tloc := gl get_attribute_location_program: progObj name: (aStringBuffer string: 'aUV').
-	
-	aStringBuffer release
+	program := GlutinGLBufferRendererProgram new renderer: self
 ]
 
 { #category : #'private - testing' }
@@ -204,11 +107,11 @@ GlutinGLBufferRenderer >> prepareForBuffer: aGlutinGLBuffer [
 		assert: [ self window isNotNil ]
 		description: [ 'Window must be set!' ].
 
+	self ensureGL.
+	self ensureProgram.
+
 	(self isValidFor: aGlutinGLBuffer)
 		ifTrue: [ ^ self ].
-
-	self initializeGL.
-	self initializeShaders.
 	
 	(gl check_frame_buffer_status: gl GL_FRAMEBUFFER) = gl GL_FRAMEBUFFER_COMPLETE
 		ifFalse: [
@@ -217,12 +120,15 @@ GlutinGLBufferRenderer >> prepareForBuffer: aGlutinGLBuffer [
 				cr ].
 
 	gl viewport: (0@0 extent: self window innerExtent).
+
+	self deleteTexture.
 	texture := self createTexture: aGlutinGLBuffer
 ]
 
 { #category : #'api - rendering' }
 GlutinGLBufferRenderer >> presentBuffer: aGlutinOpenGLBuffer areas: aCollectionOfAreas [
-	| vao |
+	self hasProblems
+		ifTrue: [ ^ self ].
 
 	self window isValid
 		ifFalse: [ ^ self ].
@@ -231,42 +137,43 @@ GlutinGLBufferRenderer >> presentBuffer: aGlutinOpenGLBuffer areas: aCollectionO
 	
 	self prepareForBuffer: aGlutinOpenGLBuffer.
 
-	self updateTexture: texture from: aGlutinOpenGLBuffer.
+	self updateTextureFromBuffer: aGlutinOpenGLBuffer.
 	
-	vao := gl gen_vertex_array.
-	gl bind_vertex_array: vao.
-	
-	gl enable_vertex_attrib_array: vloc.
-	gl bind_array_buffer: vertexBuff.
-	gl
-		vertex_attrib_pointer_index: vloc
-		size: 2
-		type: gl GL_FLOAT
-		normalized: false
-		stride: 0
-		offset: 0.
-		
-	gl enable_vertex_attrib_array: tloc.
-	gl bind_array_buffer: texBuff.
-	gl
-		vertex_attrib_pointer_index: tloc
-		size: 2
-		type: gl GL_FLOAT
-		normalized: false
-		stride: 0
-		offset: 0.
-		
-	gl draw_arrays_mode: gl GL_TRIANGLE_FAN first: 0 count: 4.	
-	
+	program execute.
+
 	self swapBuffers
 ]
 
-{ #category : #'private - texture' }
-GlutinGLBufferRenderer >> updateTexture: aTexture from: aGlutinOpenGLBuffer [
-	gl get_error = gl GL_FALSE
-		ifFalse: [ ^ self ].
+{ #category : #initialization }
+GlutinGLBufferRenderer >> resetResources [
+	super resetResources.
+	
+	program := texture := nil
+]
 
-	gl bind_texture_2d: aTexture id.
+{ #category : #'private - texture' }
+GlutinGLBufferRenderer >> updateTextureFromBuffer: aGlutinOpenGLBuffer [
+	self hasProblems
+		ifTrue: [
+			self printErrorMessage: 'Skip texture update due to existing problems'.
+			^ self ].
+
+	texture
+		ifNil: [
+			self printErrorMessage: 'Skip texture update due to undefined (nil) texture'.
+			^ self ].
+
+	self flushErrors.
+
+	gl bind_texture: texture id  target: gl GL_TEXTURE_3D.
+
+	self readErrors.
+	self hasErrors
+		ifTrue: [
+			self recordProblem: (GlutinTextureBindingProblem new texture: texture id; errors: self errors).
+			gl delete_texture: texture id.
+			texture := nil.
+			^ self ].
 
 	gl tex_parameter_i: gl GL_TEXTURE_2D name: gl GL_TEXTURE_MIN_FILTER param: gl GL_NEAREST.
 	gl tex_parameter_i: gl GL_TEXTURE_2D name: gl GL_TEXTURE_MAG_FILTER param: gl GL_NEAREST.
@@ -283,82 +190,6 @@ GlutinGLBufferRenderer >> updateTexture: aTexture from: aGlutinOpenGLBuffer [
 		pixels: (GtBoxerArrayU8
 			fromHandle: aGlutinOpenGLBuffer pixels
 			size: aGlutinOpenGLBuffer stride * aGlutinOpenGLBuffer height * 4)
-]
-
-{ #category : #'private - shader' }
-GlutinGLBufferRenderer >> vertexShader [
-	| aShaderVersion |
-	
-	aShaderVersion := self shaderVersion.
-	aShaderVersion >= 410
-		ifTrue: [ ^ self vertexShader410 ].
-
-	aShaderVersion >= 330
-		ifTrue: [ ^ self vertexShader330 ].
-	
-	aShaderVersion >= 150
-		ifTrue: [ ^ self vertexShader150 ].
-	
-	aShaderVersion >= 120
-		ifTrue: [ ^ self vertexShader120 ].
-		
-	^ self error: 'No vertex shader for version ', aShaderVersion asString
-]
-
-{ #category : #'private - shader' }
-GlutinGLBufferRenderer >> vertexShader120 [
-	^ '#version 120
-	
-	attribute vec2 aVertex;
-	attribute vec2 aUV;
-	varying vec2 vTex;
-	
-	void main(void) {
-		gl_Position = vec4(aVertex.x, -aVertex.y, 0.0, 1.0);
-		vTex = aUV;
-	}'
-]
-
-{ #category : #'private - shader' }
-GlutinGLBufferRenderer >> vertexShader150 [
-	^ '#version 150
-	
-	attribute vec2 aVertex;
-	attribute vec2 aUV;
-	varying vec2 vTex;
-	
-	void main(void) {
-		gl_Position = vec4(aVertex.x, -aVertex.y, 0.0, 1.0);
-		vTex = aUV;
-	}'
-]
-
-{ #category : #'private - shader' }
-GlutinGLBufferRenderer >> vertexShader330 [
-	^ '#version 330
-	
-	attribute vec2 aVertex;
-	attribute vec2 aUV;
-	varying vec2 vTex;
-	
-	void main(void) {
-		gl_Position = vec4(aVertex.x, -aVertex.y, 0.0, 1.0);
-		vTex = aUV;
-	}'
-]
-
-{ #category : #'private - shader' }
-GlutinGLBufferRenderer >> vertexShader410 [
-	^ '#version 410
-	
-	in vec2 aVertex;
-	in vec2 aUV;
-	out vec2 vTex;
-	
-	void main(void) {
-		gl_Position = vec4(aVertex.x, -aVertex.y, 0.0, 1.0);
-		vTex = aUV;
-	}'
 ]
 
 { #category : #accessing }
