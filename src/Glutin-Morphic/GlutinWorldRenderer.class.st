@@ -119,7 +119,7 @@ GlutinWorldRenderer >> deferUpdates: aBoolean [
 { #category : #operations }
 GlutinWorldRenderer >> displayWorldState: aWorldState ofWorld: aWorld submorphs: submorphs [
 	"Update this world's display."
-	| aCanvas |
+	| aCanvas handsToDraw allDamage worldDamageRects handDamageRects |
 		
 	"force re-layout if needed"
 	submorphs do: [ :m | m fullBounds ]. 
@@ -133,29 +133,25 @@ GlutinWorldRenderer >> displayWorldState: aWorldState ofWorld: aWorld submorphs:
 
 	glutinWindow
 		ifNil: [ ^ self ].
+		
+	worldDamageRects := aWorldState drawWorld: aWorld submorphs: submorphs invalidAreasOn: aCanvas.  
+	"repair world's damage on canvas"
 
-	Glutin critical: [
-		| handsToDraw allDamage worldDamageRects handDamageRects |
+	handsToDraw := aWorldState selectHandsToDrawForDamage: worldDamageRects.
+	handDamageRects := handsToDraw collect: [:h | h savePatchFrom: aCanvas ].
+	allDamage := worldDamageRects, handDamageRects.
 
-		worldDamageRects := aWorldState drawWorld: aWorld submorphs: submorphs invalidAreasOn: aCanvas.  
-		"repair world's damage on canvas"
+	handsToDraw reverseDo: [ :h | aCanvas fullDrawMorph: h ].  "draw hands onto world canvas"
+ 
+	"*make this true to flash damaged areas for testing*"
+	WorldState debugShowDamage
+		ifTrue: [ aWorld flashRects: allDamage color: Color black ].
 
-		handsToDraw := aWorldState selectHandsToDrawForDamage: worldDamageRects.
-		handDamageRects := handsToDraw collect: [:h | h savePatchFrom: aCanvas ].
-		allDamage := worldDamageRects, handDamageRects.
+	aCanvas finish.
+		
+	Glutin critical: [ renderer presentBuffer: buffer areas: allDamage ].
 
-		handsToDraw reverseDo: [ :h | aCanvas fullDrawMorph: h ].  "draw hands onto world canvas"
-	 
-		"*make this true to flash damaged areas for testing*"
-		WorldState debugShowDamage
-			ifTrue: [ aWorld flashRects: allDamage color: Color black ].
-
-		aCanvas finish.
-
-		renderer presentBuffer: buffer areas: allDamage.
-
-	 	handsToDraw do: [:h | h restoreSavedPatchOn: aCanvas ].  "restore world canvas under hands"
-	]
+	handsToDraw do: [:h | h restoreSavedPatchOn: aCanvas ].  "restore world canvas under hands"
 ]
 
 { #category : #initialization }

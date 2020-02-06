@@ -64,7 +64,7 @@ GlutinWindowsRegistry >> hasWindows [
 GlutinWindowsRegistry >> initialize [
 	super initialize.
 	
-	windows := Dictionary new.
+	windows := OrderedDictionary new.
 	mutex := Mutex new
 ]
 

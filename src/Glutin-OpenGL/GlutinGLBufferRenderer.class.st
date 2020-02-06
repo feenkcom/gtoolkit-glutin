@@ -3,10 +3,8 @@ I render a pixel buffer ${class:GlutinOpenGLBuffer}$ as a texture ${class:Glutin
 "
 Class {
 	#name : #GlutinGLBufferRenderer,
-	#superclass : #Object,
+	#superclass : #GlutinGLRenderer,
 	#instVars : [
-		'window',
-		'gl',
 		'vertShaderObj',
 		'fragShaderObj',
 		'progObj',
@@ -15,8 +13,7 @@ Class {
 		'texBuff',
 		'vloc',
 		'tloc',
-		'texture',
-		'session'
+		'texture'
 	],
 	#category : #'Glutin-OpenGL-Renderer'
 }
@@ -126,22 +123,9 @@ GlutinGLBufferRenderer >> fragmentShader410 [
 ]
 
 { #category : #'private - rendering' }
-GlutinGLBufferRenderer >> initializeGL [
+GlutinGLBufferRenderer >> initializeShaders [
 	"I initialize an OpenGL context to be ready to render a pixel buffer"
-	| aStringBuffer aContextApi |
-
-	self isGLValid
-		ifTrue: [ ^ self ].
-		
-	aContextApi := self window api.
-
-	gl := aContextApi = GlutinContextApi OpenGl
-		ifTrue: [ GtGleamGL loadGl: [ :aSymbol | window getProcAddress: aSymbol ] ]
-		ifFalse: [ aContextApi = GlutinContextApi OpenGlEs
-			ifTrue: [ GtGleamGL loadGles: [ :aSymbol | window getProcAddress: aSymbol ] ]
-			ifFalse: [ self error: 'Unsupported API' ] ].
-
-	session := Smalltalk session.
+	| aStringBuffer |
 
 	vertShaderObj := gl create_vertex_shader.
 	fragShaderObj := gl create_fragment_shader.
@@ -214,11 +198,6 @@ GlutinGLBufferRenderer >> isValidFor: aGlutinOpenGLBuffer [
 	^ self isGLValid and: [ self isTextureValidFor: aGlutinOpenGLBuffer ]
 ]
 
-{ #category : #'api - gl' }
-GlutinGLBufferRenderer >> makeCurrent [	
-	self window makeCurrent
-]
-
 { #category : #'private - rendering' }
 GlutinGLBufferRenderer >> prepareForBuffer: aGlutinGLBuffer [
 	self
@@ -229,6 +208,7 @@ GlutinGLBufferRenderer >> prepareForBuffer: aGlutinGLBuffer [
 		ifTrue: [ ^ self ].
 
 	self initializeGL.
+	self initializeShaders.
 	
 	(gl check_frame_buffer_status: gl GL_FRAMEBUFFER) = gl GL_FRAMEBUFFER_COMPLETE
 		ifFalse: [
@@ -281,13 +261,11 @@ GlutinGLBufferRenderer >> presentBuffer: aGlutinOpenGLBuffer areas: aCollectionO
 	self swapBuffers
 ]
 
-{ #category : #'api - gl' }
-GlutinGLBufferRenderer >> swapBuffers [
-	self window swapBuffers
-]
-
 { #category : #'private - texture' }
 GlutinGLBufferRenderer >> updateTexture: aTexture from: aGlutinOpenGLBuffer [
+	gl get_error = gl GL_FALSE
+		ifFalse: [ ^ self ].
+
 	gl bind_texture_2d: aTexture id.
 
 	gl tex_parameter_i: gl GL_TEXTURE_2D name: gl GL_TEXTURE_MIN_FILTER param: gl GL_NEAREST.
@@ -311,7 +289,7 @@ GlutinGLBufferRenderer >> updateTexture: aTexture from: aGlutinOpenGLBuffer [
 GlutinGLBufferRenderer >> vertexShader [
 	| aShaderVersion |
 	
-	aShaderVersion := gl shaderVersion.
+	aShaderVersion := self shaderVersion.
 	aShaderVersion >= 410
 		ifTrue: [ ^ self vertexShader410 ].
 
@@ -387,10 +365,10 @@ GlutinGLBufferRenderer >> vertexShader410 [
 GlutinGLBufferRenderer >> window [
 	<return: #GlutinWindowedContext>
 
-	^ window
+	^ context
 ]
 
 { #category : #accessing }
 GlutinGLBufferRenderer >> window: aGlutinWindowedContext [
-	window := aGlutinWindowedContext
+	context := aGlutinWindowedContext
 ]
