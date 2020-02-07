@@ -127,17 +127,23 @@ GlutinGLBufferRenderer >> prepareForBuffer: aGlutinGLBuffer [
 
 { #category : #'api - rendering' }
 GlutinGLBufferRenderer >> presentBuffer: aGlutinOpenGLBuffer areas: aCollectionOfAreas [
-	self hasProblems
-		ifTrue: [ ^ self ].
-
 	self window isValid
 		ifFalse: [ ^ self ].
 
 	self makeCurrent.
+
+	self hasProblems
+		ifTrue: [ self resetResources ].
 	
 	self prepareForBuffer: aGlutinOpenGLBuffer.
+	
+	self hasProblems
+		ifTrue: [ ^ self ].
 
 	self updateTextureFromBuffer: aGlutinOpenGLBuffer.
+	
+	self hasProblems
+		ifTrue: [ ^ self ].
 	
 	program execute.
 
@@ -165,7 +171,7 @@ GlutinGLBufferRenderer >> updateTextureFromBuffer: aGlutinOpenGLBuffer [
 
 	self flushErrors.
 
-	gl bind_texture: texture id  target: gl GL_TEXTURE_3D.
+	gl bind_texture_2d: texture id.
 
 	self readErrors.
 	self hasErrors
@@ -189,7 +195,15 @@ GlutinGLBufferRenderer >> updateTextureFromBuffer: aGlutinOpenGLBuffer [
 		type: gl GL_UNSIGNED_BYTE
 		pixels: (GtBoxerArrayU8
 			fromHandle: aGlutinOpenGLBuffer pixels
-			size: aGlutinOpenGLBuffer stride * aGlutinOpenGLBuffer height * 4)
+			size: aGlutinOpenGLBuffer stride * aGlutinOpenGLBuffer height * 4).
+	
+	self readErrors.
+	self hasErrors
+		ifTrue: [
+			self recordProblem: (GlutinTextureUpdateProblem new texture: texture id; errors: self errors).
+			gl delete_texture: texture id.
+			texture := nil.
+			^ self ].
 ]
 
 { #category : #accessing }

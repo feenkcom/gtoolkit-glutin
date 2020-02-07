@@ -176,6 +176,9 @@ GlutinGLRenderer >> recordProblem: aGlutinProblem [
 { #category : #initialization }
 GlutinGLRenderer >> resetResources [
 	"Session changed, reset resources"
+	
+	errors := #().
+	problems := OrderedCollection new
 ]
 
 { #category : #'api - gl' }
