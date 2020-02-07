@@ -21,9 +21,12 @@ Class {
 { #category : #execution }
 GlutinGLBufferRendererProgram >> execute [
 	"VAO tells our shaders how to match up data from buffer to shader input variables"
+	self gl use_program: progObj.
 	
 	self gl bind_vertex_array: vertexArray.
+
 	self gl bind_array_buffer: vertexBuff.
+
 	self gl
 		vertex_attrib_pointer_index: vloc
 		size: 2
@@ -31,6 +34,7 @@ GlutinGLBufferRendererProgram >> execute [
 		normalized: false
 		stride: 0
 		offset: 0.
+
 	self gl bind_array_buffer: texBuff.
 	self gl
 		vertex_attrib_pointer_index: tloc
@@ -124,7 +128,6 @@ GlutinGLBufferRendererProgram >> gl [
 { #category : #'private - rendering' }
 GlutinGLBufferRendererProgram >> initializeShaders [
 	"I initialize an OpenGL context to be ready to render a pixel buffer"
-	| buffData |
 
 	vertShaderObj := self gl create_vertex_shader.
 	fragShaderObj := self gl create_fragment_shader.
@@ -153,40 +156,32 @@ GlutinGLBufferRendererProgram >> initializeShaders [
 	vloc := self gl get_attribute_location_program: progObj name: 'aVertex'.
 	tloc := self gl get_attribute_location_program: progObj name: 'aUV'.
 
+	"Initialize vertex buffer"
 	vertexBuff := self gl create_buffer.
 	self gl bind_array_buffer: vertexBuff.
-
-	buffData := FFIExternalArray externalNewType: FFIFloat32 size: 8.
-	buffData atAll: (1 to: 8) putAll: #(-1 1 -1 -1 1 -1 1 1).
-	self gl array_buffer_data_static_draw: (buffData getHandle) length: buffData size.
-	buffData free.
+	GtBoxer
+		externalArrayNewType: FFIFloat32
+		size: 8
+		during: [ :aBuffData |
+			aBuffData atAll: (1 to: 8) putAll: #(-1 1 -1 -1 1 -1 1 1).
+			self gl array_buffer_data_static_draw: (aBuffData getHandle) length: aBuffData size ].
 	
+	"Initialize texture buffer"
 	texBuff := self gl create_buffer.
 	self gl bind_array_buffer: texBuff.
-
-	buffData := FFIExternalArray externalNewType: FFIFloat32 size: 8.
-	buffData atAll: (1 to: 8) putAll: #(0 1 0 0 1 0 1 1).
-	self gl array_buffer_data_static_draw: (buffData getHandle) length: buffData size.
-	buffData free.
+	
+	GtBoxer
+		externalArrayNewType: FFIFloat32
+		size: 8
+		during: [ :aBuffData |
+			aBuffData atAll: (1 to: 8) putAll: #(0 1 0 0 1 0 1 1).
+			self gl array_buffer_data_static_draw: (aBuffData getHandle) length: aBuffData size ].
 	
 	vertexArray := self gl gen_vertex_array.
 	self gl bind_vertex_array: vertexArray.
+
 	self gl enable_vertex_attrib_array: vloc.
-	"self gl
-		vertex_attrib_pointer_index: vloc
-		size: 2
-		type: self gl GL_FLOAT
-		normalized: false
-		stride: 0
-		offset: 0."
 	self gl enable_vertex_attrib_array: tloc.
-	"self gl
-		vertex_attrib_pointer_index: tloc
-		size: 2
-		type: self gl GL_FLOAT
-		normalized: false
-		stride: 0
-		offset: 0"
 ]
 
 { #category : #accessing }
