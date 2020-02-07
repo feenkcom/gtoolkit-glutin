@@ -5,7 +5,8 @@ Class {
 		'context',
 		'gl',
 		'session',
-		'errors'
+		'errors',
+		'problems'
 	],
 	#category : #'Glutin-OpenGL-Renderer'
 }
@@ -56,12 +57,28 @@ GlutinGLRenderer >> errors [
 	^ errors
 ]
 
+{ #category : #'private - errors' }
+GlutinGLRenderer >> flushErrors [
+	| thePreviousErrors |
+	
+	thePreviousErrors := errors.
+	self readErrors.
+	errors := #()
+]
+
 { #category : #'api - context' }
 GlutinGLRenderer >> getProcAddress: aSymbol [
 	"Gets an OpenGL procedure address."
 	<return: #ExternalAddress>
 
 	^ self context getProcAddress: aSymbol
+]
+
+{ #category : #'api - gl' }
+GlutinGLRenderer >> gl [
+	<return: #GtGleamGL>
+
+	^ gl
 ]
 
 { #category : #'private - errors' }
@@ -71,11 +88,17 @@ GlutinGLRenderer >> hasErrors [
 	^ errors isNotEmpty
 ]
 
+{ #category : #'private - problems' }
+GlutinGLRenderer >> hasProblems [
+	^ problems isNotEmpty
+]
+
 { #category : #initialization }
 GlutinGLRenderer >> initialize [
 	super initialize.
 
-	errors := #()
+	errors := #().
+	problems := OrderedCollection new
 ]
 
 { #category : #initialization }
@@ -98,7 +121,9 @@ GlutinGLRenderer >> initializeGL [
 	session := Smalltalk session.
 	
 	self readErrors.
-	self printErrors
+	self printErrors.
+	
+	self resetResources
 ]
 
 { #category : #'api - context' }
@@ -107,12 +132,24 @@ GlutinGLRenderer >> makeCurrent [
 ]
 
 { #category : #'private - errors' }
+GlutinGLRenderer >> printErrorMessage: aString [
+	Stdio stdout
+		nextPutAll: '[Gleam] Error: ';
+		nextPutAll: aString asString;
+		lf
+]
+
+{ #category : #'private - errors' }
 GlutinGLRenderer >> printErrors [
-	self errors do: [ :eachError |
-		Stdio stdout
-			nextPutAll: '[Gleam] Error: ';
-			nextPutAll: eachError printString;
-			lf ]
+	self errors do: [ :eachError | self printErrorMessage: eachError printString ]
+]
+
+{ #category : #'private - errors' }
+GlutinGLRenderer >> printProblemMessage: aString [
+	Stdio stdout
+		nextPutAll: '[Gleam] Problem: ';
+		nextPutAll: aString asString;
+		lf
 ]
 
 { #category : #'private - errors' }
@@ -126,8 +163,19 @@ GlutinGLRenderer >> readErrors [
 GlutinGLRenderer >> readErrorsDo: anExceptionBlock [
 	| anError |
 
-	[ (anError := gl get_error) = gl GL_FALSE ]
+	[ (anError := gl get_error) = gl GL_NO_ERROR ]
 		whileFalse: [ anExceptionBlock cull: anError ]
+]
+
+{ #category : #'private - problems' }
+GlutinGLRenderer >> recordProblem: aGlutinProblem [
+	problems add: aGlutinProblem.
+	self printProblemMessage: aGlutinProblem description
+]
+
+{ #category : #initialization }
+GlutinGLRenderer >> resetResources [
+	"Session changed, reset resources"
 ]
 
 { #category : #'api - gl' }

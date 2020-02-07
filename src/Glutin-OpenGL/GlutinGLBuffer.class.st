@@ -6,7 +6,7 @@ Class {
 		'extent',
 		'pixels'
 	],
-	#category : #'Glutin-OpenGL-Renderer'
+	#category : #'Glutin-OpenGL-Renderer - Buffer'
 }
 
 { #category : #accessing }
