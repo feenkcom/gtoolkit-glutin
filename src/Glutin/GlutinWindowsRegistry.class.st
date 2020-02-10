@@ -24,11 +24,6 @@ GlutinWindowsRegistry class >> default [
 	^ default ifNil: [ default := self new ]
 ]
 
-{ #category : #initialization }
-GlutinWindowsRegistry >> critical: aBlock [
-	mutex critical: aBlock
-]
-
 { #category : #accessing }
 GlutinWindowsRegistry >> detectId: aWindowId ifFound: aFoundBlock [
 	^ self detectId: aWindowId ifFound: aFoundBlock ifNone: []
@@ -40,7 +35,7 @@ GlutinWindowsRegistry >> detectId: aWindowId ifFound: aFoundBlock ifNone: aNoneB
 	
 	aWindow := nil.
 	
-	self critical: [
+	mutex critical: [
 		windows
 			at: aWindowId
 			ifPresent:  [ :each | aWindow := each ] ].
@@ -56,7 +51,7 @@ GlutinWindowsRegistry >> hasWindows [
 	| hasWindows |
 	
 	hasWindows := false.
-	self critical: [ hasWindows := windows isNotEmpty ].
+	mutex critical: [ hasWindows := windows isNotEmpty ].
 	^ hasWindows
 ]
 
@@ -70,7 +65,7 @@ GlutinWindowsRegistry >> initialize [
 
 { #category : #'window creation and deletion' }
 GlutinWindowsRegistry >> registerWindow: aGlutinWindow [
-	self critical: [
+	mutex critical: [
 		windows
 			at: aGlutinWindow id
 			put: aGlutinWindow ]
@@ -78,7 +73,7 @@ GlutinWindowsRegistry >> registerWindow: aGlutinWindow [
 
 { #category : #'window creation and deletion' }
 GlutinWindowsRegistry >> unregisterWindow: aGlutinWindow [
-	self critical: [
+	mutex critical: [
 		windows
 			removeKey: aGlutinWindow id
 			ifAbsent: [  ] ]
@@ -86,5 +81,8 @@ GlutinWindowsRegistry >> unregisterWindow: aGlutinWindow [
 
 { #category : #accessing }
 GlutinWindowsRegistry >> windowsDo: aBlock [
-	self critical: [ windows do: aBlock ]
+	| theWindowsCopy |
+	
+	theWindowsCopy := mutex critical: [ windows copy ].
+	theWindowsCopy do: aBlock
 ]
