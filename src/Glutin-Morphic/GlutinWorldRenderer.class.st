@@ -3,184 +3,106 @@ Class {
 	#superclass : #AbstractWorldRenderer,
 	#instVars : [
 		'glutinWindow',
-		'display',
-		'renderer',
-		'buffer',
 		'eventHandler',
-		'scaleFactor'
+		'scaleFactor',
+		'cursorMap'
 	],
 	#category : #'Glutin-Morphic'
 }
 
 { #category : #accessing }
-GlutinWorldRenderer class >> isApplicableFor: aWorld [
-	^ Smalltalk isHeadless
-		and: [ (CommandLineArguments new hasOption: 'interactive')
-			and: [ CommandLineArguments new hasOption: 'glutin' ] ]
+GlutinWorldRenderer >> activateCursor: aCursor withMask: maskForm [
+
+	glutinWindow ifNotNil: [ cursorMap
+		at: aCursor
+		ifPresent: [ :aGlutinCursor | glutinWindow cursor: aGlutinCursor ]
+		ifAbsent: [ glutinWindow cursor: GlutinCursorIcon Default ] ]
 ]
 
 { #category : #accessing }
-GlutinWorldRenderer class >> priority [ 
-
-	^ 30
-]
-
-{ #category : #initialization }
-GlutinWorldRenderer >> activateCursor: aCursor withMask: maskForm [
-
-	glutinWindow ifNotNil: [ "osWindow setMouseCursor: aCursor mask: maskForm" ]
-]
-
-{ #category : #initialization }
 GlutinWorldRenderer >> actualScreenSize [
+	"Return the logical screen size"
+	<return: #Point>
 
 	^ glutinWindow
 		ifNil: [ 240@120 ]
 		ifNotNil: [ ((GtFensterPhysicalSize fromPoint: glutinWindow innerExtent) asLogical: self scaleFactor) asPoint asIntegerPoint ]
 ]
 
-{ #category : #initialization }
-GlutinWorldRenderer >> canvas [ 
-	^ display ifNotNil: [ display getCanvas ]
+{ #category : #accessing }
+GlutinWorldRenderer >> canvas [
+	^ self subclassResponsibility
 ]
 
-{ #category : #initialization }
+{ #category : #accessing }
 GlutinWorldRenderer >> canvas: aCanvas [
 	"nothing we can do here"
 ]
 
-{ #category : #initialization }
+{ #category : #'api - cycle' }
 GlutinWorldRenderer >> checkForNewScreenSize [
+	"Is called on every frame"
+	<return: #Boolean>
 	| anExtent |
 	
 	anExtent := self actualScreenSize.
 
-	(display isNil or: [ display extent = anExtent ]) 
-		ifTrue: [ ^ self ].
+	(world extent = anExtent)
+		ifTrue: [ ^ false ].
 
-	buffer := self createBufferForExtent: anExtent.
-	display := self createFormForBuffer: buffer extent: anExtent.
-
-	world worldState realWindowExtent: anExtent.
-	world restoreMorphicDisplay
+	world worldState realWindowExtent: glutinWindow innerExtent.
+	world restoreMorphicDisplay.
+	
+	world extent: anExtent.
+	world worldState doFullRepaint.
+	
+	^ true
 ]
 
-{ #category : #initialization }
+{ #category : #accessing }
 GlutinWorldRenderer >> clipboardText [
 	^ Clipboard clipboardText
 ]
 
-{ #category : #initialization }
+{ #category : #accessing }
 GlutinWorldRenderer >> clipboardText: aString [
-	Clipboard clipboardText: aString asString
+	Clipboard clipboardText: aString
 ]
 
-{ #category : #private }
-GlutinWorldRenderer >> createBufferForExtent: anExtent [
-	| thePixels |
-
-	self
-		assert: [ anExtent isIntegerPoint ]
-		description: [ 'Must be an integer point' ].
-
-	thePixels := FFIExternalArray externalNewType: FFIUInt32 size: (anExtent x * anExtent y).
-	thePixels autoRelease.
-	
-	^ GlutinGLBuffer new
-		extent: anExtent;
-		stride: anExtent x;
-		pixels: thePixels getHandle
-]
-
-{ #category : #private }
-GlutinWorldRenderer >> createFormForBuffer: aBuffer extent: anExtent [
-	^ OSSDL2ExternalForm extent: anExtent depth: 32 bits: aBuffer pixels
-]
-
-{ #category : #initialization }
+{ #category : #activation }
 GlutinWorldRenderer >> deactivate [
 	world worldState worldRenderer: (NullWorldRenderer forWorld: world).
 	
-	glutinWindow ifNotNil: [ glutinWindow close. glutinWindow := nil ].
-
-	renderer := nil.
-	display := nil.
+	glutinWindow ifNotNil: [
+		glutinWindow close.
+		glutinWindow := nil ].
 
 	GlutinEventsFetcher default removeEventHandler: eventHandler.
 	eventHandler := nil
 ]
 
-{ #category : #initialization }
+{ #category : #'api - cycle' }
 GlutinWorldRenderer >> deferUpdates: aBoolean [
+	"Defered updates are not supported"
 
 	^ false
 ]
 
-{ #category : #operations }
+{ #category : #'api - cycle' }
 GlutinWorldRenderer >> displayWorldState: aWorldState ofWorld: aWorld submorphs: submorphs [
 	"Update this world's display."
-	| aCanvas handsToDraw allDamage worldDamageRects handDamageRects |
-		
-	"force re-layout if needed"
-	submorphs do: [ :m | m fullBounds ]. 
 	
-	aCanvas := self canvas.
-	aCanvas
-		ifNil: [ ^ self ].	
-
-	aWorldState checkIfUpdateNeeded
-		ifFalse: [ ^ self ].  
-
-	glutinWindow
-		ifNil: [ ^ self ].
-		
-	worldDamageRects := aWorldState drawWorld: aWorld submorphs: submorphs invalidAreasOn: aCanvas.  
-	"repair world's damage on canvas"
-
-	handsToDraw := aWorldState selectHandsToDrawForDamage: worldDamageRects.
-	handDamageRects := handsToDraw collect: [:h | h savePatchFrom: aCanvas ].
-	allDamage := worldDamageRects, handDamageRects.
-
-	handsToDraw reverseDo: [ :h | aCanvas fullDrawMorph: h ].  "draw hands onto world canvas"
- 
-	"*make this true to flash damaged areas for testing*"
-	WorldState debugShowDamage
-		ifTrue: [ aWorld flashRects: allDamage color: Color black ].
-
-	aCanvas finish.
-		
-	Glutin critical: [ renderer presentBuffer: buffer areas: allDamage ].
-
-	handsToDraw do: [:h | h restoreSavedPatchOn: aCanvas ].  "restore world canvas under hands"
+	self subclassResponsibility
 ]
 
-{ #category : #initialization }
+{ #category : #activation }
 GlutinWorldRenderer >> doActivate [
-	| initialExtent windowBuilder |
+	self initializeCursorMap.
+	self initializeGlutinWindow.
 
-	initialExtent := world worldState realWindowExtent ifNil: [ 976@665 ].
-
-	GlutinEventsFetcher default ensureEventsLoop.
-
-	windowBuilder := GlutinWindowBuilder new
-		title: Smalltalk image imageFile fullName;
-		extent: initialExtent.
-		
-	glutinWindow := GlutinEventsFetcher default eventsLoop createWindow: windowBuilder.
-	eventHandler := (GlutinMorphicEventHandler for: world) window: glutinWindow.
-	
-	GlutinEventsFetcher default addEventHandler: eventHandler.
-
-	buffer := self createBufferForExtent: initialExtent.
-	display := self createFormForBuffer: buffer extent: initialExtent.
-	
-	renderer := GlutinGLBufferRenderer new window: glutinWindow.
-
-	world extent: initialExtent.
-	world worldState doFullRepaint.
-	world displayWorld.
-	
-	GlutinEventsFetcher install
+	world worldState realWindowExtent: glutinWindow innerExtent.
+	world extent: (glutinWindow innerExtent / scaleFactor) floor asIntegerPoint.
+	world worldState doFullRepaint
 ]
 
 { #category : #operations }
@@ -197,10 +119,52 @@ GlutinWorldRenderer >> icon: aForm [
 ]
 
 { #category : #initialization }
-GlutinWorldRenderer >> initialize [
-	super initialize.
+GlutinWorldRenderer >> initializeCursorMap [
+	"Use newFromPairs: to allow duplications"
+	cursorMap := Dictionary newFromPairs: { 
+		Cursor normal . GlutinCursorIcon Default.
+		Cursor overEditableText . GlutinCursorIcon Text.
+		Cursor resizeLeft . GlutinCursorIcon EwResize.
+		Cursor resizeRight . GlutinCursorIcon EwResize.
+		Cursor resizeTop . GlutinCursorIcon NsResize.
+		Cursor resizeBottom . GlutinCursorIcon NsResize.
+		
+		Cursor resizeBottomLeft . GlutinCursorIcon NeswResize.
+		Cursor resizeBottomRight . GlutinCursorIcon NwseResize.
+		Cursor resizeTopLeft . GlutinCursorIcon NwseResize.
+		Cursor resizeTopRight . GlutinCursorIcon NeswResize.
+	}
+]
+
+{ #category : #initialization }
+GlutinWorldRenderer >> initializeGlutinWindow [
+	| anInitialExtent aWindowBuilder |
+
+	anInitialExtent := world worldState realWindowExtent
+		ifNil: [ 976@665 ].
 	
-	scaleFactor := nil
+	GlutinEventsFetcher default ensureEventsLoop.
+	
+	aWindowBuilder := GlutinWindowBuilder new
+		title: Smalltalk image imageFile basename;
+		extent: anInitialExtent.
+
+	glutinWindow := GlutinEventsFetcher default eventsLoop createWindow: aWindowBuilder.
+	scaleFactor := glutinWindow scaleFactor.
+	eventHandler := (GlutinMorphicEventHandler for: world) window: glutinWindow.
+
+	GlutinEventsFetcher default addEventHandler: eventHandler.
+	GlutinEventsFetcher install
+]
+
+{ #category : #accessing }
+GlutinWorldRenderer >> realScreenSize [
+	"Return the physical screen size"
+	<return: #Point>
+
+	^ glutinWindow
+		ifNil: [ 240@120 ]
+		ifNotNil: [ glutinWindow innerExtent ]
 ]
 
 { #category : #accessing }
@@ -217,7 +181,7 @@ GlutinWorldRenderer >> scaleFactor: aNumber [
 	self checkForNewScreenSize
 ]
 
-{ #category : #initialization }
+{ #category : #accessing }
 GlutinWorldRenderer >> world: aWorld [
 	world := aWorld
 ]

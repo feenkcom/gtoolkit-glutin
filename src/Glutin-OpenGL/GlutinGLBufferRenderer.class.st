@@ -20,6 +20,7 @@ GlutinGLBufferRenderer >> createTexture: aGlutinOpenGLBuffer [
 	aTexture := GlutinGLTexture new.
 	aTexture id: gl gen_texture.
 	aTexture extent: aGlutinOpenGLBuffer extent.
+	aTexture gl: gl.
 
 	gl bind_texture_2d: aTexture id.
 
@@ -118,8 +119,6 @@ GlutinGLBufferRenderer >> prepareForBuffer: aGlutinGLBuffer [
 			NonInteractiveTranscript stdout
 				show: ('[GL] Framebuffer is incomplete {1}' format: { gl check_frame_buffer_status: gl GL_FRAMEBUFFER });
 				cr ].
-
-	gl viewport: (0@0 extent: self window innerExtent).
 
 	self deleteTexture.
 	texture := self createTexture: aGlutinGLBuffer
