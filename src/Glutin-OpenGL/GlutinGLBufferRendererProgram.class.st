@@ -10,7 +10,9 @@ Class {
 		'texBuff',
 		'vloc',
 		'tloc',
-		'vertexArray'
+		'vertexArray',
+		'mloc',
+		'matrix'
 	],
 	#pools : [
 		'GtGleamGLConstants'
@@ -24,8 +26,9 @@ GlutinGLBufferRendererProgram >> execute [
 	self gl use_program: progObj.
 	
 	self gl bind_vertex_array: vertexArray.
-
+	
 	self gl bind_array_buffer: vertexBuff.
+	self gl enable_vertex_attrib_array: vloc.
 
 	self gl
 		vertex_attrib_pointer_index: vloc
@@ -36,6 +39,7 @@ GlutinGLBufferRendererProgram >> execute [
 		offset: 0.
 
 	self gl bind_array_buffer: texBuff.
+	self gl enable_vertex_attrib_array: tloc.
 	self gl
 		vertex_attrib_pointer_index: tloc
 		size: 2
@@ -44,7 +48,11 @@ GlutinGLBufferRendererProgram >> execute [
 		stride: 0
 		offset: 0.
 
-	self gl draw_arrays_mode: self gl GL_TRIANGLE_FAN first: 0 count: 4
+	GtBoxerArrayF32 new: 16 withAll: 0 during: [ :aBoxerArray |
+		aBoxerArray atAll: (1 to: matrix size) putAll: matrix.
+		self gl uniform_matrix_4fv: mloc transpose: false values: aBoxerArray ].
+
+	self gl draw_arrays_mode: self gl GL_TRIANGLES first: 0 count: 6
 ]
 
 { #category : #'private - shader fragment' }
@@ -125,6 +133,18 @@ GlutinGLBufferRendererProgram >> gl [
 	^ self renderer gl
 ]
 
+{ #category : #initialization }
+GlutinGLBufferRendererProgram >> initialize [
+	super initialize.
+	
+	matrix := FloatArray withAll: {
+		2 . 0 . 0 . 0.
+		0 . -2 . 0 . 0.
+		0 . 0 . -1. 0.
+		-1.0 . 1.0 . 0 . 1
+	}.
+]
+
 { #category : #'private - rendering' }
 GlutinGLBufferRendererProgram >> initializeShaders [
 	"I initialize an OpenGL context to be ready to render a pixel buffer"
@@ -155,15 +175,22 @@ GlutinGLBufferRendererProgram >> initializeShaders [
 
 	vloc := self gl get_attribute_location_program: progObj name: 'aVertex'.
 	tloc := self gl get_attribute_location_program: progObj name: 'aUV'.
+	mloc := self gl get_uniform_location_program: progObj name: 'u_matrix'.
 
 	"Initialize vertex buffer"
 	vertexBuff := self gl create_buffer.
 	self gl bind_array_buffer: vertexBuff.
 	GtBoxer
 		externalArrayNewType: FFIFloat32
-		size: 8
+		size: 12
 		during: [ :aBuffData |
-			aBuffData atAll: (1 to: 8) putAll: #(-1 1 -1 -1 1 -1 1 1).
+			aBuffData atAll: (1 to: 12) putAll: #(
+				0 0
+				0 1
+				1 0
+				1 0
+				0 1
+				1 1).
 			self gl array_buffer_data_static_draw: (aBuffData getHandle) length: aBuffData size ].
 	
 	"Initialize texture buffer"
@@ -172,16 +199,23 @@ GlutinGLBufferRendererProgram >> initializeShaders [
 	
 	GtBoxer
 		externalArrayNewType: FFIFloat32
-		size: 8
+		size: 12
 		during: [ :aBuffData |
-			aBuffData atAll: (1 to: 8) putAll: #(0 1 0 0 1 0 1 1).
+			aBuffData atAll: (1 to: 12) putAll: #(
+				0 0
+				0 1
+				1 0
+				1 0
+				0 1
+				1 1).
 			self gl array_buffer_data_static_draw: (aBuffData getHandle) length: aBuffData size ].
-	
-	vertexArray := self gl gen_vertex_array.
-	self gl bind_vertex_array: vertexArray.
+		
+	vertexArray := self gl gen_vertex_array
+]
 
-	self gl enable_vertex_attrib_array: vloc.
-	self gl enable_vertex_attrib_array: tloc.
+{ #category : #accessing }
+GlutinGLBufferRendererProgram >> matrix: aFloatArray [
+	matrix := aFloatArray
 ]
 
 { #category : #accessing }
@@ -221,10 +255,11 @@ GlutinGLBufferRendererProgram >> vertexShader120 [
 	
 	attribute vec2 aVertex;
 	attribute vec2 aUV;
+	uniform vec2 aPosition;
 	varying vec2 vTex;
 	
 	void main(void) {
-		gl_Position = vec4(aVertex.x, -aVertex.y, 0.0, 1.0);
+		gl_Position = vec4(aVertex.x + aPosition.x, -(aVertex.y + aPosition.y), 0.0, 1.0);
 		vTex = aUV;
 	}'
 ]
@@ -235,10 +270,11 @@ GlutinGLBufferRendererProgram >> vertexShader150 [
 	
 	attribute vec2 aVertex;
 	attribute vec2 aUV;
+	uniform vec2 aPosition;
 	varying vec2 vTex;
 	
 	void main(void) {
-		gl_Position = vec4(aVertex.x, -aVertex.y, 0.0, 1.0);
+		gl_Position = vec4(aVertex.x + aPosition.x, -(aVertex.y + aPosition.y), 0.0, 1.0);
 		vTex = aUV;
 	}'
 ]
@@ -249,10 +285,11 @@ GlutinGLBufferRendererProgram >> vertexShader330 [
 	
 	attribute vec2 aVertex;
 	attribute vec2 aUV;
+	uniform vec2 aPosition;
 	varying vec2 vTex;
 	
 	void main(void) {
-		gl_Position = vec4(aVertex.x, -aVertex.y, 0.0, 1.0);
+		gl_Position = vec4(aVertex.x + aPosition.x, -(aVertex.y + aPosition.y), 0.0, 1.0);
 		vTex = aUV;
 	}'
 ]
@@ -263,10 +300,12 @@ GlutinGLBufferRendererProgram >> vertexShader410 [
 	
 	in vec2 aVertex;
 	in vec2 aUV;
+	uniform mat4 u_matrix;
+
 	out vec2 vTex;
 	
 	void main(void) {
-		gl_Position = vec4(aVertex.x, -aVertex.y, 0.0, 1.0);
+		gl_Position = u_matrix * vec4(aVertex.x, aVertex.y, 0.0, 1.0);
 		vTex = aUV;
 	}'
 ]

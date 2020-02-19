@@ -9,7 +9,9 @@ Class {
 		'buttons',
 		'modifiers',
 		'cursorPosition',
-		'scaleFactor'
+		'scaleFactor',
+		'eventQueue',
+		'isDefered'
 	],
 	#classVars : [
 		'KeyCharacterMapping',
@@ -198,7 +200,26 @@ GlutinMorphicEventHandler >> convertModifiers: theGlutinModifiers [
 	^ theButtons
 ]
 
-{ #category : #events }
+{ #category : #'event - dispatch' }
+GlutinMorphicEventHandler >> dispatchEvents [
+	| theLastMouseMoveEvent theEvents |
+	
+	theLastMouseMoveEvent := nil.
+	
+	theEvents := Array streamContents: [ :aStream |
+		self fetchedEventsDo: [ :anEvent |
+			anEvent isMove
+				ifTrue: [ theLastMouseMoveEvent := anEvent  ].
+			aStream nextPut: anEvent ] ].
+	
+	theEvents do: [ :anEvent |
+		anEvent isMove
+			ifTrue: [ anEvent = theLastMouseMoveEvent
+				ifTrue: [ self dispatchMorphicEvent: anEvent ] ]
+			ifFalse: [ self dispatchMorphicEvent: anEvent ] ]
+]
+
+{ #category : #'event - dispatch' }
 GlutinMorphicEventHandler >> dispatchMorphicEvent: anEvent [
 
 	"anEvent isKeyboard ifTrue:[
@@ -215,11 +236,32 @@ GlutinMorphicEventHandler >> dispatchMorphicEvent: anEvent [
 			nextPutAll: anEvent scanCode asString;
 			lf ]."
 
+	(morphicWorld activeHand isNotNil and: [ anEvent hand isNotNil ])
+		ifTrue: [ morphicWorld activeHand handleEvent: anEvent ]
+]
+
+{ #category : #'event - dispatch' }
+GlutinMorphicEventHandler >> enqueueMorphicEvent: anEvent [
+	eventQueue nextPut: anEvent.
+	
+	isDefered
+		ifTrue: [ ^ self ].
+
+	isDefered := true.
+
 	morphicWorld defer: [
-		(morphicWorld activeHand isNotNil and: [ anEvent hand isNotNil ]) ifTrue: [
-			morphicWorld activeHand handleEvent: anEvent
-		]
-	]
+		isDefered := false.
+		self dispatchEvents ]
+]
+
+{ #category : #'event - dispatch' }
+GlutinMorphicEventHandler >> fetchedEventsDo: aBlock [
+	"Flush event queue and evaluate a given block with every queued event as argument"
+	| theEvents |
+
+	theEvents := LinkedList new.
+	eventQueue flush: [ :anEvent | theEvents add: anEvent ].
+	theEvents do: aBlock
 ]
 
 { #category : #initialization }
@@ -228,7 +270,16 @@ GlutinMorphicEventHandler >> initialize [
 	
 	modifiers := GlutinDeviceEventModifiersChangedEvent new.
 	scaleFactor := nil.
-	cursorPosition := GtFensterPhysicalPosition new
+	cursorPosition := GtFensterPhysicalPosition new.
+	eventQueue := WaitfreeQueue new.
+	isDefered := false
+]
+
+{ #category : #accessing }
+GlutinMorphicEventHandler >> logicalCursorPosition [
+	<return: #Point>
+
+	^ (cursorPosition asLogical: self scaleFactor) rounded asPoint
 ]
 
 { #category : #converting }
@@ -289,13 +340,13 @@ GlutinMorphicEventHandler >> visitCharacterReceivedEvent: anEvent [
 	keyEvent := KeyboardEvent new
 		setType: #keystroke
 		buttons: (self convertModifiers: modifiers)
-		position: (cursorPosition asLogical: self scaleFactor) asPoint
+		position: self logicalCursorPosition
 		keyValue: char asciiValue
 		charCode: char charCode
 		hand: self activeHand
 		stamp: Time millisecondClockValue.
 	
-	self dispatchMorphicEvent: keyEvent
+	self enqueueMorphicEvent: keyEvent
 ]
 
 { #category : #'event - visiting' }
@@ -312,14 +363,14 @@ GlutinMorphicEventHandler >> visitCursorMovedEvent: anEvent [
 	
 	aMorphicEvent := MouseMoveEvent basicNew
 		setType: #mouseMove 
-		startPoint: (oldPos asLogical: self scaleFactor) asPoint
-		endPoint: (cursorPosition asLogical: self scaleFactor) asPoint
-		trail: { (oldPos asLogical: self scaleFactor) asPoint. (cursorPosition asLogical: self scaleFactor) asPoint }
+		startPoint: (oldPos asLogical: self scaleFactor) rounded asPoint
+		endPoint: self logicalCursorPosition
+		trail: { (oldPos asLogical: self scaleFactor) rounded asPoint. self logicalCursorPosition }
 		buttons: theButtons
 		hand: self activeHand
 		stamp: Time millisecondClockValue.
 		
-	self dispatchMorphicEvent: aMorphicEvent
+	self enqueueMorphicEvent: aMorphicEvent
 ]
 
 { #category : #'event - visiting' }
@@ -345,13 +396,13 @@ GlutinMorphicEventHandler >> visitKeyDownEventMac: anEvent [
 	aMorphicEvent := KeyboardEvent new
 		setType: #keyDown
 		buttons: (self convertModifiers: modifiers)
-		position: (cursorPosition asLogical: self scaleFactor) asPoint
+		position: self logicalCursorPosition
 		keyValue: aKeyValue
 		charCode: aCharCode
 		hand:  self activeHand
 		stamp: Time millisecondClockValue.
 	aMorphicEvent scanCode: anEvent scan_code.
-	self dispatchMorphicEvent: aMorphicEvent.
+	self enqueueMorphicEvent: aMorphicEvent.
 	
 	aCharacter = Character null
 		ifTrue: [ ^ self ].	
@@ -363,13 +414,13 @@ GlutinMorphicEventHandler >> visitKeyDownEventMac: anEvent [
 	aMorphicEvent := KeyboardEvent new
 		setType: #keystroke
 		buttons: (self convertModifiers: modifiers)
-		position: (cursorPosition asLogical: self scaleFactor) asPoint
+		position: self logicalCursorPosition
 		keyValue: aKeyValue
 		charCode: aCharCode
 		hand: self activeHand
 		stamp: Time millisecondClockValue.
 	
-	self dispatchMorphicEvent: aMorphicEvent
+	self enqueueMorphicEvent: aMorphicEvent
 ]
 
 { #category : #'events - unix' }
@@ -385,14 +436,14 @@ GlutinMorphicEventHandler >> visitKeyDownEventUnix: anEvent [
 	aMorphicEvent := KeyboardEvent new
 		setType: #keyDown
 		buttons: (self convertModifiers: modifiers)
-		position: (cursorPosition asLogical: self scaleFactor) asPoint
+		position: self logicalCursorPosition
 		keyValue: aKeyValue
 		charCode: aCharCode
 		hand: self activeHand
 		stamp: Time millisecondClockValue.
 	aMorphicEvent scanCode: aCharCode.
 
-	self dispatchMorphicEvent: aMorphicEvent.
+	self enqueueMorphicEvent: aMorphicEvent.
 	
 	aCharacter = Character null
 		ifTrue: [ ^ self ].	
@@ -404,14 +455,14 @@ GlutinMorphicEventHandler >> visitKeyDownEventUnix: anEvent [
 	aMorphicEvent := KeyboardEvent new
 		setType: #keystroke
 		buttons: (self convertModifiers: modifiers)
-		position: (cursorPosition asLogical: self scaleFactor) asPoint
+		position: self logicalCursorPosition
 		keyValue: aKeyValue
 		charCode: aCharCode
 		hand: self activeHand
 		stamp: Time millisecondClockValue.
 	aMorphicEvent scanCode: aKeyValue.
 	
-	self dispatchMorphicEvent: aMorphicEvent
+	self enqueueMorphicEvent: aMorphicEvent
 ]
 
 { #category : #'events - windows' }
@@ -426,13 +477,13 @@ GlutinMorphicEventHandler >> visitKeyDownEventWindows: anEvent [
 	aMorphicEvent := KeyboardEvent new
 		setType: #keyDown
 		buttons: (self convertModifiers: modifiers)
-		position: (cursorPosition asLogical: self scaleFactor) asPoint
+		position: self logicalCursorPosition
 		keyValue: aKeyValue
 		charCode: aKeyValue
 		hand:  self activeHand
 		stamp: Time millisecondClockValue.
 	aMorphicEvent scanCode: aKeyValue.
-	self dispatchMorphicEvent: aMorphicEvent.
+	self enqueueMorphicEvent: aMorphicEvent.
 	
 	aCharacter = Character null
 		ifTrue: [ ^ self ].	
@@ -444,13 +495,13 @@ GlutinMorphicEventHandler >> visitKeyDownEventWindows: anEvent [
 	aMorphicEvent := KeyboardEvent new
 		setType: #keystroke
 		buttons: (self convertModifiers: modifiers)
-		position: (cursorPosition asLogical: self scaleFactor) asPoint
+		position: self logicalCursorPosition
 		keyValue: aKeyValue
 		charCode: aKeyValue
 		hand: self activeHand
 		stamp: Time millisecondClockValue.
 	
-	self dispatchMorphicEvent: aMorphicEvent
+	self enqueueMorphicEvent: aMorphicEvent
 ]
 
 { #category : #'event - visiting' }
@@ -474,14 +525,14 @@ GlutinMorphicEventHandler >> visitKeyUpEventMac: anEvent [
 	aMorphicEvent := KeyboardEvent new
 		setType: #keyUp
 		buttons: (self convertModifiers: modifiers)
-		position: (cursorPosition asLogical: self scaleFactor) asPoint
+		position: self logicalCursorPosition
 		keyValue: aKeyValue
 		charCode: aCharCode
 		hand: self activeHand
 		stamp: Time millisecondClockValue.
 	aMorphicEvent scanCode: aCharCode.
 
-	self dispatchMorphicEvent: aMorphicEvent
+	self enqueueMorphicEvent: aMorphicEvent
 ]
 
 { #category : #'events - unix' }
@@ -495,14 +546,14 @@ GlutinMorphicEventHandler >> visitKeyUpEventUnix: anEvent [
 	aMorphicEvent := KeyboardEvent new
 		setType: #keyUp
 		buttons: (self convertModifiers: modifiers)
-		position: (cursorPosition asLogical: self scaleFactor) asPoint
+		position: self logicalCursorPosition
 		keyValue: aKeyValue
 		charCode: aCharCode
 		hand: self activeHand
 		stamp: Time millisecondClockValue.
 	aMorphicEvent scanCode: aCharCode.
 
-	self dispatchMorphicEvent: aMorphicEvent
+	self enqueueMorphicEvent: aMorphicEvent
 ]
 
 { #category : #'events - windows' }
@@ -514,14 +565,14 @@ GlutinMorphicEventHandler >> visitKeyUpEventWindows: anEvent [
 	aMorphicEvent := KeyboardEvent new
 		setType: #keyUp
 		buttons: (self convertModifiers: modifiers)
-		position: (cursorPosition asLogical: self scaleFactor) asPoint
+		position: self logicalCursorPosition
 		keyValue: aKeyValue
 		charCode: aKeyValue
 		hand: self activeHand
 		stamp: Time millisecondClockValue.
 	aMorphicEvent scanCode: aKeyValue.
 
-	self dispatchMorphicEvent: aMorphicEvent
+	self enqueueMorphicEvent: aMorphicEvent
 ]
 
 { #category : #'event - visiting' }
@@ -566,13 +617,13 @@ GlutinMorphicEventHandler >> visitMouseInputEvent: anEvent [
 
 	aMorphicEvent := MouseButtonEvent new
 		setType: anEventType
-		position: (cursorPosition asLogical: self scaleFactor) asPoint
+		position: self logicalCursorPosition
 		which: buttons
 		buttons: (self convertModifiers: modifiers) | buttons
 		hand: self activeHand
 		stamp: Time millisecondClockValue.
 
-	self dispatchMorphicEvent: aMorphicEvent
+	self enqueueMorphicEvent: aMorphicEvent
 ]
 
 { #category : #'event - visiting' }
@@ -600,13 +651,13 @@ GlutinMorphicEventHandler >> visitMouseWheelEvent: anEvent [
 
 	aMorphicEvent := MouseWheelEvent new 
 		setType: #mouseWheel
-		position: (cursorPosition asLogical: self scaleFactor) asPoint
+		position: self logicalCursorPosition
 		direction: aDirection
 		buttons: (self convertModifiers: modifiers)
 		hand: self activeHand
 		stamp: Time millisecondClockValue.
 		
-	self dispatchMorphicEvent: aMorphicEvent
+	self enqueueMorphicEvent: aMorphicEvent
 ]
 
 { #category : #'event - visiting' }
