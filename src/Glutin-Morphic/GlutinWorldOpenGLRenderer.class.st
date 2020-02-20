@@ -12,7 +12,8 @@ Class {
 { #category : #accessing }
 GlutinWorldOpenGLRenderer class >> isApplicableFor: aWorld [
 	^ Smalltalk isHeadless
-		and: [ CommandLineArguments new hasOption: 'interactive' ]
+		and: [ (CommandLineArguments new hasOption: 'interactive')
+			and: [ CommandLineArguments new hasOption: 'glutin' ] ]
 ]
 
 { #category : #accessing }

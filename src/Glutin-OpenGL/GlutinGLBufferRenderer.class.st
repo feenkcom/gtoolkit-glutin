@@ -121,7 +121,9 @@ GlutinGLBufferRenderer >> prepareForBuffer: aGlutinGLBuffer [
 				cr ].
 
 	self deleteTexture.
-	texture := self createTexture: aGlutinGLBuffer
+	texture := self createTexture: aGlutinGLBuffer.
+	
+	gl viewport: (0@0 extent: self context innerExtent)
 ]
 
 { #category : #'api - rendering' }
