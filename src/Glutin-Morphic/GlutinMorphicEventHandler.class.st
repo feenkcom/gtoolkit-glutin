@@ -610,7 +610,7 @@ GlutinMorphicEventHandler >> visitMouseInputEvent: anEvent [
 	anEventType := aState = GlutinEventInputElementState Pressed
 		ifTrue: [ #mouseDown ]
 		ifFalse: [ #mouseUp ].
-		
+
 	 buttons := aState = GlutinEventInputElementState Pressed
 		ifTrue: [ self convertButton: anEvent button ]
 		ifFalse: [ 0 ].
@@ -618,7 +618,9 @@ GlutinMorphicEventHandler >> visitMouseInputEvent: anEvent [
 	aMorphicEvent := MouseButtonEvent new
 		setType: anEventType
 		position: self logicalCursorPosition
-		which: buttons
+		"which is a button that was pressed or released"
+		which: (self convertButton: anEvent button)
+		"buttons represent currently pressed buttons"
 		buttons: (self convertModifiers: modifiers) | buttons
 		hand: self activeHand
 		stamp: Time millisecondClockValue.
