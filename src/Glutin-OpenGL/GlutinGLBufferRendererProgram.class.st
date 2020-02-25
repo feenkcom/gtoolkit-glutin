@@ -255,11 +255,12 @@ GlutinGLBufferRendererProgram >> vertexShader120 [
 	
 	attribute vec2 aVertex;
 	attribute vec2 aUV;
-	uniform vec2 aPosition;
+	uniform mat4 u_matrix;
+
 	varying vec2 vTex;
 	
 	void main(void) {
-		gl_Position = vec4(aVertex.x + aPosition.x, -(aVertex.y + aPosition.y), 0.0, 1.0);
+		gl_Position = u_matrix * vec4(aVertex.x, aVertex.y, 0.0, 1.0);
 		vTex = aUV;
 	}'
 ]
@@ -270,11 +271,12 @@ GlutinGLBufferRendererProgram >> vertexShader150 [
 	
 	attribute vec2 aVertex;
 	attribute vec2 aUV;
-	uniform vec2 aPosition;
+	uniform mat4 u_matrix;
+
 	varying vec2 vTex;
 	
 	void main(void) {
-		gl_Position = vec4(aVertex.x + aPosition.x, -(aVertex.y + aPosition.y), 0.0, 1.0);
+		gl_Position = u_matrix * vec4(aVertex.x, aVertex.y, 0.0, 1.0);
 		vTex = aUV;
 	}'
 ]
@@ -285,11 +287,12 @@ GlutinGLBufferRendererProgram >> vertexShader330 [
 	
 	attribute vec2 aVertex;
 	attribute vec2 aUV;
-	uniform vec2 aPosition;
+	uniform mat4 u_matrix;
+
 	varying vec2 vTex;
 	
 	void main(void) {
-		gl_Position = vec4(aVertex.x + aPosition.x, -(aVertex.y + aPosition.y), 0.0, 1.0);
+		gl_Position = u_matrix * vec4(aVertex.x, aVertex.y, 0.0, 1.0);
 		vTex = aUV;
 	}'
 ]
