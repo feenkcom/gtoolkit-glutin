@@ -17,6 +17,7 @@ BaselineOfGlutin >> baseline: spec [
 			baseline: 'GToolkitGleam' with: [ spec repository: 'github://feenkcom/gtoolkit-gleam/src' ];
 			baseline: 'GToolkitFenster' with: [ spec repository: 'github://feenkcom/gtoolkit-fenster/src' ];
 			baseline: 'SpartaWrapper' with: [ spec repository: 'github://feenkcom/Sparta/src' ];
+			baseline: 'SpartaSkia' with: [ spec repository: 'github://feenkcom/Sparta/src' ];
 			baseline: 'GtThreadedFFIDev'
 				with: [ spec repository: 'github://feenkcom/tffi-dev/src' ].
 		spec
@@ -24,7 +25,7 @@ BaselineOfGlutin >> baseline: spec [
 			package: 'Glutin' with: [ spec requires: #(GToolkitInstaller GToolkitBoxer GtThreadedFFIDev GToolkitFenster) ];
 			package: 'Glutin-OpenGL' with: [ spec requires: #('Glutin' 'GToolkitGleam') ];
 			package: 'Glutin-Morphic' with: [ spec requires: #('Glutin' 'Glutin-OpenGL') ];
-			package: 'Glutin-Morphic-Sparta' with: [ spec requires: #('Glutin-Morphic' 'SpartaWrapper') ] ]
+			package: 'Glutin-Morphic-Sparta' with: [ spec requires: #('Glutin-Morphic' 'SpartaWrapper' 'SpartaSkia') ] ]
 ]
 
 { #category : #baselines }
