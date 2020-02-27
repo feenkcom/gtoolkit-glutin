@@ -20,6 +20,16 @@ GlutinWorldRenderer >> activateCursor: aCursor withMask: maskForm [
 ]
 
 { #category : #accessing }
+GlutinWorldRenderer >> actualFramebufferSize [
+	"Return the physical screen size"
+	<return: #Point>
+
+	^ glutinWindow
+		ifNil: [ 240@120 ]
+		ifNotNil: [ (GtFensterPhysicalSize fromPoint: glutinWindow innerExtent) asPoint asIntegerPoint ]
+]
+
+{ #category : #accessing }
 GlutinWorldRenderer >> actualScreenSize [
 	"Return the logical screen size"
 	<return: #Point>
@@ -50,7 +60,7 @@ GlutinWorldRenderer >> checkForNewScreenSize [
 	(world extent = anExtent)
 		ifTrue: [ ^ false ].
 
-	world worldState realWindowExtent: glutinWindow innerExtent.
+	world worldState realWindowExtent: self actualFramebufferSize.
 	world restoreMorphicDisplay.
 	
 	world extent: anExtent.
