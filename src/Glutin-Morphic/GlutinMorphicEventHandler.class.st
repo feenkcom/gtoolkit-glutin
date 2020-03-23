@@ -168,6 +168,13 @@ GlutinMorphicEventHandler >> activeHand [
 
 { #category : #converting }
 GlutinMorphicEventHandler >> convertButton: aGlutinButton [
+	"On mac ctrl+click is mapped to right click, see:
+	https://github.com/feenkcom/gtoolkit/issues/890"
+	(OSPlatform current isMacOS and: [
+		aGlutinButton button_type = GlutinEventMouseButtonType Left
+			and: [ modifiers ctrl ] ])
+		ifTrue: [ ^ MouseButtonEvent yellowButton ].
+
 	aGlutinButton button_type = GlutinEventMouseButtonType Left
 		ifTrue: [ ^ MouseButtonEvent redButton ].
 
