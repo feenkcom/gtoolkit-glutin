@@ -18,15 +18,15 @@ BaselineOfGlutin >> baseline: spec [
 			baseline: 'GToolkitBoxer' with: [
 				spec repository: 'github://feenkcom/gtoolkit-boxer:v0.6.66/src' ];
 			baseline: 'GToolkitGleam' with: [
-				spec repository: 'github://feenkcom/gtoolkit-gleam:v0.6.33/src' ];
+				spec repository: 'github://feenkcom/gtoolkit-gleam:v0.6.34/src' ];
 			baseline: 'GToolkitFenster' with: [
-				spec repository: 'github://feenkcom/gtoolkit-fenster:v0.6.6/src' ];
+				spec repository: 'github://feenkcom/gtoolkit-fenster:v0.6.7/src' ];
 			baseline: 'SpartaWrapper' with: [
-				spec repository: 'github://feenkcom/Sparta:v0.7.125/src' ];
+				spec repository: 'github://feenkcom/Sparta:v0.7.126/src' ];
 			baseline: 'SpartaSkia' with: [
-				spec repository: 'github://feenkcom/Sparta:v0.7.125/src' ];
+				spec repository: 'github://feenkcom/Sparta:v0.7.126/src' ];
 			baseline: 'GtThreadedFFIDev' with: [
-				spec repository: 'github://feenkcom/tffi-dev:v0.6.11/src' ].
+				spec repository: 'github://feenkcom/tffi-dev:v0.6.12/src' ].
 		spec 
 			package: 'Glutin' with: [
 				spec requires: #(#GToolkitInstaller #GToolkitBoxer #GtThreadedFFIDev #GToolkitFenster ). ];
