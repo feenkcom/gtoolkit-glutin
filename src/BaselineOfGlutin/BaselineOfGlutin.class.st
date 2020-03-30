@@ -14,19 +14,19 @@ BaselineOfGlutin >> baseline: spec [
 		spec postLoadDoIt: #'postLoadGlutin:'.
 		spec 
 			baseline: 'GToolkitInstaller' with: [
-				spec repository: 'github://feenkcom/gtoolkit-installer:v0.7.13/src' ];
+				spec repository: 'github://feenkcom/gtoolkit-installer:v0.7.14/src' ];
 			baseline: 'GToolkitBoxer' with: [
-				spec repository: 'github://feenkcom/gtoolkit-boxer:v0.6.66/src' ];
+				spec repository: 'github://feenkcom/gtoolkit-boxer:v0.6.67/src' ];
 			baseline: 'GToolkitGleam' with: [
-				spec repository: 'github://feenkcom/gtoolkit-gleam:v0.6.34/src' ];
+				spec repository: 'github://feenkcom/gtoolkit-gleam:v0.6.35/src' ];
 			baseline: 'GToolkitFenster' with: [
 				spec repository: 'github://feenkcom/gtoolkit-fenster:v0.6.7/src' ];
 			baseline: 'SpartaWrapper' with: [
-				spec repository: 'github://feenkcom/Sparta:v0.7.126/src' ];
+				spec repository: 'github://feenkcom/Sparta:v0.7.127/src' ];
 			baseline: 'SpartaSkia' with: [
-				spec repository: 'github://feenkcom/Sparta:v0.7.126/src' ];
+				spec repository: 'github://feenkcom/Sparta:v0.7.127/src' ];
 			baseline: 'GtThreadedFFIDev' with: [
-				spec repository: 'github://feenkcom/tffi-dev:v0.6.12/src' ].
+				spec repository: 'github://feenkcom/tffi-dev:v0.6.13/src' ].
 		spec 
 			package: 'Glutin' with: [
 				spec requires: #(#GToolkitInstaller #GToolkitBoxer #GtThreadedFFIDev #GToolkitFenster ). ];
