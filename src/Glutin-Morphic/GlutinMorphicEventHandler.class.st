@@ -680,6 +680,13 @@ GlutinMorphicEventHandler >> visitWindowCloseRequest: anEvent [
 ]
 
 { #category : #'event - visiting' }
+GlutinMorphicEventHandler >> visitWindowFocusedEvent: anEvent [
+	WorldState MinCycleLapse: (anEvent is_focused
+		ifTrue: [ GlutinWorldRenderer activeCycleLapse ]
+		ifFalse: [ GlutinWorldRenderer idleCycleLapse ])
+]
+
+{ #category : #'event - visiting' }
 GlutinMorphicEventHandler >> visitWindowResizedEvent: anEvent [
 	window resize: anEvent width @ anEvent height.
 	

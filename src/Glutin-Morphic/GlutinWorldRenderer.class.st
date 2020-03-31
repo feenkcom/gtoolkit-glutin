@@ -11,6 +11,20 @@ Class {
 }
 
 { #category : #accessing }
+GlutinWorldRenderer class >> activeCycleLapse [
+	"Milliseconds"
+
+	^ 20
+]
+
+{ #category : #accessing }
+GlutinWorldRenderer class >> idleCycleLapse [
+	"Milliseconds"
+
+	^ 1000
+]
+
+{ #category : #accessing }
 GlutinWorldRenderer >> activateCursor: aCursor withMask: maskForm [
 
 	glutinWindow ifNotNil: [ cursorMap
@@ -88,7 +102,9 @@ GlutinWorldRenderer >> deactivate [
 		glutinWindow := nil ].
 
 	GlutinEventsFetcher default removeEventHandler: eventHandler.
-	eventHandler := nil
+	eventHandler := nil.
+	
+	WorldState MinCycleLapse: self class idleCycleLapse
 ]
 
 { #category : #'api - cycle' }
@@ -112,7 +128,9 @@ GlutinWorldRenderer >> doActivate [
 
 	world worldState realWindowExtent: glutinWindow innerExtent.
 	world extent: (glutinWindow innerExtent / scaleFactor) floor asIntegerPoint.
-	world worldState doFullRepaint
+	world worldState doFullRepaint.
+	
+	WorldState MinCycleLapse: self class activeCycleLapse
 ]
 
 { #category : #operations }
