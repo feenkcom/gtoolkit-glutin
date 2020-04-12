@@ -158,6 +158,7 @@ GlutinContextBuilder class >> profilesDo: aBlock [
 							| eachProfile |
 							
 							eachProfile := self new
+								withAnyHardwareAcceleration;
 								withDoubleBuffer: eachDoubleBuffer;
 								withMultisampling: 0;
 								withDepthBuffer: eachDepthBuffer;
@@ -197,6 +198,11 @@ GlutinContextBuilder >> primGetPixelFormatRequirements [
 ]
 
 { #category : #'private - ffi' }
+GlutinContextBuilder >> primWithAnyHardwareAcceleration [
+	^ self ffiCall: #(void glutin_context_builder_with_any_hardware_acceleration(self))
+]
+
+{ #category : #'private - ffi' }
 GlutinContextBuilder >> primWithDepthBuffer: bits [
 	^ self ffiCall: #(void glutin_context_builder_with_depth_buffer(self, uint8 bits))
 ]
@@ -227,6 +233,11 @@ GlutinContextBuilder >> primWithGlProfileCore [
 ]
 
 { #category : #'private - ffi' }
+GlutinContextBuilder >> primWithHardwareAcceleration: aBoolean [
+	^ self ffiCall: #(void glutin_context_builder_with_hardware_acceleration(self, bool aBoolean))
+]
+
+{ #category : #'private - ffi' }
 GlutinContextBuilder >> primWithMultisampling: samples [
 	^ self ffiCall: #(void glutin_context_builder_with_multisampling(self, uint16 samples))
 ]
@@ -249,6 +260,16 @@ GlutinContextBuilder >> primWithStencilBuffer: bits [
 { #category : #'private - ffi' }
 GlutinContextBuilder >> primWithVsync: aBoolean [
 	^ self ffiCall: #(void glutin_context_builder_with_vsync(self, bool aBoolean))
+]
+
+{ #category : #printing }
+GlutinContextBuilder >> printOn: aStream [
+	aStream print: self pixelFormatRequirements
+]
+
+{ #category : #accesssing }
+GlutinContextBuilder >> withAnyHardwareAcceleration [
+	self primWithAnyHardwareAcceleration
 ]
 
 { #category : #accesssing }
@@ -278,6 +299,11 @@ GlutinContextBuilder >> withGlLatest [
 { #category : #accesssing }
 GlutinContextBuilder >> withGlProfileCore [
 	self primWithGlProfileCore
+]
+
+{ #category : #accesssing }
+GlutinContextBuilder >> withHardwareAcceleration: aBoolean [
+	self primWithHardwareAcceleration: aBoolean
 ]
 
 { #category : #accesssing }

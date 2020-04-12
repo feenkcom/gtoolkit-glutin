@@ -28,6 +28,22 @@ GlutinPixelFormatRequirements >> alphaBitsDo: aBlock ifNone: aNoneBlock [
 		ifFalse: aNoneBlock
 ]
 
+{ #category : #converting }
+GlutinPixelFormatRequirements >> asOrderedDictionary [
+	^ {
+		#alphaBits -> (self alphaBitsDo: #asString ifNone: [ 'don''t care' ]).
+		#colorBits -> (self colorBitsDo: #asString ifNone: [ 'don''t care' ]).
+		#depthBits -> (self depthBitsDo: #asString ifNone: [ 'don''t care' ]).
+		#stencilBits -> (self stencilBitsDo: #asString ifNone: [ 'don''t care' ]).
+		#multisapling -> (self multisamplingDo: #asString ifNone: [ 'don''t care' ]).
+		#doubleBuffer -> (self doubleBufferDo: #asString ifNone: [ 'don''t care' ]).
+		#hardwareAccelerated -> (self hardwareAcceleratedDo: #asString ifNone: [ 'don''t care' ]).
+		#isFlatColorBuffer -> self isFlatColorBuffer.
+		#isSrgb -> self isSrgb.
+		#isStereoscopy -> self isStereoscopy.
+	 } asOrderedDictionary
+]
+
 { #category : #accessing }
 GlutinPixelFormatRequirements >> colorBitsDo: aBlock [
 	self colorBitsDo: aBlock ifNone: [  ]
@@ -68,20 +84,9 @@ GlutinPixelFormatRequirements >> doubleBufferDo: aBlock ifNone: aNoneBlock [
 GlutinPixelFormatRequirements >> gtInfoFor: aView [
 	<gtView>
 
-	^ ({
-		#alphaBits -> (self alphaBitsDo: #asString ifNone: [ 'don''t care' ]).
-		#colorBits -> (self colorBitsDo: #asString ifNone: [ 'don''t care' ]).
-		#depthBits -> (self depthBitsDo: #asString ifNone: [ 'don''t care' ]).
-		#stencilBits -> (self stencilBitsDo: #asString ifNone: [ 'don''t care' ]).
-		#multisapling -> (self multisamplingDo: #asString ifNone: [ 'don''t care' ]).
-		#doubleBuffer -> (self doubleBufferDo: #asString ifNone: [ 'don''t care' ]).
-		#hardwareAccelerated -> (self hardwareAcceleratedDo: #asString ifNone: [ 'don''t care' ]).
-		#isFlatColorBuffer -> self isFlatColorBuffer.
-		#isSrgb -> self isSrgb.
-		#isStereoscopy -> self isStereoscopy.
-	 } asOrderedDictionary gtItemsFor: aView)
-			title: 'Info';
-			priority: 2
+	^ (self asOrderedDictionary gtItemsFor: aView)
+		title: 'Info';
+		priority: 2
 ]
 
 { #category : #accessing }
@@ -206,6 +211,11 @@ GlutinPixelFormatRequirements >> primIsSrgb [
 { #category : #'private - ffi' }
 GlutinPixelFormatRequirements >> primIsStereoscopy [
 	^ self ffiCall: #(bool glutin_pixel_format_requirements_is_stereoscopy(self))
+]
+
+{ #category : #printing }
+GlutinPixelFormatRequirements >> printOn: aStream [
+	aStream print: self asOrderedDictionary
 ]
 
 { #category : #accessing }
