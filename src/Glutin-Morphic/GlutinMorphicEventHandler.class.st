@@ -337,10 +337,10 @@ GlutinMorphicEventHandler >> shouldGetStepsFrom: aWorld [
 { #category : #'event - visiting' }
 GlutinMorphicEventHandler >> visitCharacterReceivedEvent: anEvent [
 	| char keyEvent anInputString |
-
+	
 	anInputString := anEvent text.	
-	(modifiers ctrl not and: [ (anInputString allSatisfy: [ :aCharacter | Unicode isPrintable: aCharacter ]) ])
-		ifFalse: [ ^ self ].
+	(modifiers ctrl or: [ modifiers logo or: [ (anInputString anySatisfy: [ :aCharacter | (Unicode isPrintable: aCharacter) not ]) ] ])
+		ifTrue: [ ^ self ].
 	
 	char := anInputString first.
 
