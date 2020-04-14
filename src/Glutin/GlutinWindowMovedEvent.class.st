@@ -19,8 +19,8 @@ GlutinWindowMovedEvent class >> fieldsDesc [
 	self rebuildFieldAccessors
 	"
 	^ #(
-		uint32 x
-		uint32 y
+		int32 x
+		int32 y
  	)
 ]
 
@@ -37,23 +37,23 @@ GlutinWindowMovedEvent >> accept: aVisitor [
 { #category : #'accessing structure variables' }
 GlutinWindowMovedEvent >> x [
 	"This method was automatically generated"
-	^handle unsignedLongAt: OFFSET_X
+	^handle signedLongAt: OFFSET_X
 ]
 
 { #category : #'accessing structure variables' }
 GlutinWindowMovedEvent >> x: anObject [
 	"This method was automatically generated"
-	handle unsignedLongAt: OFFSET_X put: anObject
+	handle signedLongAt: OFFSET_X put: anObject
 ]
 
 { #category : #'accessing structure variables' }
 GlutinWindowMovedEvent >> y [
 	"This method was automatically generated"
-	^handle unsignedLongAt: OFFSET_Y
+	^handle signedLongAt: OFFSET_Y
 ]
 
 { #category : #'accessing structure variables' }
 GlutinWindowMovedEvent >> y: anObject [
 	"This method was automatically generated"
-	handle unsignedLongAt: OFFSET_Y put: anObject
+	handle signedLongAt: OFFSET_Y put: anObject
 ]
