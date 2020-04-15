@@ -7,25 +7,30 @@ Class {
 	#category : #BaselineOfGlutin
 }
 
-{ #category : #baselines }
+{ #category : #baseline }
 BaselineOfGlutin >> baseline: spec [
 	<baseline>
-	spec for: #common do: [
-		spec
-			baseline: 'GToolkitInstaller' with: [ spec repository: 'github://feenkcom/gtoolkit-installer/src' ];
-			baseline: 'GToolkitBoxer' with: [ spec repository: 'github://feenkcom/gtoolkit-boxer/src' ];
-			baseline: 'GToolkitGleam' with: [ spec repository: 'github://feenkcom/gtoolkit-gleam/src' ];
-			baseline: 'GToolkitFenster' with: [ spec repository: 'github://feenkcom/gtoolkit-fenster/src' ];
-			"baseline: 'SpartaWrapper' with: [ spec repository: 'github://feenkcom/Sparta/src' ];
-			baseline: 'SpartaSkia' with: [ spec repository: 'github://feenkcom/Sparta/src' ];"
-			baseline: 'GtThreadedFFIDev'
-				with: [ spec repository: 'github://feenkcom/tffi-dev/src' ].
-		spec
-			postLoadDoIt: #'postLoadGlutin:';
-			package: 'Glutin' with: [ spec requires: #(GToolkitInstaller GToolkitBoxer GtThreadedFFIDev GToolkitFenster) ];
-			package: 'Glutin-OpenGL' with: [ spec requires: #('Glutin' 'GToolkitGleam') ];
-			package: 'Glutin-Morphic' with: [ spec requires: #('Glutin' 'Glutin-OpenGL') ]
-			"package: 'Glutin-Morphic-Sparta' with: [ spec requires: #('Glutin-Morphic' 'SpartaWrapper' 'SpartaSkia') ]" ]
+	spec for: #'common' do: [
+		spec postLoadDoIt: #'postLoadGlutin:'.
+		spec 
+			baseline: 'GToolkitInstaller' with: [
+				spec repository: 'github://feenkcom/gtoolkit-installer:v0.7.15/src' ];
+			baseline: 'GToolkitBoxer' with: [
+				spec repository: 'github://feenkcom/gtoolkit-boxer:v0.6.69/src' ];
+			baseline: 'GToolkitGleam' with: [
+				spec repository: 'github://feenkcom/gtoolkit-gleam:v0.6.40/src' ];
+			baseline: 'GToolkitFenster' with: [
+				spec repository: 'github://feenkcom/gtoolkit-fenster:v0.6.10/src' ];
+			baseline: 'GtThreadedFFIDev' with: [
+				spec repository: 'github://feenkcom/tffi-dev:v0.6.17/src' ].
+		spec 
+			package: 'Glutin' with: [
+				spec requires: #(#GToolkitInstaller #GToolkitBoxer #GtThreadedFFIDev #GToolkitFenster ). ];
+			package: 'Glutin-OpenGL' with: [
+				spec requires: #('Glutin' 'GToolkitGleam' ). ];
+			package: 'Glutin-Morphic' with: [
+				spec requires: #('Glutin' 'Glutin-OpenGL' ). ]. ].
+
 ]
 
 { #category : #baselines }
