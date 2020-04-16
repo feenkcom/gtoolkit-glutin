@@ -25,7 +25,7 @@ BaselineOfGlutin >> baseline: spec [
 				spec repository: 'github://feenkcom/tffi-dev:v0.6.17/src' ].
 		spec 
 			package: 'Glutin' with: [
-				spec requires: #(#GToolkitInstaller #GToolkitBoxer #GtThreadedFFIDev #GToolkitFenster ). ];
+				spec requires: #('GToolkitInstaller' 'GToolkitBoxer' 'GtThreadedFFIDev' 'GToolkitFenster' ). ];
 			package: 'Glutin-OpenGL' with: [
 				spec requires: #('Glutin' 'GToolkitGleam' ). ];
 			package: 'Glutin-Morphic' with: [
