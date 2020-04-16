@@ -17,12 +17,12 @@ GlutinMonitorId class >> primRelease: aHandle [
 ]
 
 { #category : #accessing }
-GlutinMonitorId >> eventsLoop [
+GlutinMonitorId >> eventLoop [
 	^ eventsLoop
 ]
 
 { #category : #accessing }
-GlutinMonitorId >> eventsLoop: anObject [
+GlutinMonitorId >> eventLoop: anObject [
 	eventsLoop := anObject
 ]
 

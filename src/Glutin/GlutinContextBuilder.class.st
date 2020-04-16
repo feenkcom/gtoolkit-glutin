@@ -26,7 +26,7 @@ GlutinContextBuilder class >> headless [
 				aHeadlessContext isValid
 					ifTrue: [
 						GlutinLibrary println: '[Glutin] Profile #', anIndex asString, ' worked'.
-						aHeadlessContext eventsLoop: self.
+						aHeadlessContext eventLoop: self.
 						^ aHeadlessContext ] ] ].
 		
 	self error: 'Could not find a suitable OpenGL profile for this system'

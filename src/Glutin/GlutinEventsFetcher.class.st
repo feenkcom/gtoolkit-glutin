@@ -47,32 +47,14 @@ GlutinEventsFetcher >> addEventHandler: anEventHandler [
 	eventHandlers add: anEventHandler
 ]
 
-{ #category : #private }
-GlutinEventsFetcher >> ensureEventsLoop [
-	"I make sure that Glutin events loop (external) is valid"
-
-	(currentSession == Smalltalk session
-		and: [ eventsLoop isNotNil
-			and: [ eventsLoop isNull not ] ])
-		ifTrue: [ ^ self ].
-
-	currentSession := Smalltalk session.
-	eventsLoop := GlutinEventLoop new
-]
-
-{ #category : #accessing }
-GlutinEventsFetcher >> eventHandlers [
-	^ eventHandlers
-]
-
-{ #category : #accessing }
-GlutinEventsFetcher >> eventLoop [
+{ #category : #'private - event loop' }
+GlutinEventsFetcher >> basicPharoEventLoop [
 	"Fetch pending raw events from the OS.
 	 This method is run at the user interrupt priority."
 	| idlePriority userInterruptPriority lowIOPriority prioritySempahore |
 
 	"I make sure that Glutin events loop (external) is valid"
-	self ensureEventsLoop.
+	self ensureEventLoop.
 
 	[ GlutinWindowsRegistry default hasWindows ]
 		whileFalse: [ 50 milliSeconds wait ].
@@ -125,11 +107,29 @@ GlutinEventsFetcher >> eventLoop [
 			shutdownSemaphore signal ]
 ]
 
+{ #category : #'private - event loop' }
+GlutinEventsFetcher >> ensureEventLoop [
+	"I make sure that Glutin events loop (external) is valid"
+
+	(currentSession == Smalltalk session
+		and: [ eventsLoop isNotNil
+			and: [ eventsLoop isNull not ] ])
+		ifTrue: [ ^ self ].
+
+	currentSession := Smalltalk session.
+	eventsLoop := GlutinEventLoop new
+]
+
 { #category : #accessing }
-GlutinEventsFetcher >> eventsLoop [
+GlutinEventsFetcher >> eventHandlers [
+	^ eventHandlers
+]
+
+{ #category : #accessing }
+GlutinEventsFetcher >> eventLoop [
 	<return: #GlutinEventLoop>
 
-	self ensureEventsLoop.
+	self ensureEventLoop.
 	^ eventsLoop
 ]
 
@@ -179,7 +179,7 @@ GlutinEventsFetcher >> reinstallEventLoop [
 		assert: [ fetcherProcess isNil ]
 		description: [ 'Fetcher process must not exist' ].
 
-	fetcherProcess := [ self eventLoop ] forkAt: Processor userInterruptPriority.
+	fetcherProcess := [ self basicPharoEventLoop ] forkAt: Processor userInterruptPriority.
 	fetcherProcess name: 'Glutin Event Fetcher Process'
 ]
 

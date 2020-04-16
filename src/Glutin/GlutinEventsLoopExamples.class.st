@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-GlutinEventsLoopExamples >> eventsLoop [
+GlutinEventsLoopExamples >> eventLoop [
 	<gtExample>
 	| anEventsLoop |
 	
@@ -29,7 +29,7 @@ GlutinEventsLoopExamples >> primaryMonitor [
 	<gtExample>
 	| aMonitor |
 	
-	aMonitor := self eventsLoop primaryMonitor.
+	aMonitor := self eventLoop primaryMonitor.
 	
 	^ aMonitor
 ]
