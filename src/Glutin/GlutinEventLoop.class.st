@@ -52,7 +52,7 @@ GlutinEventLoop >> createWindow: aWindowBuilder [
 					ifTrue: [
 						GlutinLibrary println: '[Glutin] Profile #', anIndex asString, ' worked'.
 						aWindowedContext autoRelease.
-						aWindowedContext eventsLoop: self.
+						aWindowedContext eventLoop: self.
 						aWindowedContext title: aBuilderCopy title.
 						
 						GlutinWindowsRegistry default registerWindow: aWindowedContext.
@@ -73,6 +73,11 @@ GlutinEventLoop >> primGetPrimaryMonitor [
 ]
 
 { #category : #'private - ffi' }
+GlutinEventLoop >> primGetType [
+	^ self ffiCall: #(GlutinEventLoopType glutin_events_loop_get_type (self))
+]
+
+{ #category : #'private - ffi' }
 GlutinEventLoop >> primRunReturn: aCallback [
 	^ self ffiCall: #(void glutin_events_loop_run_return(self, GlutinEventCallback aCallback))
 ]
@@ -84,7 +89,7 @@ GlutinEventLoop >> primaryMonitor [
 	
 	aMonitorId := self primGetPrimaryMonitor.
 	aMonitorId autoRelease.
-	aMonitorId eventsLoop: self.
+	aMonitorId eventLoop: self.
 	
 	^ aMonitorId
 ]
@@ -119,4 +124,11 @@ GlutinEventLoop >> tryHeadlessContext: aContextBuilder [
 	<return: #Boolean>
 
 	^ GlutinContextBuilder primTryContext: aContextBuilder eventLoop: self
+]
+
+{ #category : #accessing }
+GlutinEventLoop >> type [
+	<return: #GlutinEventLoopType>
+	
+	^ self primGetType
 ]

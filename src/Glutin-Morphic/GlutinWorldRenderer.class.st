@@ -171,13 +171,11 @@ GlutinWorldRenderer >> initializeGlutinWindow [
 	anInitialExtent := world worldState realWindowExtent
 		ifNil: [ 976@665 ].
 	
-	GlutinEventsFetcher default ensureEventsLoop.
-	
 	aWindowBuilder := GlutinWindowBuilder new
 		title: Smalltalk image imageFile basename;
 		extent: anInitialExtent.
 
-	glutinWindow := GlutinEventsFetcher default eventsLoop createWindow: aWindowBuilder.
+	glutinWindow := GlutinEventsFetcher default eventLoop createWindow: aWindowBuilder.
 	scaleFactor := glutinWindow scaleFactor.
 	eventHandler := (GlutinMorphicEventHandler for: world) window: glutinWindow.
 

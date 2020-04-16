@@ -15,12 +15,12 @@ GlutinContext >> api [
 ]
 
 { #category : #accessing }
-GlutinContext >> eventsLoop [
+GlutinContext >> eventLoop [
 	^ eventsLoop
 ]
 
 { #category : #accessing }
-GlutinContext >> eventsLoop: anObject [
+GlutinContext >> eventLoop: anObject [
 	eventsLoop := anObject
 ]
 

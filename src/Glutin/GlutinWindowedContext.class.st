@@ -28,7 +28,7 @@ GlutinWindowedContext class >> primRelease: aHandle [
 
 { #category : #'initialize-release' }
 GlutinWindowedContext >> close [
-	self eventsLoop closeWindow: self
+	self eventLoop closeWindow: self
 ]
 
 { #category : #'api - accessing' }
