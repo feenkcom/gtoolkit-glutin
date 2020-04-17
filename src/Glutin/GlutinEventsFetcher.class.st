@@ -150,10 +150,15 @@ GlutinEventsFetcher >> initialize [
 GlutinEventsFetcher >> installEventLoop [
 	"Initialize the event loop process"
 
-	(fetcherProcess isNotNil and: [ fetcherProcess isTerminated not ])
+	self isRunning
 		ifTrue: [ ^ self ].
 
 	self reinstallEventLoop
+]
+
+{ #category : #testing }
+GlutinEventsFetcher >> isRunning [
+	^ fetcherProcess isNotNil and: [ fetcherProcess isTerminated not ]
 ]
 
 { #category : #accessing }
