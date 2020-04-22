@@ -81,12 +81,12 @@ GlutinMorphicEventHandler class >> initializeWindowsKeyValueMapping [
 	{
 	GlutinEventVirtualKeyCode Escape . #ESCAPE.
 	GlutinEventVirtualKeyCode Tab . #TAB.
-	GlutinEventVirtualKeyCode Home . #HOME.
+	GlutinEventVirtualKeyCode Home . 1.
 	GlutinEventVirtualKeyCode Left . #KP_LEFT.
 	GlutinEventVirtualKeyCode Up . #KP_UP.
 	GlutinEventVirtualKeyCode Right . #KP_RIGHT.
 	GlutinEventVirtualKeyCode Down . #KP_DOWN.
-	GlutinEventVirtualKeyCode End . #END.
+	GlutinEventVirtualKeyCode End . 4.
 	GlutinEventVirtualKeyCode PageUp . #PAGE_UP.
 	GlutinEventVirtualKeyCode PageDown . #PAGE_DOWN.
 	GlutinEventVirtualKeyCode Space. #KP_SPACE.
