@@ -1,9 +1,6 @@
 Class {
 	#name : #GlutinMainThreadLibrary,
 	#superclass : #GlutinLibrary,
-	#classInstVars : [
-		'MouseWheelScrollSpeed'
-	],
 	#category : #Glutin
 }
 
