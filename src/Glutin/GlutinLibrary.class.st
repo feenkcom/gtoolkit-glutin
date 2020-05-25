@@ -132,15 +132,6 @@ GlutinLibrary >> primTest [
 	^ self ffiCall: #(bool glutin_test())
 ]
 
-{ #category : #'private - ffi' }
-GlutinLibrary >> runner [ 
-
-	^ ThreadedFFIMigration threadedFFIAvailable
-		ifTrue: [ TFSameThreadRunner uniqueInstance ]
-		ifFalse: [ super runner ]
-
-]
-
 { #category : #'accessing platform' }
 GlutinLibrary >> unixModuleName [
 	^ self detectLibrary: 'libGlutin.so'
