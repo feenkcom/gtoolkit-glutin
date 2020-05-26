@@ -140,7 +140,7 @@ GlutinContextBuilder class >> profilesDo: aBlock [
 	aCounter := 0.
 	
 	"let's try a default profile first"
-	aBlock value: self new value: aCounter.
+	aBlock value: (self new withVsync: false) value: aCounter.
 	
 	theGlRequests := self possibleGlRequests.
 	thePixelFormats := self possiblePixelFormats.

@@ -1,13 +1,13 @@
 Class {
 	#name : #GlutinEventCallback,
 	#superclass : #FFICallback,
-	#category : #'Glutin-Events Fetcher'
+	#category : #'Glutin-Event fetcher'
 }
 
 { #category : #resources }
 GlutinEventCallback class >> ffiLibrary [
 
-	^ GlutinLibrary
+	^ GlutinSameThreadLibrary
 ]
 
 { #category : #'callback spec' }

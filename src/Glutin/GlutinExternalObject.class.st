@@ -6,7 +6,7 @@ Class {
 
 { #category : #'library path' }
 GlutinExternalObject class >> ffiLibraryName [
-	^ GlutinLibrary
+	^ GlutinSameThreadLibrary
 ]
 
 { #category : #testing }
