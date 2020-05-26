@@ -10,7 +10,7 @@ Class {
 	#classVars : [
 		'Combinations'
 	],
-	#category : #'Glutin-Events Fetcher'
+	#category : #'Glutin-Event fetcher'
 }
 
 { #category : #'class initialization' }

@@ -16,7 +16,7 @@ Class {
 	#classInstVars : [
 		'default'
 	],
-	#category : #'Glutin-Events Fetcher'
+	#category : #'Glutin-Event fetcher'
 }
 
 { #category : #accessing }

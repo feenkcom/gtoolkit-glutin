@@ -6,5 +6,5 @@ Class {
 
 { #category : #'library path' }
 GlutinWindowedContextExamples class >> ffiLibraryName [
-	^ GlutinLibrary
+	^ GlutinSameThreadLibrary
 ]

@@ -1,7 +1,7 @@
 Class {
 	#name : #GlutinEventLoop,
 	#superclass : #GlutinExternalObject,
-	#category : #'Glutin-Events Fetcher'
+	#category : #'Glutin-Event loop'
 }
 
 { #category : #'private - ffi' }

@@ -1,12 +1,10 @@
 Class {
 	#name : #GlutinMonitorId,
-	#superclass : #FFIExternalObject,
-	#traits : 'TGlutinLibrary + TGlutinPtr',
-	#classTraits : 'TGlutinLibrary classTrait + TGlutinPtr classTrait',
+	#superclass : #GlutinExternalObject,
 	#instVars : [
 		'eventsLoop'
 	],
-	#category : #Glutin
+	#category : #'Glutin-External'
 }
 
 { #category : #'private - ffi' }
