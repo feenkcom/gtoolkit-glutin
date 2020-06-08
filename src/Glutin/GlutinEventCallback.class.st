@@ -18,7 +18,7 @@ GlutinEventCallback class >> fnSpec [
 { #category : #'callback spec' }
 GlutinEventCallback class >> on: aBlock [
 	^ self 
-		signature: self fnSpec 
+		newCallbackWithSignature: self fnSpec 
 		block: aBlock
 ]
 
