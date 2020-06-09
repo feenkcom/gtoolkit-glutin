@@ -18,11 +18,11 @@ BaselineOfGlutin >> baseline: spec [
 			baseline: 'GToolkitBoxer' with: [
 				spec repository: 'github://feenkcom/gtoolkit-boxer:v0.6.72/src' ];
 			baseline: 'GToolkitGleam' with: [
-				spec repository: 'github://feenkcom/gtoolkit-gleam:v0.6.44/src' ];
+				spec repository: 'github://feenkcom/gtoolkit-gleam:v0.6.45/src' ];
 			baseline: 'GToolkitFenster' with: [
 				spec repository: 'github://feenkcom/gtoolkit-fenster:v0.6.14/src' ];
 			baseline: 'GtThreadedFFIDev' with: [
-				spec repository: 'github://feenkcom/tffi-dev:v0.6.18/src' ].
+				spec repository: 'github://feenkcom/tffi-dev:v0.6.19/src' ].
 		spec 
 			package: 'Glutin' with: [
 				spec requires: #('GToolkitInstaller' 'GToolkitBoxer' 'GtThreadedFFIDev' 'GToolkitFenster' ). ];
