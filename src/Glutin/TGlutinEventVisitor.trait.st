@@ -8,6 +8,14 @@ TGlutinEventVisitor >> visitCharacterReceivedEvent: anEvent [
 ]
 
 { #category : #'event - visiting' }
+TGlutinEventVisitor >> visitCursorEnteredEvent: anEvent [
+]
+
+{ #category : #'event - visiting' }
+TGlutinEventVisitor >> visitCursorLeftEvent: anEvent [
+]
+
+{ #category : #'event - visiting' }
 TGlutinEventVisitor >> visitCursorMovedEvent: anEvent [
 ]
 
