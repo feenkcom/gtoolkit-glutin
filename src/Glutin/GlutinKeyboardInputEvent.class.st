@@ -67,6 +67,11 @@ GlutinKeyboardInputEvent >> has_virtual_keycode: anObject [
 	handle booleanAt: OFFSET_HAS_VIRTUAL_KEYCODE put: anObject
 ]
 
+{ #category : #testing }
+GlutinKeyboardInputEvent >> isKeyboardInputEvent [
+	^ true
+]
+
 { #category : #'accessing structure variables' }
 GlutinKeyboardInputEvent >> is_synthetic [
 	"This method was automatically generated"

@@ -173,6 +173,15 @@ GlutinEventsFetcher >> processGlutinEvent: aGlutinEvent [
 	| mappedEvent |
 
 	mappedEvent := aGlutinEvent mapped.
+
+	"rust-windowing generates synthetic key press and release events to try and work around issues with keys being pressed and held while window focus is lost, see https://github.com/rust-windowing/winit/pull/1296
+	However the Ubuntu workspace keyboard shortcut is causing synthetic Pressed events, without the corresponding Release event.
+	Ignore synthetic key Pressed events"
+	(mappedEvent isKeyboardInputEvent  and:
+		[ mappedEvent is_synthetic and:
+		[ mappedEvent state = GlutinEventInputElementState Pressed ] ]) ifTrue:
+				[ ^ self ].
+
 	self eventHandlers do: [ :eachHandler | eachHandler processGlutinEvent: mappedEvent ]
 ]
 
