@@ -48,6 +48,15 @@ GlutinMouseInputEvent >> button: anObject [
 	handle structAt: OFFSET_BUTTON put: anObject getHandle length: GlutinEventMouseButton byteSize
 ]
 
+{ #category : #copying }
+GlutinMouseInputEvent >> copy [
+	^ super copy
+		button: self button;
+		device_id: self device_id;
+		state: self state;
+		yourself
+]
+
 { #category : #'accessing structure variables' }
 GlutinMouseInputEvent >> device_id [
 	"This method was automatically generated"

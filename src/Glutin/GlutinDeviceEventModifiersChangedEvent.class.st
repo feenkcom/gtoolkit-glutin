@@ -52,11 +52,12 @@ GlutinDeviceEventModifiersChangedEvent >> alt: anObject [
 
 { #category : #copying }
 GlutinDeviceEventModifiersChangedEvent >> copy [
-	^ self class new
+	^ super copy
 		alt: self alt;
 		ctrl: self ctrl;
 		logo: self logo;
-		shift: self shift
+		shift: self shift;
+		yourself
 ]
 
 { #category : #'accessing structure variables' }

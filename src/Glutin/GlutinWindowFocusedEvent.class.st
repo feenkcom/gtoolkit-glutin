@@ -32,6 +32,13 @@ GlutinWindowFocusedEvent >> accept: aVisitor [
 	^ aVisitor visitWindowFocusedEvent: self
 ]
 
+{ #category : #copying }
+GlutinWindowFocusedEvent >> copy [
+	^ super copy
+		is_focused: self is_focused;
+		yourself
+]
+
 { #category : #'accessing structure variables' }
 GlutinWindowFocusedEvent >> is_focused [
 	"This method was automatically generated"

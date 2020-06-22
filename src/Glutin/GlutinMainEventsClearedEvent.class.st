@@ -21,8 +21,3 @@ GlutinMainEventsClearedEvent class >> fromBaseEvent: anEvent [
 GlutinMainEventsClearedEvent >> accept: aVisitor [
 	^ aVisitor visitMainEventsCleared: self
 ]
-
-{ #category : #testing }
-GlutinMainEventsClearedEvent >> isCommonEvent [
-	^ true
-]

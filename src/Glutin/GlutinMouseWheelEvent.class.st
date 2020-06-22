@@ -36,6 +36,15 @@ GlutinMouseWheelEvent >> accept: aVisitor [
 	^ aVisitor visitMouseWheelEvent: self
 ]
 
+{ #category : #copying }
+GlutinMouseWheelEvent >> copy [
+	^ super copy
+		delta: self delta;
+		device_id: self device_id;
+		phase: self phase;
+		yourself
+]
+
 { #category : #'accessing structure variables' }
 GlutinMouseWheelEvent >> delta [
 	"This method was automatically generated"

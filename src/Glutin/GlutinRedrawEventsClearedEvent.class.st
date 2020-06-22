@@ -18,8 +18,3 @@ GlutinRedrawEventsClearedEvent class >> fromBaseEvent: anEvent [
 GlutinRedrawEventsClearedEvent >> accept: aVisitor [
 	^ aVisitor visitRedrawEventsCleared: self
 ]
-
-{ #category : #testing }
-GlutinRedrawEventsClearedEvent >> isCommonEvent [
-	^ true
-]

@@ -36,6 +36,15 @@ GlutinCursorMovedEvent >> accept: aVisitor [
 	^ aVisitor visitCursorMovedEvent: self
 ]
 
+{ #category : #copying }
+GlutinCursorMovedEvent >> copy [
+	^ super copy
+		x: self x;
+		y: self y;
+		deviceId: self device_id;
+		yourself
+]
+
 { #category : #'accessing structure variables' }
 GlutinCursorMovedEvent >> device_id [
 	"This method was automatically generated"

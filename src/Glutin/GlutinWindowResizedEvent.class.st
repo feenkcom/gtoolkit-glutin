@@ -34,6 +34,14 @@ GlutinWindowResizedEvent >> accept: aVisitor [
 	^ aVisitor visitWindowResizedEvent: self
 ]
 
+{ #category : #copying }
+GlutinWindowResizedEvent >> copy [
+	^ super copy
+		height: self height;
+		width: self width;
+		yourself
+]
+
 { #category : #'accessing structure variables' }
 GlutinWindowResizedEvent >> height [
 	"This method was automatically generated"

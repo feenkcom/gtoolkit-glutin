@@ -88,6 +88,17 @@ GlutinReceivedCharacterEvent >> byte_4: anObject [
 	handle unsignedByteAt: OFFSET_BYTE_4 put: anObject
 ]
 
+{ #category : #copying }
+GlutinReceivedCharacterEvent >> copy [
+	^ super copy
+		byte_1: self byte_1;
+		byte_2: self byte_2;
+		byte_3: self byte_3;
+		byte_4: self byte_4;
+		length: self length;
+		yourself
+]
+
 { #category : #'accessing structure variables' }
 GlutinReceivedCharacterEvent >> length [
 	"This method was automatically generated"

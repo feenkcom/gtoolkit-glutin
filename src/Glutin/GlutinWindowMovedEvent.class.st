@@ -34,6 +34,14 @@ GlutinWindowMovedEvent >> accept: aVisitor [
 	^ aVisitor visitWindowMovedEvent: self
 ]
 
+{ #category : #copying }
+GlutinWindowMovedEvent >> copy [
+	^ super copy
+		x: self x;
+		y: self y;
+		yourself
+]
+
 { #category : #'accessing structure variables' }
 GlutinWindowMovedEvent >> x [
 	"This method was automatically generated"
