@@ -30,6 +30,11 @@ GlutinMappedEvent >> isDeviceEvent [
 ]
 
 { #category : #testing }
+GlutinMappedEvent >> isKeyboardInputEvent [
+	^ false
+]
+
+{ #category : #testing }
 GlutinMappedEvent >> isWindowEvent [
 	^ false
 ]
