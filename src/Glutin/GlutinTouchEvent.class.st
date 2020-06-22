@@ -40,6 +40,17 @@ GlutinTouchEvent >> accept: aVisitor [
 	^ aVisitor visitTouchEvent: self
 ]
 
+{ #category : #copying }
+GlutinTouchEvent >> copy [
+	^ super copy
+		device_id: self device_id;
+		id: self id;
+		phase: self phase;
+		x: self x;
+		y: self y;
+		yourself
+]
+
 { #category : #'accessing structure variables' }
 GlutinTouchEvent >> device_id [
 	"This method was automatically generated"

@@ -36,6 +36,15 @@ GlutinWindowScaleFactorChangedEvent >> accept: aVisitor [
 	^ aVisitor visitWindowScaleFactorChangedEvent: self
 ]
 
+{ #category : #copying }
+GlutinWindowScaleFactorChangedEvent >> copy [
+	^ super copy
+		height: self height;
+		scale_factor: self scale_factor;
+		width: self width;
+		yourself
+]
+
 { #category : #'accessing structure variables' }
 GlutinWindowScaleFactorChangedEvent >> height [
 	"This method was automatically generated"

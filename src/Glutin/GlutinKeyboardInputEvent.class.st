@@ -43,6 +43,18 @@ GlutinKeyboardInputEvent >> accept: aVisitor [
 	^ aVisitor visitKeyboardInputEvent: self
 ]
 
+{ #category : #copying }
+GlutinKeyboardInputEvent >> copy [
+	^ super copy
+		device_id: self device_id;
+		has_virtual_keycode: self has_virtual_keycode;
+		is_synthetic: self is_synthetic;
+		scan_code: self scan_code;
+		state: self state;
+		virtual_keycode: self virtual_keycode;
+		yourself
+]
+
 { #category : #'accessing structure variables' }
 GlutinKeyboardInputEvent >> device_id [
 	"This method was automatically generated"
