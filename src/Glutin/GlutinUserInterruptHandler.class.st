@@ -34,7 +34,9 @@ GlutinUserInterruptHandler >> initialize [
 	uiProcessBlock := [ nil ].
 	interruptCombinations := {
 		"mac"
-		{ GlutinEventVirtualKeyCode LWin . GlutinEventVirtualKeyCode Period } asSet
+		{ GlutinEventVirtualKeyCode LWin . GlutinEventVirtualKeyCode Period } asSet.
+		"linux"
+		{ GlutinEventVirtualKeyCode LControl . GlutinEventVirtualKeyCode Period } asSet.
 	}.
 ]
 
