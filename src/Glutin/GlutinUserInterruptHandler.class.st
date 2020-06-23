@@ -5,21 +5,11 @@ Class {
 	#classTraits : 'TGlutinEventVisitor classTrait',
 	#instVars : [
 		'buffer',
-		'uiProcessBlock'
-	],
-	#classVars : [
-		'Combinations'
+		'uiProcessBlock',
+		'interruptCombinations'
 	],
 	#category : #'Glutin-Event fetcher'
 }
-
-{ #category : #'class initialization' }
-GlutinUserInterruptHandler class >> initialize [
-	Combinations := {
-		"mac"
-		{ GlutinEventVirtualKeyCode LWin . GlutinEventVirtualKeyCode Period } asSet
-	}
-]
 
 { #category : #private }
 GlutinUserInterruptHandler >> handleUserInterrupt [
@@ -41,7 +31,11 @@ GlutinUserInterruptHandler >> initialize [
 	super initialize.
 	
 	buffer := Set new.
-	uiProcessBlock := [ nil ]
+	uiProcessBlock := [ nil ].
+	interruptCombinations := {
+		"mac"
+		{ GlutinEventVirtualKeyCode LWin . GlutinEventVirtualKeyCode Period } asSet
+	}.
 ]
 
 { #category : #'event - handling' }
@@ -88,7 +82,7 @@ GlutinUserInterruptHandler >> visitKeyboardInputEvent: anEvent [
 	anEvent state = GlutinEventInputElementState Pressed
 		ifTrue: [ buffer add: anEvent virtual_keycode ].
 	
-	(Combinations includes: buffer)
+	(interruptCombinations notNil and: [ interruptCombinations includes: buffer ])
 		ifTrue: [ self handleUserInterrupt ]
 ]
 
