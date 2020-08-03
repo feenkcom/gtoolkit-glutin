@@ -11,6 +11,7 @@ Class {
 		'OFFSET_RECEIVED_CHARACTER',
 		'OFFSET_SCALE_FACTOR',
 		'OFFSET_TOUCH',
+		'OFFSET_USER_EVENT',
 		'OFFSET_WINDOW_FOCUSED',
 		'OFFSET_WINDOW_ID',
 		'OFFSET_WINDOW_MOVED',
@@ -46,6 +47,7 @@ GlutinBaseEvent class >> fieldsDesc [
 		GlutinWindowMovedEvent window_moved
 		GlutinWindowFocusedEvent window_focused
 		GlutinDeviceEventModifiersChangedEvent modifiers
+		GlutinUserEvent user_event
  	)
 ]
 
@@ -176,6 +178,18 @@ GlutinBaseEvent >> touch [
 GlutinBaseEvent >> touch: anObject [
 	"This method was automatically generated"
 	handle structAt: OFFSET_TOUCH put: anObject getHandle length: GlutinTouchEvent byteSize
+]
+
+{ #category : #'accessing structure variables' }
+GlutinBaseEvent >> user_event [
+	"This method was automatically generated"
+	^ GlutinUserEvent fromHandle: (handle referenceStructAt: OFFSET_USER_EVENT length: GlutinUserEvent byteSize)
+]
+
+{ #category : #'accessing structure variables' }
+GlutinBaseEvent >> user_event: anObject [
+	"This method was automatically generated"
+	handle structAt: OFFSET_USER_EVENT put: anObject getHandle length: GlutinUserEvent byteSize
 ]
 
 { #category : #'accessing structure variables' }

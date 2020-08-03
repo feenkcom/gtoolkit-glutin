@@ -13,6 +13,9 @@ Class {
 		'wantsToShutdown',
 		'isInCallback'
 	],
+	#classVars : [
+		'GlutinEventClass'
+	],
 	#classInstVars : [
 		'default'
 	],
@@ -22,6 +25,11 @@ Class {
 { #category : #accessing }
 GlutinEventsFetcher class >> default [
 	^ default ifNil: [ default := self new ]
+]
+
+{ #category : #accessing }
+GlutinEventsFetcher class >> eventClass [
+	^ GlutinEventClass
 ]
 
 { #category : #accessing }
