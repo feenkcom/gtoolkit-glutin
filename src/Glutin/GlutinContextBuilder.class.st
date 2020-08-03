@@ -12,9 +12,13 @@ GlutinContextBuilder class >> allProfiles [
 { #category : #'instance creation' }
 GlutinContextBuilder class >> headless [
 	"Create a headless context"
-	| anEventLoop |
 	
-	anEventLoop := GlutinEventLoop new.
+	^ self headless: GlutinEventLoop new
+]
+
+{ #category : #'instance creation' }
+GlutinContextBuilder class >> headless: anEventLoop [
+	"Create a headless context"
 
 	GlutinContextBuilder profilesDo: [ :eachProfile :anIndex |
 		(anEventLoop tryHeadlessContext: eachProfile)
@@ -26,7 +30,7 @@ GlutinContextBuilder class >> headless [
 				aHeadlessContext isValid
 					ifTrue: [
 						GlutinLibrary println: '[Glutin] Profile #', anIndex asString, ' worked'.
-						aHeadlessContext eventLoop: self.
+						aHeadlessContext eventLoop: anEventLoop.
 						^ aHeadlessContext ] ] ].
 		
 	self error: 'Could not find a suitable OpenGL profile for this system'
