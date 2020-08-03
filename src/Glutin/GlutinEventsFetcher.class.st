@@ -83,28 +83,33 @@ GlutinEventsFetcher >> basicPharoEventLoop [
 		eventsLoop run: [ :aGlutinEvent |
 			| aControlFlow  |
 
-			Processor activeProcess priority: userInterruptPriority.
-			"Force the process to adopt its new lower priority.
-			The #yield primitive won't do this for us"
-			[prioritySempahore signal] fork.
-			prioritySempahore wait.
+			GlutinEventClass := aGlutinEvent event_type.
 
-			aControlFlow := GlutinControlFlow poll.
+			aControlFlow := GlutinControlFlow wait.
 
 			self processGlutinEvent: aGlutinEvent.
 
 			aGlutinEvent event_type = GlutinEventType RedrawEventsCleared
 				ifTrue: [
+					"We should only let other processes run within redraw events cleared"
+					
+					Processor activeProcess priority: userInterruptPriority.
+					"Force the process to adopt its new lower priority.
+					The #yield primitive won't do this for us"
+					[ prioritySempahore signal ] fork.
+					prioritySempahore wait.
+					
 					Processor nextReadyProcess priority > idlePriority ifTrue: [
 							"There's a process with priority between: 12 and: 50 wanting to run"
 							idleProcess ifNotNil: #terminate.
 							idleSemaphore consumeAllSignals.
 							idleProcess := idleProcessBlock forkAt: idlePriority.
-							idleSemaphore waitTimeoutMSecs: 50.
+							(idleSemaphore waitTimeoutMSecs: 50)
+								"deadline expired, let's fetch the next one *now*"
+								ifTrue: [ aControlFlow := GlutinControlFlow poll ].
 						] ifFalse: [ 
 							"Only the idleProcess wants the CPU, wait"
 							aControlFlow := GlutinControlFlow wait ] ].
-
 			wantsToShutdown
 				ifTrue: [ aControlFlow := GlutinControlFlow exit ].
 			"Ensure that the current callback process terminates before the next one runs"
