@@ -18,6 +18,11 @@ GlutinHeadlessContext class >> primRelease: aHandle [
 	self ffiCall: #(void glutin_destroy_context(void* aHandle))
 ]
 
+{ #category : #testing }
+GlutinHeadlessContext >> isHeadless [
+	^ true
+]
+
 { #category : #'private - ffi' }
 GlutinHeadlessContext >> primGetApi [
 	^ self ffiCall: #(GlutinContextApi glutin_context_get_api(self))
