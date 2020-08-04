@@ -13,6 +13,11 @@ GlutinLibrary class >> ffiLibraryName [
 ]
 
 { #category : #installation }
+GlutinLibrary class >> initLogger [
+	self uniqueInstance primInitLogger
+]
+
+{ #category : #installation }
 GlutinLibrary class >> install [
 	<script: 'self install'>
 	| installer |
@@ -125,6 +130,11 @@ GlutinLibrary >> hasModule [
 { #category : #'accessing platform' }
 GlutinLibrary >> macModuleName [
 	^ self detectLibrary: 'libGlutin.dylib'
+]
+
+{ #category : #'private - ffi' }
+GlutinLibrary >> primInitLogger [
+	^ self ffiCall: #(void glutin_init_logger())
 ]
 
 { #category : #'private - ffi' }

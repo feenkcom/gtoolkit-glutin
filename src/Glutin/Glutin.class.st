@@ -9,7 +9,7 @@ Class {
 
 { #category : #'class initialization' }
 Glutin class >> critical: aBlock [
-	AccessMutex critical: aBlock
+	^ AccessMutex critical: aBlock
 ]
 
 { #category : #'class initialization' }

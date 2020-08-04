@@ -1,39 +1,15 @@
 Class {
 	#name : #GlutinContextBuilder,
 	#superclass : #GlutinExternalObject,
+	#instVars : [
+		'sharedContext'
+	],
 	#category : #'Glutin-External'
 }
 
 { #category : #'instance creation' }
 GlutinContextBuilder class >> allProfiles [
 	^ Array streamContents: [ :aStream | self profilesDo: [ :eachProfile :eachIndex | aStream nextPut: eachProfile ] ]
-]
-
-{ #category : #'instance creation' }
-GlutinContextBuilder class >> headless [
-	"Create a headless context"
-	
-	^ self headless: GlutinEventLoop new
-]
-
-{ #category : #'instance creation' }
-GlutinContextBuilder class >> headless: anEventLoop [
-	"Create a headless context"
-
-	GlutinContextBuilder profilesDo: [ :eachProfile :anIndex |
-		(anEventLoop tryHeadlessContext: eachProfile)
-			ifTrue: [
-				| aHeadlessContext |
-				aHeadlessContext := GlutinHeadlessContext fromNativeHandle: (GlutinHeadlessContext primCreate: anEventLoop contextBuilder: eachProfile).
-				eachProfile nullify.
-			
-				aHeadlessContext isValid
-					ifTrue: [
-						GlutinLibrary println: '[Glutin] Profile #', anIndex asString, ' worked'.
-						aHeadlessContext eventLoop: anEventLoop.
-						^ aHeadlessContext ] ] ].
-		
-	self error: 'Could not find a suitable OpenGL profile for this system'
 ]
 
 { #category : #'instance creation' }
@@ -144,7 +120,7 @@ GlutinContextBuilder class >> profilesDo: aBlock [
 	aCounter := 0.
 	
 	"let's try a default profile first"
-	aBlock value: (self new withVsync: false) value: aCounter.
+	aBlock value: (GlutinContextProfile new vsync: false) value: aCounter.
 	
 	theGlRequests := self possibleGlRequests.
 	thePixelFormats := self possiblePixelFormats.
@@ -161,17 +137,16 @@ GlutinContextBuilder class >> profilesDo: aBlock [
 						theSrgbValues do: [ :eachSrgb |
 							| eachProfile |
 							
-							eachProfile := self new
-								withAnyHardwareAcceleration;
-								withDoubleBuffer: eachDoubleBuffer;
-								withMultisampling: 0;
-								withDepthBuffer: eachDepthBuffer;
-								withStencilBuffer: eachStencilBuffer;
-								withPixelFormatColor: eachFormat first alpha: eachFormat second;
-								withSrgb: eachSrgb;
-								withVsync: false.
-								
-							eachProfile perform: eachGlRequest key withArguments: eachGlRequest value.
+							eachProfile := GlutinContextProfile new
+								acceleration: #withAnyHardwareAcceleration;
+								doubleBuffer: eachDoubleBuffer;
+								multisampling: 0;
+								depthBuffer: eachDepthBuffer;
+								stencilBuffer: eachStencilBuffer;
+								pixelFormat: eachFormat first;
+								srgb: eachSrgb;
+								vsync: false;
+								glRequest: eachGlRequest.
 							
 							aCounter := aCounter + 1.
 							aBlock value: eachProfile value: aCounter ] ] ] ] ] ]
@@ -199,6 +174,11 @@ GlutinContextBuilder >> pixelFormatRequirements [
 { #category : #'private - ffi' }
 GlutinContextBuilder >> primGetPixelFormatRequirements [
 	^ self ffiCall: #(void* glutin_context_builder_get_pixel_format_requirements(self))
+]
+
+{ #category : #'private - ffi' }
+GlutinContextBuilder >> primPrintIt [
+	^ self ffiCall: #(void glutin_context_builder_print_it(self))
 ]
 
 { #category : #'private - ffi' }
@@ -252,6 +232,16 @@ GlutinContextBuilder >> primWithPixelFormatColor: colorBits alpha: alphaBits [
 ]
 
 { #category : #'private - ffi' }
+GlutinContextBuilder >> primWithSharedHeadlessContext: aGlutinHeadlessContext [
+	^ self ffiCall: #(void glutin_context_builder_with_shared_headless_context(self, GlutinHeadlessContext aGlutinHeadlessContext))
+]
+
+{ #category : #'private - ffi' }
+GlutinContextBuilder >> primWithSharedWindowedContext: aGlutinWindowedContext [
+	^ self ffiCall: #(void glutin_context_builder_with_shared_windowed_context(self, GlutinWindowedContext aGlutinWindowedContext))
+]
+
+{ #category : #'private - ffi' }
 GlutinContextBuilder >> primWithSrgb: aBoolean [
 	^ self ffiCall: #(void glutin_context_builder_with_srgb(self, bool aBoolean))
 ]
@@ -267,8 +257,18 @@ GlutinContextBuilder >> primWithVsync: aBoolean [
 ]
 
 { #category : #printing }
+GlutinContextBuilder >> print [
+	self primPrintIt
+]
+
+{ #category : #printing }
 GlutinContextBuilder >> printOn: aStream [
 	aStream print: self pixelFormatRequirements
+]
+
+{ #category : #accesssing }
+GlutinContextBuilder >> sharedContextDo: aBlock [
+	^ sharedContext ifNotNil: aBlock
 ]
 
 { #category : #accesssing }
@@ -318,6 +318,15 @@ GlutinContextBuilder >> withMultisampling: aNumber [
 { #category : #accesssing }
 GlutinContextBuilder >> withPixelFormatColor: theColorBits alpha: theAlphaBits [
 	self primWithPixelFormatColor: theColorBits alpha: theAlphaBits
+]
+
+{ #category : #accesssing }
+GlutinContextBuilder >> withSharedContext: aGlutinContext [
+	aGlutinContext isHeadless
+		ifTrue: [ self primWithSharedHeadlessContext: aGlutinContext ]
+		ifFalse: [ "self primWithSharedWindowedContext: aGlutinContext" ].
+
+	sharedContext := aGlutinContext
 ]
 
 { #category : #accesssing }

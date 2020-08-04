@@ -1,6 +1,9 @@
 Class {
 	#name : #GlutinEventLoop,
 	#superclass : #GlutinExternalObject,
+	#instVars : [
+		'headlessContext'
+	],
 	#category : #'Glutin-Event loop'
 }
 
@@ -22,6 +25,43 @@ GlutinEventLoop >> closeWindow: aWindowedContext [
 	aWindowedContext release
 ]
 
+{ #category : #'api - windows' }
+GlutinEventLoop >> createHeadless [
+	"Create a headless context"
+
+	^ self createHeadlessWithSharing: true
+]
+
+{ #category : #'api - windows' }
+GlutinEventLoop >> createHeadlessWithSharing: aBoolean [
+	"Create a headless context"
+	| aSharedHeadlessContext |
+
+	aBoolean
+		ifTrue: [ aSharedHeadlessContext := self headlessContext ].
+
+	GlutinContextBuilder profilesDo: [ :eachProfile :anIndex |		
+		(self tryHeadlessContext: eachProfile asContextBuilder)
+			ifTrue: [
+				| aHeadlessContext aContextBuilder |
+				
+				aContextBuilder := eachProfile asContextBuilder.			
+				aBoolean
+					ifTrue: [ aContextBuilder withSharedContext: aSharedHeadlessContext ].
+
+				aHeadlessContext := GlutinHeadlessContext
+					fromNativeHandle: (GlutinHeadlessContext primCreate: self contextBuilder: aContextBuilder).
+			
+				aHeadlessContext isValid
+					ifTrue: [
+						GlutinLibrary println: '[Glutin] Profile #', anIndex asString, ' worked'.
+						aContextBuilder sharedContextDo: [ :aSharedContext | aHeadlessContext sharedContext: aSharedContext ].
+						aHeadlessContext eventLoop: self.
+						^ aHeadlessContext ] ] ].
+
+	self error: 'Could not find a suitable OpenGL profile for this system'
+]
+
 { #category : #'api - events' }
 GlutinEventLoop >> createProxy [
 	<return: #GlutinEventLoopProxy>
@@ -32,21 +72,31 @@ GlutinEventLoop >> createProxy [
 { #category : #'api - windows' }
 GlutinEventLoop >> createWindow: aWindowBuilder [
 	"I choose a context builder so that context creation works"
-	| aWindowedContext |
+	| aWindowedContext aSharedHeadlessContext |
+	
+	aSharedHeadlessContext := self headlessContext.
 	
 	self
 		assert: [ self isNull not ]
 		description: [ 'Can not create a window with invalid event loop' ].
 
 	GlutinContextBuilder profilesDo: [ :eachProfile :anIndex |
-		(self tryHeadlessContext: eachProfile)
+		(self tryHeadlessContext: eachProfile asContextBuilder)
 			ifTrue: [
-				| aBuilderCopy |
-				
+				| aBuilderCopy aContextBuilder |
+
 				aBuilderCopy := aWindowBuilder copy.
-				aWindowedContext := GlutinWindowedContext fromNativeHandle: (GlutinWindowedContext primCreate: self windowBuilder: aBuilderCopy contextBuilder: eachProfile).
+
+				aContextBuilder := eachProfile asContextBuilder.
+				aContextBuilder withSharedContext: aSharedHeadlessContext.
+
+				aWindowedContext := GlutinWindowedContext
+					fromNativeHandle: (GlutinWindowedContext primCreate: self windowBuilder: aBuilderCopy contextBuilder: aContextBuilder).
+				
+				aContextBuilder sharedContextDo: [ :aSharedContext | aWindowedContext sharedContext: aSharedContext ].
+
 				aBuilderCopy nullify.
-				eachProfile nullify.
+				aContextBuilder nullify.
 			
 				aWindowedContext isValid
 					ifTrue: [
@@ -60,6 +110,16 @@ GlutinEventLoop >> createWindow: aWindowBuilder [
 						^ aWindowedContext ] ] ].
 		
 	self error: 'Could not find a suitable OpenGL profile for this system'
+]
+
+{ #category : #accessing }
+GlutinEventLoop >> headlessContext [
+	^ headlessContext ifNil: [ headlessContext := self createHeadlessWithSharing: false ]
+]
+
+{ #category : #accessing }
+GlutinEventLoop >> headlessContextDo: aBlock [
+	^ headlessContext ifNotNil: aBlock
 ]
 
 { #category : #'private - ffi' }

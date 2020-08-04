@@ -2,7 +2,8 @@ Class {
 	#name : #GlutinContext,
 	#superclass : #GlutinExternalObject,
 	#instVars : [
-		'eventsLoop'
+		'eventsLoop',
+		'sharedContext'
 	],
 	#category : #'Glutin-External'
 }
@@ -43,6 +44,11 @@ GlutinContext >> isCurrent [
 		ifTrue: [ self primIsCurrent ]
 ]
 
+{ #category : #testing }
+GlutinContext >> isHeadless [
+	^ false
+]
+
 { #category : #'api - gl' }
 GlutinContext >> makeCurrent [	
 	self isValid
@@ -74,4 +80,14 @@ GlutinContext >> primIsCurrent [
 GlutinContext >> primMakeCurrent [
 	"^ self ffiCall: #(void glutin_context_make_current(self))"
 	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+GlutinContext >> sharedContext [
+	^ sharedContext
+]
+
+{ #category : #accessing }
+GlutinContext >> sharedContext: anObject [
+	sharedContext := anObject
 ]
