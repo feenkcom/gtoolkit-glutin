@@ -143,7 +143,7 @@ GlutinContextBuilder class >> profilesDo: aBlock [
 								multisampling: 0;
 								depthBuffer: eachDepthBuffer;
 								stencilBuffer: eachStencilBuffer;
-								pixelFormat: eachFormat first;
+								pixelFormat: eachFormat;
 								srgb: eachSrgb;
 								vsync: false;
 								glRequest: eachGlRequest.
