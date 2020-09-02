@@ -13,7 +13,7 @@ GlutinPollingEventLoop class >> primCreate [
 GlutinPollingEventLoop class >> primRelease: aHandle [
 	
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"
-	self ffiCall: #(void glutin_polling_event_loop_drop(void* aHandle)) library: GlutinMainThreadLibrary
+	self ffiCall: #(void glutin_polling_event_loop_drop(void** aHandle)) library: GlutinMainThreadLibrary
 ]
 
 { #category : #running }

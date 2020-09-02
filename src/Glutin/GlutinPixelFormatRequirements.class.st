@@ -13,7 +13,7 @@ GlutinPixelFormatRequirements class >> primCreate [
 GlutinPixelFormatRequirements class >> primRelease: aHandle [
 	
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"
-	self ffiCall: #(void glutin_pixel_format_requirements_drop(void* aHandle))
+	self ffiCall: #(void glutin_pixel_format_requirements_drop(void** aHandle))
 ]
 
 { #category : #accessing }
