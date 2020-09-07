@@ -20,7 +20,7 @@ BaselineOfGlutin >> baseline: spec [
 			baseline: 'GToolkitGleam' with: [
 				spec repository: 'github://feenkcom/gtoolkit-gleam:v0.8.3/src' ];
 			baseline: 'GToolkitFenster' with: [
-				spec repository: 'github://feenkcom/gtoolkit-fenster:v0.8.0/src' ];
+				spec repository: 'github://feenkcom/gtoolkit-fenster:v0.8.1/src' ];
 			baseline: 'GtThreadedFFIDev' with: [
 				spec repository: 'github://feenkcom/tffi-dev:v0.8.0/src' ].
 		spec 
