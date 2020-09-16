@@ -181,8 +181,8 @@ GlutinWindowedContext >> primSetInnerWidth: aWidth height: aHeight [
 GlutinWindowedContext >> primSetPositionX: aX y: aY [
 	^ self ffiCall: #(void glutin_windowed_context_set_position(
 		self,
-		i32 aX,
-		i32 aY))
+		int32 aX,
+		int32 aY))
 ]
 
 { #category : #'private - ffi' }
