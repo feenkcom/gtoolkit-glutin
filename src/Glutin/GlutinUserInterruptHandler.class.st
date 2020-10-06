@@ -12,6 +12,20 @@ Class {
 }
 
 { #category : #private }
+GlutinUserInterruptHandler >> canInterruptDirectly: aProcess [ 
+	"Indicates that the given process can be directly interrupted and the look-up 
+	should not search for a better process. "
+	
+	^ aProcess ~~  WeakArray runningFinalizationProcess and: [ 
+		"Manually get the value of the local process variable GlutinIgnoreDuringInterruptStatus.
+		In general this is not thread-safe as the process can modify this variable.
+		In this case this code is run in a high priority process and reads the value 
+		for processes at a lower priority. "
+		((aProcess psValueAt: GlutinIgnoreDuringInterruptStatus soleInstance index)
+			ifNil: [ GlutinIgnoreDuringInterruptStatus soleInstance default ]) not ]
+]
+
+{ #category : #private }
 GlutinUserInterruptHandler >> handleUserInterrupt [
 	"This will be called from the event-fetcher process. 
 	Assume no system-vital processes have a lower priority than this, and are thus ok to interrupt"
@@ -19,7 +33,7 @@ GlutinUserInterruptHandler >> handleUserInterrupt [
 
 	[
 		self processToInterrupt
-			ifNotNil: [ :proc | proc debugWithTitle: 'User Interrupt' ]
+			ifNotNil: [ :aProcess | aProcess debugWithTitle: 'User Interrupt' ]
 			ifNil: [ NonInteractiveTranscript stdout show: 'There is no process to interrupt'; cr ]
 	
 	"fork exceptions, we don't want interrupt handler to die"
@@ -40,6 +54,16 @@ GlutinUserInterruptHandler >> initialize [
 	}.
 ]
 
+{ #category : #private }
+GlutinUserInterruptHandler >> isAllowedToInterruptProcess: aProcess [
+	"Check if the system is allowed to interrupt a process."
+	
+	"Do not interrupt the idle process; it is fatal."
+	^ (aProcess ~~ Processor backgroundProcess and: [
+		"suspendedContext sender == nil usually means that process is only scheduled but had no chance to run" 
+		aProcess suspendedContext sender notNil])
+]
+
 { #category : #'event - handling' }
 GlutinUserInterruptHandler >> processGlutinEvent: aGlutinEvent [
 	aGlutinEvent accept: self
@@ -48,21 +72,22 @@ GlutinUserInterruptHandler >> processGlutinEvent: aGlutinEvent [
 { #category : #private }
 GlutinUserInterruptHandler >> processToInterrupt [ 
 	"Look for best candidate to interrupt: 
-		- any scheduled non-finalization process of lower priority 
+		- any scheduled non-finalization process of lower priority
+			- if the process has GlutinIgnoreDuringInterruptStatus set true the lookup searches for a better process.
 		- the weak-finalization process, if scheduled 
 		- the UI process 
 	Never interrupt the idle process, since killing it is fatal" 
 	| fallback |
 
+	"We use the UI process as a fallback in case no process is found."
 	fallback := uiProcessBlock value.
 
 	Processor 
-		scanSchedule: [:p | 
-		 "suspendedContext sender == nil usually means that process is only scheduled but had no chance to run" 
-			((p priority > (Processor lowestPriority + 1)) and: [p suspendedContext sender notNil]) ifTrue: [
-				p ~~  WeakArray runningFinalizationProcess 
-					ifTrue: [^p] 
-					ifFalse: [fallback := p]]]
+		scanSchedule: [ :aProcess | 
+			(self isAllowedToInterruptProcess: aProcess) ifTrue: [
+				(self canInterruptDirectly: aProcess )
+					ifTrue: [ ^ aProcess ] 
+					ifFalse: [ fallback := aProcess ]]]
 		startingAt: Processor activePriority.
 	^fallback
 ]
