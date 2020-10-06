@@ -59,10 +59,10 @@ GlutinUserInterruptHandler >> processToInterrupt [
 	Processor 
 		scanSchedule: [:p | 
 		 "suspendedContext sender == nil usually means that process is only scheduled but had no chance to run" 
-			((p priority > (Processor lowestPriority + 1)) and: [p suspendedContext sender notNil]) ifTrue: [
+			(p ~~ Processor backgroundProcess and: [p suspendedContext sender notNil]) ifTrue: [
 				p ~~  WeakArray runningFinalizationProcess 
-					ifTrue: [^p] 
-					ifFalse: [fallback := p]]]
+					ifTrue: [ ^ p ] 
+					ifFalse: [ fallback := p ]]]
 		startingAt: Processor activePriority.
 	^fallback
 ]
