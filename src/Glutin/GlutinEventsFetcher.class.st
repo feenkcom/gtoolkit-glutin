@@ -110,10 +110,16 @@ GlutinEventsFetcher >> basicPharoEventLoop [
 						] ifFalse: [ 
 							"Only the idleProcess wants the CPU, wait"
 							aControlFlow := GlutinControlFlow wait ] ].
-			wantsToShutdown
+			wantsToShutdown 
 				ifTrue: [ aControlFlow := GlutinControlFlow exit ].
+			
+			"This callback is about to terminate. The interrupt handler should ignore 
+			this process if it is not finished when the interrupt is run."
+			GlutinIgnoreDuringInterruptStatus value: true.
+			
 			"Ensure that the current callback process terminates before the next one runs"
 			Processor activeProcess priority: lowIOPriority.
+			
 			aControlFlow ].
 		] ensure: [
 			isInCallback := false.
