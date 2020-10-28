@@ -8,6 +8,7 @@ Class {
 		'Add',
 		'Apostrophe',
 		'Apps',
+		'Asterisk',
 		'At',
 		'Ax',
 		'B',
@@ -108,9 +109,14 @@ Class {
 		'Numpad7',
 		'Numpad8',
 		'Numpad9',
+		'NumpadAdd',
 		'NumpadComma',
+		'NumpadDecimal',
+		'NumpadDivide',
 		'NumpadEnter',
 		'NumpadEquals',
+		'NumpadMultiply',
+		'NumpadSubtract',
 		'O',
 		'OEM102',
 		'P',
@@ -120,6 +126,7 @@ Class {
 		'Pause',
 		'Period',
 		'PlayPause',
+		'Plus',
 		'Power',
 		'PrevTrack',
 		'Q',
@@ -201,6 +208,12 @@ GlutinEventVirtualKeyCode class >> Apostrophe [
 GlutinEventVirtualKeyCode class >> Apps [
 	"This method was automatically generated"
 	^ Apps
+]
+
+{ #category : #'accessing enum' }
+GlutinEventVirtualKeyCode class >> Asterisk [
+	"This method was automatically generated"
+	^ Asterisk
 ]
 
 { #category : #'accessing enum' }
@@ -804,9 +817,27 @@ GlutinEventVirtualKeyCode class >> Numpad9 [
 ]
 
 { #category : #'accessing enum' }
+GlutinEventVirtualKeyCode class >> NumpadAdd [
+	"This method was automatically generated"
+	^ NumpadAdd
+]
+
+{ #category : #'accessing enum' }
 GlutinEventVirtualKeyCode class >> NumpadComma [
 	"This method was automatically generated"
 	^ NumpadComma
+]
+
+{ #category : #'accessing enum' }
+GlutinEventVirtualKeyCode class >> NumpadDecimal [
+	"This method was automatically generated"
+	^ NumpadDecimal
+]
+
+{ #category : #'accessing enum' }
+GlutinEventVirtualKeyCode class >> NumpadDivide [
+	"This method was automatically generated"
+	^ NumpadDivide
 ]
 
 { #category : #'accessing enum' }
@@ -819,6 +850,18 @@ GlutinEventVirtualKeyCode class >> NumpadEnter [
 GlutinEventVirtualKeyCode class >> NumpadEquals [
 	"This method was automatically generated"
 	^ NumpadEquals
+]
+
+{ #category : #'accessing enum' }
+GlutinEventVirtualKeyCode class >> NumpadMultiply [
+	"This method was automatically generated"
+	^ NumpadMultiply
+]
+
+{ #category : #'accessing enum' }
+GlutinEventVirtualKeyCode class >> NumpadSubtract [
+	"This method was automatically generated"
+	^ NumpadSubtract
 ]
 
 { #category : #'accessing enum' }
@@ -873,6 +916,12 @@ GlutinEventVirtualKeyCode class >> Period [
 GlutinEventVirtualKeyCode class >> PlayPause [
 	"This method was automatically generated"
 	^ PlayPause
+]
+
+{ #category : #'accessing enum' }
+GlutinEventVirtualKeyCode class >> Plus [
+	"This method was automatically generated"
+	^ Plus
 ]
 
 { #category : #'accessing enum' }
@@ -1140,178 +1189,201 @@ GlutinEventVirtualKeyCode class >> externalDeclaration [
 	"
 
 	^ #(
-    Key1,
-    Key2,
-    Key3,
-    Key4,
-    Key5,
-    Key6,
-    Key7,
-    Key8,
-    Key9,
-    Key0,
+		"The '1' key over the letters."
+		Key1,
+		"The '2' key over the letters."
+		Key2,
+		"The '3' key over the letters."
+		Key3,
+		"The '4' key over the letters."
+		Key4,
+		"The '5' key over the letters."
+		Key5,
+		"The '6' key over the letters."
+		Key6,
+		"The '7' key over the letters."
+		Key7,
+		"The '8' key over the letters."
+		Key8,
+		"The '9' key over the letters."
+		Key9,
+		"The '0' key over the 'O' and 'P' keys."
+		Key0,
 
-    A,
-    B,
-    C,
-    D,
-    E,
-    F,
-    G,
-    H,
-    I,
-    J,
-    K,
-    L,
-    M,
-    N,
-    O,
-    P,
-    Q,
-    R,
-    S,
-    T,
-    U,
-    V,
-    W,
-    X,
-    Y,
-    Z,
+		A,
+		B,
+		C,
+		D,
+		E,
+		F,
+		G,
+		H,
+		I,
+		J,
+		K,
+		L,
+		M,
+		N,
+		O,
+		P,
+		Q,
+		R,
+		S,
+		T,
+		U,
+		V,
+		W,
+		X,
+		Y,
+		Z,
 
-    Escape,
+		"The Escape key, next to F1."
+		Escape,
 
-    F1,
-    F2,
-    F3,
-    F4,
-    F5,
-    F6,
-    F7,
-    F8,
-    F9,
-    F10,
-    F11,
-    F12,
-    F13,
-    F14,
-    F15,
-    F16,
-    F17,
-    F18,
-    F19,
-    F20,
-    F21,
-    F22,
-    F23,
-    F24,
+		F1,
+		F2,
+		F3,
+		F4,
+		F5,
+		F6,
+		F7,
+		F8,
+		F9,
+		F10,
+		F11,
+		F12,
+		F13,
+		F14,
+		F15,
+		F16,
+		F17,
+		F18,
+		F19,
+		F20,
+		F21,
+		F22,
+		F23,
+		F24,
 
-    Snapshot,
-    Scroll,
-    Pause,
+		"Print Screen/SysRq."
+		Snapshot,
+		"Scroll Lock."
+		Scroll,
+		"Pause/Break key, next to Scroll lock."
+		Pause,
 
-    Insert,
-    Home,
-    Delete,
-    End,
-    PageDown,
-    PageUp,
 
-    Left,
-    Up,
-    Right,
-    Down,
+		Insert,
+		Home,
+		Delete,
+		End,
+		PageDown,
+		PageUp,
 
-    Back,
-    Return,
-    Space,
+		Left,
+		Up,
+		Right,
+		Down,
 
-    Compose,
+		"The Backspace key, right over Enter."
+		Back,
+		"The Enter key."
+		Return,
+		"The space bar."
+		Space,
 
-    Caret,
+		"The Compose key on Linux."
+		Compose,
 
-    Numlock,
-    Numpad0,
-    Numpad1,
-    Numpad2,
-    Numpad3,
-    Numpad4,
-    Numpad5,
-    Numpad6,
-    Numpad7,
-    Numpad8,
-    Numpad9,
+		Caret,
 
-    AbntC1,
-    AbntC2,
-    Add,
-    Apostrophe,
-    Apps,
-    At,
-    Ax,
-    Backslash,
-    Calculator,
-    Capital,
-    Colon,
-    Comma,
-    Convert,
-    Decimal,
-    Divide,
-    Equals,
-    Grave,
-    Kana,
-    Kanji,
-    LAlt,
-    LBracket,
-    LControl,
-    LShift,
-    LWin,
-    Mail,
-    MediaSelect,
-    MediaStop,
-    Minus,
-    Multiply,
-    Mute,
-    MyComputer,
-    NavigateForward,
-    NavigateBackward,
-    NextTrack,
-    NoConvert,
-    NumpadComma,
-    NumpadEnter,
-    NumpadEquals,
-    OEM102,
-    Period,
-    PlayPause,
-    Power,
-    PrevTrack,
-    RAlt,
-    RBracket,
-    RControl,
-    RShift,
-    RWin,
-    Semicolon,
-    Slash,
-    Sleep,
-    Stop,
-    Subtract,
-    Sysrq,
-    Tab,
-    Underline,
-    Unlabeled,
-    VolumeDown,
-    VolumeUp,
-    Wake,
-    WebBack,
-    WebFavorites,
-    WebForward,
-    WebHome,
-    WebRefresh,
-    WebSearch,
-    WebStop,
-    Yen,
-    Copy,
-    Paste,
-    Cut,
+		Numlock,
+		Numpad0,
+		Numpad1,
+		Numpad2,
+		Numpad3,
+		Numpad4,
+		Numpad5,
+		Numpad6,
+		Numpad7,
+		Numpad8,
+		Numpad9,
+		NumpadAdd,
+		NumpadDivide,
+		NumpadDecimal,
+		NumpadComma,
+		NumpadEnter,
+		NumpadEquals,
+		NumpadMultiply,
+		NumpadSubtract,
+
+		AbntC1,
+		AbntC2,
+		Apostrophe,
+		Apps,
+		Asterisk,
+		At,
+		Ax,
+		Backslash,
+		Calculator,
+		Capital,
+		Colon,
+		Comma,
+		Convert,
+		Equals,
+		Grave,
+		Kana,
+		Kanji,
+		LAlt,
+		LBracket,
+		LControl,
+		LShift,
+		LWin,
+		Mail,
+		MediaSelect,
+		MediaStop,
+		Minus,
+		Mute,
+		MyComputer,
+		"also called Next"
+		NavigateForward,
+		"also called Prior"
+		NavigateBackward,
+		NextTrack,
+		NoConvert,
+		OEM102,
+		Period,
+		PlayPause,
+		Plus,
+		Power,
+		PrevTrack,
+		RAlt,
+		RBracket,
+		RControl,
+		RShift,
+		RWin,
+		Semicolon,
+		Slash,
+		Sleep,
+		Stop,
+		Sysrq,
+		Tab,
+		Underline,
+		Unlabeled,
+		VolumeDown,
+		VolumeUp,
+		Wake,
+		WebBack,
+		WebFavorites,
+		WebForward,
+		WebHome,
+		WebRefresh,
+		WebSearch,
+		WebStop,
+		Yen,
+		Copy,
+		Paste,
+		Cut,
 	)
 ]
 
