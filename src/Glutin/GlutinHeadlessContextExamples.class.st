@@ -9,7 +9,7 @@ GlutinHeadlessContextExamples >> fromWorkingProfile [
 	<gtExample>
 	| aHeadlessContext |
 	
-	aHeadlessContext := GlutinContextBuilder headless.
+	aHeadlessContext := GlutinEventLoop new createHeadless.
 	self assert: aHeadlessContext isCurrent not.
 	
 	^ aHeadlessContext
