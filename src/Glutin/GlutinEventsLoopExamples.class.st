@@ -7,6 +7,7 @@ Class {
 { #category : #'instance creation' }
 GlutinEventsLoopExamples >> eventLoop [
 	<gtExample>
+	<noTest>
 	| anEventsLoop |
 	
 	anEventsLoop := GlutinEventLoop new.
@@ -17,6 +18,7 @@ GlutinEventsLoopExamples >> eventLoop [
 { #category : #'instance creation' }
 GlutinEventsLoopExamples >> hdpi [
 	<gtExample>
+	<noTest>
 	| aMonitor |
 	
 	aMonitor := self primaryMonitor.
@@ -27,6 +29,7 @@ GlutinEventsLoopExamples >> hdpi [
 { #category : #'instance creation' }
 GlutinEventsLoopExamples >> primaryMonitor [
 	<gtExample>
+	<noTest>
 	| aMonitor |
 	
 	aMonitor := self eventLoop primaryMonitor.
