@@ -7,6 +7,7 @@ Class {
 { #category : #accessing }
 GlutinPollingEventLoopExamples >> default [
 	<gtExample>
+	<noTest>
 	
 	^ GlutinPollingEventLoop new
 ]
@@ -14,6 +15,7 @@ GlutinPollingEventLoopExamples >> default [
 { #category : #accessing }
 GlutinPollingEventLoopExamples >> poll [
 	<gtExample>
+	<noTest>
 	| anEventLoop |
 	
 	anEventLoop := self default.
