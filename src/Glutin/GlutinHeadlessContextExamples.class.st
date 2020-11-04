@@ -7,9 +7,10 @@ Class {
 { #category : #'instance creation' }
 GlutinHeadlessContextExamples >> fromWorkingProfile [
 	<gtExample>
+	<noTest>
 	| aHeadlessContext |
 	
-	aHeadlessContext := GlutinContextBuilder headless.
+	aHeadlessContext := GlutinEventLoop new createHeadless.
 	self assert: aHeadlessContext isCurrent not.
 	
 	^ aHeadlessContext
@@ -18,6 +19,7 @@ GlutinHeadlessContextExamples >> fromWorkingProfile [
 { #category : #'instance creation' }
 GlutinHeadlessContextExamples >> makeCurrent [
 	<gtExample>
+	<noTest>
 	| aHeadlessContext |
 	
 	aHeadlessContext := self fromWorkingProfile.
