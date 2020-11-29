@@ -101,7 +101,7 @@ GlutinWorldRenderer >> deactivate [
 		glutinWindow close.
 		glutinWindow := nil ].
 
-	GlutinEventsFetcher default removeEventHandler: eventHandler.
+	GlutinEventFetcher default removeEventHandler: eventHandler.
 	eventHandler := nil.
 	
 	WorldState MinCycleLapse: self class idleCycleLapse
@@ -175,12 +175,12 @@ GlutinWorldRenderer >> initializeGlutinWindow [
 		title: Smalltalk image imageFile basename;
 		extent: anInitialExtent.
 
-	glutinWindow := GlutinEventsFetcher default eventLoop createWindow: aWindowBuilder.
+	glutinWindow := GlutinEventFetcher default eventLoop createWindow: aWindowBuilder.
 	scaleFactor := glutinWindow scaleFactor.
 	eventHandler := (GlutinMorphicEventHandler for: world) window: glutinWindow.
 
-	GlutinEventsFetcher default addEventHandler: eventHandler.
-	GlutinEventsFetcher install
+	GlutinEventFetcher default addEventHandler: eventHandler.
+	GlutinEventFetcher install
 ]
 
 { #category : #accessing }
