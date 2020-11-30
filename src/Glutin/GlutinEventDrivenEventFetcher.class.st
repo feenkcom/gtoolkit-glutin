@@ -1,9 +1,7 @@
 Class {
-	#name : #GlutinEventsFetcher,
-	#superclass : #Object,
+	#name : #GlutinEventDrivenEventFetcher,
+	#superclass : #GlutinEventFetcher,
 	#instVars : [
-		'eventHandlers',
-		'fetcherProcess',
 		'currentSession',
 		'eventsLoop',
 		'idleSemaphore',
@@ -16,47 +14,16 @@ Class {
 	#classVars : [
 		'GlutinEventClass'
 	],
-	#classInstVars : [
-		'default'
-	],
 	#category : #'Glutin-Event fetcher'
 }
 
 { #category : #accessing }
-GlutinEventsFetcher class >> default [
-	^ default ifNil: [ default := self new ]
-]
-
-{ #category : #accessing }
-GlutinEventsFetcher class >> eventClass [
+GlutinEventDrivenEventFetcher class >> eventClass [
 	^ GlutinEventClass
 ]
 
-{ #category : #accessing }
-GlutinEventsFetcher class >> install [
-	SessionManager default registerUserClassNamed: self name.
-	self default installEventLoop
-]
-
-{ #category : #accessing }
-GlutinEventsFetcher class >> shutDown: isQuitting [
-	self default shutDown: isQuitting
-]
-
-{ #category : #accessing }
-GlutinEventsFetcher class >> startUp: isInANewSession [
-	self default startUp: isInANewSession
-]
-
-{ #category : #'api - event handlers' }
-GlutinEventsFetcher >> addEventHandler: anEventHandler [
-	(eventHandlers includes: anEventHandler)
-		ifTrue: [ ^ self ].
-	eventHandlers add: anEventHandler
-]
-
 { #category : #'private - event loop' }
-GlutinEventsFetcher >> basicPharoEventLoop [
+GlutinEventDrivenEventFetcher >> basicPharoEventLoop [
 	"Fetch pending raw events from the OS.
 	 This method is run at the user interrupt priority."
 	| idlePriority userInterruptPriority lowIOPriority prioritySempahore |
@@ -127,7 +94,7 @@ GlutinEventsFetcher >> basicPharoEventLoop [
 ]
 
 { #category : #'private - event loop' }
-GlutinEventsFetcher >> ensureEventLoop [
+GlutinEventDrivenEventFetcher >> ensureEventLoop [
 	"I make sure that Glutin events loop (external) is valid"
 
 	(currentSession == Smalltalk session
@@ -140,23 +107,22 @@ GlutinEventsFetcher >> ensureEventLoop [
 ]
 
 { #category : #accessing }
-GlutinEventsFetcher >> eventHandlers [
-	^ eventHandlers
-]
-
-{ #category : #accessing }
-GlutinEventsFetcher >> eventLoop [
+GlutinEventDrivenEventFetcher >> eventLoop [
 	<return: #GlutinEventLoop>
 
 	self ensureEventLoop.
 	^ eventsLoop
 ]
 
+{ #category : #lifecycle }
+GlutinEventDrivenEventFetcher >> fetcherProcessPriority [
+	^ Processor userInterruptPriority
+]
+
 { #category : #initialization }
-GlutinEventsFetcher >> initialize [
+GlutinEventDrivenEventFetcher >> initialize [
 	super initialize.
-	
-	eventHandlers := OrderedCollection new.
+
 	idleSemaphore := nil.
 	idleProcess := nil.
 	
@@ -165,67 +131,8 @@ GlutinEventsFetcher >> initialize [
 	wantsToShutdown := false
 ]
 
-{ #category : #lifecycle }
-GlutinEventsFetcher >> installEventLoop [
-	"Initialize the event loop process"
-
-	self isRunning
-		ifTrue: [ ^ self ].
-
-	self reinstallEventLoop
-]
-
-{ #category : #testing }
-GlutinEventsFetcher >> isRunning [
-	^ fetcherProcess isNotNil and: [ fetcherProcess isTerminated not ]
-]
-
-{ #category : #accessing }
-GlutinEventsFetcher >> process [
-	^ fetcherProcess
-]
-
-{ #category : #'event - handling' }
-GlutinEventsFetcher >> processGlutinEvent: aGlutinEvent [
-	"Send the event to all registered event handlers"
-
-	| mappedEvent |
-
-	mappedEvent := aGlutinEvent mapped.
-	(GlutinEventSignal event: mappedEvent) emit.
-
-	"rust-windowing generates synthetic key press and release events to try and work around issues with keys being pressed and held while window focus is lost, see https://github.com/rust-windowing/winit/pull/1296
-	However the Ubuntu workspace keyboard shortcut is causing synthetic Pressed events, without the corresponding Release event.
-	Ignore synthetic key Pressed events"
-	(mappedEvent isKeyboardInputEvent  and:
-		[ mappedEvent is_synthetic and:
-		[ mappedEvent state = GlutinEventInputElementState Pressed ] ]) ifTrue:
-				[ ^ self ].
-
-	self eventHandlers do: [ :eachHandler | eachHandler processGlutinEvent: mappedEvent ]
-]
-
-{ #category : #lifecycle }
-GlutinEventsFetcher >> reinstallEventLoop [
-	"Force initialize a new event fetcher process. It is not possible to do this if Glutin event loop is not nil"
-	
-	self
-		assert: [ fetcherProcess isNil ]
-		description: [ 'Fetcher process must not exist' ].
-
-	fetcherProcess := [ self basicPharoEventLoop ] forkAt: Processor userInterruptPriority.
-	fetcherProcess name: 'Glutin Event Fetcher Process'
-]
-
-{ #category : #'api - event handlers' }
-GlutinEventsFetcher >> removeEventHandler: anEventHandler [
-	(eventHandlers includes: anEventHandler)
-		ifFalse: [ ^ self ].
-	eventHandlers remove: anEventHandler
-]
-
 { #category : #'system startup' }
-GlutinEventsFetcher >> shutDown: isQuitting [
+GlutinEventDrivenEventFetcher >> shutDown: isQuitting [
 
 	wantsToShutdown := true.
 	[ isInCallback ifTrue: [ shutdownSemaphore wait ] ]
@@ -242,17 +149,17 @@ GlutinEventsFetcher >> shutDown: isQuitting [
 ]
 
 { #category : #'system startup' }
-GlutinEventsFetcher >> startUp: isInANewSession [
+GlutinEventDrivenEventFetcher >> startUp: isInANewSession [
 	"Here we re-enable the callback"
 
 	self
 		assert: [ isInCallback not ]
 		description: [ 'I must not be in a callback' ].
-		
+
 	self
 		assert: [ wantsToShutdown not ]
 		description: [ 'I must not be in the middle of the shutdown' ].
 
 	(Smalltalk os windowSystemName isNil or: [ Smalltalk os windowSystemName = 'null' ])
-		ifTrue: [ self reinstallEventLoop ]
+		ifTrue: [ self reinstallEventFetcher ]
 ]

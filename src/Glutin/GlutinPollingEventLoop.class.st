@@ -6,34 +6,27 @@ Class {
 
 { #category : #'private - ffi' }
 GlutinPollingEventLoop class >> primCreate [
-	^ self ffiCall: #(void* glutin_polling_event_loop_new()) library: GlutinMainThreadLibrary
+	^ self ffiCall: #(void* glutin_polling_event_loop_new())
 ]
 
 { #category : #'private - ffi' }
 GlutinPollingEventLoop class >> primRelease: aHandle [
 	
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"
-	self ffiCall: #(void glutin_polling_event_loop_drop(void** aHandle)) library: GlutinMainThreadLibrary
-]
-
-{ #category : #running }
-GlutinPollingEventLoop >> poll [
-	| anEvent |
-	
-	anEvent := (GlutinBaseEvent fromHandle: self primPoll).
-	
-	
+	self ffiCall: #(void glutin_polling_event_loop_drop(void** aHandle))
 ]
 
 { #category : #running }
 GlutinPollingEventLoop >> poll: aBlock [
+	<return: #Boolean>
 	| anEvent |
 	
 	anEvent := (GlutinBaseEvent fromHandle: self primPoll).
 	anEvent isNull
-		ifTrue: [ ^ self ].
+		ifTrue: [ ^ false ].
 		
 	[ aBlock cull: anEvent ] ensure: [ anEvent release ].
+	^ true
 ]
 
 { #category : #'private - ffi' }
@@ -47,19 +40,14 @@ GlutinPollingEventLoop >> primReleaseEvent: aGlutinBaseEvent [
 ]
 
 { #category : #'private - ffi' }
-GlutinPollingEventLoop >> primRunReturn [
-	^ self ffiCall: #(void glutin_polling_event_loop_run_return(self)) library: GlutinMainThreadLibrary
+GlutinPollingEventLoop >> primRunReturn: aGlutinEventLoop [
+	^ self ffiCall: #(void glutin_polling_event_loop_run_return(self, GlutinEventLoop aGlutinEventLoop))
 ]
 
 { #category : #running }
-GlutinPollingEventLoop >> run [
+GlutinPollingEventLoop >> run: aGlutinEventLoop [
 	self isNull
 		ifTrue: [ ^ self ].
 		
-	self
-		"By design of Winit we must start an events loop only when there is at least one window"
-		assert: [ GlutinWindowsRegistry default hasWindows ]
-		description: [ 'Must have at least one window' ].
-		
-	self primRunReturn
+	self primRunReturn: aGlutinEventLoop
 ]
