@@ -22,7 +22,7 @@ GlutinLibrary class >> install [
 	<script: 'self install'>
 	| installer |
 
-	installer := #GtLibraryInstaller asClass.
+	installer := #GtLibraryInstaller asClass new.
 	installer library: 'Glutin'.
 	installer version: 'development'.
 	installer icon: (Form extent: 1@1 depth: 32).
