@@ -54,7 +54,7 @@ GlutinEventLoop >> createHeadlessWithSharing: aBoolean [
 			
 				aHeadlessContext isValid
 					ifTrue: [
-						GlutinLibrary println: '[Glutin] Profile #', anIndex asString, ' worked'.
+						GlutinSameThreadLibrary println: '[Glutin] Profile #', anIndex asString, ' worked'.
 						aContextBuilder sharedContextDo: [ :aSharedContext | aHeadlessContext sharedContext: aSharedContext ].
 						aHeadlessContext eventLoop: self.
 						^ aHeadlessContext ] ] ].
@@ -100,7 +100,7 @@ GlutinEventLoop >> createWindow: aWindowBuilder [
 			
 				aWindowedContext isValid
 					ifTrue: [
-						GlutinLibrary println: '[Glutin] Profile #', anIndex asString, ' worked'.
+						GlutinSameThreadLibrary println: '[Glutin] Profile #', anIndex asString, ' worked'.
 						aWindowedContext autoRelease.
 						aWindowedContext eventLoop: self.
 						aWindowedContext title: aBuilderCopy title.

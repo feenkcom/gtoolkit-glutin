@@ -8,13 +8,13 @@ Class {
 }
 
 { #category : #'library path' }
-GlutinLibrary class >> ffiLibraryName [
+GlutinLibrary class >> ffiLibrary [
 	^ self
 ]
 
-{ #category : #installation }
-GlutinLibrary class >> initLogger [
-	self uniqueInstance primInitLogger
+{ #category : #'library path' }
+GlutinLibrary class >> ffiLibraryName [
+	^ self
 ]
 
 { #category : #installation }
@@ -22,13 +22,13 @@ GlutinLibrary class >> install [
 	<script: 'self install'>
 	| installer |
 
-	installer := GtLibraryInstaller new.
+	installer := #GtLibraryInstaller asClass.
 	installer library: 'Glutin'.
 	installer version: 'development'.
 	installer icon: (Form extent: 1@1 depth: 32).
 	installer binary: 'libGlutin'.
 	installer url: 'https://dl.feenk.com/{library}/{platform}/{version}/{arch}/{binary}.{extension}'.
-	installer works: [ GlutinLibrary uniqueInstance hasModule ].
+	installer works: [ GlutinSameThreadLibrary uniqueInstance hasModule ].
 
 	installer run
 ]
@@ -98,9 +98,7 @@ GlutinLibrary class >> println: aString [
 
 { #category : #'private - ffi' }
 GlutinLibrary >> calloutAPIClass [
-	^ ThreadedFFIMigration threadedFFIAvailable
-		ifTrue: [ TFCalloutAPI ]
-		ifFalse: [ super calloutAPIClass ]
+	^ self subclassResponsibility
 ]
 
 { #category : #'accessing platform' }
@@ -112,34 +110,14 @@ GlutinLibrary >> detectLibrary: aFileName [
 			ifNone: [ aFileName ]
 ]
 
-{ #category : #testing }
-GlutinLibrary >> hasModule [
-	"Return if there is a loadable and working Glutin library installed, false otherwise"
-	<return: #Boolean>
-	| aResult |
-
-	aResult := nil.
-	
-	[ aResult := self primTest ]
-		on: Error
-		do: [ :e | aResult := false ].
-
-	^ aResult ifNil: [ false ]
-]
-
 { #category : #'accessing platform' }
 GlutinLibrary >> macModuleName [
 	^ self detectLibrary: 'libGlutin.dylib'
 ]
 
-{ #category : #'private - ffi' }
-GlutinLibrary >> primInitLogger [
-	^ self ffiCall: #(void glutin_init_logger())
-]
-
-{ #category : #'private - ffi' }
-GlutinLibrary >> primTest [
-	^ self ffiCall: #(bool glutin_test())
+{ #category : #accessing }
+GlutinLibrary >> runner [
+	^ self subclassResponsibility
 ]
 
 { #category : #'accessing platform' }
