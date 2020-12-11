@@ -14,18 +14,12 @@ BaselineOfGlutin >> baseline: spec [
 		spec
 			baseline: 'GToolkitInstaller' with: [ spec repository: 'github://feenkcom/gtoolkit-installer/src' ];
 			baseline: 'GToolkitBoxer' with: [ spec repository: 'github://feenkcom/gtoolkit-boxer/src' ];
-			baseline: 'GToolkitGleam' with: [ spec repository: 'github://feenkcom/gtoolkit-gleam/src' ];
-			baseline: 'GToolkitFenster' with: [ spec repository: 'github://feenkcom/gtoolkit-fenster/src' ];
-			"baseline: 'SpartaWrapper' with: [ spec repository: 'github://feenkcom/Sparta/src' ];
-			baseline: 'SpartaSkia' with: [ spec repository: 'github://feenkcom/Sparta/src' ];"
-			baseline: 'GtThreadedFFIDev'
-				with: [ spec repository: 'github://feenkcom/tffi-dev/src' ].
+			baseline: 'GtThreadedFFIDev'with: [ spec repository: 'github://feenkcom/tffi-dev/src' ];
+			
+			"an actual package with glutin bindings"
+			baseline: 'GlutinBindings' with: [ spec repository: 'github://feenkcom/gtoolkit-glutin/src' ].
 		spec
-			postLoadDoIt: #'postLoadGlutin:';
-			package: 'Glutin' with: [ spec requires: #(GToolkitInstaller GToolkitBoxer GtThreadedFFIDev GToolkitFenster) ];
-			package: 'Glutin-OpenGL' with: [ spec requires: #('Glutin' 'GToolkitGleam') ];
-			package: 'Glutin-Morphic' with: [ spec requires: #('Glutin' 'Glutin-OpenGL') ]
-			"package: 'Glutin-Morphic-Sparta' with: [ spec requires: #('Glutin-Morphic' 'SpartaWrapper' 'SpartaSkia') ]" ]
+			postLoadDoIt: #'postLoadGlutin:' ]
 ]
 
 { #category : #baselines }
@@ -34,13 +28,7 @@ BaselineOfGlutin >> postLoadGlutin: spec [
 		ifTrue: [ ^ self ].
 
 	PostLoaded := true.
-	self postLoadInitializeEventsMap: spec.
 	self postLoadInstallGlutinBinary: spec
-]
-
-{ #category : #baselines }
-BaselineOfGlutin >> postLoadInitializeEventsMap: aSpec [
-	GlutinBaseEvent initializeEventTypeMap
 ]
 
 { #category : #baselines }
