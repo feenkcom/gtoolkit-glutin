@@ -61,7 +61,7 @@ GlutinWorldOpenGLRenderer >> createBufferForExtent: anExtent [
 
 { #category : #private }
 GlutinWorldOpenGLRenderer >> createFormForBuffer: aBuffer extent: anExtent [
-	^ OSSDL2ExternalForm extent: anExtent depth: 32 bits: aBuffer pixels
+	^ GlutinWorldExternalForm extent: anExtent depth: 32 bits: aBuffer pixels
 ]
 
 { #category : #initialization }

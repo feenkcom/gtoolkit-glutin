@@ -7,30 +7,19 @@ Class {
 	#category : #BaselineOfGlutin
 }
 
-{ #category : #baseline }
+{ #category : #baselines }
 BaselineOfGlutin >> baseline: spec [
 	<baseline>
-	spec for: #'common' do: [
-		spec postLoadDoIt: #'postLoadGlutin:'.
-		spec 
-			baseline: 'GToolkitInstaller' with: [
-				spec repository: 'github://feenkcom/gtoolkit-installer:v0.8.1/src' ];
-			baseline: 'GToolkitBoxer' with: [
-				spec repository: 'github://feenkcom/gtoolkit-boxer:v0.8.5/src' ];
-			baseline: 'GToolkitGleam' with: [
-				spec repository: 'github://feenkcom/gtoolkit-gleam:v0.8.9/src' ];
-			baseline: 'GToolkitFenster' with: [
-				spec repository: 'github://feenkcom/gtoolkit-fenster:v0.8.15/src' ];
-			baseline: 'GtThreadedFFIDev' with: [
-				spec repository: 'github://feenkcom/tffi-dev:v0.8.5/src' ].
-		spec 
-			package: 'Glutin' with: [
-				spec requires: #('GToolkitInstaller' 'GToolkitBoxer' 'GtThreadedFFIDev' 'GToolkitFenster' ). ];
-			package: 'Glutin-OpenGL' with: [
-				spec requires: #('Glutin' 'GToolkitGleam' ). ];
-			package: 'Glutin-Morphic' with: [
-				spec requires: #('Glutin' 'Glutin-OpenGL' ). ]. ].
-
+	spec for: #common do: [
+		spec
+			baseline: 'GToolkitInstaller' with: [ spec repository: 'github://feenkcom/gtoolkit-installer/src' ];
+			baseline: 'GToolkitBoxer' with: [ spec repository: 'github://feenkcom/gtoolkit-boxer/src' ];
+			baseline: 'GtThreadedFFIDev'with: [ spec repository: 'github://feenkcom/tffi-dev/src' ];
+			
+			"an actual package with glutin bindings"
+			baseline: 'GlutinBindings' with: [ spec repository: 'github://feenkcom/gtoolkit-glutin/src' ].
+		spec
+			postLoadDoIt: #'postLoadGlutin:' ]
 ]
 
 { #category : #baselines }
@@ -39,13 +28,7 @@ BaselineOfGlutin >> postLoadGlutin: spec [
 		ifTrue: [ ^ self ].
 
 	PostLoaded := true.
-	self postLoadInitializeEventsMap: spec.
 	self postLoadInstallGlutinBinary: spec
-]
-
-{ #category : #baselines }
-BaselineOfGlutin >> postLoadInitializeEventsMap: aSpec [
-	GlutinBaseEvent initializeEventTypeMap
 ]
 
 { #category : #baselines }
