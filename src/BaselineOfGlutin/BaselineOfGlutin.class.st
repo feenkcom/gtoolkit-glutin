@@ -16,11 +16,11 @@ BaselineOfGlutin >> baseline: spec [
 			baseline: 'GToolkitInstaller' with: [
 				spec repository: 'github://feenkcom/gtoolkit-installer:v0.8.1/src' ];
 			baseline: 'GToolkitBoxer' with: [
-				spec repository: 'github://feenkcom/gtoolkit-boxer:v0.8.7/src' ];
+				spec repository: 'github://feenkcom/gtoolkit-boxer:v0.8.8/src' ];
 			baseline: 'GtThreadedFFIDev' with: [
 				spec repository: 'github://feenkcom/tffi-dev:v0.8.5/src' ];
 			baseline: 'GlutinBindings' with: [
-				spec repository: 'github://feenkcom/gtoolkit-glutin:v0.8.33/src' ]. ].
+				spec repository: 'github://feenkcom/gtoolkit-glutin:v0.8.34/src' ]. ].
 
 ]
 
