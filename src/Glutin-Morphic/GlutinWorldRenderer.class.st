@@ -40,7 +40,7 @@ GlutinWorldRenderer >> actualFramebufferSize [
 
 	^ glutinWindow
 		ifNil: [ 240@120 ]
-		ifNotNil: [ (GtFensterPhysicalSize fromPoint: glutinWindow innerExtent) asPoint asIntegerPoint ]
+		ifNotNil: [ (FensterPhysicalSize fromPoint: glutinWindow innerExtent) asPoint asIntegerPoint ]
 ]
 
 { #category : #accessing }
@@ -50,7 +50,7 @@ GlutinWorldRenderer >> actualScreenSize [
 
 	^ glutinWindow
 		ifNil: [ 240@120 ]
-		ifNotNil: [ ((GtFensterPhysicalSize fromPoint: glutinWindow innerExtent) asLogical: self scaleFactor) asPoint asIntegerPoint ]
+		ifNotNil: [ ((FensterPhysicalSize fromPoint: glutinWindow innerExtent) asLogical: self scaleFactor) asPoint asIntegerPoint ]
 ]
 
 { #category : #accessing }
