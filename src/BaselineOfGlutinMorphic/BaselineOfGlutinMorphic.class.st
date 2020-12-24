@@ -11,7 +11,7 @@ BaselineOfGlutinMorphic >> baseline: spec [
 		spec
 			baseline: 'Glutin' with: [ spec repository: 'github://feenkcom/gtoolkit-glutin/src' ];
 			baseline: 'GlutinOpenGL' with: [ spec repository: 'github://feenkcom/gtoolkit-glutin/src' ];
-			baseline: 'GToolkitFenster' with: [ spec repository: 'github://feenkcom/gtoolkit-fenster/src' ].
+			baseline: 'Fenster' with: [ spec repository: 'github://feenkcom/fenster/src' ].
 		spec
-			package: 'Glutin-Morphic' with: [ spec requires: #(#Glutin #GlutinOpenGL #GToolkitFenster) ] ]
+			package: 'Glutin-Morphic' with: [ spec requires: #(#Glutin #GlutinOpenGL #Fenster) ] ]
 ]
