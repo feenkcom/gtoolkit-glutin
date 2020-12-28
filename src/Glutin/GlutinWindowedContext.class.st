@@ -97,13 +97,6 @@ GlutinWindowedContext >> primGetApi [
 ]
 
 { #category : #'private - ffi' }
-GlutinWindowedContext >> primGetFramebufferSize: aSizeU32 [
-	^ self ffiCall: #(void glutin_windowed_context_get_framebuffer_size(
-		self,
-		GtBoxerSizeU32 aSizeU32))
-]
-
-{ #category : #'private - ffi' }
 GlutinWindowedContext >> primGetId: aUint128 [
 	^ self ffiCall: #(void glutin_windowed_context_get_id(
 		self,

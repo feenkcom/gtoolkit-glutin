@@ -277,7 +277,7 @@ GlutinMorphicEventHandler >> initialize [
 	
 	modifiers := GlutinDeviceEventModifiersChangedEvent new.
 	scaleFactor := nil.
-	cursorPosition := GtFensterPhysicalPosition new.
+	cursorPosition := FensterPhysicalPosition new.
 	eventQueue := WaitfreeQueue new.
 	isDefered := false
 ]
@@ -361,7 +361,7 @@ GlutinMorphicEventHandler >> visitCursorMovedEvent: anEvent [
 	| aMorphicEvent oldPos theButtons |
 	
 	oldPos := cursorPosition.
-	cursorPosition := GtFensterPhysicalPosition x: anEvent x y: anEvent y.
+	cursorPosition := FensterPhysicalPosition x: anEvent x y: anEvent y.
 	
 	theButtons := (self convertModifiers: modifiers).
 	buttons ifNotNil: [ theButtons := theButtons | buttons ].
