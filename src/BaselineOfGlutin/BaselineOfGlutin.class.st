@@ -20,7 +20,7 @@ BaselineOfGlutin >> baseline: spec [
 			baseline: 'GtThreadedFFIDev' with: [
 				spec repository: 'github://feenkcom/tffi-dev:v0.8.5/src' ];
 			baseline: 'GlutinBindings' with: [
-				spec repository: 'github://feenkcom/gtoolkit-glutin:v0.8.34/src' ]. ].
+				spec repository: 'github://feenkcom/gtoolkit-glutin:v0.8.35/src' ]. ].
 
 ]
 

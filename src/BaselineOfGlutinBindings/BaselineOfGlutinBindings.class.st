@@ -10,17 +10,19 @@ Class {
 	#category : #BaselineOfGlutinBindings
 }
 
-{ #category : #baselines }
+{ #category : #baseline }
 BaselineOfGlutinBindings >> baseline: spec [
 	<baseline>
-	spec for: #common do: [
-		spec
-			baseline: 'GToolkitBoxerBindings' with: [ spec repository: 'github://feenkcom/gtoolkit-boxer/src' ];
-			baseline: 'Fenster' with: [ spec repository: 'github://feenkcom/fenster/src' ].
+	spec for: #'common' do: [
+		spec postLoadDoIt: #'postLoadGlutin:'.
+		spec 
+			baseline: 'GToolkitBoxerBindings' with: [
+				spec repository: 'github://feenkcom/gtoolkit-boxer:v0.8.8/src' ];
+			baseline: 'Fenster' with: [
+				spec repository: 'github://feenkcom/fenster:v0.8.17/src' ].
+		spec package: 'Glutin' with: [
+				spec requires: #('GToolkitBoxerBindings' 'Fenster' ). ]. ].
 
-		spec
-			postLoadDoIt: #'postLoadGlutin:';
-			package: 'Glutin' with: [ spec requires: #(GToolkitBoxerBindings Fenster) ] ]
 ]
 
 { #category : #baselines }
