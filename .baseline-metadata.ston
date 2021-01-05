@@ -1,1 +1,1 @@
-{	"repositories" : {		"github://feenkcom/fenster/src" : "v0.8.17",		"github://feenkcom/tffi-dev/src" : "v0.8.5",		"github://feenkcom/gtoolkit-boxer/src" : "v0.8.8",		"github://feenkcom/gtoolkit-installer/src" : "v0.8.1",		"github://feenkcom/gtoolkit-gleam/src" : "v0.8.12"	}}
+{	"repositories" : {		"github://feenkcom/fenster/src" : "v0.8.17",		"github://feenkcom/tffi-dev/src" : "v0.8.5",		"github://feenkcom/gtoolkit-installer/src" : "v0.8.1",		"github://feenkcom/gtoolkit-boxer/boxer-bindings" : "v0.8.9",		"github://feenkcom/gtoolkit-gleam/src" : "v0.8.13"	}}
