@@ -1,5 +1,7 @@
 "
 Represents an OpenGL context and the Window with which it is associated.
+
+
 "
 Class {
 	#name : #GlutinWindowedContext,

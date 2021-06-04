@@ -1,5 +1,7 @@
 "
 Just bindings, without external library nor any extra features
+
+
 "
 Class {
 	#name : #BaselineOfGlutinBindings,

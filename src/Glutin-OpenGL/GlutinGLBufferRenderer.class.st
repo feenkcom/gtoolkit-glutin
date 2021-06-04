@@ -1,5 +1,7 @@
 "
-I render a pixel buffer ${class:GlutinOpenGLBuffer}$ as a texture ${class:GlutinOpenGLTexture}$ in a glutin window using Gleam API
+I render a pixel buffer {{gtClass:GlutinOpenGLBuffer}} as a texture {{gtClass:GlutinOpenGLTexture}} in a glutin window using Gleam API
+
+
 "
 Class {
 	#name : #GlutinGLBufferRenderer,

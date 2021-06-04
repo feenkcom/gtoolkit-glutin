@@ -1,5 +1,7 @@
 "
 Emitted when the application has been resumed.
+
+
 "
 Class {
 	#name : #GlutinResumedEvent,

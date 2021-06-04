@@ -1,5 +1,7 @@
 "
 Emitted when the event loop is being shut down. This is irreversable - if this event is emitted, it is guaranteed to be the last event emitted.
+
+
 "
 Class {
 	#name : #GlutinLoopDestroyedEvent,
