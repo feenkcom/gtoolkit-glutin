@@ -1,5 +1,7 @@
 "
 Emitted when the application has been suspended.
+
+
 "
 Class {
 	#name : #GlutinSuspendedEvent,

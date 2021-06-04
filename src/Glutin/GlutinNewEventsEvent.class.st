@@ -1,5 +1,7 @@
 "
 Emitted when new events arrive from the OS to be processed.
+
+
 "
 Class {
 	#name : #GlutinNewEventsEvent,
