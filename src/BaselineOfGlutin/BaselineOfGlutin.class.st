@@ -7,18 +7,19 @@ Class {
 	#category : #BaselineOfGlutin
 }
 
-{ #category : #baselines }
+{ #category : #baseline }
 BaselineOfGlutin >> baseline: spec [
 	<baseline>
-	spec for: #common do: [
-		spec
-			baseline: 'GToolkitInstaller' with: [ spec repository: 'github://feenkcom/gtoolkit-installer/src' ];
-			baseline: 'GToolkitBoxer' with: [ spec repository: 'github://feenkcom/gtoolkit-boxer/boxer-bindings' ];
-			
-			"an actual package with glutin bindings"
-			baseline: 'GlutinBindings' with: [ spec repository: 'github://feenkcom/gtoolkit-glutin/src' ].
-		spec
-			postLoadDoIt: #'postLoadGlutin:' ]
+	spec for: #'common' do: [
+		spec postLoadDoIt: #'postLoadGlutin:'.
+		spec 
+			baseline: 'GToolkitInstaller' with: [
+				spec repository: 'github://feenkcom/gtoolkit-installer:v0.8.4/src' ];
+			baseline: 'GToolkitBoxer' with: [
+				spec repository: 'github://feenkcom/gtoolkit-boxer:v0.8.12/boxer-bindings' ];
+			baseline: 'GlutinBindings' with: [
+				spec repository: 'github://feenkcom/gtoolkit-glutin:v0.8.44/src' ]. ].
+
 ]
 
 { #category : #baselines }
