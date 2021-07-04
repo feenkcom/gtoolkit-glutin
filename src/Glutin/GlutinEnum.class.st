@@ -52,3 +52,8 @@ GlutinEnum class >> initialize [
 		useAuthor: 'UFFI'
 		during: [ self rebuildEnumAccessors ]
 ]
+
+{ #category : #converting }
+GlutinEnum >> asInteger [
+	^ self value
+]
