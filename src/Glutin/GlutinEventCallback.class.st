@@ -24,10 +24,13 @@ GlutinEventCallback class >> on: aBlock [
 
 { #category : #resources }
 GlutinEventCallback >> calloutAPIClass [
-
-	^ ThreadedFFIMigration threadedFFIAvailable
-		ifTrue: [ TFCalloutAPI ]
-		ifFalse: [ super calloutAPIClass ]
+	^ self class environment
+		at: #ThreadedFFIMigration
+		ifPresent: [ :aThreadedFFIMigration |
+			aThreadedFFIMigration threadedFFIAvailable
+				ifTrue: [ self class environment at: #TFCalloutAPI ]
+				ifFalse: [ super calloutAPIClass ] ]
+		ifAbsent: [ super calloutAPIClass ]
 ]
 
 { #category : #resources }
