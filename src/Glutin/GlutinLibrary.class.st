@@ -96,11 +96,6 @@ GlutinLibrary class >> println: aString [
 		ensure: [ aBoxerString release ]
 ]
 
-{ #category : #'private - ffi' }
-GlutinLibrary >> calloutAPIClass [
-	^ self subclassResponsibility
-]
-
 { #category : #'api - library' }
 GlutinLibrary >> detectLibrary: aFileName [
 	"Pharo9 introduced a platform specific FFILibraryFinder which should be used instead of this custom implementation"
@@ -118,11 +113,6 @@ GlutinLibrary >> macLibraryName [
 		at: #FFIMacLibraryFinder
 		ifPresent: [ :aLibraryFinder | aLibraryFinder findLibrary: 'libGlutin.dylib' ]
 		ifAbsent: [ self detectLibrary: 'libGlutin.dylib' ]
-]
-
-{ #category : #accessing }
-GlutinLibrary >> runner [
-	^ self subclassResponsibility
 ]
 
 { #category : #'accessing platform' }

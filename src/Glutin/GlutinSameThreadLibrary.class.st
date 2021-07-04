@@ -30,7 +30,9 @@ GlutinSameThreadLibrary >> hasModule [
 	
 	[ aResult := self primTest ]
 		on: Error
-		do: [ :e | aResult := false ].
+		do: [ :e |
+			NonInteractiveTranscript stderr nextPutAll: e description; cr.
+			aResult := false ].
 
 	^ aResult ifNil: [ false ]
 ]
