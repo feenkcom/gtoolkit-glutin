@@ -101,9 +101,11 @@ GlutinLibrary >> calloutAPIClass [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'accessing platform' }
+{ #category : #'api - library' }
 GlutinLibrary >> detectLibrary: aFileName [
-	^ ({ Smalltalk imageDirectory . Smalltalk vmDirectory . FileSystem workingDirectory }
+	"Pharo9 introduced a platform specific FFILibraryFinder which should be used instead of this custom implementation"
+
+	^ ({ Smalltalk imageDirectory . Smalltalk vmDirectory . Smalltalk vmBinary parent / 'Plugins'. FileSystem workingDirectory }
 		collect: [ :aPath | aPath asFileReference / aFileName ])
 			detect: #exists
 			ifFound: #fullName
@@ -111,8 +113,11 @@ GlutinLibrary >> detectLibrary: aFileName [
 ]
 
 { #category : #'accessing platform' }
-GlutinLibrary >> macModuleName [
-	^ self detectLibrary: 'libGlutin.dylib'
+GlutinLibrary >> macLibraryName [
+	^ self class environment
+		at: #FFIMacLibraryFinder
+		ifPresent: [ :aLibraryFinder | aLibraryFinder findLibrary: 'libGlutin.dylib' ]
+		ifAbsent: [ self detectLibrary: 'libGlutin.dylib' ]
 ]
 
 { #category : #accessing }
@@ -121,11 +126,25 @@ GlutinLibrary >> runner [
 ]
 
 { #category : #'accessing platform' }
-GlutinLibrary >> unixModuleName [
-	^ self detectLibrary: 'libGlutin.so'
+GlutinLibrary >> unix32LibraryName [
+	^ self class environment
+		at: #FFIUnix32LibraryFinder
+		ifPresent: [ :aLibraryFinder | aLibraryFinder findLibrary: 'libGlutin.so' ]
+		ifAbsent: [ self detectLibrary: 'libGlutin.so' ]
 ]
 
 { #category : #'accessing platform' }
-GlutinLibrary >> win32ModuleName [
-	^ self detectLibrary: 'libGlutin.dll'
+GlutinLibrary >> unix64LibraryName [
+	^ self class environment
+		at: #FFIUnix64LibraryFinder
+		ifPresent: [ :aLibraryFinder | aLibraryFinder findLibrary: 'libGlutin.so' ]
+		ifAbsent: [ self detectLibrary: 'libGlutin.so' ]
+]
+
+{ #category : #'accessing platform' }
+GlutinLibrary >> win32LibraryName [
+	^ self class environment
+		at: #FFIWindowsLibraryFinder
+		ifPresent: [ :aLibraryFinder | aLibraryFinder findLibrary: 'libGlutin.dll' ]
+		ifAbsent: [ self detectLibrary: 'libGlutin.dll' ]
 ]
