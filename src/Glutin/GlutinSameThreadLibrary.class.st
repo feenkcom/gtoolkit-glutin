@@ -11,9 +11,13 @@ GlutinSameThreadLibrary class >> initLogger [
 
 { #category : #'private - ffi' }
 GlutinSameThreadLibrary >> calloutAPIClass [
-	^ ThreadedFFIMigration threadedFFIAvailable
-		ifTrue: [ TFCalloutAPI ]
-		ifFalse: [ super calloutAPIClass ]
+	^ self class environment
+		at: #ThreadedFFIMigration
+		ifPresent: [ :aThreadedFFIMigration |
+			aThreadedFFIMigration threadedFFIAvailable
+				ifTrue: [ self class environment at: #TFCalloutAPI ]
+				ifFalse: [ super calloutAPIClass ] ]
+		ifAbsent: [ super calloutAPIClass ]
 ]
 
 { #category : #testing }
@@ -43,8 +47,11 @@ GlutinSameThreadLibrary >> primTest [
 
 { #category : #'private - ffi' }
 GlutinSameThreadLibrary >> runner [ 
-
-	^ ThreadedFFIMigration threadedFFIAvailable
-		ifTrue: [ TFSameThreadRunner uniqueInstance ]
-		ifFalse: [ super runner ]
+	^ self class environment
+		at: #ThreadedFFIMigration
+		ifPresent: [ :aThreadedFFIMigration |
+			aThreadedFFIMigration threadedFFIAvailable
+				ifTrue: [ (self class environment at: #TFSameThreadRunner) uniqueInstance ]
+				ifFalse: [ super runner ] ]
+		ifAbsent: [ super runner ]
 ]
