@@ -160,6 +160,6 @@ GlutinEventDrivenEventFetcher >> startUp: isInANewSession [
 		assert: [ wantsToShutdown not ]
 		description: [ 'I must not be in the middle of the shutdown' ].
 
-	(Smalltalk os windowSystemName isNil or: [ Smalltalk os windowSystemName = 'null' ])
+	Glutin isSupported
 		ifTrue: [ self reinstallEventFetcher ]
 ]

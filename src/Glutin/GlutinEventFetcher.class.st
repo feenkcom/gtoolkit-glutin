@@ -125,7 +125,11 @@ GlutinEventFetcher >> reinstallEventFetcher [
 	self
 		assert: [ fetcherProcess isNil ]
 		description: [ 'Fetcher process must not exist' ].
-
+	
+	self
+		assert: [ Glutin isSupported ]
+		description: [ 'Glutin must be supported by the system' ].
+	
 	fetcherProcess := [ self basicPharoEventLoop ] forkAt: self fetcherProcessPriority.
 	fetcherProcess name: 'Glutin Event Fetcher Process'
 ]
