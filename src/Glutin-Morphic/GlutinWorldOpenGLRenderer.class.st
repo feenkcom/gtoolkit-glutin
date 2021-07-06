@@ -11,14 +11,11 @@ Class {
 
 { #category : #accessing }
 GlutinWorldOpenGLRenderer class >> isApplicableFor: aWorld [
-	^ Smalltalk isHeadless
-		and: [ (CommandLineArguments new hasOption: 'interactive')
-			and: [ CommandLineArguments new hasOption: 'glutin' ] ]
+	^ Glutin isSupported
 ]
 
 { #category : #accessing }
-GlutinWorldOpenGLRenderer class >> priority [ 
-
+GlutinWorldOpenGLRenderer class >> priority [
 	^ 30
 ]
 
