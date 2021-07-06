@@ -69,11 +69,11 @@ GlutinWorldOpenGLRenderer >> deactivate [
 	display := nil
 ]
 
-{ #category : #operations }
+{ #category : #rendering }
 GlutinWorldOpenGLRenderer >> displayWorldState: aWorldState ofWorld: aWorld submorphs: submorphs [
-	"Update this world's display."
+	"Obsolete. In Pharo8 each world renderer had to implement its own displayWorldState:ofWorld:submorphs:"
 	| aCanvas handsToDraw allDamage worldDamageRects handDamageRects |
-		
+
 	"force re-layout if needed"
 	submorphs do: [ :m | m fullBounds ]. 
 	
@@ -101,7 +101,7 @@ GlutinWorldOpenGLRenderer >> displayWorldState: aWorldState ofWorld: aWorld subm
 		ifTrue: [ aWorld flashRects: allDamage color: Color black ].
 
 	aCanvas finish.
-		
+
 	Glutin critical: [ renderer presentBuffer: buffer areas: allDamage ].
 
 	handsToDraw do: [:h | h restoreSavedPatchOn: aCanvas ].  "restore world canvas under hands"
@@ -118,4 +118,21 @@ GlutinWorldOpenGLRenderer >> doActivate [
 	display := self createFormForBuffer: buffer extent: anExtent.
 	
 	renderer := GlutinGLBufferRenderer new window: glutinWindow
+]
+
+{ #category : #rendering }
+GlutinWorldOpenGLRenderer >> drawDuring: aBlock [
+	"Starting from Pharo9, the basic rendering is implemented in the AbstractWorldRenderer"
+	
+	glutinWindow
+		ifNil: [ ^ self ].
+	
+	aBlock value: self canvas
+]
+
+{ #category : #rendering }
+GlutinWorldOpenGLRenderer >> updateDamage: rectangles [
+	"Starting from Pharo9, the basic rendering is implemented in the AbstractWorldRenderer"
+
+	Glutin critical: [ renderer presentBuffer: buffer areas: rectangles ]
 ]

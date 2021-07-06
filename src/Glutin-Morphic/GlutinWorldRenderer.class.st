@@ -93,6 +93,12 @@ GlutinWorldRenderer >> clipboardText: aString [
 	Clipboard clipboardText: aString
 ]
 
+{ #category : #initialization }
+GlutinWorldRenderer >> convertWindowMouseEventPosition: aPosition [
+
+	^ (aPosition / self scaleFactor) rounded
+]
+
 { #category : #activation }
 GlutinWorldRenderer >> deactivate [
 	world worldState worldRenderer: (NullWorldRenderer forWorld: world).
