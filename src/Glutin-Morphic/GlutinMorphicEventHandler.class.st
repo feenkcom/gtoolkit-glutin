@@ -77,83 +77,90 @@ GlutinMorphicEventHandler class >> initializeWindowsKeyValueMapping [
 	<script: 'self initializeWindowsKeyValueMapping'>
 	WindowsKeyValueMapping := Dictionary new.
 	
-	(($a to: $z) flatCollect: [ :c | { GlutinEventVirtualKeyCode perform: c asString asUppercase asSymbol . c asUppercase asInteger } ]),
+	(($a to: $z) flatCollect: [ :c | { GlutinEventVirtualKeyCode perform: c asString asUppercase asSymbol . { c asUppercase asInteger } } ]),
 	{
-	GlutinEventVirtualKeyCode Escape . #ESCAPE.
-	GlutinEventVirtualKeyCode Tab . #TAB.
-	GlutinEventVirtualKeyCode Home . 1.
-	GlutinEventVirtualKeyCode Left . #KP_LEFT.
-	GlutinEventVirtualKeyCode Up . #KP_UP.
-	GlutinEventVirtualKeyCode Right . #KP_RIGHT.
-	GlutinEventVirtualKeyCode Down . #KP_DOWN.
-	GlutinEventVirtualKeyCode End . 4.
-	GlutinEventVirtualKeyCode PageUp . #PAGE_UP.
-	GlutinEventVirtualKeyCode PageDown . #PAGE_DOWN.
-	GlutinEventVirtualKeyCode Space. #KP_SPACE.
-	GlutinEventVirtualKeyCode Key0 . #ZERO.
-	GlutinEventVirtualKeyCode Key1 . #ONE.
-	GlutinEventVirtualKeyCode Key2 . #TWO.
-	GlutinEventVirtualKeyCode Key3 . #THREE.
-	GlutinEventVirtualKeyCode Key4 . #FOUR.
-	GlutinEventVirtualKeyCode Key5 . #FIVE.
-	GlutinEventVirtualKeyCode Key6 . #SIX.
-	GlutinEventVirtualKeyCode Key7 . #SEVEN.
-	GlutinEventVirtualKeyCode Key8 . #EIGHT.
-	GlutinEventVirtualKeyCode Key9 . #NINE.
-	GlutinEventVirtualKeyCode Return . #KP_ENTER.
-	GlutinEventVirtualKeyCode LShift . #SHIFT_L.
-	GlutinEventVirtualKeyCode RShift . #SHIFT_R.
-	GlutinEventVirtualKeyCode LControl . #CONTROL_L.
-	GlutinEventVirtualKeyCode RControl . #CONTROL_R.
-	GlutinEventVirtualKeyCode LAlt . #ALT_L.
-	GlutinEventVirtualKeyCode RAlt . #ALT_R.
-	GlutinEventVirtualKeyCode LWin . #META_L.
-	GlutinEventVirtualKeyCode Capital . #CAPS_LOCK.
-	GlutinEventVirtualKeyCode F1 . #F1.
-	GlutinEventVirtualKeyCode F2 . #F2.
-	GlutinEventVirtualKeyCode F3 . #F3.
-	GlutinEventVirtualKeyCode F4 . #F4.
-	GlutinEventVirtualKeyCode F5 . #F5.
-	GlutinEventVirtualKeyCode F6 . #F6.
-	GlutinEventVirtualKeyCode F7 . #F7.
-	GlutinEventVirtualKeyCode F8 . #F8.
-	GlutinEventVirtualKeyCode F9 . #F9.
-	GlutinEventVirtualKeyCode F10 . #F10.
-	GlutinEventVirtualKeyCode F11 . #F11.
-	GlutinEventVirtualKeyCode F12 . #F12.
-	GlutinEventVirtualKeyCode Numpad0 . #KP_0.
-	GlutinEventVirtualKeyCode Numpad1 . #KP_1.
-	GlutinEventVirtualKeyCode Numpad2 . #KP_2.
-	GlutinEventVirtualKeyCode Numpad3 . #KP_3.
-	GlutinEventVirtualKeyCode Numpad4 . #KP_4.
-	GlutinEventVirtualKeyCode Numpad5 . #KP_5.
-	GlutinEventVirtualKeyCode Numpad6 . #KP_6.
-	GlutinEventVirtualKeyCode Numpad7 . #KP_7.
-	GlutinEventVirtualKeyCode Numpad8 . #KP_8.
-	GlutinEventVirtualKeyCode Numpad9 . #KP_9.
-	GlutinEventVirtualKeyCode Minus . 223.
-	GlutinEventVirtualKeyCode Comma . 222.
-	GlutinEventVirtualKeyCode Semicolon . 188.
-	GlutinEventVirtualKeyCode Equals . 200.
-	GlutinEventVirtualKeyCode Grave . 203.
-	GlutinEventVirtualKeyCode LBracket . 243.
-	GlutinEventVirtualKeyCode RBracket . 250.
-	GlutinEventVirtualKeyCode Period . 240.
-	GlutinEventVirtualKeyCode Slash . 192.
-	GlutinEventVirtualKeyCode Backslash . 134.
-	GlutinEventVirtualKeyCode Apostrophe . 251.
-	GlutinEventVirtualKeyCode Back . 8.
-	GlutinEventVirtualKeyCode Delete. 127.
-	GlutinEventVirtualKeyCode NumpadEquals . #KP_EQUAL.
-	GlutinEventVirtualKeyCode Divide . #KP_DIVIDE.
-	GlutinEventVirtualKeyCode Decimal . #KP_DECIMAL.
-	GlutinEventVirtualKeyCode Add . #KP_ADD.
-	GlutinEventVirtualKeyCode Multiply . #KP_MULTIPLY.
-	GlutinEventVirtualKeyCode Subtract . #KP_SUBTRACT.
-	} pairsDo: [ :key :val |
-		val isNumber
-			ifTrue: [ WindowsKeyValueMapping at: key put: val ]
-			ifFalse: [ WindowsKeyValueMapping at: key put: (KeyboardKey windowsVirtualKeyTable keyAtValue: (KeyboardKey named: val)) ] ]
+	GlutinEventVirtualKeyCode Escape . #(ESCAPE).
+	GlutinEventVirtualKeyCode Tab . #(TAB).
+	GlutinEventVirtualKeyCode Home . #(1).
+	GlutinEventVirtualKeyCode Left . #(KP_LEFT).
+	GlutinEventVirtualKeyCode Up . #(KP_UP).
+	GlutinEventVirtualKeyCode Right . #(KP_RIGHT).
+	GlutinEventVirtualKeyCode Down . #(KP_DOWN).
+	GlutinEventVirtualKeyCode End . #(4).
+	GlutinEventVirtualKeyCode PageUp . #(PAGE_UP).
+	GlutinEventVirtualKeyCode PageDown . #(PAGE_DOWN).
+	GlutinEventVirtualKeyCode Space. #(KP_SPACE).
+	GlutinEventVirtualKeyCode Key0 . #(ZERO '0').
+	GlutinEventVirtualKeyCode Key1 . #(ONE '1').
+	GlutinEventVirtualKeyCode Key2 . #(TWO '2').
+	GlutinEventVirtualKeyCode Key3 . #(THREE '3').
+	GlutinEventVirtualKeyCode Key4 . #(FOUR '4').
+	GlutinEventVirtualKeyCode Key5 . #(FIVE '5').
+	GlutinEventVirtualKeyCode Key6 . #(SIX '6').
+	GlutinEventVirtualKeyCode Key7 . #(SEVEN '7').
+	GlutinEventVirtualKeyCode Key8 . #(EIGHT '8').
+	GlutinEventVirtualKeyCode Key9 . #(NINE '9').
+	GlutinEventVirtualKeyCode Return . #(KP_ENTER).
+	GlutinEventVirtualKeyCode LShift . #(SHIFT_L).
+	GlutinEventVirtualKeyCode RShift . #(SHIFT_R).
+	GlutinEventVirtualKeyCode LControl . #(CONTROL_L).
+	GlutinEventVirtualKeyCode RControl . #(CONTROL_R).
+	GlutinEventVirtualKeyCode LAlt . #(ALT_L).
+	GlutinEventVirtualKeyCode RAlt . #(ALT_R).
+	GlutinEventVirtualKeyCode LWin . #(META_L).
+	GlutinEventVirtualKeyCode Capital . #(CAPS_LOCK).
+	GlutinEventVirtualKeyCode F1 . #(F1).
+	GlutinEventVirtualKeyCode F2 . #(F2).
+	GlutinEventVirtualKeyCode F3 . #(F3).
+	GlutinEventVirtualKeyCode F4 . #(F4).
+	GlutinEventVirtualKeyCode F5 . #(F5).
+	GlutinEventVirtualKeyCode F6 . #(F6).
+	GlutinEventVirtualKeyCode F7 . #(F7).
+	GlutinEventVirtualKeyCode F8 . #(F8).
+	GlutinEventVirtualKeyCode F9 . #(F9).
+	GlutinEventVirtualKeyCode F10 . #(F10).
+	GlutinEventVirtualKeyCode F11 . #(F11).
+	GlutinEventVirtualKeyCode F12 . #(F12).
+	GlutinEventVirtualKeyCode Numpad0 . #(KP_0).
+	GlutinEventVirtualKeyCode Numpad1 . #(KP_1).
+	GlutinEventVirtualKeyCode Numpad2 . #(KP_2).
+	GlutinEventVirtualKeyCode Numpad3 . #(KP_3).
+	GlutinEventVirtualKeyCode Numpad4 . #(KP_4).
+	GlutinEventVirtualKeyCode Numpad5 . #(KP_5).
+	GlutinEventVirtualKeyCode Numpad6 . #(KP_6).
+	GlutinEventVirtualKeyCode Numpad7 . #(KP_7).
+	GlutinEventVirtualKeyCode Numpad8 . #(KP_8).
+	GlutinEventVirtualKeyCode Numpad9 . #(KP_9).
+	GlutinEventVirtualKeyCode Minus . #(223).
+	GlutinEventVirtualKeyCode Comma . #(222).
+	GlutinEventVirtualKeyCode Semicolon . #(188).
+	GlutinEventVirtualKeyCode Equals . #(200).
+	GlutinEventVirtualKeyCode Grave . #(203).
+	GlutinEventVirtualKeyCode LBracket . #(243).
+	GlutinEventVirtualKeyCode RBracket . #(250).
+	GlutinEventVirtualKeyCode Period . #(240).
+	GlutinEventVirtualKeyCode Slash . #(192).
+	GlutinEventVirtualKeyCode Backslash . #(134).
+	GlutinEventVirtualKeyCode Apostrophe . #(251).
+	GlutinEventVirtualKeyCode Back . #(8).
+	GlutinEventVirtualKeyCode Delete. #(127).
+	GlutinEventVirtualKeyCode NumpadEquals . #(KP_EQUAL).
+	GlutinEventVirtualKeyCode Divide . #(KP_DIVIDE).
+	GlutinEventVirtualKeyCode Decimal . #(KP_DECIMAL).
+	GlutinEventVirtualKeyCode Add . #(KP_ADD).
+	GlutinEventVirtualKeyCode Multiply . #(KP_MULTIPLY).
+	GlutinEventVirtualKeyCode Subtract . #(KP_SUBTRACT).
+	} pairsDo: [ :key :values |
+		values do: [ :val |
+			val isNumber
+				ifTrue: [ WindowsKeyValueMapping at: key put: val ]
+				ifFalse: [
+					([ (KeyboardKey named: val) ] on: NotFound do: [ nil ])
+						ifNotNil: [ :aNamedKey |
+							(KeyboardKey windowsVirtualKeyTable
+								keyAtValue: aNamedKey
+								ifAbsent: [ nil ])
+									ifNotNil: [ :aCode | WindowsKeyValueMapping at: key put: aCode ] ] ] ] ]
 ]
 
 { #category : #accessing }

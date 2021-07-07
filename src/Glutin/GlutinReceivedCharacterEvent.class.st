@@ -113,10 +113,9 @@ GlutinReceivedCharacterEvent >> length: anObject [
 
 { #category : #accessing }
 GlutinReceivedCharacterEvent >> text [
-	^ ((#[ 0 0 0 0 ]
-		at: 1 put: self byte_1;
-		at: 2 put: self byte_2;
-		at: 3 put: self byte_3;
-		at: 4 put: self byte_4;
-		yourself) first: self length) utf8Decoded
+	^ ((ByteArray
+			with: self byte_1
+			with: self byte_2
+			with: self byte_3
+			with: self byte_4) first: self length) utf8Decoded
 ]
