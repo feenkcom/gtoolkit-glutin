@@ -1,5 +1,5 @@
 Class {
-	#name : #GlutinMorphicEventHandler,
+	#name : #Pharo8GlutinMorphicEventHandler,
 	#superclass : #GlutinWindowEventsSensor,
 	#traits : 'TGlutinEventVisitor',
 	#classTraits : 'TGlutinEventVisitor classTrait',
@@ -11,8 +11,7 @@ Class {
 		'cursorPosition',
 		'scaleFactor',
 		'eventQueue',
-		'isDefered',
-		'exceptions'
+		'isDefered'
 	],
 	#classVars : [
 		'KeyCharacterMapping',
@@ -22,12 +21,12 @@ Class {
 }
 
 { #category : #'instance creation' }
-GlutinMorphicEventHandler class >> for: morphicWorld [
+Pharo8GlutinMorphicEventHandler class >> for: morphicWorld [
 	^ self new morphicWorld: morphicWorld; yourself
 ]
 
 { #category : #'class initialization' }
-GlutinMorphicEventHandler class >> initialize [
+Pharo8GlutinMorphicEventHandler class >> initialize [
 	"
 	self initialize
 	"
@@ -36,7 +35,7 @@ GlutinMorphicEventHandler class >> initialize [
 ]
 
 { #category : #'class initialization' }
-GlutinMorphicEventHandler class >> initializeKeyCharacterMapping [
+Pharo8GlutinMorphicEventHandler class >> initializeKeyCharacterMapping [
 	<script: 'self initializeKeyCharacterMapping'>
 	KeyCharacterMapping := Dictionary new.
 	
@@ -74,7 +73,7 @@ GlutinMorphicEventHandler class >> initializeKeyCharacterMapping [
 ]
 
 { #category : #'class initialization' }
-GlutinMorphicEventHandler class >> initializeWindowsKeyValueMapping [
+Pharo8GlutinMorphicEventHandler class >> initializeWindowsKeyValueMapping [
 	<script: 'self initializeWindowsKeyValueMapping'>
 	WindowsKeyValueMapping := Dictionary new.
 	
@@ -165,22 +164,17 @@ GlutinMorphicEventHandler class >> initializeWindowsKeyValueMapping [
 ]
 
 { #category : #accessing }
-GlutinMorphicEventHandler class >> keyCharacterMapping [
-	^ KeyCharacterMapping
-]
-
-{ #category : #accessing }
-GlutinMorphicEventHandler class >> windowsKeyValueMapping [
+Pharo8GlutinMorphicEventHandler class >> windowsKeyValueMapping [
 	^ WindowsKeyValueMapping
 ]
 
 { #category : #private }
-GlutinMorphicEventHandler >> activeHand [
+Pharo8GlutinMorphicEventHandler >> activeHand [
 	^ self morphicWorld activeHand
 ]
 
 { #category : #converting }
-GlutinMorphicEventHandler >> convertButton: aGlutinButton [
+Pharo8GlutinMorphicEventHandler >> convertButton: aGlutinButton [
 	"On mac ctrl+click is mapped to right click, see:
 	https://github.com/feenkcom/gtoolkit/issues/890"
 	(OSPlatform current isMacOS and: [
@@ -201,7 +195,7 @@ GlutinMorphicEventHandler >> convertButton: aGlutinButton [
 ]
 
 { #category : #converting }
-GlutinMorphicEventHandler >> convertModifiers: theGlutinModifiers [
+Pharo8GlutinMorphicEventHandler >> convertModifiers: theGlutinModifiers [
 	| theButtons |
 
 	theButtons := 0.
@@ -221,7 +215,7 @@ GlutinMorphicEventHandler >> convertModifiers: theGlutinModifiers [
 ]
 
 { #category : #'event - dispatch' }
-GlutinMorphicEventHandler >> dispatchEvents [
+Pharo8GlutinMorphicEventHandler >> dispatchEvents [
 	| theLastMouseMoveEvent theEvents |
 	
 	theLastMouseMoveEvent := nil.
@@ -240,7 +234,7 @@ GlutinMorphicEventHandler >> dispatchEvents [
 ]
 
 { #category : #'event - dispatch' }
-GlutinMorphicEventHandler >> dispatchMorphicEvent: anEvent [
+Pharo8GlutinMorphicEventHandler >> dispatchMorphicEvent: anEvent [
 
 	"anEvent isKeyboard ifTrue:[
 		Stdio stdout
@@ -261,7 +255,7 @@ GlutinMorphicEventHandler >> dispatchMorphicEvent: anEvent [
 ]
 
 { #category : #'event - dispatch' }
-GlutinMorphicEventHandler >> enqueueMorphicEvent: anEvent [
+Pharo8GlutinMorphicEventHandler >> enqueueMorphicEvent: anEvent [
 	eventQueue nextPut: anEvent.
 	
 	isDefered
@@ -275,7 +269,7 @@ GlutinMorphicEventHandler >> enqueueMorphicEvent: anEvent [
 ]
 
 { #category : #'event - dispatch' }
-GlutinMorphicEventHandler >> fetchedEventsDo: aBlock [
+Pharo8GlutinMorphicEventHandler >> fetchedEventsDo: aBlock [
 	"Flush event queue and evaluate a given block with every queued event as argument"
 	| theEvents |
 
@@ -285,64 +279,40 @@ GlutinMorphicEventHandler >> fetchedEventsDo: aBlock [
 ]
 
 { #category : #initialization }
-GlutinMorphicEventHandler >> initialize [
+Pharo8GlutinMorphicEventHandler >> initialize [
 	super initialize.
 	
 	modifiers := GlutinDeviceEventModifiersChangedEvent new.
 	scaleFactor := nil.
 	cursorPosition := FensterPhysicalPosition new.
 	eventQueue := WaitfreeQueue new.
-	isDefered := false.
-	exceptions := Dictionary new.
-	"exceptions at: GlutinEventVirtualKeyCode Up put: #UP.
-	exceptions at: GlutinEventVirtualKeyCode Down put: #DOWN."
+	isDefered := false
 ]
 
 { #category : #accessing }
-GlutinMorphicEventHandler >> logicalCursorPosition [
+Pharo8GlutinMorphicEventHandler >> logicalCursorPosition [
 	<return: #Point>
 
 	^ (cursorPosition asLogical: self scaleFactor) rounded asPoint
 ]
 
-{ #category : #'events - mac' }
-GlutinMorphicEventHandler >> mapGlutinToPharoCodeFor: aGlutinSymbol withDefault: aGlutinCode [
-
-	| result |
-	"Try to map a glutin symbol like #Up to a Morphic symbol like #UP"
-	result := OSKeySymbols mapKeySymbolNameToValue:
-		          aGlutinSymbol item asUppercase.
-
-	"If asUppercase translation does not work, 
-	we have manual translation dictionary where we stored exceptions"
-
-	result == 0 ifTrue: [ 
-		result := OSKeySymbols mapKeySymbolNameToValue:
-			          (exceptions at: aGlutinSymbol ifAbsent: '') ].
-			          
-	"last resort is to just return what we had in the first place"
-	result == 0 ifTrue: [ ^ aGlutinCode ].
-
-	^ result
-]
-
 { #category : #converting }
-GlutinMorphicEventHandler >> mapSymbolToKeyValue: symbol [
+Pharo8GlutinMorphicEventHandler >> mapSymbolToKeyValue: symbol [
 	^ KeyCharacterMapping at: symbol ifAbsent: [ Character null ]
 ]
 
 { #category : #accessing }
-GlutinMorphicEventHandler >> morphicWorld [
+Pharo8GlutinMorphicEventHandler >> morphicWorld [
 	^ morphicWorld
 ]
 
 { #category : #accessing }
-GlutinMorphicEventHandler >> morphicWorld: aMorphicWorld [
+Pharo8GlutinMorphicEventHandler >> morphicWorld: aMorphicWorld [
 	morphicWorld := aMorphicWorld
 ]
 
 { #category : #'event - handling' }
-GlutinMorphicEventHandler >> processDeviceEvent: aGlutinDeviceEvent forWindow: aWindow [
+Pharo8GlutinMorphicEventHandler >> processDeviceEvent: aGlutinDeviceEvent forWindow: aWindow [
 	self window == aWindow
 		ifFalse: [ ^ self ].
 
@@ -350,7 +320,7 @@ GlutinMorphicEventHandler >> processDeviceEvent: aGlutinDeviceEvent forWindow: a
 ]
 
 { #category : #'event - handling' }
-GlutinMorphicEventHandler >> processWindowEvent: aGlutinWindowEvent forWindow: aWindow [
+Pharo8GlutinMorphicEventHandler >> processWindowEvent: aGlutinWindowEvent forWindow: aWindow [
 	self window == aWindow
 		ifFalse: [ ^ self ].
 		
@@ -358,7 +328,7 @@ GlutinMorphicEventHandler >> processWindowEvent: aGlutinWindowEvent forWindow: a
 ]
 
 { #category : #accessing }
-GlutinMorphicEventHandler >> scaleFactor [
+Pharo8GlutinMorphicEventHandler >> scaleFactor [
 	"Return a scaling dpi factor from logical to physical coordinates.
 	On high dpi (retina) displays scaling factor is > 1"
 	<return: #Number>
@@ -367,12 +337,12 @@ GlutinMorphicEventHandler >> scaleFactor [
 ]
 
 { #category : #accessing }
-GlutinMorphicEventHandler >> shouldGetStepsFrom: aWorld [
+Pharo8GlutinMorphicEventHandler >> shouldGetStepsFrom: aWorld [
 	^ true
 ]
 
 { #category : #'event - visiting' }
-GlutinMorphicEventHandler >> visitCharacterReceivedEvent: anEvent [
+Pharo8GlutinMorphicEventHandler >> visitCharacterReceivedEvent: anEvent [
 	| char keyEvent anInputString |
 	
 	anInputString := anEvent text.	
@@ -394,7 +364,7 @@ GlutinMorphicEventHandler >> visitCharacterReceivedEvent: anEvent [
 ]
 
 { #category : #'event - visiting' }
-GlutinMorphicEventHandler >> visitCursorMovedEvent: anEvent [
+Pharo8GlutinMorphicEventHandler >> visitCursorMovedEvent: anEvent [
 	| aMorphicEvent oldPos theButtons |
 	
 	oldPos := cursorPosition.
@@ -418,7 +388,7 @@ GlutinMorphicEventHandler >> visitCursorMovedEvent: anEvent [
 ]
 
 { #category : #'event - visiting' }
-GlutinMorphicEventHandler >> visitKeyDownEvent: anEvent [
+Pharo8GlutinMorphicEventHandler >> visitKeyDownEvent: anEvent [
 	OSPlatform current isUnix
 		ifTrue: [ self visitKeyDownEventUnix: anEvent ].
 	OSPlatform current isWindows
@@ -428,85 +398,129 @@ GlutinMorphicEventHandler >> visitKeyDownEvent: anEvent [
 ]
 
 { #category : #'events - mac' }
-GlutinMorphicEventHandler >> visitKeyDownEventMac: anEvent [
-
+Pharo8GlutinMorphicEventHandler >> visitKeyDownEventMac: anEvent [
 	| aCharacter aKeyValue aCharCode aMorphicEvent |
-	aCharacter := self mapSymbolToKeyValue: anEvent virtual_keycode.
 
+	aCharacter := self mapSymbolToKeyValue: anEvent virtual_keycode.
+	
 	aKeyValue := aCharacter asciiValue.
 	aCharCode := aCharacter charCode.
-	aCharCode > 255 ifTrue: [ aKeyValue := 0 ].
+	(aCharCode > 255) ifTrue: [ aKeyValue := 0 ].
 
 	aMorphicEvent := KeyboardEvent new
-		                 setType: #keyDown
-		                 buttons: (self convertModifiers: modifiers)
-		                 position: self logicalCursorPosition
-		                 keyValue: aKeyValue
-		                 charCode: aCharCode
-		                 hand: self activeHand
-		                 stamp: Time millisecondClockValue.
-	aMorphicEvent
-		scanCode: anEvent scan_code;
-		key: (OSKeySymbols mapKeySymbolValueToKeyboardKey: (self
-						  mapGlutinToPharoCodeFor: anEvent virtual_keycode
-						  withDefault: aKeyValue)).
+		setType: #keyDown
+		buttons: (self convertModifiers: modifiers)
+		position: self logicalCursorPosition
+		keyValue: aKeyValue
+		charCode: aCharCode
+		hand:  self activeHand
+		stamp: Time millisecondClockValue.
+	aMorphicEvent scanCode: anEvent scan_code.
+	self enqueueMorphicEvent: aMorphicEvent.
+	
+	aCharacter = Character null
+		ifTrue: [ ^ self ].	
+	
+	"if a character is printable and logo is not pressed we let visitCharacterReceivedEvent: to handle the event"
+	((Unicode isPrintable: aCharacter) and: [ modifiers logo not ])
+		ifTrue: [ ^ self ].
+	
+	aMorphicEvent := KeyboardEvent new
+		setType: #keystroke
+		buttons: (self convertModifiers: modifiers)
+		position: self logicalCursorPosition
+		keyValue: aKeyValue
+		charCode: aCharCode
+		hand: self activeHand
+		stamp: Time millisecondClockValue.
+	
 	self enqueueMorphicEvent: aMorphicEvent
+
 ]
 
 { #category : #'events - unix' }
-GlutinMorphicEventHandler >> visitKeyDownEventUnix: anEvent [
-
+Pharo8GlutinMorphicEventHandler >> visitKeyDownEventUnix: anEvent [
 	| aCharacter aKeyValue aCharCode aMorphicEvent |
-	aCharacter := self mapSymbolToKeyValue: anEvent virtual_keycode.
 
+	aCharacter := self mapSymbolToKeyValue: anEvent virtual_keycode.
+	
 	aKeyValue := aCharacter asciiValue.
 	aCharCode := aCharacter charCode.
-	aCharCode > 255 ifTrue: [ aKeyValue := 0 ].
+	(aCharCode > 255) ifTrue: [ aKeyValue := 0 ].
 
 	aMorphicEvent := KeyboardEvent new
-		                 setType: #keyDown
-		                 buttons: (self convertModifiers: modifiers)
-		                 position: self logicalCursorPosition
-		                 keyValue: aKeyValue
-		                 charCode: aCharCode
-		                 hand: self activeHand
-		                 stamp: Time millisecondClockValue.
-	aMorphicEvent scanCode: aCharCode;
-		key: (OSKeySymbols mapKeySymbolValueToKeyboardKey: (self
-						  mapGlutinToPharoCodeFor: anEvent virtual_keycode
-						  withDefault: aKeyValue)).
+		setType: #keyDown
+		buttons: (self convertModifiers: modifiers)
+		position: self logicalCursorPosition
+		keyValue: aKeyValue
+		charCode: aCharCode
+		hand: self activeHand
+		stamp: Time millisecondClockValue.
+	aMorphicEvent scanCode: aCharCode.
 
+	self enqueueMorphicEvent: aMorphicEvent.
+	
+	aCharacter = Character null
+		ifTrue: [ ^ self ].	
+	
+	"if a character is printable and ctrl is not pressed we let visitCharacterReceivedEvent: to handle the event"
+	((Unicode isPrintable: aCharacter) and: [ modifiers ctrl not ])
+		ifTrue: [ ^ self ].
+	
+	aMorphicEvent := KeyboardEvent new
+		setType: #keystroke
+		buttons: (self convertModifiers: modifiers)
+		position: self logicalCursorPosition
+		keyValue: aKeyValue
+		charCode: aCharCode
+		hand: self activeHand
+		stamp: Time millisecondClockValue.
+	aMorphicEvent scanCode: aKeyValue.
+	
 	self enqueueMorphicEvent: aMorphicEvent
 ]
 
 { #category : #'events - windows' }
-GlutinMorphicEventHandler >> visitKeyDownEventWindows: anEvent [
-
+Pharo8GlutinMorphicEventHandler >> visitKeyDownEventWindows: anEvent [
 	| aCharacter aKeyValue aMorphicEvent |
-	aCharacter := self mapSymbolToKeyValue: anEvent virtual_keycode.
 
+	aCharacter := self mapSymbolToKeyValue: anEvent virtual_keycode.
+	
 	"In case of windows the keyValue, charCode and scanCode are the same"
-	aKeyValue := self windowsVirtualKeycodeToKeyValue:
-		             anEvent virtual_keycode.
+	aKeyValue := self windowsVirtualKeycodeToKeyValue: anEvent virtual_keycode.
 
 	aMorphicEvent := KeyboardEvent new
-		                 setType: #keyDown
-		                 buttons: (self convertModifiers: modifiers)
-		                 position: self logicalCursorPosition
-		                 keyValue: aKeyValue
-		                 charCode: aKeyValue
-		                 hand: self activeHand
-		                 stamp: Time millisecondClockValue.
-	aMorphicEvent
-		scanCode: aKeyValue;
-		key: (OSKeySymbols mapKeySymbolValueToKeyboardKey: (self
-						  mapGlutinToPharoCodeFor: anEvent virtual_keycode
-						  withDefault: aKeyValue)).
+		setType: #keyDown
+		buttons: (self convertModifiers: modifiers)
+		position: self logicalCursorPosition
+		keyValue: aKeyValue
+		charCode: aKeyValue
+		hand:  self activeHand
+		stamp: Time millisecondClockValue.
+	aMorphicEvent scanCode: aKeyValue.
+	self enqueueMorphicEvent: aMorphicEvent.
+	
+	aCharacter = Character null
+		ifTrue: [ ^ self ].	
+	
+	"if a character is printable and ctrl is not pressed we let visitCharacterReceivedEvent: to handle the event"
+	((Unicode isPrintable: aCharacter) and: [ modifiers ctrl not ])
+		ifTrue: [ ^ self ].
+
+	aMorphicEvent := KeyboardEvent new
+		setType: #keystroke
+		buttons: (self convertModifiers: modifiers)
+		position: self logicalCursorPosition
+		keyValue: aKeyValue
+		charCode: aKeyValue
+		hand: self activeHand
+		stamp: Time millisecondClockValue.
+	
 	self enqueueMorphicEvent: aMorphicEvent
 ]
 
 { #category : #'event - visiting' }
-GlutinMorphicEventHandler >> visitKeyUpEvent: anEvent [	
+Pharo8GlutinMorphicEventHandler >> visitKeyUpEvent: anEvent [	
 	OSPlatform current isWindows
 		ifTrue: [ self visitKeyUpEventWindows: anEvent ].
 	OSPlatform current isUnix
@@ -516,7 +530,7 @@ GlutinMorphicEventHandler >> visitKeyUpEvent: anEvent [
 ]
 
 { #category : #'events - mac' }
-GlutinMorphicEventHandler >> visitKeyUpEventMac: anEvent [
+Pharo8GlutinMorphicEventHandler >> visitKeyUpEventMac: anEvent [
 	| aMorphicEvent aCharacter aKeyValue aCharCode |
 
 	aCharacter := self mapSymbolToKeyValue: anEvent virtual_keycode.
@@ -537,7 +551,7 @@ GlutinMorphicEventHandler >> visitKeyUpEventMac: anEvent [
 ]
 
 { #category : #'events - unix' }
-GlutinMorphicEventHandler >> visitKeyUpEventUnix: anEvent [
+Pharo8GlutinMorphicEventHandler >> visitKeyUpEventUnix: anEvent [
 	| aMorphicEvent aCharacter aKeyValue aCharCode |
 
 	aCharacter := self mapSymbolToKeyValue: anEvent virtual_keycode.
@@ -558,7 +572,7 @@ GlutinMorphicEventHandler >> visitKeyUpEventUnix: anEvent [
 ]
 
 { #category : #'events - windows' }
-GlutinMorphicEventHandler >> visitKeyUpEventWindows: anEvent [
+Pharo8GlutinMorphicEventHandler >> visitKeyUpEventWindows: anEvent [
 	| aMorphicEvent aKeyValue |
 
 	aKeyValue := self windowsVirtualKeycodeToKeyValue: anEvent virtual_keycode.
@@ -577,7 +591,7 @@ GlutinMorphicEventHandler >> visitKeyUpEventWindows: anEvent [
 ]
 
 { #category : #'event - visiting' }
-GlutinMorphicEventHandler >> visitKeyboardInputEvent: anEvent [
+Pharo8GlutinMorphicEventHandler >> visitKeyboardInputEvent: anEvent [
 	| aState |
 
 	anEvent has_virtual_keycode
@@ -595,12 +609,12 @@ GlutinMorphicEventHandler >> visitKeyboardInputEvent: anEvent [
 ]
 
 { #category : #'event - visiting' }
-GlutinMorphicEventHandler >> visitModifiersChanged: anEvent [
+Pharo8GlutinMorphicEventHandler >> visitModifiersChanged: anEvent [
 	modifiers := anEvent copy
 ]
 
 { #category : #'event - visiting' }
-GlutinMorphicEventHandler >> visitMouseInputEvent: anEvent [
+Pharo8GlutinMorphicEventHandler >> visitMouseInputEvent: anEvent [
 	| aState aMorphicEvent anEventType |
 
 	aState := anEvent state.
@@ -630,7 +644,7 @@ GlutinMorphicEventHandler >> visitMouseInputEvent: anEvent [
 ]
 
 { #category : #'event - visiting' }
-GlutinMorphicEventHandler >> visitMouseWheelEvent: anEvent [
+Pharo8GlutinMorphicEventHandler >> visitMouseWheelEvent: anEvent [
 	| aMorphicEvent aDelta aScrollDistance  aDirection |
 	
 	aDelta := anEvent delta.
@@ -664,24 +678,24 @@ GlutinMorphicEventHandler >> visitMouseWheelEvent: anEvent [
 ]
 
 { #category : #'event - visiting' }
-GlutinMorphicEventHandler >> visitUnknownEvent: anEvent [
+Pharo8GlutinMorphicEventHandler >> visitUnknownEvent: anEvent [
 ]
 
 { #category : #'event - visiting' }
-GlutinMorphicEventHandler >> visitWindowCloseRequest: anEvent [
+Pharo8GlutinMorphicEventHandler >> visitWindowCloseRequest: anEvent [
 	morphicWorld defer: [
 		morphicWorld worldState worldRenderer deactivate ]
 ]
 
 { #category : #'event - visiting' }
-GlutinMorphicEventHandler >> visitWindowFocusedEvent: anEvent [
+Pharo8GlutinMorphicEventHandler >> visitWindowFocusedEvent: anEvent [
 	WorldState MinCycleLapse: (anEvent is_focused
 		ifTrue: [ GlutinWorldRenderer activeCycleLapse ]
 		ifFalse: [ GlutinWorldRenderer idleCycleLapse ])
 ]
 
 { #category : #'event - visiting' }
-GlutinMorphicEventHandler >> visitWindowResizedEvent: anEvent [
+Pharo8GlutinMorphicEventHandler >> visitWindowResizedEvent: anEvent [
 	window resize: anEvent width @ anEvent height.
 	
 	"window resized"
@@ -690,7 +704,7 @@ GlutinMorphicEventHandler >> visitWindowResizedEvent: anEvent [
 ]
 
 { #category : #'event - visiting' }
-GlutinMorphicEventHandler >> visitWindowScaleFactorChangedEvent: anEvent [
+Pharo8GlutinMorphicEventHandler >> visitWindowScaleFactorChangedEvent: anEvent [
 	scaleFactor := anEvent scale_factor.
 	window resize: anEvent width @ anEvent height.
 	
@@ -699,17 +713,17 @@ GlutinMorphicEventHandler >> visitWindowScaleFactorChangedEvent: anEvent [
 ]
 
 { #category : #accessing }
-GlutinMorphicEventHandler >> window [
+Pharo8GlutinMorphicEventHandler >> window [
 	^ window
 ]
 
 { #category : #accessing }
-GlutinMorphicEventHandler >> window: anObject [
+Pharo8GlutinMorphicEventHandler >> window: anObject [
 	window := anObject
 ]
 
 { #category : #'events - windows' }
-GlutinMorphicEventHandler >> windowsVirtualKeycodeToKeyValue: aGlutinEventVirtualKeyCode [
+Pharo8GlutinMorphicEventHandler >> windowsVirtualKeycodeToKeyValue: aGlutinEventVirtualKeyCode [
 	<return: #Number>
 
 	^ WindowsKeyValueMapping

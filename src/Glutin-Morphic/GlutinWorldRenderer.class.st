@@ -172,19 +172,25 @@ GlutinWorldRenderer >> initializeCursorMap [
 
 { #category : #initialization }
 GlutinWorldRenderer >> initializeGlutinWindow [
+
 	| anInitialExtent aWindowBuilder |
+	anInitialExtent := world worldState realWindowExtent ifNil: [ 
+		                   976 @ 665 ].
 
-	anInitialExtent := world worldState realWindowExtent
-		ifNil: [ 976@665 ].
-	
 	aWindowBuilder := GlutinWindowBuilder new
-		title: Smalltalk image imageFile basename;
-		extent: anInitialExtent.
+		                  title: Smalltalk image imageFile basename;
+		                  extent: anInitialExtent.
 
-	glutinWindow := GlutinEventFetcher default eventLoop createWindow: aWindowBuilder.
+	glutinWindow := GlutinEventFetcher default eventLoop createWindow:
+		                aWindowBuilder.
 	scaleFactor := glutinWindow scaleFactor.
-	eventHandler := (GlutinMorphicEventHandler for: world) window: glutinWindow.
-
+	SystemVersion current major == 8
+		ifTrue: [ 
+			eventHandler := (Pharo8GlutinMorphicEventHandler for: world) 
+				                window: glutinWindow ]
+		ifFalse: [ 
+			eventHandler := (GlutinMorphicEventHandler for: world) window:
+				                glutinWindow ].
 	GlutinEventFetcher default addEventHandler: eventHandler.
 	GlutinEventFetcher install
 ]
