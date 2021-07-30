@@ -135,6 +135,6 @@ GlutinLibrary >> unix64LibraryName [
 GlutinLibrary >> win32LibraryName [
 	^ self class environment
 		at: #FFIWindowsLibraryFinder
-		ifPresent: [ :aLibraryFinder | aLibraryFinder findLibrary: 'libGlutin.dll' ]
+		ifPresent: [ :aLibraryFinder | aLibraryFinder findAnyLibrary: #('Glutin.dll' 'libGlutin.dll') ]
 		ifAbsent: [ self detectLibrary: 'libGlutin.dll' ]
 ]
