@@ -42,5 +42,7 @@ Glutin class >> isInteractive [
 
 { #category : #testing }
 Glutin class >> isSupported [
-	^ self isHeadfulVM not and: [ self isInteractive ]
+	^ GlutinLibrary uniqueInstance hasModule
+		and: [ self isHeadfulVM not
+			and: [ self isInteractive ] ]
 ]
