@@ -107,12 +107,32 @@ GlutinLibrary >> detectLibrary: aFileName [
 			ifNone: [ aFileName ]
 ]
 
+{ #category : #testing }
+GlutinLibrary >> hasModule [
+	"Return if there is a loadable and working Glutin library installed, false otherwise"
+	<return: #Boolean>
+	| aResult |
+
+	aResult := nil.
+	
+	[ aResult := self primTest ]
+		on: Error
+		do: [ :e | aResult := false ].
+
+	^ aResult ifNil: [ false ]
+]
+
 { #category : #'accessing platform' }
 GlutinLibrary >> macLibraryName [
 	^ self class environment
 		at: #FFIMacLibraryFinder
 		ifPresent: [ :aLibraryFinder | aLibraryFinder findLibrary: 'libGlutin.dylib' ]
 		ifAbsent: [ self detectLibrary: 'libGlutin.dylib' ]
+]
+
+{ #category : #'private - ffi' }
+GlutinLibrary >> primTest [
+	^ self ffiCall: #(bool glutin_test())
 ]
 
 { #category : #'accessing platform' }
