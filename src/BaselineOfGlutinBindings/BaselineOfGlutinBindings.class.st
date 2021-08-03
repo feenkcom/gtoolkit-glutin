@@ -19,9 +19,9 @@ BaselineOfGlutinBindings >> baseline: spec [
 		spec postLoadDoIt: #'postLoadGlutin:'.
 		spec 
 			baseline: 'GToolkitBoxerBindings' with: [
-				spec repository: 'github://feenkcom/gtoolkit-boxer:v0.8.15/boxer-bindings' ];
+				spec repository: 'github://feenkcom/gtoolkit-boxer:main/boxer-bindings' ];
 			baseline: 'Fenster' with: [
-				spec repository: 'github://feenkcom/fenster:v0.8.20/src' ].
+				spec repository: 'github://feenkcom/fenster:main/src' ].
 		spec package: 'Glutin' with: [
 				spec requires: #('GToolkitBoxerBindings' 'Fenster' ). ]. ].
 
