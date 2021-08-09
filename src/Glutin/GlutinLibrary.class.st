@@ -17,6 +17,16 @@ GlutinLibrary class >> ffiLibraryName [
 	^ self
 ]
 
+{ #category : #accessing }
+GlutinLibrary class >> initEnvLogger [
+	self uniqueInstance initEnvLogger
+]
+
+{ #category : #'class initialization' }
+GlutinLibrary class >> initialize [
+	SessionManager default registerUserClassNamed: self name
+]
+
 { #category : #installation }
 GlutinLibrary class >> install [
 	<script: 'self install'>
@@ -96,6 +106,13 @@ GlutinLibrary class >> println: aString [
 		ensure: [ aBoxerString release ]
 ]
 
+{ #category : #'class initialization' }
+GlutinLibrary class >> startUp: isANewSession [
+	isANewSession
+		ifTrue: [
+			self initEnvLogger ]
+]
+
 { #category : #'api - library' }
 GlutinLibrary >> detectLibrary: aFileName [
 	"Pharo9 introduced a platform specific FFILibraryFinder which should be used instead of this custom implementation"
@@ -122,12 +139,24 @@ GlutinLibrary >> hasModule [
 	^ aResult ifNil: [ false ]
 ]
 
+{ #category : #'api - logger' }
+GlutinLibrary >> initEnvLogger [
+	[ self primInitEnvLogger ]
+		on: Error
+		do: [ :e | NonInteractiveTranscript stdout nextPutAll: '[Glutin] Could not init env logger'; cr ]
+]
+
 { #category : #'accessing platform' }
 GlutinLibrary >> macLibraryName [
 	^ self class environment
 		at: #FFIMacLibraryFinder
 		ifPresent: [ :aLibraryFinder | aLibraryFinder findLibrary: 'libGlutin.dylib' ]
 		ifAbsent: [ self detectLibrary: 'libGlutin.dylib' ]
+]
+
+{ #category : #'private - ffi' }
+GlutinLibrary >> primInitEnvLogger [
+	^ self ffiCall: #(void glutin_init_logger())
 ]
 
 { #category : #'private - ffi' }
