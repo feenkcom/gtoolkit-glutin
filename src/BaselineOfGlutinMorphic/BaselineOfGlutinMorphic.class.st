@@ -1,21 +1,24 @@
 Class {
-	#name : #BaselineOfGlutinMorphic,
-	#superclass : #BaselineOf,
-	#category : #BaselineOfGlutinMorphic
+	#name : 'BaselineOfGlutinMorphic',
+	#superclass : 'BaselineOf',
+	#category : 'BaselineOfGlutinMorphic'
 }
 
-{ #category : #baseline }
+{ #category : 'baseline' }
 BaselineOfGlutinMorphic >> baseline: spec [
 	<baseline>
 	spec for: #'common' do: [
-		spec 
+		spec
 			baseline: 'Glutin' with: [
-				spec repository: 'github://feenkcom/gtoolkit-glutin:v0.8.54/src' ];
+				spec repository: 'github://feenkcom/gtoolkit-glutin:v0.8.55/src' ].
+		spec
 			baseline: 'GlutinOpenGL' with: [
-				spec repository: 'github://feenkcom/gtoolkit-glutin:v0.8.54/src' ];
+				spec repository: 'github://feenkcom/gtoolkit-glutin:v0.8.55/src' ].
+		spec
 			baseline: 'Fenster' with: [
 				spec repository: 'github://feenkcom/fenster:v0.8.21/src' ].
-		spec package: 'Glutin-Morphic' with: [
-				spec requires: #('Glutin' 'GlutinOpenGL' 'Fenster' ). ]. ].
 
+		spec package: 'Glutin-Morphic' with: [
+			spec requires: #('Glutin' 'GlutinOpenGL' 'Fenster') ].
+	]
 ]
