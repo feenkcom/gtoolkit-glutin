@@ -1,1 +1,1 @@
-Package { #name : 'BaselineOfGlutinMorphic' }
+Package { #name : #BaselineOfGlutinMorphic }

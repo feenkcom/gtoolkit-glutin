@@ -1,1 +1,1 @@
-Package { #name : 'BaselineOfGlutinOpenGL' }
+Package { #name : #BaselineOfGlutinOpenGL }

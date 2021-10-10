@@ -1,13 +1,13 @@
 Class {
-	#name : 'BaselineOfGlutin',
-	#superclass : 'BaselineOf',
+	#name : #BaselineOfGlutin,
+	#superclass : #BaselineOf,
 	#classVars : [
 		'PostLoaded'
 	],
-	#category : 'BaselineOfGlutin'
+	#category : #BaselineOfGlutin
 }
 
-{ #category : 'baseline' }
+{ #category : #baseline }
 BaselineOfGlutin >> baseline: spec [
 	<baseline>
 	spec for: #'common' do: [
@@ -20,11 +20,11 @@ BaselineOfGlutin >> baseline: spec [
 				spec repository: 'github://feenkcom/gtoolkit-boxer:v0.8.18/boxer-bindings' ].
 		spec
 			baseline: 'GlutinBindings' with: [
-				spec repository: 'github://feenkcom/gtoolkit-glutin:v0.8.56/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-glutin:v0.8.57/src' ].
 	]
 ]
 
-{ #category : 'baselines' }
+{ #category : #baselines }
 BaselineOfGlutin >> postLoadGlutin: spec [
 	(PostLoaded isNotNil and: [ PostLoaded ])
 		ifTrue: [ ^ self ].
@@ -33,7 +33,7 @@ BaselineOfGlutin >> postLoadGlutin: spec [
 	self postLoadInstallGlutinBinary: spec
 ]
 
-{ #category : 'baselines' }
+{ #category : #baselines }
 BaselineOfGlutin >> postLoadInstallGlutinBinary: aSpec [
 	(self class environment at: #GlutinLibrary) install
 ]
