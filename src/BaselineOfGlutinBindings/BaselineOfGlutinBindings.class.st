@@ -4,22 +4,22 @@ Just bindings, without external library nor any extra features
 
 "
 Class {
-	#name : 'BaselineOfGlutinBindings',
-	#superclass : 'BaselineOf',
+	#name : #BaselineOfGlutinBindings,
+	#superclass : #BaselineOf,
 	#classVars : [
 		'PostLoaded'
 	],
-	#category : 'BaselineOfGlutinBindings'
+	#category : #BaselineOfGlutinBindings
 }
 
-{ #category : 'baseline' }
+{ #category : #baseline }
 BaselineOfGlutinBindings >> baseline: spec [
 	<baseline>
 	spec for: #'common' do: [
 		spec postLoadDoIt: #'postLoadGlutin:'.
 		spec
 			baseline: 'GToolkitBoxerBindings' with: [
-				spec repository: 'github://feenkcom/gtoolkit-boxer:v0.8.18/boxer-bindings' ].
+				spec repository: 'github://feenkcom/gtoolkit-boxer:v0.8.19/boxer-bindings' ].
 		spec
 			baseline: 'Fenster' with: [
 				spec repository: 'github://feenkcom/fenster:v0.8.21/src' ].
@@ -29,7 +29,7 @@ BaselineOfGlutinBindings >> baseline: spec [
 	]
 ]
 
-{ #category : 'baselines' }
+{ #category : #baselines }
 BaselineOfGlutinBindings >> postLoadGlutin: spec [
 	(PostLoaded isNotNil and: [ PostLoaded ])
 		ifTrue: [ ^ self ].
@@ -38,7 +38,7 @@ BaselineOfGlutinBindings >> postLoadGlutin: spec [
 	self postLoadInitializeEventsMap: spec
 ]
 
-{ #category : 'baselines' }
+{ #category : #baselines }
 BaselineOfGlutinBindings >> postLoadInitializeEventsMap: aSpec [
 	GlutinBaseEvent initializeEventTypeMap
 ]

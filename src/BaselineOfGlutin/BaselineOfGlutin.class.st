@@ -14,13 +14,13 @@ BaselineOfGlutin >> baseline: spec [
 		spec postLoadDoIt: #'postLoadGlutin:'.
 		spec
 			baseline: 'GToolkitInstaller' with: [
-				spec repository: 'github://feenkcom/gtoolkit-installer:v0.8.8/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-installer:v0.8.9/src' ].
 		spec
 			baseline: 'GToolkitBoxer' with: [
-				spec repository: 'github://feenkcom/gtoolkit-boxer:v0.8.18/boxer-bindings' ].
+				spec repository: 'github://feenkcom/gtoolkit-boxer:v0.8.19/boxer-bindings' ].
 		spec
 			baseline: 'GlutinBindings' with: [
-				spec repository: 'github://feenkcom/gtoolkit-glutin:v0.8.58/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-glutin:v0.8.59/src' ].
 	]
 ]
 
