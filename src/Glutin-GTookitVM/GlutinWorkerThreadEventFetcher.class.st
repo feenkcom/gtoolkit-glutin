@@ -74,7 +74,7 @@ GlutinWorkerThreadEventFetcher >> shutDown: isQuitting [
 { #category : #'system startup' }
 GlutinWorkerThreadEventFetcher >> startUp: isInANewSession [
 	
-	GToolkitVM current isOnWorkerThread
+	Smalltalk vm isRunningInWorkerThread
 		ifTrue: [ self installEventFetcher ]
 ]
 
