@@ -38,7 +38,7 @@ GlutinLibrary class >> install [
 	installer icon: (Form extent: 1@1 depth: 32).
 	installer binary: 'libGlutin'.
 	installer url: 'https://dl.feenk.com/{library}/{platform}/{version}/{arch}/{binary}.{extension}'.
-	installer works: [ GlutinSameThreadLibrary uniqueInstance hasModule ].
+	installer works: [ GlutinLibrary uniqueInstance hasModule ].
 
 	installer run
 ]

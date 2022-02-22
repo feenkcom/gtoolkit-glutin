@@ -6,8 +6,7 @@ Class {
 
 { #category : #resources }
 GlutinEventCallback class >> ffiLibrary [
-
-	^ GlutinSameThreadLibrary
+	^ GlutinLibrary
 ]
 
 { #category : #'callback spec' }

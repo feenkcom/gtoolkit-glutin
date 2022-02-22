@@ -11,7 +11,7 @@ GlutinMainThreadEventLoop class >> createPollingEventLoopWithSemaphoreSignaller:
 		size_t aSemaphoreIndex,
 		void* aThunkAddress,
 		void* aReceiverCallback,
-		void* aReceiverThunk)) library: GlutinSameThreadLibrary
+		void* aReceiverThunk)) library: GlutinLibrary
 ]
 
 { #category : #'private - ffi' }
@@ -66,12 +66,12 @@ GlutinMainThreadEventLoop >> poll: aBlock [
 
 { #category : #'private - ffi' }
 GlutinMainThreadEventLoop >> primPoll [
-	^ self ffiCall: #(void* glutin_polling_event_loop_poll(self)) library: GlutinSameThreadLibrary
+	^ self ffiCall: #(void* glutin_polling_event_loop_poll(self)) library: GlutinLibrary
 ]
 
 { #category : #'private - ffi' }
 GlutinMainThreadEventLoop >> primReleaseEvent: aGlutinBaseEvent [
-	^ self ffiCall: #(void glutin_event_drop(void* aGlutinBaseEvent)) library: GlutinSameThreadLibrary
+	^ self ffiCall: #(void glutin_event_drop(void* aGlutinBaseEvent)) library: GlutinLibrary
 ]
 
 { #category : #'private - ffi' }
