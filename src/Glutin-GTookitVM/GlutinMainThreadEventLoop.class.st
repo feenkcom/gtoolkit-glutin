@@ -11,19 +11,19 @@ GlutinMainThreadEventLoop class >> createPollingEventLoopWithSemaphoreSignaller:
 		size_t aSemaphoreIndex,
 		void* aThunkAddress,
 		void* aReceiverCallback,
-		void* aReceiverThunk)) library: GlutinLibrary
+		void* aReceiverThunk))
 ]
 
 { #category : #'private - ffi' }
 GlutinMainThreadEventLoop class >> primCreate [
-	^ self ffiCall: #(void* glutin_polling_event_loop_new()) library: GlutinMainThreadAsyncLibrary
+	^ self ffiCall: #(void* glutin_polling_event_loop_new())
 ]
 
 { #category : #'private - ffi' }
 GlutinMainThreadEventLoop class >> primRelease: aHandle [
 	
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"
-	self ffiCall: #(void glutin_polling_event_loop_drop(void** aHandle)) library: GlutinMainThreadAsyncLibrary
+	self ffiCall: #(void glutin_polling_event_loop_drop(void** aHandle))
 ]
 
 { #category : #'instance creation' }
@@ -66,17 +66,17 @@ GlutinMainThreadEventLoop >> poll: aBlock [
 
 { #category : #'private - ffi' }
 GlutinMainThreadEventLoop >> primPoll [
-	^ self ffiCall: #(void* glutin_polling_event_loop_poll(self)) library: GlutinLibrary
+	^ self ffiCall: #(void* glutin_polling_event_loop_poll(self))
 ]
 
 { #category : #'private - ffi' }
 GlutinMainThreadEventLoop >> primReleaseEvent: aGlutinBaseEvent [
-	^ self ffiCall: #(void glutin_event_drop(void* aGlutinBaseEvent)) library: GlutinLibrary
+	^ self ffiCall: #(void glutin_event_drop(void* aGlutinBaseEvent))
 ]
 
 { #category : #'private - ffi' }
 GlutinMainThreadEventLoop >> primRun [
-	^ self ffiCall: #(void glutin_polling_event_loop_run(self)) library: GlutinMainThreadNonBlockingLibrary
+	^ self ffiCall: #(void glutin_polling_event_loop_run(self)) options: #(optEventLoop optNonBlocking)
 ]
 
 { #category : #running }
@@ -84,9 +84,9 @@ GlutinMainThreadEventLoop >> run [
 	self isNull
 		ifTrue: [ ^ self ].
 	
-	GToolkitVM current isOnWorkerThread
+	Smalltalk vm isRunningInWorkerThread
 		ifFalse: [ self error: 'Must be on a worker thread!' ].
-	
+
 	"this will block when not on the Worker Thread!"
 	self primRun
 ]
