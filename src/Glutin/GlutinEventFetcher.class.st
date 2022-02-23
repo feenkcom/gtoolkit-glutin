@@ -23,8 +23,20 @@ GlutinEventFetcher class >> install [
 ]
 
 { #category : #accessing }
+GlutinEventFetcher class >> isAvailable [
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
 GlutinEventFetcher class >> preferableEventFetcher [
-	^ GlutinEventDrivenEventFetcher
+	^ (self subclasses sorted: [ :a :b | a priority > b priority ])
+		detect: [ :each | each isAvailable ]
+		ifNone: [ self error: 'Could not find a suitable event fetcher' ]
+]
+
+{ #category : #accessing }
+GlutinEventFetcher class >> priority [
+	^ self subclassResponsibility
 ]
 
 { #category : #accessing }

@@ -7,8 +7,18 @@ Class {
 		'semaphore',
 		'semaphoreIndex'
 	],
-	#category : #'Glutin-GTookitVM-Event fetcher'
+	#category : #'Glutin-Event fetcher'
 }
+
+{ #category : #accessing }
+GlutinWorkerThreadEventFetcher class >> isAvailable [
+	^ Smalltalk vm isRunningInWorkerThread
+]
+
+{ #category : #accessing }
+GlutinWorkerThreadEventFetcher class >> priority [
+	^ 10
+]
 
 { #category : #'private - event loop' }
 GlutinWorkerThreadEventFetcher >> basicPharoEventLoop [

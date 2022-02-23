@@ -22,6 +22,16 @@ GlutinEventDrivenEventFetcher class >> eventClass [
 	^ GlutinEventClass
 ]
 
+{ #category : #accessing }
+GlutinEventDrivenEventFetcher class >> isAvailable [
+	^ Smalltalk vm isRunningInWorkerThread not
+]
+
+{ #category : #accessing }
+GlutinEventDrivenEventFetcher class >> priority [
+	^ 10
+]
+
 { #category : #'private - event loop' }
 GlutinEventDrivenEventFetcher >> basicPharoEventLoop [
 	"Fetch pending raw events from the OS.
