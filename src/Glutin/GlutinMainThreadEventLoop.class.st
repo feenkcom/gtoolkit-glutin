@@ -1,7 +1,7 @@
 Class {
 	#name : #GlutinMainThreadEventLoop,
 	#superclass : #GlutinExternalObject,
-	#category : #'Glutin-GTookitVM-Event fetcher'
+	#category : #'Glutin-Event loop'
 }
 
 { #category : #'private - ffi' }
@@ -27,26 +27,28 @@ GlutinMainThreadEventLoop class >> primRelease: aHandle [
 ]
 
 { #category : #'instance creation' }
-GlutinMainThreadEventLoop class >> withSemaphore: aSemaphoreIndex [
-	| aSemaphoreSignaller aReceiverSignaller |
+GlutinMainThreadEventLoop class >> primitiveGetSemaphoreSignaller [
+	<primitive: 'primitiveGetSemaphoreSignaller'>
 
-	aSemaphoreSignaller := GToolkitVM current semaphoreSignaller.
-	aReceiverSignaller := GToolkitVM current receiverSignaller.
-
-	^ self
-		withSemaphoreSignaller: aSemaphoreSignaller getHandle
-		index: aSemaphoreIndex
-		thunk: aSemaphoreSignaller thunk
-		receiverSignaller: aReceiverSignaller getHandle
-		thunk: aReceiverSignaller thunk
+	^ ExternalAddress null
 ]
 
 { #category : #'instance creation' }
-GlutinMainThreadEventLoop class >> withSemaphoreSignaller: aCallbackFunction index: aSemaphoreIndex thunk: aThunkAddress receiverSignaller: aReceiverCallback thunk: aReceiverThunk [
+GlutinMainThreadEventLoop class >> withSemaphore: aSemaphoreIndex [
+
+	^ self
+		withSemaphoreSignaller: self primitiveGetSemaphoreSignaller
+		index: aSemaphoreIndex
+		receiverSignaller: ExternalAddress null
+		thunk: ExternalAddress null
+]
+
+{ #category : #'instance creation' }
+GlutinMainThreadEventLoop class >> withSemaphoreSignaller: aCallbackFunction index: aSemaphoreIndex receiverSignaller: aReceiverCallback thunk: aReceiverThunk [
 	^ self fromNativeHandle: (self
 		createPollingEventLoopWithSemaphoreSignaller: aCallbackFunction
 		index: aSemaphoreIndex
-		thunk: aThunkAddress
+		thunk: ExternalAddress null
 		receiverSignaller: aReceiverCallback
 		thunk: aReceiverThunk)
 ]
