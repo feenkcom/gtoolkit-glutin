@@ -13,7 +13,11 @@ Class {
 
 { #category : #accessing }
 GlutinEventFetcher class >> default [
-	^ default ifNil: [ default := self preferableEventFetcher new ]
+	"Initialize an event fetcher if it does not exist or if it is no longer available"
+	(default isNil or: [ default class isAvailable not ])
+		ifTrue: [ default := self preferableEventFetcher new ].
+
+	^ default
 ]
 
 { #category : #accessing }
