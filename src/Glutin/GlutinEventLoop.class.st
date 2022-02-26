@@ -1,6 +1,8 @@
 Class {
 	#name : #GlutinEventLoop,
 	#superclass : #GlutinExternalObject,
+	#traits : 'TGlutinEventLoop',
+	#classTraits : 'TGlutinEventLoop classTrait',
 	#instVars : [
 		'headlessContext'
 	],
