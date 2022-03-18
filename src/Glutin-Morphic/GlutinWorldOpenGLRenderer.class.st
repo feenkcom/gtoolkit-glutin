@@ -27,15 +27,14 @@ GlutinWorldOpenGLRenderer >> canvas [
 { #category : #initialization }
 GlutinWorldOpenGLRenderer >> checkForNewScreenSize [
 	| anExtent |
-	
+		
 	super checkForNewScreenSize
 		ifFalse: [ ^ false ]. 
 	
 	anExtent := self actualScreenSize.
-	
 	buffer := self createBufferForExtent: anExtent.
 	display := self createFormForBuffer: buffer extent: anExtent.
-	
+
 	^ true
 ]
 

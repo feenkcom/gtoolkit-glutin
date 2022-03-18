@@ -28,13 +28,10 @@ GlutinWorldPixelsRenderer >> canvas [
 GlutinWorldPixelsRenderer >> checkForNewScreenSize [
 	| anExtent |
 	
-	true ifTrue: [ ^ false ].
-	
 	super checkForNewScreenSize
 		ifFalse: [ ^ false ]. 
 	
 	anExtent := self actualScreenSize.
-	
 	buffer := self createBufferForExtent: anExtent.
 	display := self createFormForBuffer: buffer extent: anExtent.
 	
@@ -128,6 +125,6 @@ GlutinWorldPixelsRenderer >> drawDuring: aBlock [
 GlutinWorldPixelsRenderer >> updateDamage: rectangles [
 	"Starting from Pharo9, the basic rendering is implemented in the AbstractWorldRenderer"
 
-	renderer update: display extent pixels: buffer.
+	renderer updateSurface: self actualFramebufferSize buffer: display extent pixels: buffer.
 	renderer draw
 ]

@@ -2,6 +2,7 @@ Class {
 	#name : #GlutinWorkerThreadEventFetcher,
 	#superclass : #GlutinEventFetcher,
 	#instVars : [
+		'mutex',
 		'currentSession',
 		'mainThreadEventLoop',
 		'semaphore',
@@ -39,16 +40,17 @@ GlutinWorkerThreadEventFetcher >> basicPharoEventLoop [
 { #category : #'private - event loop' }
 GlutinWorkerThreadEventFetcher >> ensureEventLoop [
 	"I make sure that Glutin events loop (external) is valid"
+	
+	mutex critical: [
+		(currentSession == Smalltalk session
+			and: [ mainThreadEventLoop notNil
+				and: [ mainThreadEventLoop isNull not ] ])
+			ifTrue: [ ^ self ].
 
-	(currentSession == Smalltalk session
-		and: [ mainThreadEventLoop notNil
-			and: [ mainThreadEventLoop isNull not ] ])
-		ifTrue: [ ^ self ].
-
-	currentSession := Smalltalk session.
-	semaphore := Semaphore new.
-	semaphoreIndex := Smalltalk registerExternalObject: semaphore.
-	mainThreadEventLoop := WinitMainThreadEventLoop withSemaphore: semaphoreIndex
+		currentSession := Smalltalk session.
+		semaphore := Semaphore new.
+		semaphoreIndex := Smalltalk registerExternalObject: semaphore.
+		mainThreadEventLoop := WinitMainThreadEventLoop withSemaphore: semaphoreIndex ]
 ]
 
 { #category : #accessing }
@@ -63,16 +65,19 @@ GlutinWorkerThreadEventFetcher >> eventLoop [
 GlutinWorkerThreadEventFetcher >> fetchEvents [
 	[ mainThreadEventLoop
 		poll: [ :aGlutinEvent |
-			NonInteractiveTranscript stdout
-				nextPutAll: aGlutinEvent event_type printString;
-				cr.
-			self processGlutinEvent: aGlutinEvent ] ]
-		whileTrue
+			self processGlutinEvent: aGlutinEvent ] ] whileTrue
 ]
 
 { #category : #lifecycle }
 GlutinWorkerThreadEventFetcher >> fetcherProcessPriority [
 	^ Processor lowIOPriority
+]
+
+{ #category : #initialization }
+GlutinWorkerThreadEventFetcher >> initialize [
+	super initialize.
+	
+	mutex := Monitor new
 ]
 
 { #category : #'system startup' }
