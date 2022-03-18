@@ -4,14 +4,14 @@ Class {
 	#category : #'Glutin-Event fetcher'
 }
 
-{ #category : #resources }
+{ #category : #accessing }
 GlutinEventCallback class >> ffiLibrary [
 	^ GlutinLibrary
 ]
 
 { #category : #'callback spec' }
 GlutinEventCallback class >> fnSpec [
-	^ #(GlutinControlFlow ( void* event ))
+	^ #(WinitControlFlow ( void* event ))
 ]
 
 { #category : #'callback spec' }
@@ -21,19 +21,7 @@ GlutinEventCallback class >> on: aBlock [
 		block: aBlock
 ]
 
-{ #category : #resources }
-GlutinEventCallback >> calloutAPIClass [
-	^ self class environment
-		at: #ThreadedFFIMigration
-		ifPresent: [ :aThreadedFFIMigration |
-			aThreadedFFIMigration threadedFFIAvailable
-				ifTrue: [ self class environment at: #TFCalloutAPI ]
-				ifFalse: [ super calloutAPIClass ] ]
-		ifAbsent: [ super calloutAPIClass ]
-]
-
-{ #category : #resources }
+{ #category : #accessing }
 GlutinEventCallback >> ffiLibrary [
-
 	^ self class ffiLibrary
 ]

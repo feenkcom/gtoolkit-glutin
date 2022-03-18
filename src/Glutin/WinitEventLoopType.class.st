@@ -1,67 +1,66 @@
 Class {
-	#name : #WinitEventTouchPhase,
+	#name : #WinitEventLoopType,
 	#superclass : #WinitEnum,
 	#classVars : [
-		'Cancelled',
-		'Ended',
-		'Moved',
-		'Started',
-		'Unknown'
+		'MacOS',
+		'Unknown',
+		'Wayland',
+		'Windows',
+		'X11'
 	],
-	#category : #'Winit-Enums'
+	#category : #'Glutin-Enums'
 }
 
 { #category : #'accessing enum' }
-WinitEventTouchPhase class >> Cancelled [
+WinitEventLoopType class >> MacOS [
 	"This method was automatically generated"
-	^ Cancelled
+	^ MacOS
 ]
 
 { #category : #'accessing enum' }
-WinitEventTouchPhase class >> Ended [
-	"This method was automatically generated"
-	^ Ended
-]
-
-{ #category : #'accessing enum' }
-WinitEventTouchPhase class >> Moved [
-	"This method was automatically generated"
-	^ Moved
-]
-
-{ #category : #'accessing enum' }
-WinitEventTouchPhase class >> Started [
-	"This method was automatically generated"
-	^ Started
-]
-
-{ #category : #'accessing enum' }
-WinitEventTouchPhase class >> Unknown [
+WinitEventLoopType class >> Unknown [
 	"This method was automatically generated"
 	^ Unknown
 ]
 
+{ #category : #'accessing enum' }
+WinitEventLoopType class >> Wayland [
+	"This method was automatically generated"
+	^ Wayland
+]
+
+{ #category : #'accessing enum' }
+WinitEventLoopType class >> Windows [
+	"This method was automatically generated"
+	^ Windows
+]
+
+{ #category : #'accessing enum' }
+WinitEventLoopType class >> X11 [
+	"This method was automatically generated"
+	^ X11
+]
+
 { #category : #'enum declaration' }
-WinitEventTouchPhase class >> externalDeclaration [
+WinitEventLoopType class >> externalDeclaration [
 	"
 	self rebuildEnumAccessors
 	"
 
 	^ #(
-	 Unknown,
-    Started,
-    Moved,
-    Ended,
-    Cancelled,
-	)
+		Windows,
+		MacOS,
+		X11,
+		Wayland,
+		Unknown,)
 ]
 
 { #category : #'enum declaration' }
-WinitEventTouchPhase class >> externalType [
-	^ FFIUInt32 new
+WinitEventLoopType class >> externalType [
+	^ FFIUInt8 new
 ]
 
 { #category : #'class initialization' }
-WinitEventTouchPhase class >> initialize [
+WinitEventLoopType class >> initialize [
 	super initialize
 ]

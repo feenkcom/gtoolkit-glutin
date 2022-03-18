@@ -1,7 +1,7 @@
 Class {
 	#name : #WinitEnum,
 	#superclass : #FFIExternalEnumeration,
-	#category : #'Winit-Enums'
+	#category : #'Glutin-Enums'
 }
 
 { #category : #'enum declaration' }
@@ -51,4 +51,9 @@ WinitEnum class >> initialize [
 	Author
 		useAuthor: 'UFFI'
 		during: [ self rebuildEnumAccessors ]
+]
+
+{ #category : #converting }
+WinitEnum >> asInteger [
+	^ self value
 ]

@@ -110,7 +110,7 @@ GlutinContextBuilder class >> primRelease: aHandle [
 
 { #category : #'private - ffi' }
 GlutinContextBuilder class >> primTryContext: aContextBuilder eventLoop: anEventLoop [
-	^ self ffiCall: #(bool glutin_try_headless_context(GlutinEventLoop anEventLoop, GlutinContextBuilder aContextBuilder))
+	^ self ffiCall: #(bool glutin_try_headless_context(#GlutinCallbackEventLoop anEventLoop, GlutinContextBuilder aContextBuilder))
 ]
 
 { #category : #'instance creation' }

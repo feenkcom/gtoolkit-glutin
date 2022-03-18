@@ -48,12 +48,12 @@ GlutinWorkerThreadEventFetcher >> ensureEventLoop [
 	currentSession := Smalltalk session.
 	semaphore := Semaphore new.
 	semaphoreIndex := Smalltalk registerExternalObject: semaphore.
-	mainThreadEventLoop := GlutinMainThreadEventLoop withSemaphore: semaphoreIndex
+	mainThreadEventLoop := WinitMainThreadEventLoop withSemaphore: semaphoreIndex
 ]
 
 { #category : #accessing }
 GlutinWorkerThreadEventFetcher >> eventLoop [
-	<return: #GlutinEventLoop>
+	<return: #GlutinCallbackEventLoop>
 
 	self ensureEventLoop.
 	^ mainThreadEventLoop
@@ -84,7 +84,7 @@ GlutinWorkerThreadEventFetcher >> shutDown: isQuitting [
 { #category : #'system startup' }
 GlutinWorkerThreadEventFetcher >> startUp: isInANewSession [
 	
-	(Glutin isSupported and: [ Smalltalk vm isRunningInWorkerThread ])
+	(true"Glutin isSupported" and: [ Smalltalk vm isRunningInWorkerThread ])
 		ifTrue: [ self installEventFetcher ]
 ]
 

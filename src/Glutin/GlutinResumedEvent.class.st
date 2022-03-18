@@ -11,7 +11,7 @@ Class {
 
 { #category : #'event type' }
 GlutinResumedEvent class >> eventType [
-	^ GlutinEventType Resumed
+	^ WinitEventType Resumed
 ]
 
 { #category : #'event type' }

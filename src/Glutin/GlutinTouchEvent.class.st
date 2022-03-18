@@ -13,7 +13,7 @@ Class {
 
 { #category : #'event type' }
 GlutinTouchEvent class >> eventType [
-	^ GlutinEventType WindowEventTouch
+	^ WinitEventType WindowEventTouch
 ]
 
 { #category : #'field definition' }
@@ -23,7 +23,7 @@ GlutinTouchEvent class >> fieldsDesc [
 	"
 	^ #(
 		int64 device_id
-		GlutinEventTouchPhase phase
+		#WinitEventTouchPhase phase
 		float64 x
 		float64 y
 		uint64 id
@@ -78,7 +78,7 @@ GlutinTouchEvent >> id: anObject [
 { #category : #'accessing structure variables' }
 GlutinTouchEvent >> phase [
 	"This method was automatically generated"
-	^GlutinEventTouchPhase fromInteger: (handle unsignedLongAt: OFFSET_PHASE)
+	^WinitEventTouchPhase fromInteger: (handle unsignedLongAt: OFFSET_PHASE)
 ]
 
 { #category : #'accessing structure variables' }

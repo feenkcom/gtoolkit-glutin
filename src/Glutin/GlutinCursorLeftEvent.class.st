@@ -6,7 +6,7 @@ Class {
 
 { #category : #'event type' }
 GlutinCursorLeftEvent class >> eventType [
-	^ GlutinEventType WindowEventCursorLeft
+	^ WinitEventType WindowEventCursorLeft
 ]
 
 { #category : #'event type' }

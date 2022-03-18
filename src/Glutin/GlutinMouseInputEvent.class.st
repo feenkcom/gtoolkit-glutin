@@ -11,7 +11,7 @@ Class {
 
 { #category : #'event type' }
 GlutinMouseInputEvent class >> eventType [
-	^ GlutinEventType WindowEventMouseInput
+	^ WinitEventType WindowEventMouseInput
 ]
 
 { #category : #'field definition' }
@@ -21,7 +21,7 @@ GlutinMouseInputEvent class >> fieldsDesc [
 	"
 	^ #(
 		int64 device_id
-		GlutinEventInputElementState state
+		#WinitEventInputElementState state
 		GlutinEventMouseButton button
  	)
 ]
@@ -72,7 +72,7 @@ GlutinMouseInputEvent >> device_id: anObject [
 { #category : #'accessing structure variables' }
 GlutinMouseInputEvent >> state [
 	"This method was automatically generated"
-	^GlutinEventInputElementState fromInteger: (handle unsignedLongAt: OFFSET_STATE)
+	^WinitEventInputElementState fromInteger: (handle unsignedLongAt: OFFSET_STATE)
 ]
 
 { #category : #'accessing structure variables' }

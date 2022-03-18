@@ -11,7 +11,7 @@ Class {
 
 { #category : #'event type' }
 GlutinLoopDestroyedEvent class >> eventType [
-	^ GlutinEventType LoopDestroyed
+	^ WinitEventType LoopDestroyed
 ]
 
 { #category : #'event type' }

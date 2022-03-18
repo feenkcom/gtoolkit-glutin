@@ -4,7 +4,7 @@ Class {
 	#classVars : [
 		'AccessMutex'
 	],
-	#category : #Glutin
+	#category : #'Glutin-Library'
 }
 
 { #category : #'class initialization' }

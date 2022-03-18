@@ -15,7 +15,7 @@ WinitEventLoopWaker class >> for: aGlutinEventLoop [
 
 { #category : #'private - ffi' }
 WinitEventLoopWaker class >> primCreate: aGlutinEventLoop [
-	^ self ffiCall: #(void* glutin_event_loop_waker_create(GlutinEventLoop aGlutinEventLoop))
+	^ self ffiCall: #(void* glutin_event_loop_waker_create(#GlutinCallbackEventLoop aGlutinEventLoop))
 ]
 
 { #category : #'private - ffi' }

@@ -1,6 +1,6 @@
 Class {
-	#name : #GlutinControlFlow,
-	#superclass : #GlutinEnum,
+	#name : #WinitControlFlow,
+	#superclass : #WinitEnum,
 	#classVars : [
 		'exit',
 		'poll',
@@ -10,13 +10,13 @@ Class {
 }
 
 { #category : #'accessing enum' }
-GlutinControlFlow class >> exit [
+WinitControlFlow class >> exit [
 	"This method was automatically generated"
 	^ exit
 ]
 
 { #category : #'enum declaration' }
-GlutinControlFlow class >> externalDeclaration [
+WinitControlFlow class >> externalDeclaration [
 	"
 	self rebuildEnumAccessors
 	"
@@ -29,23 +29,23 @@ GlutinControlFlow class >> externalDeclaration [
 ]
 
 { #category : #'enum declaration' }
-GlutinControlFlow class >> externalType [
+WinitControlFlow class >> externalType [
 	^ FFIUInt32 new
 ]
 
 { #category : #'class initialization' }
-GlutinControlFlow class >> initialize [
+WinitControlFlow class >> initialize [
 	super initialize
 ]
 
 { #category : #'accessing enum' }
-GlutinControlFlow class >> poll [
+WinitControlFlow class >> poll [
 	"This method was automatically generated"
 	^ poll
 ]
 
 { #category : #'accessing enum' }
-GlutinControlFlow class >> wait [
+WinitControlFlow class >> wait [
 	"This method was automatically generated"
 	^ wait
 ]

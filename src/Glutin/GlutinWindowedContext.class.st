@@ -16,7 +16,7 @@ Class {
 { #category : #'private - ffi' }
 GlutinWindowedContext class >> primCreate: anEventsLoop windowBuilder: aWindowBuilder contextBuilder: aContextBuilder [
 	^ self ffiCall: #(void* glutin_create_windowed_context(
-			GlutinEventLoop anEventsLoop,
+			#GlutinCallbackEventLoop anEventsLoop,
 			GlutinWindowBuilder aWindowBuilder,
 			GlutinContextBuilder aContextBuilder))
 ]
@@ -145,6 +145,11 @@ GlutinWindowedContext >> primMakeCurrent [
 ]
 
 { #category : #'private - ffi' }
+GlutinWindowedContext >> primRawWindowHandle [
+	^ self ffiCall: #(void* glutin_windowed_context_raw_window_handle (self))
+]
+
+{ #category : #'private - ffi' }
 GlutinWindowedContext >> primRequestRedraw [
 	^ self ffiCall: #(void glutin_windowed_context_request_redraw(self))
 ]
@@ -159,9 +164,7 @@ GlutinWindowedContext >> primResizeWidth: aWidth height: aHeight [
 
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primSetCursor: aCursorIcon [
-	^ self ffiCall: #(void glutin_windowed_context_set_cursor_icon (
-		self,
-		GlutinCursorIcon aCursorIcon))
+	^ self ffiCall: #(void glutin_windowed_context_set_cursor_icon(self, WinitCursorIcon aCursorIcon))
 ]
 
 { #category : #'private - ffi' }
@@ -188,6 +191,11 @@ GlutinWindowedContext >> primSetTitle: aGtBoxerString [
 { #category : #'private - ffi' }
 GlutinWindowedContext >> primSwapBuffers [
 	^ self ffiCall: #(void glutin_windowed_context_swap_buffers(self))
+]
+
+{ #category : #'api - accessing' }
+GlutinWindowedContext >> rawWindowHandle [
+	^ self primRawWindowHandle
 ]
 
 { #category : #'api - gl' }

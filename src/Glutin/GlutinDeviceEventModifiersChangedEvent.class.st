@@ -12,7 +12,7 @@ Class {
 
 { #category : #'event type' }
 GlutinDeviceEventModifiersChangedEvent class >> eventType [
-	^ GlutinEventType ModifiersChanged
+	^ WinitEventType ModifiersChanged
 ]
 
 { #category : #'field definition' }

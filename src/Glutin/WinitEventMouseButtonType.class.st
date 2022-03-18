@@ -1,67 +1,67 @@
 Class {
-	#name : #GlutinEventTouchPhase,
-	#superclass : #GlutinEnum,
+	#name : #WinitEventMouseButtonType,
+	#superclass : #WinitEnum,
 	#classVars : [
-		'Cancelled',
-		'Ended',
-		'Moved',
-		'Started',
+		'Left',
+		'Middle',
+		'Other',
+		'Right',
 		'Unknown'
 	],
 	#category : #'Glutin-Enums'
 }
 
 { #category : #'accessing enum' }
-GlutinEventTouchPhase class >> Cancelled [
+WinitEventMouseButtonType class >> Left [
 	"This method was automatically generated"
-	^ Cancelled
+	^ Left
 ]
 
 { #category : #'accessing enum' }
-GlutinEventTouchPhase class >> Ended [
+WinitEventMouseButtonType class >> Middle [
 	"This method was automatically generated"
-	^ Ended
+	^ Middle
 ]
 
 { #category : #'accessing enum' }
-GlutinEventTouchPhase class >> Moved [
+WinitEventMouseButtonType class >> Other [
 	"This method was automatically generated"
-	^ Moved
+	^ Other
 ]
 
 { #category : #'accessing enum' }
-GlutinEventTouchPhase class >> Started [
+WinitEventMouseButtonType class >> Right [
 	"This method was automatically generated"
-	^ Started
+	^ Right
 ]
 
 { #category : #'accessing enum' }
-GlutinEventTouchPhase class >> Unknown [
+WinitEventMouseButtonType class >> Unknown [
 	"This method was automatically generated"
 	^ Unknown
 ]
 
 { #category : #'enum declaration' }
-GlutinEventTouchPhase class >> externalDeclaration [
+WinitEventMouseButtonType class >> externalDeclaration [
 	"
 	self rebuildEnumAccessors
 	"
 
 	^ #(
 	 Unknown,
-    Started,
-    Moved,
-    Ended,
-    Cancelled,
+    Left,
+    Right,
+    Middle,
+    Other,
 	)
 ]
 
 { #category : #'enum declaration' }
-GlutinEventTouchPhase class >> externalType [
+WinitEventMouseButtonType class >> externalType [
 	^ FFIUInt32 new
 ]
 
 { #category : #'class initialization' }
-GlutinEventTouchPhase class >> initialize [
+WinitEventMouseButtonType class >> initialize [
 	super initialize
 ]

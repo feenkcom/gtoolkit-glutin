@@ -1,6 +1,8 @@
 Class {
 	#name : #GlutinMainThreadEventLoop,
-	#superclass : #GlutinExternalObject,
+	#superclass : #RustWindowingEventLoop,
+	#traits : 'TGlutin',
+	#classTraits : 'TGlutin classTrait',
 	#instVars : [
 		'isRunning'
 	],
@@ -15,11 +17,6 @@ GlutinMainThreadEventLoop class >> createPollingEventLoopWithSemaphoreSignaller:
 		void* aThunkAddress,
 		void* aReceiverCallback,
 		void* aReceiverThunk))
-]
-
-{ #category : #'private - ffi' }
-GlutinMainThreadEventLoop class >> primCreate [
-	^ self ffiCall: #(void* glutin_polling_event_loop_new())
 ]
 
 { #category : #'private - ffi' }
@@ -90,23 +87,25 @@ GlutinMainThreadEventLoop >> createWindow: aWindowBuilder [
 	aContextBuilder := (GlutinContextProfile new vsync: false) asContextBuilder.
 
 	aWindowedContextHandle := self primCreateWindow: aBuilderCopy contextBuilder: aContextBuilder.
-	"aWindowedContext := GlutinWindowedContext fromNativeHandle: aWindowedContextHandle."
+	aWindowedContext := GlutinWindowedContext fromNativeHandle: aWindowedContextHandle.
 
 	aBuilderCopy nullify.
 	aContextBuilder nullify.
 
-	"aWindowedContext isValid
+	aWindowedContext isValid
 		ifTrue: [
-			GlutinLibrary println: '[Glutin] Profile #0 worked'.
+			NonInteractiveTranscript stdout
+				nextPutAll: '[Glutin] Profile #0 worked';
+				cr.
 			aWindowedContext autoRelease.
 			aWindowedContext eventLoop: self.
 			aWindowedContext title: aBuilderCopy title.
 			
 			GlutinWindowsRegistry default registerWindow: aWindowedContext.
 			
-			^ aWindowedContext ]."
-		
-	"self error: 'Could not find a suitable OpenGL profile for this system'"
+			^ aWindowedContext ].
+	
+	self error: 'Could not find a suitable OpenGL profile for this system'
 ]
 
 { #category : #initialization }
@@ -131,7 +130,7 @@ GlutinMainThreadEventLoop >> poll: aBlock [
 
 { #category : #'private - ffi' }
 GlutinMainThreadEventLoop >> primCreateWindow: aWindowBuilder contextBuilder: aContextBuilder [
-	^ self ffiCall: #(void* glutin_polling_event_loop_create_windowed_context(
+	^ self ffiCall: #(void* winit_polling_event_loop_new(
 			self,
 			GlutinWindowBuilder aWindowBuilder,
 			GlutinContextBuilder aContextBuilder)) options: #(optEventLoop)

@@ -10,7 +10,7 @@ Class {
 
 { #category : #'event type' }
 GlutinWindowMovedEvent class >> eventType [
-	^ GlutinEventType WindowEventMoved
+	^ WinitEventType WindowEventMoved
 ]
 
 { #category : #'field definition' }

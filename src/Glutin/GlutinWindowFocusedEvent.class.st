@@ -9,7 +9,7 @@ Class {
 
 { #category : #'event type' }
 GlutinWindowFocusedEvent class >> eventType [
-	^ GlutinEventType WindowEventFocused
+	^ WinitEventType WindowEventFocused
 ]
 
 { #category : #'field definition' }

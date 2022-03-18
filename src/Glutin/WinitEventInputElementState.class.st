@@ -1,51 +1,51 @@
 Class {
-	#name : #GlutinEventMouseScrollDeltaType,
-	#superclass : #GlutinEnum,
+	#name : #WinitEventInputElementState,
+	#superclass : #WinitEnum,
 	#classVars : [
-		'LineDelta',
-		'PixelDelta',
+		'Pressed',
+		'Released',
 		'Unknown'
 	],
 	#category : #'Glutin-Enums'
 }
 
 { #category : #'accessing enum' }
-GlutinEventMouseScrollDeltaType class >> LineDelta [
+WinitEventInputElementState class >> Pressed [
 	"This method was automatically generated"
-	^ LineDelta
+	^ Pressed
 ]
 
 { #category : #'accessing enum' }
-GlutinEventMouseScrollDeltaType class >> PixelDelta [
+WinitEventInputElementState class >> Released [
 	"This method was automatically generated"
-	^ PixelDelta
+	^ Released
 ]
 
 { #category : #'accessing enum' }
-GlutinEventMouseScrollDeltaType class >> Unknown [
+WinitEventInputElementState class >> Unknown [
 	"This method was automatically generated"
 	^ Unknown
 ]
 
 { #category : #'enum declaration' }
-GlutinEventMouseScrollDeltaType class >> externalDeclaration [
+WinitEventInputElementState class >> externalDeclaration [
 	"
 	self rebuildEnumAccessors
 	"
 
 	^ #(
 	 Unknown,
-    LineDelta,
-    PixelDelta,
+    Pressed,
+    Released,
 	)
 ]
 
 { #category : #'enum declaration' }
-GlutinEventMouseScrollDeltaType class >> externalType [
+WinitEventInputElementState class >> externalType [
 	^ FFIUInt32 new
 ]
 
 { #category : #'class initialization' }
-GlutinEventMouseScrollDeltaType class >> initialize [
+WinitEventInputElementState class >> initialize [
 	super initialize
 ]

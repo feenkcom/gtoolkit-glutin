@@ -1,6 +1,6 @@
 Class {
-	#name : #GlutinEventVirtualKeyCode,
-	#superclass : #GlutinEnum,
+	#name : #WinitEventVirtualKeyCode,
+	#superclass : #WinitEnum,
 	#classVars : [
 		'A',
 		'AbntC1',
@@ -175,1015 +175,1015 @@ Class {
 }
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> A [
+WinitEventVirtualKeyCode class >> A [
 	"This method was automatically generated"
 	^ A
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> AbntC1 [
+WinitEventVirtualKeyCode class >> AbntC1 [
 	"This method was automatically generated"
 	^ AbntC1
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> AbntC2 [
+WinitEventVirtualKeyCode class >> AbntC2 [
 	"This method was automatically generated"
 	^ AbntC2
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Add [
+WinitEventVirtualKeyCode class >> Add [
 	"This method was automatically generated"
 	^ Add
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Apostrophe [
+WinitEventVirtualKeyCode class >> Apostrophe [
 	"This method was automatically generated"
 	^ Apostrophe
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Apps [
+WinitEventVirtualKeyCode class >> Apps [
 	"This method was automatically generated"
 	^ Apps
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Asterisk [
+WinitEventVirtualKeyCode class >> Asterisk [
 	"This method was automatically generated"
 	^ Asterisk
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> At [
+WinitEventVirtualKeyCode class >> At [
 	"This method was automatically generated"
 	^ At
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Ax [
+WinitEventVirtualKeyCode class >> Ax [
 	"This method was automatically generated"
 	^ Ax
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> B [
+WinitEventVirtualKeyCode class >> B [
 	"This method was automatically generated"
 	^ B
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Back [
+WinitEventVirtualKeyCode class >> Back [
 	"This method was automatically generated"
 	^ Back
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Backslash [
+WinitEventVirtualKeyCode class >> Backslash [
 	"This method was automatically generated"
 	^ Backslash
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> C [
+WinitEventVirtualKeyCode class >> C [
 	"This method was automatically generated"
 	^ C
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Calculator [
+WinitEventVirtualKeyCode class >> Calculator [
 	"This method was automatically generated"
 	^ Calculator
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Capital [
+WinitEventVirtualKeyCode class >> Capital [
 	"This method was automatically generated"
 	^ Capital
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Caret [
+WinitEventVirtualKeyCode class >> Caret [
 	"This method was automatically generated"
 	^ Caret
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Colon [
+WinitEventVirtualKeyCode class >> Colon [
 	"This method was automatically generated"
 	^ Colon
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Comma [
+WinitEventVirtualKeyCode class >> Comma [
 	"This method was automatically generated"
 	^ Comma
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Compose [
+WinitEventVirtualKeyCode class >> Compose [
 	"This method was automatically generated"
 	^ Compose
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Convert [
+WinitEventVirtualKeyCode class >> Convert [
 	"This method was automatically generated"
 	^ Convert
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Copy [
+WinitEventVirtualKeyCode class >> Copy [
 	"This method was automatically generated"
 	^ Copy
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Cut [
+WinitEventVirtualKeyCode class >> Cut [
 	"This method was automatically generated"
 	^ Cut
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> D [
+WinitEventVirtualKeyCode class >> D [
 	"This method was automatically generated"
 	^ D
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Decimal [
+WinitEventVirtualKeyCode class >> Decimal [
 	"This method was automatically generated"
 	^ Decimal
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Delete [
+WinitEventVirtualKeyCode class >> Delete [
 	"This method was automatically generated"
 	^ Delete
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Divide [
+WinitEventVirtualKeyCode class >> Divide [
 	"This method was automatically generated"
 	^ Divide
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Down [
+WinitEventVirtualKeyCode class >> Down [
 	"This method was automatically generated"
 	^ Down
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> E [
+WinitEventVirtualKeyCode class >> E [
 	"This method was automatically generated"
 	^ E
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> End [
+WinitEventVirtualKeyCode class >> End [
 	"This method was automatically generated"
 	^ End
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Equals [
+WinitEventVirtualKeyCode class >> Equals [
 	"This method was automatically generated"
 	^ Equals
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Escape [
+WinitEventVirtualKeyCode class >> Escape [
 	"This method was automatically generated"
 	^ Escape
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> F [
+WinitEventVirtualKeyCode class >> F [
 	"This method was automatically generated"
 	^ F
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> F1 [
+WinitEventVirtualKeyCode class >> F1 [
 	"This method was automatically generated"
 	^ F1
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> F10 [
+WinitEventVirtualKeyCode class >> F10 [
 	"This method was automatically generated"
 	^ F10
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> F11 [
+WinitEventVirtualKeyCode class >> F11 [
 	"This method was automatically generated"
 	^ F11
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> F12 [
+WinitEventVirtualKeyCode class >> F12 [
 	"This method was automatically generated"
 	^ F12
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> F13 [
+WinitEventVirtualKeyCode class >> F13 [
 	"This method was automatically generated"
 	^ F13
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> F14 [
+WinitEventVirtualKeyCode class >> F14 [
 	"This method was automatically generated"
 	^ F14
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> F15 [
+WinitEventVirtualKeyCode class >> F15 [
 	"This method was automatically generated"
 	^ F15
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> F16 [
+WinitEventVirtualKeyCode class >> F16 [
 	"This method was automatically generated"
 	^ F16
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> F17 [
+WinitEventVirtualKeyCode class >> F17 [
 	"This method was automatically generated"
 	^ F17
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> F18 [
+WinitEventVirtualKeyCode class >> F18 [
 	"This method was automatically generated"
 	^ F18
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> F19 [
+WinitEventVirtualKeyCode class >> F19 [
 	"This method was automatically generated"
 	^ F19
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> F2 [
+WinitEventVirtualKeyCode class >> F2 [
 	"This method was automatically generated"
 	^ F2
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> F20 [
+WinitEventVirtualKeyCode class >> F20 [
 	"This method was automatically generated"
 	^ F20
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> F21 [
+WinitEventVirtualKeyCode class >> F21 [
 	"This method was automatically generated"
 	^ F21
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> F22 [
+WinitEventVirtualKeyCode class >> F22 [
 	"This method was automatically generated"
 	^ F22
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> F23 [
+WinitEventVirtualKeyCode class >> F23 [
 	"This method was automatically generated"
 	^ F23
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> F24 [
+WinitEventVirtualKeyCode class >> F24 [
 	"This method was automatically generated"
 	^ F24
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> F3 [
+WinitEventVirtualKeyCode class >> F3 [
 	"This method was automatically generated"
 	^ F3
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> F4 [
+WinitEventVirtualKeyCode class >> F4 [
 	"This method was automatically generated"
 	^ F4
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> F5 [
+WinitEventVirtualKeyCode class >> F5 [
 	"This method was automatically generated"
 	^ F5
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> F6 [
+WinitEventVirtualKeyCode class >> F6 [
 	"This method was automatically generated"
 	^ F6
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> F7 [
+WinitEventVirtualKeyCode class >> F7 [
 	"This method was automatically generated"
 	^ F7
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> F8 [
+WinitEventVirtualKeyCode class >> F8 [
 	"This method was automatically generated"
 	^ F8
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> F9 [
+WinitEventVirtualKeyCode class >> F9 [
 	"This method was automatically generated"
 	^ F9
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> G [
+WinitEventVirtualKeyCode class >> G [
 	"This method was automatically generated"
 	^ G
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Grave [
+WinitEventVirtualKeyCode class >> Grave [
 	"This method was automatically generated"
 	^ Grave
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> H [
+WinitEventVirtualKeyCode class >> H [
 	"This method was automatically generated"
 	^ H
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Home [
+WinitEventVirtualKeyCode class >> Home [
 	"This method was automatically generated"
 	^ Home
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> I [
+WinitEventVirtualKeyCode class >> I [
 	"This method was automatically generated"
 	^ I
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Insert [
+WinitEventVirtualKeyCode class >> Insert [
 	"This method was automatically generated"
 	^ Insert
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> J [
+WinitEventVirtualKeyCode class >> J [
 	"This method was automatically generated"
 	^ J
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> K [
+WinitEventVirtualKeyCode class >> K [
 	"This method was automatically generated"
 	^ K
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Kana [
+WinitEventVirtualKeyCode class >> Kana [
 	"This method was automatically generated"
 	^ Kana
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Kanji [
+WinitEventVirtualKeyCode class >> Kanji [
 	"This method was automatically generated"
 	^ Kanji
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Key0 [
+WinitEventVirtualKeyCode class >> Key0 [
 	"This method was automatically generated"
 	^ Key0
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Key1 [
+WinitEventVirtualKeyCode class >> Key1 [
 	"This method was automatically generated"
 	^ Key1
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Key2 [
+WinitEventVirtualKeyCode class >> Key2 [
 	"This method was automatically generated"
 	^ Key2
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Key3 [
+WinitEventVirtualKeyCode class >> Key3 [
 	"This method was automatically generated"
 	^ Key3
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Key4 [
+WinitEventVirtualKeyCode class >> Key4 [
 	"This method was automatically generated"
 	^ Key4
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Key5 [
+WinitEventVirtualKeyCode class >> Key5 [
 	"This method was automatically generated"
 	^ Key5
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Key6 [
+WinitEventVirtualKeyCode class >> Key6 [
 	"This method was automatically generated"
 	^ Key6
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Key7 [
+WinitEventVirtualKeyCode class >> Key7 [
 	"This method was automatically generated"
 	^ Key7
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Key8 [
+WinitEventVirtualKeyCode class >> Key8 [
 	"This method was automatically generated"
 	^ Key8
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Key9 [
+WinitEventVirtualKeyCode class >> Key9 [
 	"This method was automatically generated"
 	^ Key9
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> L [
+WinitEventVirtualKeyCode class >> L [
 	"This method was automatically generated"
 	^ L
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> LAlt [
+WinitEventVirtualKeyCode class >> LAlt [
 	"This method was automatically generated"
 	^ LAlt
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> LBracket [
+WinitEventVirtualKeyCode class >> LBracket [
 	"This method was automatically generated"
 	^ LBracket
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> LControl [
+WinitEventVirtualKeyCode class >> LControl [
 	"This method was automatically generated"
 	^ LControl
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> LShift [
+WinitEventVirtualKeyCode class >> LShift [
 	"This method was automatically generated"
 	^ LShift
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> LWin [
+WinitEventVirtualKeyCode class >> LWin [
 	"This method was automatically generated"
 	^ LWin
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Left [
+WinitEventVirtualKeyCode class >> Left [
 	"This method was automatically generated"
 	^ Left
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> M [
+WinitEventVirtualKeyCode class >> M [
 	"This method was automatically generated"
 	^ M
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Mail [
+WinitEventVirtualKeyCode class >> Mail [
 	"This method was automatically generated"
 	^ Mail
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> MediaSelect [
+WinitEventVirtualKeyCode class >> MediaSelect [
 	"This method was automatically generated"
 	^ MediaSelect
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> MediaStop [
+WinitEventVirtualKeyCode class >> MediaStop [
 	"This method was automatically generated"
 	^ MediaStop
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Minus [
+WinitEventVirtualKeyCode class >> Minus [
 	"This method was automatically generated"
 	^ Minus
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Multiply [
+WinitEventVirtualKeyCode class >> Multiply [
 	"This method was automatically generated"
 	^ Multiply
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Mute [
+WinitEventVirtualKeyCode class >> Mute [
 	"This method was automatically generated"
 	^ Mute
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> MyComputer [
+WinitEventVirtualKeyCode class >> MyComputer [
 	"This method was automatically generated"
 	^ MyComputer
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> N [
+WinitEventVirtualKeyCode class >> N [
 	"This method was automatically generated"
 	^ N
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> NavigateBackward [
+WinitEventVirtualKeyCode class >> NavigateBackward [
 	"This method was automatically generated"
 	^ NavigateBackward
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> NavigateForward [
+WinitEventVirtualKeyCode class >> NavigateForward [
 	"This method was automatically generated"
 	^ NavigateForward
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> NextTrack [
+WinitEventVirtualKeyCode class >> NextTrack [
 	"This method was automatically generated"
 	^ NextTrack
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> NoConvert [
+WinitEventVirtualKeyCode class >> NoConvert [
 	"This method was automatically generated"
 	^ NoConvert
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Numlock [
+WinitEventVirtualKeyCode class >> Numlock [
 	"This method was automatically generated"
 	^ Numlock
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Numpad0 [
+WinitEventVirtualKeyCode class >> Numpad0 [
 	"This method was automatically generated"
 	^ Numpad0
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Numpad1 [
+WinitEventVirtualKeyCode class >> Numpad1 [
 	"This method was automatically generated"
 	^ Numpad1
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Numpad2 [
+WinitEventVirtualKeyCode class >> Numpad2 [
 	"This method was automatically generated"
 	^ Numpad2
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Numpad3 [
+WinitEventVirtualKeyCode class >> Numpad3 [
 	"This method was automatically generated"
 	^ Numpad3
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Numpad4 [
+WinitEventVirtualKeyCode class >> Numpad4 [
 	"This method was automatically generated"
 	^ Numpad4
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Numpad5 [
+WinitEventVirtualKeyCode class >> Numpad5 [
 	"This method was automatically generated"
 	^ Numpad5
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Numpad6 [
+WinitEventVirtualKeyCode class >> Numpad6 [
 	"This method was automatically generated"
 	^ Numpad6
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Numpad7 [
+WinitEventVirtualKeyCode class >> Numpad7 [
 	"This method was automatically generated"
 	^ Numpad7
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Numpad8 [
+WinitEventVirtualKeyCode class >> Numpad8 [
 	"This method was automatically generated"
 	^ Numpad8
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Numpad9 [
+WinitEventVirtualKeyCode class >> Numpad9 [
 	"This method was automatically generated"
 	^ Numpad9
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> NumpadAdd [
+WinitEventVirtualKeyCode class >> NumpadAdd [
 	"This method was automatically generated"
 	^ NumpadAdd
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> NumpadComma [
+WinitEventVirtualKeyCode class >> NumpadComma [
 	"This method was automatically generated"
 	^ NumpadComma
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> NumpadDecimal [
+WinitEventVirtualKeyCode class >> NumpadDecimal [
 	"This method was automatically generated"
 	^ NumpadDecimal
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> NumpadDivide [
+WinitEventVirtualKeyCode class >> NumpadDivide [
 	"This method was automatically generated"
 	^ NumpadDivide
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> NumpadEnter [
+WinitEventVirtualKeyCode class >> NumpadEnter [
 	"This method was automatically generated"
 	^ NumpadEnter
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> NumpadEquals [
+WinitEventVirtualKeyCode class >> NumpadEquals [
 	"This method was automatically generated"
 	^ NumpadEquals
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> NumpadMultiply [
+WinitEventVirtualKeyCode class >> NumpadMultiply [
 	"This method was automatically generated"
 	^ NumpadMultiply
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> NumpadSubtract [
+WinitEventVirtualKeyCode class >> NumpadSubtract [
 	"This method was automatically generated"
 	^ NumpadSubtract
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> O [
+WinitEventVirtualKeyCode class >> O [
 	"This method was automatically generated"
 	^ O
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> OEM102 [
+WinitEventVirtualKeyCode class >> OEM102 [
 	"This method was automatically generated"
 	^ OEM102
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> P [
+WinitEventVirtualKeyCode class >> P [
 	"This method was automatically generated"
 	^ P
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> PageDown [
+WinitEventVirtualKeyCode class >> PageDown [
 	"This method was automatically generated"
 	^ PageDown
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> PageUp [
+WinitEventVirtualKeyCode class >> PageUp [
 	"This method was automatically generated"
 	^ PageUp
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Paste [
+WinitEventVirtualKeyCode class >> Paste [
 	"This method was automatically generated"
 	^ Paste
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Pause [
+WinitEventVirtualKeyCode class >> Pause [
 	"This method was automatically generated"
 	^ Pause
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Period [
+WinitEventVirtualKeyCode class >> Period [
 	"This method was automatically generated"
 	^ Period
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> PlayPause [
+WinitEventVirtualKeyCode class >> PlayPause [
 	"This method was automatically generated"
 	^ PlayPause
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Plus [
+WinitEventVirtualKeyCode class >> Plus [
 	"This method was automatically generated"
 	^ Plus
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Power [
+WinitEventVirtualKeyCode class >> Power [
 	"This method was automatically generated"
 	^ Power
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> PrevTrack [
+WinitEventVirtualKeyCode class >> PrevTrack [
 	"This method was automatically generated"
 	^ PrevTrack
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Q [
+WinitEventVirtualKeyCode class >> Q [
 	"This method was automatically generated"
 	^ Q
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> R [
+WinitEventVirtualKeyCode class >> R [
 	"This method was automatically generated"
 	^ R
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> RAlt [
+WinitEventVirtualKeyCode class >> RAlt [
 	"This method was automatically generated"
 	^ RAlt
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> RBracket [
+WinitEventVirtualKeyCode class >> RBracket [
 	"This method was automatically generated"
 	^ RBracket
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> RControl [
+WinitEventVirtualKeyCode class >> RControl [
 	"This method was automatically generated"
 	^ RControl
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> RShift [
+WinitEventVirtualKeyCode class >> RShift [
 	"This method was automatically generated"
 	^ RShift
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> RWin [
+WinitEventVirtualKeyCode class >> RWin [
 	"This method was automatically generated"
 	^ RWin
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Return [
+WinitEventVirtualKeyCode class >> Return [
 	"This method was automatically generated"
 	^ Return
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Right [
+WinitEventVirtualKeyCode class >> Right [
 	"This method was automatically generated"
 	^ Right
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> S [
+WinitEventVirtualKeyCode class >> S [
 	"This method was automatically generated"
 	^ S
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Scroll [
+WinitEventVirtualKeyCode class >> Scroll [
 	"This method was automatically generated"
 	^ Scroll
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Semicolon [
+WinitEventVirtualKeyCode class >> Semicolon [
 	"This method was automatically generated"
 	^ Semicolon
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Slash [
+WinitEventVirtualKeyCode class >> Slash [
 	"This method was automatically generated"
 	^ Slash
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Sleep [
+WinitEventVirtualKeyCode class >> Sleep [
 	"This method was automatically generated"
 	^ Sleep
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Snapshot [
+WinitEventVirtualKeyCode class >> Snapshot [
 	"This method was automatically generated"
 	^ Snapshot
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Space [
+WinitEventVirtualKeyCode class >> Space [
 	"This method was automatically generated"
 	^ Space
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Stop [
+WinitEventVirtualKeyCode class >> Stop [
 	"This method was automatically generated"
 	^ Stop
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Subtract [
+WinitEventVirtualKeyCode class >> Subtract [
 	"This method was automatically generated"
 	^ Subtract
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Sysrq [
+WinitEventVirtualKeyCode class >> Sysrq [
 	"This method was automatically generated"
 	^ Sysrq
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> T [
+WinitEventVirtualKeyCode class >> T [
 	"This method was automatically generated"
 	^ T
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Tab [
+WinitEventVirtualKeyCode class >> Tab [
 	"This method was automatically generated"
 	^ Tab
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> U [
+WinitEventVirtualKeyCode class >> U [
 	"This method was automatically generated"
 	^ U
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Underline [
+WinitEventVirtualKeyCode class >> Underline [
 	"This method was automatically generated"
 	^ Underline
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Unlabeled [
+WinitEventVirtualKeyCode class >> Unlabeled [
 	"This method was automatically generated"
 	^ Unlabeled
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Up [
+WinitEventVirtualKeyCode class >> Up [
 	"This method was automatically generated"
 	^ Up
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> V [
+WinitEventVirtualKeyCode class >> V [
 	"This method was automatically generated"
 	^ V
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> VolumeDown [
+WinitEventVirtualKeyCode class >> VolumeDown [
 	"This method was automatically generated"
 	^ VolumeDown
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> VolumeUp [
+WinitEventVirtualKeyCode class >> VolumeUp [
 	"This method was automatically generated"
 	^ VolumeUp
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> W [
+WinitEventVirtualKeyCode class >> W [
 	"This method was automatically generated"
 	^ W
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Wake [
+WinitEventVirtualKeyCode class >> Wake [
 	"This method was automatically generated"
 	^ Wake
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> WebBack [
+WinitEventVirtualKeyCode class >> WebBack [
 	"This method was automatically generated"
 	^ WebBack
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> WebFavorites [
+WinitEventVirtualKeyCode class >> WebFavorites [
 	"This method was automatically generated"
 	^ WebFavorites
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> WebForward [
+WinitEventVirtualKeyCode class >> WebForward [
 	"This method was automatically generated"
 	^ WebForward
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> WebHome [
+WinitEventVirtualKeyCode class >> WebHome [
 	"This method was automatically generated"
 	^ WebHome
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> WebRefresh [
+WinitEventVirtualKeyCode class >> WebRefresh [
 	"This method was automatically generated"
 	^ WebRefresh
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> WebSearch [
+WinitEventVirtualKeyCode class >> WebSearch [
 	"This method was automatically generated"
 	^ WebSearch
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> WebStop [
+WinitEventVirtualKeyCode class >> WebStop [
 	"This method was automatically generated"
 	^ WebStop
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> X [
+WinitEventVirtualKeyCode class >> X [
 	"This method was automatically generated"
 	^ X
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Y [
+WinitEventVirtualKeyCode class >> Y [
 	"This method was automatically generated"
 	^ Y
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Yen [
+WinitEventVirtualKeyCode class >> Yen [
 	"This method was automatically generated"
 	^ Yen
 ]
 
 { #category : #'accessing enum' }
-GlutinEventVirtualKeyCode class >> Z [
+WinitEventVirtualKeyCode class >> Z [
 	"This method was automatically generated"
 	^ Z
 ]
 
 { #category : #'enum declaration' }
-GlutinEventVirtualKeyCode class >> externalDeclaration [
+WinitEventVirtualKeyCode class >> externalDeclaration [
 	"
 	self rebuildEnumAccessors
 	"
@@ -1388,11 +1388,11 @@ GlutinEventVirtualKeyCode class >> externalDeclaration [
 ]
 
 { #category : #'enum declaration' }
-GlutinEventVirtualKeyCode class >> externalType [
+WinitEventVirtualKeyCode class >> externalType [
 	^ FFIUInt32 new
 ]
 
 { #category : #'class initialization' }
-GlutinEventVirtualKeyCode class >> initialize [
+WinitEventVirtualKeyCode class >> initialize [
 	super initialize
 ]

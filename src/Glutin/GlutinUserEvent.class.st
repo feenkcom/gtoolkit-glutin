@@ -9,7 +9,7 @@ Class {
 
 { #category : #'event type' }
 GlutinUserEvent class >> eventType [
-	^ GlutinEventType UserEvent
+	^ WinitEventType UserEvent
 ]
 
 { #category : #'field definition' }

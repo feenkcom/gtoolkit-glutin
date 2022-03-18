@@ -74,7 +74,7 @@ GlutinEventFetcher >> eventHandlers [
 GlutinEventFetcher >> eventLoop [
 	"Return a Glutin event loop behind this event fetcher. A reference to the event loop
 	is required to create a window"
-	<return: #GlutinEventLoop>
+	<return: #GlutinCallbackEventLoop>
 	
 	^ self subclassResponsibility
 ]
@@ -128,7 +128,7 @@ GlutinEventFetcher >> processGlutinEvent: aGlutinEvent [
 	Ignore synthetic key Pressed events"
 	(mappedEvent isKeyboardInputEvent  and:
 		[ mappedEvent is_synthetic and:
-		[ mappedEvent state = GlutinEventInputElementState Pressed ] ]) ifTrue:
+		[ mappedEvent state = WinitEventInputElementState Pressed ] ]) ifTrue:
 				[ ^ self ].
 
 	self eventHandlers do: [ :eachHandler | eachHandler processGlutinEvent: mappedEvent ]
@@ -142,9 +142,9 @@ GlutinEventFetcher >> reinstallEventFetcher [
 		assert: [ fetcherProcess isNil ]
 		description: [ 'Fetcher process must not exist' ].
 	
-	self
+	"self
 		assert: [ Glutin isSupported ]
-		description: [ 'Glutin must be supported by the system' ].
+		description: [ 'Glutin must be supported by the system' ]."
 	
 	fetcherProcess := [ self basicPharoEventLoop ] forkAt: self fetcherProcessPriority.
 	fetcherProcess name: 'Glutin Event Fetcher Process'

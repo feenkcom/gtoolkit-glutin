@@ -48,9 +48,9 @@ GlutinUserInterruptHandler >> initialize [
 	uiProcessBlock := [ nil ].
 	interruptCombinations := {
 		"mac"
-		{ GlutinEventVirtualKeyCode LWin . GlutinEventVirtualKeyCode Period } asSet.
+		{ WinitEventVirtualKeyCode LWin . WinitEventVirtualKeyCode Period } asSet.
 		"linux"
-		{ GlutinEventVirtualKeyCode LControl . GlutinEventVirtualKeyCode Period } asSet.
+		{ WinitEventVirtualKeyCode LControl . WinitEventVirtualKeyCode Period } asSet.
 	}.
 ]
 
@@ -103,10 +103,10 @@ GlutinUserInterruptHandler >> visitKeyboardInputEvent: anEvent [
 	anEvent has_virtual_keycode
 		ifFalse: [ ^ self ].
 	
-	anEvent state = GlutinEventInputElementState Released
+	anEvent state = WinitEventInputElementState Released
 		ifTrue: [ buffer remove: anEvent virtual_keycode ifAbsent: [  ] ].
 	
-	anEvent state = GlutinEventInputElementState Pressed
+	anEvent state = WinitEventInputElementState Pressed
 		ifTrue: [ buffer add: anEvent virtual_keycode ].
 	
 	(interruptCombinations notNil and: [ interruptCombinations includes: buffer ])

@@ -38,7 +38,7 @@ Class {
 		'ZoomIn',
 		'ZoomOut'
 	],
-	#category : #'Winit-Enums'
+	#category : #'Glutin-Enums'
 }
 
 { #category : #'accessing enum' }
