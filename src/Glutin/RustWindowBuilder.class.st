@@ -53,7 +53,7 @@ RustWindowBuilder >> extent: aPoint [
 
 { #category : #initialization }
 RustWindowBuilder >> initialize [
-	"no super to not nullify the handle"
+	super initialize.
 
 	self title: 'Window'.
 	self extent: 800@600.

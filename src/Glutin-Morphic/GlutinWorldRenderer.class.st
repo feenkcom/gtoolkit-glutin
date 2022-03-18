@@ -5,7 +5,9 @@ Class {
 		'glutinWindow',
 		'eventHandler',
 		'scaleFactor',
-		'cursorMap'
+		'cursorMap',
+		'windowLogicalSize',
+		'worldExtent'
 	],
 	#category : #'Glutin-Morphic'
 }
@@ -38,9 +40,7 @@ GlutinWorldRenderer >> actualFramebufferSize [
 	"Return the physical screen size"
 	<return: #Point>
 
-	^ glutinWindow
-		ifNil: [ 240@120 ]
-		ifNotNil: [ (FensterPhysicalSize fromPoint: glutinWindow innerExtent) asPoint asIntegerPoint ]
+	^ ((FensterLogicalSize fromPoint: worldExtent) asPhysical: self scaleFactor) rounded asPoint
 ]
 
 { #category : #accessing }
@@ -48,9 +48,7 @@ GlutinWorldRenderer >> actualScreenSize [
 	"Return the logical screen size"
 	<return: #Point>
 
-	^ glutinWindow
-		ifNil: [ 240@120 ]
-		ifNotNil: [ ((FensterPhysicalSize fromPoint: glutinWindow innerExtent) asLogical: self scaleFactor) asPoint asIntegerPoint ]
+	^ worldExtent
 ]
 
 { #category : #accessing }
@@ -68,13 +66,14 @@ GlutinWorldRenderer >> checkForNewScreenSize [
 	"Is called on every frame"
 	<return: #Boolean>
 	| anExtent |
-	
-	anExtent := self actualScreenSize.
 
-	(world extent = anExtent)
+	anExtent := self windowLogicalSize asPoint.
+
+	(worldExtent = anExtent)
 		ifTrue: [ ^ false ].
-
-	world worldState realWindowExtent: self actualFramebufferSize.
+	
+	worldExtent := anExtent.
+	world worldState realWindowExtent: anExtent.
 	world restoreMorphicDisplay.
 	
 	world extent: anExtent.
@@ -177,32 +176,25 @@ GlutinWorldRenderer >> initializeCursorMap [
 
 { #category : #initialization }
 GlutinWorldRenderer >> initializeGlutinWindow [
-	| anInitialExtent aWindowBuilder eventLoop |
-
-	anInitialExtent := world worldState realWindowExtent
-		ifNil: [ 976 @ 665 ].
+	| aWindowBuilder eventLoop |
+	
+	"#realWindowExtent is the logical size of the window"
+	windowLogicalSize := FensterLogicalSize
+		fromPoint: ((world worldState realWindowExtent ifNil: [ 976 @ 665 ]) asIntegerPoint).
+		
+	worldExtent := windowLogicalSize asPoint.
 
 	eventLoop := GlutinEventFetcher default eventLoop.
 	aWindowBuilder := eventLoop windowBuilder
 		title: Smalltalk image imageFile basename;
-		extent: anInitialExtent.
+		extent: windowLogicalSize asPoint.	
 
 	glutinWindow := eventLoop createWindow: aWindowBuilder.
 	scaleFactor := glutinWindow scaleFactor.
 
-	eventHandler := (GlutinMorphicEventHandler for: world) window: glutinWindow.
+	eventHandler := (WinitMorphicEventHandler for: world) window: glutinWindow.
 
 	GlutinEventFetcher default addEventHandler: eventHandler
-]
-
-{ #category : #accessing }
-GlutinWorldRenderer >> realScreenSize [
-	"Return the physical screen size"
-	<return: #Point>
-
-	^ glutinWindow
-		ifNil: [ 240@120 ]
-		ifNotNil: [ glutinWindow innerExtent ]
 ]
 
 { #category : #accessing }
@@ -215,8 +207,27 @@ GlutinWorldRenderer >> scaleFactor [
 
 { #category : #accessing }
 GlutinWorldRenderer >> scaleFactor: aNumber [
-	scaleFactor := aNumber.
-	self checkForNewScreenSize
+	scaleFactor := aNumber
+]
+
+{ #category : #accessing }
+GlutinWorldRenderer >> windowLogicalSize [
+	"Return the logical size of the window. The value can be changed anytime during the world cycle.
+	It is advised to only use it during #checkForNewScreenSize"
+	<return: #FensterLogicalSize>
+
+	^ windowLogicalSize
+]
+
+{ #category : #accessing }
+GlutinWorldRenderer >> windowLogicalSize: aFensterLogicalSize [
+	| roundedSize |
+	
+	roundedSize := aFensterLogicalSize rounded.
+	roundedSize isZero
+		ifTrue: [ self error: 'Window size must be positive' ].
+	
+	windowLogicalSize := roundedSize
 ]
 
 { #category : #accessing }

@@ -4,7 +4,8 @@ Class {
 	#traits : 'TWinit',
 	#classTraits : 'TWinit classTrait',
 	#instVars : [
-		'isRunning'
+		'isRunning',
+		'waker'
 	],
 	#category : #'Glutin-Event loop'
 }
@@ -103,8 +104,9 @@ WinitMainThreadEventLoop >> createWindow: aWindowBuilder [
 { #category : #initialization }
 WinitMainThreadEventLoop >> initialize [
 	super initialize.
-	
-	isRunning := false
+
+	isRunning := false.
+	waker := self primCreateWaker
 ]
 
 { #category : #running }
@@ -121,10 +123,20 @@ WinitMainThreadEventLoop >> poll: aBlock [
 ]
 
 { #category : #'private - ffi' }
+WinitMainThreadEventLoop >> primCreateWaker [
+	^ self ffiCall: #(void* winit_event_loop_waker_create(self))
+]
+
+{ #category : #'private - ffi' }
 WinitMainThreadEventLoop >> primCreateWindow: aWindowBuilder [
 	^ self
 		ffiCall: #(void* winit_polling_event_loop_create_window(self, WinitWindowBuilder aWindowBuilder))
 		options: #(optEventLoop)
+]
+
+{ #category : #'private - ffi' }
+WinitMainThreadEventLoop >> primGetWakerCallback [
+	^ self ffiCall: #(void* winit_event_loop_waker_function())
 ]
 
 { #category : #'private - ffi' }
@@ -150,9 +162,23 @@ WinitMainThreadEventLoop >> run [
 	Smalltalk vm isRunningInWorkerThread
 		ifFalse: [ self error: 'Must be on a worker thread!' ].
 
+	GtVirtualMachine instance
+		eventLoopWaker: self waker
+		function: self wakerCallback.
+
 	"this will block when not on the Worker Thread!"
 	self primRun.
 	isRunning := true
+]
+
+{ #category : #'api - accessing' }
+WinitMainThreadEventLoop >> waker [
+	^ waker
+]
+
+{ #category : #'api - accessing' }
+WinitMainThreadEventLoop >> wakerCallback [
+	^ self primGetWakerCallback
 ]
 
 { #category : #'api - windows' }

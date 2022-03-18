@@ -40,17 +40,27 @@ GtPixels >> primDraw [
 ]
 
 { #category : #'private - ffi' }
-GtPixels >> primUpdateWidth: aWidth height: aHeight pixels: aGtBoxerArrayU8 [
-	^ self ffiCall: #(void pixels_world_update(self, uint32 aWidth, uint32 aHeight, GtBoxerArrayU8 aGtBoxerArrayU8))
+GtPixels >> primUpdateSurfaceWidth: aSurfaceWidth height: aSurfaceHeight bufferWidth: aBufferWidth height: aBufferHeight pixels: aGtBoxerArrayU8 [
+	^ self ffiCall: #(void pixels_world_update(
+		self,
+		uint32 aSurfaceWidth,
+		uint32 aSurfaceHeight,
+		uint32 aBufferWidth,
+		uint32 aBufferHeight,
+		GtBoxerArrayU8 aGtBoxerArrayU8))
 ]
 
 { #category : #drawing }
-GtPixels >> update: aPoint pixels: aGtBoxerArrayU8 [
-	self assert: [ aPoint x > 0 ] description: [ 'Width must be positive' ].
-	self assert: [ aPoint y > 0 ] description: [ 'Height must be positive' ].
+GtPixels >> updateSurface: aSurfaceSize buffer: aBufferSize pixels: aGtBoxerArrayU8 [
+	self assert: [ aSurfaceSize x > 0 ] description: [ 'Surface width must be positive' ].
+	self assert: [ aSurfaceSize y > 0 ] description: [ 'Surface height must be positive' ].
+	self assert: [ aBufferSize x > 0 ] description: [ 'Buffer width must be positive' ].
+	self assert: [ aBufferSize y > 0 ] description: [ 'Buffer height must be positive' ].
 	
 	self
-		primUpdateWidth: aPoint x
-		height: aPoint y
+		primUpdateSurfaceWidth: aSurfaceSize x
+		height: aSurfaceSize y
+		bufferWidth: aBufferSize x
+		height: aBufferSize y
 		pixels: aGtBoxerArrayU8
 ]

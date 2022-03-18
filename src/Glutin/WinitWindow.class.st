@@ -119,7 +119,7 @@ WinitWindow >> primRawWindowHandle [
 
 { #category : #'private - ffi' }
 WinitWindow >> primRequestRedraw [
-	^ self ffiCall: #(void winit_window_request_redraw(self))
+	^ self ffiCall: #(void winit_window_request_redraw(self)) options: #(optEventLoop optNonBlocking)
 ]
 
 { #category : #'private - ffi' }
