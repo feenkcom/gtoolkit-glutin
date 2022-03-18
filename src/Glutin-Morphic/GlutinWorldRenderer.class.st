@@ -30,7 +30,7 @@ GlutinWorldRenderer >> activateCursor: aCursor withMask: maskForm [
 	glutinWindow ifNotNil: [ cursorMap
 		at: aCursor
 		ifPresent: [ :aGlutinCursor | glutinWindow cursor: aGlutinCursor ]
-		ifAbsent: [ glutinWindow cursor: GlutinCursorIcon Default ] ]
+		ifAbsent: [ glutinWindow cursor: WinitCursorIcon Default ] ]
 ]
 
 { #category : #accessing }
@@ -147,6 +147,11 @@ GlutinWorldRenderer >> fullscreenMode: aValue [
 ]
 
 { #category : #accessing }
+GlutinWorldRenderer >> glutinWindow [
+	^ glutinWindow
+]
+
+{ #category : #accessing }
 GlutinWorldRenderer >> icon: aForm [ 
 
 	"osWindow icon: aForm"
@@ -156,43 +161,38 @@ GlutinWorldRenderer >> icon: aForm [
 GlutinWorldRenderer >> initializeCursorMap [
 	"Use newFromPairs: to allow duplications"
 	cursorMap := Dictionary newFromPairs: { 
-		Cursor normal . GlutinCursorIcon Default.
-		Cursor overEditableText . GlutinCursorIcon Text.
-		Cursor resizeLeft . GlutinCursorIcon EwResize.
-		Cursor resizeRight . GlutinCursorIcon EwResize.
-		Cursor resizeTop . GlutinCursorIcon NsResize.
-		Cursor resizeBottom . GlutinCursorIcon NsResize.
+		Cursor normal . WinitCursorIcon Default.
+		Cursor overEditableText . WinitCursorIcon Text.
+		Cursor resizeLeft . WinitCursorIcon EwResize.
+		Cursor resizeRight . WinitCursorIcon EwResize.
+		Cursor resizeTop . WinitCursorIcon NsResize.
+		Cursor resizeBottom . WinitCursorIcon NsResize.
 		
-		Cursor resizeBottomLeft . GlutinCursorIcon NeswResize.
-		Cursor resizeBottomRight . GlutinCursorIcon NwseResize.
-		Cursor resizeTopLeft . GlutinCursorIcon NwseResize.
-		Cursor resizeTopRight . GlutinCursorIcon NeswResize.
+		Cursor resizeBottomLeft . WinitCursorIcon NeswResize.
+		Cursor resizeBottomRight . WinitCursorIcon NwseResize.
+		Cursor resizeTopLeft . WinitCursorIcon NwseResize.
+		Cursor resizeTopRight . WinitCursorIcon NeswResize.
 	}
 ]
 
 { #category : #initialization }
 GlutinWorldRenderer >> initializeGlutinWindow [
+	| anInitialExtent aWindowBuilder eventLoop |
 
-	| anInitialExtent aWindowBuilder |
-	anInitialExtent := world worldState realWindowExtent ifNil: [ 
-		                   976 @ 665 ].
+	anInitialExtent := world worldState realWindowExtent
+		ifNil: [ 976 @ 665 ].
 
-	aWindowBuilder := GlutinWindowBuilder new
-		                  title: Smalltalk image imageFile basename;
-		                  extent: anInitialExtent.
+	eventLoop := GlutinEventFetcher default eventLoop.
+	aWindowBuilder := eventLoop windowBuilder
+		title: Smalltalk image imageFile basename;
+		extent: anInitialExtent.
 
-	glutinWindow := GlutinEventFetcher default eventLoop createWindow:
-		                aWindowBuilder.
+	glutinWindow := eventLoop createWindow: aWindowBuilder.
 	scaleFactor := glutinWindow scaleFactor.
-	SystemVersion current major == 8
-		ifTrue: [ 
-			eventHandler := (Pharo8GlutinMorphicEventHandler for: world) 
-				                window: glutinWindow ]
-		ifFalse: [ 
-			eventHandler := (GlutinMorphicEventHandler for: world) window:
-				                glutinWindow ].
-	GlutinEventFetcher default addEventHandler: eventHandler.
-	GlutinEventFetcher install
+
+	eventHandler := (GlutinMorphicEventHandler for: world) window: glutinWindow.
+
+	GlutinEventFetcher default addEventHandler: eventHandler
 ]
 
 { #category : #accessing }

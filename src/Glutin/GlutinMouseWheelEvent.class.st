@@ -11,7 +11,7 @@ Class {
 
 { #category : #'event type' }
 GlutinMouseWheelEvent class >> eventType [
-	^ GlutinEventType WindowEventMouseWheel
+	^ WinitEventType WindowEventMouseWheel
 ]
 
 { #category : #'field definition' }
@@ -21,7 +21,7 @@ GlutinMouseWheelEvent class >> fieldsDesc [
 	"
 	^ #(
 		int64 device_id
-		GlutinEventTouchPhase phase
+		#WinitEventTouchPhase phase
 		GlutinMouseScrollDelta delta
  	)
 ]
@@ -72,7 +72,7 @@ GlutinMouseWheelEvent >> device_id: anObject [
 { #category : #'accessing structure variables' }
 GlutinMouseWheelEvent >> phase [
 	"This method was automatically generated"
-	^GlutinEventTouchPhase fromInteger: (handle unsignedLongAt: OFFSET_PHASE)
+	^WinitEventTouchPhase fromInteger: (handle unsignedLongAt: OFFSET_PHASE)
 ]
 
 { #category : #'accessing structure variables' }

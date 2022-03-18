@@ -1,6 +1,6 @@
 Class {
 	#name : #GlutinContextApi,
-	#superclass : #GlutinEnum,
+	#superclass : #WinitEnum,
 	#classVars : [
 		'OpenGl',
 		'OpenGlEs',

@@ -14,7 +14,7 @@ GlutinEventMouseButton class >> fieldsDesc [
 	self rebuildFieldAccessors
 	"
 	^ #(
-		GlutinEventMouseButtonType button_type
+		#WinitEventMouseButtonType button_type
 		uint8 button_code
  	)
 ]
@@ -34,7 +34,7 @@ GlutinEventMouseButton >> button_code: anObject [
 { #category : #'accessing structure variables' }
 GlutinEventMouseButton >> button_type [
 	"This method was automatically generated"
-	^GlutinEventMouseButtonType fromInteger: (handle unsignedLongAt: OFFSET_BUTTON_TYPE)
+	^WinitEventMouseButtonType fromInteger: (handle unsignedLongAt: OFFSET_BUTTON_TYPE)
 ]
 
 { #category : #'accessing structure variables' }

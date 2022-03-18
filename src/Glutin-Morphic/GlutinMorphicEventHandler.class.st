@@ -40,36 +40,36 @@ GlutinMorphicEventHandler class >> initializeKeyCharacterMapping [
 	<script: 'self initializeKeyCharacterMapping'>
 	KeyCharacterMapping := Dictionary new.
 	
-	(($a to: $z) flatCollect: [ :c | { GlutinEventVirtualKeyCode perform: c asString asUppercase asSymbol . c } ]),
+	(($a to: $z) flatCollect: [ :c | { WinitEventVirtualKeyCode perform: c asString asUppercase asSymbol . c } ]),
 	{
-	GlutinEventVirtualKeyCode Back . Character backspace.
-	GlutinEventVirtualKeyCode Escape . Character escape.
-	GlutinEventVirtualKeyCode Tab . Character tab.
-	GlutinEventVirtualKeyCode Home . Character home.
-	GlutinEventVirtualKeyCode Left . Character arrowLeft.
-	GlutinEventVirtualKeyCode Up . Character arrowUp.
-	GlutinEventVirtualKeyCode Right . Character arrowRight.
-	GlutinEventVirtualKeyCode Down . Character arrowDown.
-	GlutinEventVirtualKeyCode End . Character end.
-	GlutinEventVirtualKeyCode PageUp . Character pageUp.
-	GlutinEventVirtualKeyCode PageDown . Character pageDown.
-	GlutinEventVirtualKeyCode Delete. Character delete.
-	GlutinEventVirtualKeyCode Space. Character space.
-	GlutinEventVirtualKeyCode Key0 . $0.
-	GlutinEventVirtualKeyCode Key1 . $1.
-	GlutinEventVirtualKeyCode Key2 . $2.
-	GlutinEventVirtualKeyCode Key3 . $3.
-	GlutinEventVirtualKeyCode Key4 . $4.
-	GlutinEventVirtualKeyCode Key5 . $5.
-	GlutinEventVirtualKeyCode Key6 . $6.
-	GlutinEventVirtualKeyCode Key7 . $7.
-	GlutinEventVirtualKeyCode Key8 . $8.
-	GlutinEventVirtualKeyCode Key9 . $9.
-	GlutinEventVirtualKeyCode Slash . $/.
-	GlutinEventVirtualKeyCode Backslash . $\.
-	GlutinEventVirtualKeyCode Minus . $-.
-	GlutinEventVirtualKeyCode Return . Character cr.
-	GlutinEventVirtualKeyCode Period . $..
+	WinitEventVirtualKeyCode Back . Character backspace.
+	WinitEventVirtualKeyCode Escape . Character escape.
+	WinitEventVirtualKeyCode Tab . Character tab.
+	WinitEventVirtualKeyCode Home . Character home.
+	WinitEventVirtualKeyCode Left . Character arrowLeft.
+	WinitEventVirtualKeyCode Up . Character arrowUp.
+	WinitEventVirtualKeyCode Right . Character arrowRight.
+	WinitEventVirtualKeyCode Down . Character arrowDown.
+	WinitEventVirtualKeyCode End . Character end.
+	WinitEventVirtualKeyCode PageUp . Character pageUp.
+	WinitEventVirtualKeyCode PageDown . Character pageDown.
+	WinitEventVirtualKeyCode Delete. Character delete.
+	WinitEventVirtualKeyCode Space. Character space.
+	WinitEventVirtualKeyCode Key0 . $0.
+	WinitEventVirtualKeyCode Key1 . $1.
+	WinitEventVirtualKeyCode Key2 . $2.
+	WinitEventVirtualKeyCode Key3 . $3.
+	WinitEventVirtualKeyCode Key4 . $4.
+	WinitEventVirtualKeyCode Key5 . $5.
+	WinitEventVirtualKeyCode Key6 . $6.
+	WinitEventVirtualKeyCode Key7 . $7.
+	WinitEventVirtualKeyCode Key8 . $8.
+	WinitEventVirtualKeyCode Key9 . $9.
+	WinitEventVirtualKeyCode Slash . $/.
+	WinitEventVirtualKeyCode Backslash . $\.
+	WinitEventVirtualKeyCode Minus . $-.
+	WinitEventVirtualKeyCode Return . Character cr.
+	WinitEventVirtualKeyCode Period . $..
 	} pairsDo: [ :key :val | KeyCharacterMapping at: key put: val ]
 ]
 
@@ -78,79 +78,79 @@ GlutinMorphicEventHandler class >> initializeWindowsKeyValueMapping [
 	<script: 'self initializeWindowsKeyValueMapping'>
 	WindowsKeyValueMapping := Dictionary new.
 	
-	(($a to: $z) flatCollect: [ :c | { GlutinEventVirtualKeyCode perform: c asString asUppercase asSymbol . { c asUppercase asInteger } } ]),
+	(($a to: $z) flatCollect: [ :c | { WinitEventVirtualKeyCode perform: c asString asUppercase asSymbol . { c asUppercase asInteger } } ]),
 	{
-	GlutinEventVirtualKeyCode Escape . #(ESCAPE).
-	GlutinEventVirtualKeyCode Tab . #(TAB).
-	GlutinEventVirtualKeyCode Home . #(1).
-	GlutinEventVirtualKeyCode Left . #(KP_LEFT).
-	GlutinEventVirtualKeyCode Up . #(KP_UP).
-	GlutinEventVirtualKeyCode Right . #(KP_RIGHT).
-	GlutinEventVirtualKeyCode Down . #(KP_DOWN).
-	GlutinEventVirtualKeyCode End . #(4).
-	GlutinEventVirtualKeyCode PageUp . #(PAGE_UP).
-	GlutinEventVirtualKeyCode PageDown . #(PAGE_DOWN).
-	GlutinEventVirtualKeyCode Space. #(KP_SPACE).
-	GlutinEventVirtualKeyCode Key0 . #(ZERO '0').
-	GlutinEventVirtualKeyCode Key1 . #(ONE '1').
-	GlutinEventVirtualKeyCode Key2 . #(TWO '2').
-	GlutinEventVirtualKeyCode Key3 . #(THREE '3').
-	GlutinEventVirtualKeyCode Key4 . #(FOUR '4').
-	GlutinEventVirtualKeyCode Key5 . #(FIVE '5').
-	GlutinEventVirtualKeyCode Key6 . #(SIX '6').
-	GlutinEventVirtualKeyCode Key7 . #(SEVEN '7').
-	GlutinEventVirtualKeyCode Key8 . #(EIGHT '8').
-	GlutinEventVirtualKeyCode Key9 . #(NINE '9').
-	GlutinEventVirtualKeyCode Return . #(KP_ENTER).
-	GlutinEventVirtualKeyCode LShift . #(SHIFT_L).
-	GlutinEventVirtualKeyCode RShift . #(SHIFT_R).
-	GlutinEventVirtualKeyCode LControl . #(CONTROL_L).
-	GlutinEventVirtualKeyCode RControl . #(CONTROL_R).
-	GlutinEventVirtualKeyCode LAlt . #(ALT_L).
-	GlutinEventVirtualKeyCode RAlt . #(ALT_R).
-	GlutinEventVirtualKeyCode LWin . #(META_L).
-	GlutinEventVirtualKeyCode Capital . #(CAPS_LOCK).
-	GlutinEventVirtualKeyCode F1 . #(F1).
-	GlutinEventVirtualKeyCode F2 . #(F2).
-	GlutinEventVirtualKeyCode F3 . #(F3).
-	GlutinEventVirtualKeyCode F4 . #(F4).
-	GlutinEventVirtualKeyCode F5 . #(F5).
-	GlutinEventVirtualKeyCode F6 . #(F6).
-	GlutinEventVirtualKeyCode F7 . #(F7).
-	GlutinEventVirtualKeyCode F8 . #(F8).
-	GlutinEventVirtualKeyCode F9 . #(F9).
-	GlutinEventVirtualKeyCode F10 . #(F10).
-	GlutinEventVirtualKeyCode F11 . #(F11).
-	GlutinEventVirtualKeyCode F12 . #(F12).
-	GlutinEventVirtualKeyCode Numpad0 . #(KP_0).
-	GlutinEventVirtualKeyCode Numpad1 . #(KP_1).
-	GlutinEventVirtualKeyCode Numpad2 . #(KP_2).
-	GlutinEventVirtualKeyCode Numpad3 . #(KP_3).
-	GlutinEventVirtualKeyCode Numpad4 . #(KP_4).
-	GlutinEventVirtualKeyCode Numpad5 . #(KP_5).
-	GlutinEventVirtualKeyCode Numpad6 . #(KP_6).
-	GlutinEventVirtualKeyCode Numpad7 . #(KP_7).
-	GlutinEventVirtualKeyCode Numpad8 . #(KP_8).
-	GlutinEventVirtualKeyCode Numpad9 . #(KP_9).
-	GlutinEventVirtualKeyCode Minus . #(223).
-	GlutinEventVirtualKeyCode Comma . #(222).
-	GlutinEventVirtualKeyCode Semicolon . #(188).
-	GlutinEventVirtualKeyCode Equals . #(200).
-	GlutinEventVirtualKeyCode Grave . #(203).
-	GlutinEventVirtualKeyCode LBracket . #(243).
-	GlutinEventVirtualKeyCode RBracket . #(250).
-	GlutinEventVirtualKeyCode Period . #(240).
-	GlutinEventVirtualKeyCode Slash . #(192).
-	GlutinEventVirtualKeyCode Backslash . #(134).
-	GlutinEventVirtualKeyCode Apostrophe . #(251).
-	GlutinEventVirtualKeyCode Back . #(8).
-	GlutinEventVirtualKeyCode Delete. #(127).
-	GlutinEventVirtualKeyCode NumpadEquals . #(KP_EQUAL).
-	GlutinEventVirtualKeyCode Divide . #(KP_DIVIDE).
-	GlutinEventVirtualKeyCode Decimal . #(KP_DECIMAL).
-	GlutinEventVirtualKeyCode Add . #(KP_ADD).
-	GlutinEventVirtualKeyCode Multiply . #(KP_MULTIPLY).
-	GlutinEventVirtualKeyCode Subtract . #(KP_SUBTRACT).
+	WinitEventVirtualKeyCode Escape . #(ESCAPE).
+	WinitEventVirtualKeyCode Tab . #(TAB).
+	WinitEventVirtualKeyCode Home . #(1).
+	WinitEventVirtualKeyCode Left . #(KP_LEFT).
+	WinitEventVirtualKeyCode Up . #(KP_UP).
+	WinitEventVirtualKeyCode Right . #(KP_RIGHT).
+	WinitEventVirtualKeyCode Down . #(KP_DOWN).
+	WinitEventVirtualKeyCode End . #(4).
+	WinitEventVirtualKeyCode PageUp . #(PAGE_UP).
+	WinitEventVirtualKeyCode PageDown . #(PAGE_DOWN).
+	WinitEventVirtualKeyCode Space. #(KP_SPACE).
+	WinitEventVirtualKeyCode Key0 . #(ZERO '0').
+	WinitEventVirtualKeyCode Key1 . #(ONE '1').
+	WinitEventVirtualKeyCode Key2 . #(TWO '2').
+	WinitEventVirtualKeyCode Key3 . #(THREE '3').
+	WinitEventVirtualKeyCode Key4 . #(FOUR '4').
+	WinitEventVirtualKeyCode Key5 . #(FIVE '5').
+	WinitEventVirtualKeyCode Key6 . #(SIX '6').
+	WinitEventVirtualKeyCode Key7 . #(SEVEN '7').
+	WinitEventVirtualKeyCode Key8 . #(EIGHT '8').
+	WinitEventVirtualKeyCode Key9 . #(NINE '9').
+	WinitEventVirtualKeyCode Return . #(KP_ENTER).
+	WinitEventVirtualKeyCode LShift . #(SHIFT_L).
+	WinitEventVirtualKeyCode RShift . #(SHIFT_R).
+	WinitEventVirtualKeyCode LControl . #(CONTROL_L).
+	WinitEventVirtualKeyCode RControl . #(CONTROL_R).
+	WinitEventVirtualKeyCode LAlt . #(ALT_L).
+	WinitEventVirtualKeyCode RAlt . #(ALT_R).
+	WinitEventVirtualKeyCode LWin . #(META_L).
+	WinitEventVirtualKeyCode Capital . #(CAPS_LOCK).
+	WinitEventVirtualKeyCode F1 . #(F1).
+	WinitEventVirtualKeyCode F2 . #(F2).
+	WinitEventVirtualKeyCode F3 . #(F3).
+	WinitEventVirtualKeyCode F4 . #(F4).
+	WinitEventVirtualKeyCode F5 . #(F5).
+	WinitEventVirtualKeyCode F6 . #(F6).
+	WinitEventVirtualKeyCode F7 . #(F7).
+	WinitEventVirtualKeyCode F8 . #(F8).
+	WinitEventVirtualKeyCode F9 . #(F9).
+	WinitEventVirtualKeyCode F10 . #(F10).
+	WinitEventVirtualKeyCode F11 . #(F11).
+	WinitEventVirtualKeyCode F12 . #(F12).
+	WinitEventVirtualKeyCode Numpad0 . #(KP_0).
+	WinitEventVirtualKeyCode Numpad1 . #(KP_1).
+	WinitEventVirtualKeyCode Numpad2 . #(KP_2).
+	WinitEventVirtualKeyCode Numpad3 . #(KP_3).
+	WinitEventVirtualKeyCode Numpad4 . #(KP_4).
+	WinitEventVirtualKeyCode Numpad5 . #(KP_5).
+	WinitEventVirtualKeyCode Numpad6 . #(KP_6).
+	WinitEventVirtualKeyCode Numpad7 . #(KP_7).
+	WinitEventVirtualKeyCode Numpad8 . #(KP_8).
+	WinitEventVirtualKeyCode Numpad9 . #(KP_9).
+	WinitEventVirtualKeyCode Minus . #(223).
+	WinitEventVirtualKeyCode Comma . #(222).
+	WinitEventVirtualKeyCode Semicolon . #(188).
+	WinitEventVirtualKeyCode Equals . #(200).
+	WinitEventVirtualKeyCode Grave . #(203).
+	WinitEventVirtualKeyCode LBracket . #(243).
+	WinitEventVirtualKeyCode RBracket . #(250).
+	WinitEventVirtualKeyCode Period . #(240).
+	WinitEventVirtualKeyCode Slash . #(192).
+	WinitEventVirtualKeyCode Backslash . #(134).
+	WinitEventVirtualKeyCode Apostrophe . #(251).
+	WinitEventVirtualKeyCode Back . #(8).
+	WinitEventVirtualKeyCode Delete. #(127).
+	WinitEventVirtualKeyCode NumpadEquals . #(KP_EQUAL).
+	WinitEventVirtualKeyCode Divide . #(KP_DIVIDE).
+	WinitEventVirtualKeyCode Decimal . #(KP_DECIMAL).
+	WinitEventVirtualKeyCode Add . #(KP_ADD).
+	WinitEventVirtualKeyCode Multiply . #(KP_MULTIPLY).
+	WinitEventVirtualKeyCode Subtract . #(KP_SUBTRACT).
 	} pairsDo: [ :key :values |
 		values do: [ :val |
 			val isNumber
@@ -184,17 +184,17 @@ GlutinMorphicEventHandler >> convertButton: aGlutinButton [
 	"On mac ctrl+click is mapped to right click, see:
 	https://github.com/feenkcom/gtoolkit/issues/890"
 	(OSPlatform current isMacOS and: [
-		aGlutinButton button_type = GlutinEventMouseButtonType Left
+		aGlutinButton button_type = WinitEventMouseButtonType Left
 			and: [ modifiers ctrl ] ])
 		ifTrue: [ ^ MouseButtonEvent yellowButton ].
 
-	aGlutinButton button_type = GlutinEventMouseButtonType Left
+	aGlutinButton button_type = WinitEventMouseButtonType Left
 		ifTrue: [ ^ MouseButtonEvent redButton ].
 
-	aGlutinButton button_type = GlutinEventMouseButtonType Middle
+	aGlutinButton button_type = WinitEventMouseButtonType Middle
 		ifTrue: [ ^ MouseButtonEvent blueButton ].
 
-	aGlutinButton button_type = GlutinEventMouseButtonType Right
+	aGlutinButton button_type = WinitEventMouseButtonType Right
 		ifTrue: [ ^ MouseButtonEvent yellowButton ].
 
 	^ 0
@@ -585,10 +585,10 @@ GlutinMorphicEventHandler >> visitKeyboardInputEvent: anEvent [
 
 	aState := anEvent state.
 
-	aState = GlutinEventInputElementState Unknown
+	aState = WinitEventInputElementState Unknown
 		ifTrue: [ ^ self ].
 	
-	aState = GlutinEventInputElementState Pressed
+	aState = WinitEventInputElementState Pressed
 		ifTrue: [ self visitKeyDownEvent: anEvent ]
 		ifFalse: [ self visitKeyUpEvent: anEvent ]
 	
@@ -605,14 +605,14 @@ GlutinMorphicEventHandler >> visitMouseInputEvent: anEvent [
 
 	aState := anEvent state.
 	
-	aState = GlutinEventInputElementState Unknown
+	aState = WinitEventInputElementState Unknown
 		ifTrue: [ ^ self ].
 
-	anEventType := aState = GlutinEventInputElementState Pressed
+	anEventType := aState = WinitEventInputElementState Pressed
 		ifTrue: [ #mouseDown ]
 		ifFalse: [ #mouseUp ].
 
-	 buttons := aState = GlutinEventInputElementState Pressed
+	 buttons := aState = WinitEventInputElementState Pressed
 		ifTrue: [ self convertButton: anEvent button ]
 		ifFalse: [ 0 ].
 
@@ -635,9 +635,9 @@ GlutinMorphicEventHandler >> visitMouseWheelEvent: anEvent [
 	
 	aDelta := anEvent delta.
 	
-	aScrollDistance := aDelta type = GlutinEventMouseScrollDeltaType PixelDelta
+	aScrollDistance := aDelta type = WinitEventMouseScrollDeltaType PixelDelta
 		ifTrue: [ aDelta x negated @ aDelta y ]
-		ifFalse: [ aDelta type = GlutinEventMouseScrollDeltaType LineDelta
+		ifFalse: [ aDelta type = WinitEventMouseScrollDeltaType LineDelta
 			ifTrue: [ (aDelta x negated @ aDelta y) * (GlutinLibrary mouseWheelScrollSpeed) ]
 			ifFalse: [ 0@0 ] ].
 

@@ -7,7 +7,7 @@ Class {
 { #category : #'private - ffi' }
 GlutinHeadlessContext class >> primCreate: anEventsLoop contextBuilder: aContextBuilder [
 	^ self ffiCall: #(void* glutin_create_headless_context(
-			#GlutinEventLoop anEventsLoop,
+			#GlutinCallbackEventLoop anEventsLoop,
 			#GlutinContextBuilder aContextBuilder))
 ]
 
@@ -40,5 +40,5 @@ GlutinHeadlessContext >> primIsCurrent [
 
 { #category : #'private - ffi' }
 GlutinHeadlessContext >> primMakeCurrent [
-	^ self ffiCall: #(void glutin_context_make_current(self))
+	^ self ffiCall: #(void glutin_context_make_current(self)) options: #(optEventLoop)
 ]

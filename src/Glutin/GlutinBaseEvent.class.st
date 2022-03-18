@@ -35,7 +35,7 @@ GlutinBaseEvent class >> fieldsDesc [
 	"
 	^ #(
 		GtBoxerUint128Structure window_id
-		GlutinEventType event_type
+		#WinitEventType event_type
 		GlutinTouchEvent touch
 		GlutinMouseWheelEvent mouse_wheel
 		GlutinMouseInputEvent mouse_input
@@ -82,7 +82,7 @@ GlutinBaseEvent >> cursor_moved: anObject [
 { #category : #'accessing structure variables' }
 GlutinBaseEvent >> event_type [
 	"This method was automatically generated"
-	^GlutinEventType fromInteger: (handle unsignedLongAt: OFFSET_EVENT_TYPE)
+	^WinitEventType fromInteger: (handle unsignedLongAt: OFFSET_EVENT_TYPE)
 ]
 
 { #category : #'accessing structure variables' }

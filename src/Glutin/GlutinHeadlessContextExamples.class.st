@@ -10,7 +10,7 @@ GlutinHeadlessContextExamples >> fromWorkingProfile [
 	<noTest>
 	| aHeadlessContext |
 	
-	aHeadlessContext := GlutinEventLoop new createHeadless.
+	aHeadlessContext := GlutinCallbackEventLoop new createHeadless.
 	self assert: aHeadlessContext isCurrent not.
 	
 	^ aHeadlessContext

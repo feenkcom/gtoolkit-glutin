@@ -15,7 +15,7 @@ Class {
 
 { #category : #'event type' }
 GlutinKeyboardInputEvent class >> eventType [
-	^ GlutinEventType WindowEventKeyboardInput
+	^ WinitEventType WindowEventKeyboardInput
 ]
 
 { #category : #'field definition' }
@@ -26,9 +26,9 @@ GlutinKeyboardInputEvent class >> fieldsDesc [
 	^ #(
 		int64 device_id
 		uint32 scan_code
-		GlutinEventInputElementState state
+		#WinitEventInputElementState state
 		bool has_virtual_keycode
-		GlutinEventVirtualKeyCode virtual_keycode
+		#WinitEventVirtualKeyCode virtual_keycode
 		bool is_synthetic
  	)
 ]
@@ -111,7 +111,7 @@ GlutinKeyboardInputEvent >> scan_code: anObject [
 { #category : #'accessing structure variables' }
 GlutinKeyboardInputEvent >> state [
 	"This method was automatically generated"
-	^GlutinEventInputElementState fromInteger: (handle unsignedLongAt: OFFSET_STATE)
+	^WinitEventInputElementState fromInteger: (handle unsignedLongAt: OFFSET_STATE)
 ]
 
 { #category : #'accessing structure variables' }
@@ -123,7 +123,7 @@ GlutinKeyboardInputEvent >> state: anObject [
 { #category : #'accessing structure variables' }
 GlutinKeyboardInputEvent >> virtual_keycode [
 	"This method was automatically generated"
-	^GlutinEventVirtualKeyCode fromInteger: (handle unsignedLongAt: OFFSET_VIRTUAL_KEYCODE)
+	^WinitEventVirtualKeyCode fromInteger: (handle unsignedLongAt: OFFSET_VIRTUAL_KEYCODE)
 ]
 
 { #category : #'accessing structure variables' }

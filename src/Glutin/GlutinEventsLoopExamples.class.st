@@ -10,7 +10,7 @@ GlutinEventsLoopExamples >> eventLoop [
 	<noTest>
 	| anEventsLoop |
 	
-	anEventsLoop := GlutinEventLoop new.
+	anEventsLoop := GlutinCallbackEventLoop new.
 	
 	^ anEventsLoop
 ]

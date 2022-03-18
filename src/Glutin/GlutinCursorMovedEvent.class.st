@@ -11,7 +11,7 @@ Class {
 
 { #category : #'event type' }
 GlutinCursorMovedEvent class >> eventType [
-	^ GlutinEventType WindowEventCursorMoved
+	^ WinitEventType WindowEventCursorMoved
 ]
 
 { #category : #'field definition' }

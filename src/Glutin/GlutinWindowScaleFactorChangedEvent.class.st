@@ -11,7 +11,7 @@ Class {
 
 { #category : #'event type' }
 GlutinWindowScaleFactorChangedEvent class >> eventType [
-	^ GlutinEventType WindowEventScaleFactorChanged
+	^ WinitEventType WindowEventScaleFactorChanged
 ]
 
 { #category : #'field definition' }

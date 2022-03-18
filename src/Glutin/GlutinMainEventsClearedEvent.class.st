@@ -11,7 +11,7 @@ Class {
 
 { #category : #'event type' }
 GlutinMainEventsClearedEvent class >> eventType [
-	^ GlutinEventType MainEventsCleared
+	^ WinitEventType MainEventsCleared
 ]
 
 { #category : #'event type' }

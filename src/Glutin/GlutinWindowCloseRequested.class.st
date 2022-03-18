@@ -6,7 +6,7 @@ Class {
 
 { #category : #'event type' }
 GlutinWindowCloseRequested class >> eventType [
-	^ GlutinEventType WindowEventCloseRequested
+	^ WinitEventType WindowEventCloseRequested
 ]
 
 { #category : #'event type' }

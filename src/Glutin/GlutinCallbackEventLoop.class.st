@@ -1,8 +1,8 @@
 Class {
-	#name : #GlutinEventLoop,
-	#superclass : #GlutinExternalObject,
-	#traits : 'TGlutinEventLoop',
-	#classTraits : 'TGlutinEventLoop classTrait',
+	#name : #GlutinCallbackEventLoop,
+	#superclass : #RustWindowingEventLoop,
+	#traits : 'TGlutin',
+	#classTraits : 'TGlutin classTrait',
 	#instVars : [
 		'headlessContext'
 	],
@@ -10,32 +10,32 @@ Class {
 }
 
 { #category : #'private - ffi' }
-GlutinEventLoop class >> primCreate [
-	^ self ffiCall: #(#GlutinEventLoop glutin_create_events_loop())
+GlutinCallbackEventLoop class >> primCreate [
+	^ self ffiCall: #(#GlutinCallbackEventLoop glutin_create_events_loop())
 ]
 
 { #category : #'private - ffi' }
-GlutinEventLoop class >> primRelease: aHandle [
+GlutinCallbackEventLoop class >> primRelease: aHandle [
 	
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"
 	^ self ffiCall: #(void glutin_destroy_events_loop(void** aHandle))
 ]
 
 { #category : #'api - windows' }
-GlutinEventLoop >> closeWindow: aWindowedContext [
+GlutinCallbackEventLoop >> closeWindow: aWindowedContext [
 	GlutinWindowsRegistry default unregisterWindow: aWindowedContext.
 	aWindowedContext release
 ]
 
 { #category : #'api - windows' }
-GlutinEventLoop >> createHeadless [
+GlutinCallbackEventLoop >> createHeadless [
 	"Create a headless context"
 
 	^ self createHeadlessWithSharing: true
 ]
 
 { #category : #'api - windows' }
-GlutinEventLoop >> createHeadlessWithSharing: aBoolean [
+GlutinCallbackEventLoop >> createHeadlessWithSharing: aBoolean [
 	"Create a headless context"
 	| aSharedHeadlessContext |
 
@@ -56,7 +56,11 @@ GlutinEventLoop >> createHeadlessWithSharing: aBoolean [
 			
 				aHeadlessContext isValid
 					ifTrue: [
-						GlutinLibrary println: '[Glutin] Profile #', anIndex asString, ' worked'.
+						NonInteractiveTranscript stdout
+							nextPutAll: '[Glutin] Profile #';
+							nextPutAll: anIndex asString;
+							nextPutAll: ' worked';
+							cr.
 						aContextBuilder sharedContextDo: [ :aSharedContext | aHeadlessContext sharedContext: aSharedContext ].
 						aHeadlessContext eventLoop: self.
 						^ aHeadlessContext ] ] ].
@@ -65,14 +69,14 @@ GlutinEventLoop >> createHeadlessWithSharing: aBoolean [
 ]
 
 { #category : #'api - events' }
-GlutinEventLoop >> createProxy [
+GlutinCallbackEventLoop >> createProxy [
 	<return: #GlutinEventLoopProxy>
 
 	^ GlutinEventLoopProxy fromNativeHandle: self primCreateProxy
 ]
 
 { #category : #'api - windows' }
-GlutinEventLoop >> createWindow: aWindowBuilder [
+GlutinCallbackEventLoop >> createWindow: aWindowBuilder [
 	"I choose a context builder so that context creation works"
 	| aWindowedContext aSharedHeadlessContext |
 	
@@ -102,7 +106,12 @@ GlutinEventLoop >> createWindow: aWindowBuilder [
 			
 				aWindowedContext isValid
 					ifTrue: [
-						GlutinLibrary println: '[Glutin] Profile #', anIndex asString, ' worked'.
+						NonInteractiveTranscript stdout
+							nextPutAll: '[Glutin] Profile #';
+							nextPutAll: anIndex asString;
+							nextPutAll: ' worked';
+							cr.
+						
 						aWindowedContext autoRelease.
 						aWindowedContext eventLoop: self.
 						aWindowedContext title: aBuilderCopy title.
@@ -115,37 +124,37 @@ GlutinEventLoop >> createWindow: aWindowBuilder [
 ]
 
 { #category : #accessing }
-GlutinEventLoop >> headlessContext [
+GlutinCallbackEventLoop >> headlessContext [
 	^ headlessContext ifNil: [ headlessContext := self createHeadlessWithSharing: false ]
 ]
 
 { #category : #accessing }
-GlutinEventLoop >> headlessContextDo: aBlock [
+GlutinCallbackEventLoop >> headlessContextDo: aBlock [
 	^ headlessContext ifNotNil: aBlock
 ]
 
 { #category : #'private - ffi' }
-GlutinEventLoop >> primCreateProxy [
+GlutinCallbackEventLoop >> primCreateProxy [
 	^ self ffiCall: #(void* glutin_events_loop_create_proxy(self))
 ]
 
 { #category : #'private - ffi' }
-GlutinEventLoop >> primGetPrimaryMonitor [
+GlutinCallbackEventLoop >> primGetPrimaryMonitor [
 	^ self ffiCall: #(GlutinMonitorId glutin_events_loop_get_primary_monitor (self))
 ]
 
 { #category : #'private - ffi' }
-GlutinEventLoop >> primGetType [
-	^ self ffiCall: #(GlutinEventLoopType glutin_events_loop_get_type (self))
+GlutinCallbackEventLoop >> primGetType [
+	^ self ffiCall: #(WinitEventLoopType glutin_events_loop_get_type (self))
 ]
 
 { #category : #'private - ffi' }
-GlutinEventLoop >> primRunReturn: aCallback [
+GlutinCallbackEventLoop >> primRunReturn: aCallback [
 	^ self ffiCall: #(void glutin_events_loop_run_return(self, GlutinEventCallback aCallback))
 ]
 
 { #category : #accessing }
-GlutinEventLoop >> primaryMonitor [
+GlutinCallbackEventLoop >> primaryMonitor [
 	<return: #GlutinMonitorId>
 	| aMonitorId |
 	
@@ -157,7 +166,7 @@ GlutinEventLoop >> primaryMonitor [
 ]
 
 { #category : #'api - events' }
-GlutinEventLoop >> run: aBlock [
+GlutinCallbackEventLoop >> run: aBlock [
 	| aCallback |
 	self isNull
 		ifTrue: [ ^ self ].
@@ -172,8 +181,8 @@ GlutinEventLoop >> run: aBlock [
 		| aControlFlow |
 		
 		aControlFlow := aBlock cull: (GlutinBaseEvent fromHandle: anEventAddress) cull: self.
-		(aControlFlow isKindOf: GlutinControlFlow)
-			ifFalse: [ aControlFlow := GlutinControlFlow poll ].
+		(aControlFlow isKindOf: WinitControlFlow)
+			ifFalse: [ aControlFlow := WinitControlFlow poll ].
 		aControlFlow ].
 	
 	"the next call will block the current thread and will return only when the callback
@@ -182,15 +191,20 @@ GlutinEventLoop >> run: aBlock [
 ]
 
 { #category : #'api - windows' }
-GlutinEventLoop >> tryHeadlessContext: aContextBuilder [
+GlutinCallbackEventLoop >> tryHeadlessContext: aContextBuilder [
 	<return: #Boolean>
 
 	^ GlutinContextBuilder primTryContext: aContextBuilder eventLoop: self
 ]
 
 { #category : #accessing }
-GlutinEventLoop >> type [
-	<return: #GlutinEventLoopType>
+GlutinCallbackEventLoop >> type [
+	<return: #WinitEventLoopType>
 	
 	^ self primGetType
+]
+
+{ #category : #'api - windows' }
+GlutinCallbackEventLoop >> windowBuilder [
+	^ GlutinWindowBuilder new
 ]

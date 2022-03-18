@@ -62,11 +62,11 @@ GlutinEventDrivenEventFetcher >> basicPharoEventLoop [
 
 			GlutinEventClass := aGlutinEvent event_type.
 
-			aControlFlow := GlutinControlFlow wait.
+			aControlFlow := WinitControlFlow wait.
 
 			self processGlutinEvent: aGlutinEvent.
 
-			aGlutinEvent event_type = GlutinEventType RedrawEventsCleared
+			aGlutinEvent event_type = WinitEventType RedrawEventsCleared
 				ifTrue: [
 					"We should only let other processes run within redraw events cleared"
 					
@@ -83,12 +83,12 @@ GlutinEventDrivenEventFetcher >> basicPharoEventLoop [
 							idleProcess := idleProcessBlock forkAt: idlePriority.
 							(idleSemaphore waitTimeoutMSecs: 50)
 								"deadline expired, let's fetch the next one *now*"
-								ifTrue: [ aControlFlow := GlutinControlFlow poll ].
+								ifTrue: [ aControlFlow := WinitControlFlow poll ].
 						] ifFalse: [ 
 							"Only the idleProcess wants the CPU, wait"
-							aControlFlow := GlutinControlFlow wait ] ].
+							aControlFlow := WinitControlFlow wait ] ].
 			wantsToShutdown 
-				ifTrue: [ aControlFlow := GlutinControlFlow exit ].
+				ifTrue: [ aControlFlow := WinitControlFlow exit ].
 			
 			"This callback is about to terminate. The interrupt handler should ignore 
 			this process if it is not finished when the interrupt is run."
@@ -113,12 +113,12 @@ GlutinEventDrivenEventFetcher >> ensureEventLoop [
 		ifTrue: [ ^ self ].
 
 	currentSession := Smalltalk session.
-	eventsLoop := GlutinEventLoop new
+	eventsLoop := GlutinCallbackEventLoop new
 ]
 
 { #category : #accessing }
 GlutinEventDrivenEventFetcher >> eventLoop [
-	<return: #GlutinEventLoop>
+	<return: #GlutinCallbackEventLoop>
 
 	self ensureEventLoop.
 	^ eventsLoop

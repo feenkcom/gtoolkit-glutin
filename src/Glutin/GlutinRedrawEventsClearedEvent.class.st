@@ -6,7 +6,7 @@ Class {
 
 { #category : #'event type' }
 GlutinRedrawEventsClearedEvent class >> eventType [
-	^ GlutinEventType RedrawEventsCleared
+	^ WinitEventType RedrawEventsCleared
 ]
 
 { #category : #'event type' }

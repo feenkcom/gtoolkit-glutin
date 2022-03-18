@@ -1,12 +1,14 @@
 Class {
 	#name : #WinitWindow,
-	#superclass : #WinitExternalObject,
+	#superclass : #GtBoxerValueBox,
+	#traits : 'TWinit',
+	#classTraits : 'TWinit classTrait',
 	#instVars : [
 		'eventLoop',
 		'title',
 		'id'
 	],
-	#category : #'Winit-External'
+	#category : #'Glutin-External'
 }
 
 { #category : #'private - ffi' }
@@ -111,6 +113,11 @@ WinitWindow >> primGetScaleFactor [
 ]
 
 { #category : #'private - ffi' }
+WinitWindow >> primRawWindowHandle [
+	^ self ffiCall: #(void* winit_windowed_context_raw_window_handle (self))
+]
+
+{ #category : #'private - ffi' }
 WinitWindow >> primRequestRedraw [
 	^ self ffiCall: #(void winit_window_request_redraw(self))
 ]
@@ -144,11 +151,20 @@ WinitWindow >> primSetTitle: aGtBoxerString [
 ]
 
 { #category : #'api - accessing' }
+WinitWindow >> rawWindowHandle [
+	^ self primRawWindowHandle
+]
+
+{ #category : #'api - accessing' }
 WinitWindow >> requestRedraw [
 	self isValid
 		ifFalse: [ ^ self ].
 
 	self primRequestRedraw
+]
+
+{ #category : #'api - accessing' }
+WinitWindow >> resize: aPoint [
 ]
 
 { #category : #'api - accessing' }

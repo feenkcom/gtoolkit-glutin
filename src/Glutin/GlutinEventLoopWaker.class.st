@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'eventLoop'
 	],
-	#category : #'Glutin-Event loop'
+	#category : #'Glutin-External'
 }
 
 { #category : #'instance creation' }
@@ -15,7 +15,7 @@ GlutinEventLoopWaker class >> for: aGlutinEventLoop [
 
 { #category : #'private - ffi' }
 GlutinEventLoopWaker class >> primCreate: aGlutinEventLoop [
-	^ self ffiCall: #(void* glutin_event_loop_waker_create(GlutinEventLoop aGlutinEventLoop))
+	^ self ffiCall: #(void* glutin_event_loop_waker_create(#GlutinCallbackEventLoop aGlutinEventLoop))
 ]
 
 { #category : #'private - ffi' }

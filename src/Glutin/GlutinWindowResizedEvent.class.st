@@ -10,7 +10,7 @@ Class {
 
 { #category : #'event type' }
 GlutinWindowResizedEvent class >> eventType [
-	^ GlutinEventType WindowEventResized
+	^ WinitEventType WindowEventResized
 ]
 
 { #category : #'field definition' }
