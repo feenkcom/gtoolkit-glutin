@@ -14,3 +14,8 @@ RustWindowingEventLoop >> createWindow: aWindowBuilder [
 	"I choose a context builder so that context creation works"
 	^ self subclassResponsibility
 ]
+
+{ #category : #'api - windows' }
+RustWindowingEventLoop >> windowBuilder [
+	^ self subclassResponsibility
+]

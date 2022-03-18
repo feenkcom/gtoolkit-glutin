@@ -203,3 +203,8 @@ GlutinCallbackEventLoop >> type [
 	
 	^ self primGetType
 ]
+
+{ #category : #'api - windows' }
+GlutinCallbackEventLoop >> windowBuilder [
+	^ GlutinWindowBuilder new
+]

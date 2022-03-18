@@ -163,3 +163,8 @@ GlutinMainThreadEventLoop >> run [
 	self primRun.
 	isRunning := true
 ]
+
+{ #category : #'api - windows' }
+GlutinMainThreadEventLoop >> windowBuilder [
+	^ GlutinWindowBuilder new
+]

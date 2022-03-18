@@ -154,3 +154,8 @@ WinitMainThreadEventLoop >> run [
 	self primRun.
 	isRunning := true
 ]
+
+{ #category : #'api - windows' }
+WinitMainThreadEventLoop >> windowBuilder [
+	^ WinitWindowBuilder new
+]
