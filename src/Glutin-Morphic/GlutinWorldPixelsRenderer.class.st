@@ -111,7 +111,7 @@ GlutinWorldPixelsRenderer >> doActivate [
 	buffer := self createBufferForExtent: anExtent.
 	display := self createFormForBuffer: buffer extent: anExtent.
 	
-	renderer := Pixels size: anExtent windowHandle: glutinWindow rawWindowHandle
+	renderer := GtPixels size: anExtent windowHandle: glutinWindow rawWindowHandle
 ]
 
 { #category : #rendering }
