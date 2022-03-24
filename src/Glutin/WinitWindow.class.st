@@ -71,6 +71,15 @@ WinitWindow >> innerExtent: aPoint [
 	self primSetInnerWidth: aPoint x height: aPoint y
 ]
 
+{ #category : #'host space - rendering' }
+WinitWindow >> makeCurrent [
+]
+
+{ #category : #'api - platform' }
+WinitWindow >> nsView [
+	^ self primGetNSView
+]
+
 { #category : #'api - accessing' }
 WinitWindow >> position [
 	"Return the window position in physical pixels"
@@ -98,6 +107,11 @@ WinitWindow >> primGetInnerSize: aSizeU32 [
 	^ self ffiCall: #(void winit_window_get_inner_size(
 		self,
 		GtBoxerSizeU32 aSizeU32))
+]
+
+{ #category : #'private - ffi' }
+WinitWindow >> primGetNSView [
+	^ self ffiCall: #(void* winit_window_get_ns_view(self)) options: #(optEventLoop)
 ]
 
 { #category : #'private - ffi' }
@@ -172,6 +186,10 @@ WinitWindow >> scaleFactor [
 	<return: #Number>
 
 	^ self primGetScaleFactor
+]
+
+{ #category : #'host space - rendering' }
+WinitWindow >> swapBuffers [
 ]
 
 { #category : #'api - accessing' }
