@@ -1,5 +1,5 @@
 Class {
-	#name : #GlutinWorldPixelsRenderer,
+	#name : #WinitWorldPixelsRenderer,
 	#superclass : #GlutinWorldRenderer,
 	#instVars : [
 		'display',
@@ -10,22 +10,25 @@ Class {
 }
 
 { #category : #accessing }
-GlutinWorldPixelsRenderer class >> isApplicableFor: aWorld [
-	^ Smalltalk vm isRunningInWorkerThread
+WinitWorldPixelsRenderer class >> isApplicableFor: aWorld [
+	^ WinitLibrary uniqueInstance hasModule and: [
+		PixelsLibrary uniqueInstance hasModule and: [
+			Glutin isSupported and: [
+				RustWindowingEventFetcher default eventLoop isWinit ] ] ]
 ]
 
 { #category : #accessing }
-GlutinWorldPixelsRenderer class >> priority [
+WinitWorldPixelsRenderer class >> priority [
 	^ 40
 ]
 
 { #category : #accessing }
-GlutinWorldPixelsRenderer >> canvas [ 
+WinitWorldPixelsRenderer >> canvas [ 
 	^ display ifNotNil: [ display getCanvas ]
 ]
 
 { #category : #initialization }
-GlutinWorldPixelsRenderer >> checkForNewScreenSize [
+WinitWorldPixelsRenderer >> checkForNewScreenSize [
 	| anExtent |
 	
 	super checkForNewScreenSize
@@ -39,7 +42,7 @@ GlutinWorldPixelsRenderer >> checkForNewScreenSize [
 ]
 
 { #category : #private }
-GlutinWorldPixelsRenderer >> createBufferForExtent: anExtent [
+WinitWorldPixelsRenderer >> createBufferForExtent: anExtent [
 	self
 		assert: [ anExtent isIntegerPoint ]
 		description: [ 'Must be an integer point' ].
@@ -48,12 +51,12 @@ GlutinWorldPixelsRenderer >> createBufferForExtent: anExtent [
 ]
 
 { #category : #private }
-GlutinWorldPixelsRenderer >> createFormForBuffer: aBuffer extent: anExtent [
+WinitWorldPixelsRenderer >> createFormForBuffer: aBuffer extent: anExtent [
 	^ GlutinWorldExternalForm extent: anExtent depth: 32 bits: aBuffer data getHandle
 ]
 
 { #category : #initialization }
-GlutinWorldPixelsRenderer >> deactivate [
+WinitWorldPixelsRenderer >> deactivate [
 	super deactivate.
 
 	renderer := nil.
@@ -61,7 +64,7 @@ GlutinWorldPixelsRenderer >> deactivate [
 ]
 
 { #category : #rendering }
-GlutinWorldPixelsRenderer >> displayWorldState: aWorldState ofWorld: aWorld submorphs: submorphs [
+WinitWorldPixelsRenderer >> displayWorldState: aWorldState ofWorld: aWorld submorphs: submorphs [
 	"Obsolete. In Pharo8 each world renderer had to implement its own displayWorldState:ofWorld:submorphs:"
 	| aCanvas handsToDraw allDamage worldDamageRects handDamageRects |
 
@@ -99,7 +102,7 @@ GlutinWorldPixelsRenderer >> displayWorldState: aWorldState ofWorld: aWorld subm
 ]
 
 { #category : #initialization }
-GlutinWorldPixelsRenderer >> doActivate [
+WinitWorldPixelsRenderer >> doActivate [
 	| anExtent |
 	super doActivate.
 	
@@ -108,11 +111,11 @@ GlutinWorldPixelsRenderer >> doActivate [
 	buffer := self createBufferForExtent: anExtent.
 	display := self createFormForBuffer: buffer extent: anExtent.
 	
-	renderer := GtPixels size: anExtent windowHandle: glutinWindow rawWindowHandle
+	renderer := PixelsSurface size: anExtent windowHandle: glutinWindow rawWindowHandle
 ]
 
 { #category : #rendering }
-GlutinWorldPixelsRenderer >> drawDuring: aBlock [
+WinitWorldPixelsRenderer >> drawDuring: aBlock [
 	"Starting from Pharo9, the basic rendering is implemented in the AbstractWorldRenderer"
 	
 	glutinWindow
@@ -122,9 +125,9 @@ GlutinWorldPixelsRenderer >> drawDuring: aBlock [
 ]
 
 { #category : #rendering }
-GlutinWorldPixelsRenderer >> updateDamage: rectangles [
+WinitWorldPixelsRenderer >> updateDamage: rectangles [
 	"Starting from Pharo9, the basic rendering is implemented in the AbstractWorldRenderer"
 
-	renderer updateSurface: self actualFramebufferSize buffer: display extent pixels: buffer.
+	renderer update: self actualFramebufferSize buffer: display extent pixels: buffer.
 	renderer draw
 ]

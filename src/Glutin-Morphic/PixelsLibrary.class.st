@@ -1,5 +1,5 @@
 Class {
-	#name : #GtPixelsLibrary,
+	#name : #PixelsLibrary,
 	#superclass : #FFILibrary,
 	#classInstVars : [
 		'MouseWheelScrollSpeed'
@@ -8,12 +8,12 @@ Class {
 }
 
 { #category : #'library path' }
-GtPixelsLibrary class >> ffiLibrary [
+PixelsLibrary class >> ffiLibrary [
 	^ self
 ]
 
 { #category : #testing }
-GtPixelsLibrary >> hasModule [
+PixelsLibrary >> hasModule [
 	"Return if there is a loadable and working Glutin library installed, false otherwise"
 	<return: #Boolean>
 	| aResult |
@@ -28,26 +28,26 @@ GtPixelsLibrary >> hasModule [
 ]
 
 { #category : #'accessing platform' }
-GtPixelsLibrary >> macLibraryName [
+PixelsLibrary >> macLibraryName [
 	^ FFIMacLibraryFinder findLibrary: 'libPixels.dylib'
 ]
 
 { #category : #'private - ffi' }
-GtPixelsLibrary >> primTest [
+PixelsLibrary >> primTest [
 	^ self ffiCall: #(bool pixels_test())
 ]
 
 { #category : #'accessing platform' }
-GtPixelsLibrary >> unix32LibraryName [
+PixelsLibrary >> unix32LibraryName [
 	^ FFIUnix32LibraryFinder findLibrary: 'libPixels.so'
 ]
 
 { #category : #'accessing platform' }
-GtPixelsLibrary >> unix64LibraryName [
+PixelsLibrary >> unix64LibraryName [
 	^ FFIUnix64LibraryFinder findLibrary: 'libPixels.so'
 ]
 
 { #category : #'accessing platform' }
-GtPixelsLibrary >> win32LibraryName [
+PixelsLibrary >> win32LibraryName [
 	^ FFIWindowsLibraryFinder findLibrary: 'Pixels.dll'
 ]

@@ -15,6 +15,16 @@ RustWindowingEventLoop >> createWindow: aWindowBuilder [
 	^ self subclassResponsibility
 ]
 
+{ #category : #testing }
+RustWindowingEventLoop >> isGlutin [
+	^ false
+]
+
+{ #category : #testing }
+RustWindowingEventLoop >> isWinit [
+	^ false
+]
+
 { #category : #'api - windows' }
 RustWindowingEventLoop >> windowBuilder [
 	^ self subclassResponsibility
