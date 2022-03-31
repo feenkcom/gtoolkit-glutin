@@ -15,7 +15,9 @@ Class {
 WinitWindow class >> primRelease: aHandle [
 
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"
-	self ffiCall: #(void winit_window_drop (void** aHandle))
+	self
+		ffiCall: #(void winit_window_drop (void** aHandle))
+		options: #(optEventLoop)
 ]
 
 { #category : #'initialize-release' }
@@ -133,7 +135,7 @@ WinitWindow >> primRawWindowHandle [
 
 { #category : #'private - ffi' }
 WinitWindow >> primRequestRedraw [
-	^ self ffiCall: #(void winit_window_request_redraw(self)) options: #(optEventLoop optNonBlocking)
+	^ self ffiCall: #(void winit_window_request_redraw(self))
 ]
 
 { #category : #'private - ffi' }

@@ -115,6 +115,11 @@ GlutinMainThreadEventLoop >> initialize [
 	isRunning := false
 ]
 
+{ #category : #testing }
+GlutinMainThreadEventLoop >> isGlutin [
+	^ true
+]
+
 { #category : #running }
 GlutinMainThreadEventLoop >> poll: aBlock [
 	<return: #Boolean>

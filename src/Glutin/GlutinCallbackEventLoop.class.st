@@ -133,6 +133,11 @@ GlutinCallbackEventLoop >> headlessContextDo: aBlock [
 	^ headlessContext ifNotNil: aBlock
 ]
 
+{ #category : #testing }
+GlutinCallbackEventLoop >> isGlutin [
+	^ true
+]
+
 { #category : #'private - ffi' }
 GlutinCallbackEventLoop >> primCreateProxy [
 	^ self ffiCall: #(void* glutin_events_loop_create_proxy(self))

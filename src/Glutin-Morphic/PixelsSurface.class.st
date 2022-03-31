@@ -1,28 +1,28 @@
 Class {
-	#name : #GtPixels,
+	#name : #PixelsSurface,
 	#superclass : #GtBoxerValueBox,
 	#category : #'Glutin-Morphic'
 }
 
 { #category : #accessing }
-GtPixels class >> ffiLibrary [
-	^ GtPixelsLibrary
+PixelsSurface class >> ffiLibrary [
+	^ PixelsLibrary
 ]
 
 { #category : #'private - ffi' }
-GtPixels class >> primCreateWidth: aWidth height: aHeight windowHandle: aWindowHandle [
+PixelsSurface class >> primCreateWidth: aWidth height: aHeight windowHandle: aWindowHandle [
 	^ self ffiCall: #(void* pixels_new_world(uint32 aWidth, uint32 aHeight, void* aWindowHandle)) options: #(optEventLoop)
 ]
 
 { #category : #'private - ffi' }
-GtPixels class >> primRelease: aHandle [
+PixelsSurface class >> primRelease: aHandle [
 	
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"
 	self ffiCall: #(void pixels_world_drop(void** aHandle)) options: #(optEventLoop)
 ]
 
 { #category : #'instance creation' }
-GtPixels class >> size: aPoint windowHandle: aWindowHandle [
+PixelsSurface class >> size: aPoint windowHandle: aWindowHandle [
 	self assert: [ aPoint x > 0 ] description: [ 'Width must be positive' ].
 	self assert: [ aPoint y > 0 ] description: [ 'Height must be positive' ].
 
@@ -30,17 +30,17 @@ GtPixels class >> size: aPoint windowHandle: aWindowHandle [
 ]
 
 { #category : #drawing }
-GtPixels >> draw [
+PixelsSurface >> draw [
 	self primDraw
 ]
 
 { #category : #'private - ffi' }
-GtPixels >> primDraw [
+PixelsSurface >> primDraw [
 	^ self ffiCall: #(void pixels_world_draw(self)) options: #(optEventLoop)
 ]
 
 { #category : #'private - ffi' }
-GtPixels >> primUpdateSurfaceWidth: aSurfaceWidth height: aSurfaceHeight bufferWidth: aBufferWidth height: aBufferHeight pixels: aGtBoxerArrayU8 [
+PixelsSurface >> primUpdateSurfaceWidth: aSurfaceWidth height: aSurfaceHeight bufferWidth: aBufferWidth height: aBufferHeight pixels: aGtBoxerArrayU8 [
 	^ self ffiCall: #(void pixels_world_update(
 		self,
 		uint32 aSurfaceWidth,
@@ -51,7 +51,7 @@ GtPixels >> primUpdateSurfaceWidth: aSurfaceWidth height: aSurfaceHeight bufferW
 ]
 
 { #category : #drawing }
-GtPixels >> updateSurface: aSurfaceSize buffer: aBufferSize pixels: aGtBoxerArrayU8 [
+PixelsSurface >> update: aSurfaceSize buffer: aBufferSize pixels: aGtBoxerArrayU8 [
 	self assert: [ aSurfaceSize x > 0 ] description: [ 'Surface width must be positive' ].
 	self assert: [ aSurfaceSize y > 0 ] description: [ 'Surface height must be positive' ].
 	self assert: [ aBufferSize x > 0 ] description: [ 'Buffer width must be positive' ].

@@ -1,9 +1,10 @@
 Class {
-	#name : #GlutinEventFetcher,
+	#name : #RustWindowingEventFetcher,
 	#superclass : #Object,
 	#instVars : [
 		'eventHandlers',
-		'fetcherProcess'
+		'fetcherProcess',
+		'session'
 	],
 	#classVars : [
 		'default'
@@ -12,66 +13,77 @@ Class {
 }
 
 { #category : #accessing }
-GlutinEventFetcher class >> default [
+RustWindowingEventFetcher class >> default [
 	"Initialize an event fetcher if it does not exist or if it is no longer available"
-	(default isNil or: [ default class isAvailable not ])
+	(default isNil or: [
+		default session ~~ Smalltalk session or: [
+			default class isAbstract or: [
+				default class isAvailable not ] ] ])
 		ifTrue: [ default := self preferableEventFetcher new ].
 
 	^ default
 ]
 
 { #category : #accessing }
-GlutinEventFetcher class >> install [
+RustWindowingEventFetcher class >> install [
 	SessionManager default registerUserClassNamed: self name.
 	self default installEventFetcher
 ]
 
+{ #category : #testing }
+RustWindowingEventFetcher class >> isAbstract [
+	^ self == RustWindowingEventFetcher
+]
+
 { #category : #accessing }
-GlutinEventFetcher class >> isAvailable [
+RustWindowingEventFetcher class >> isAvailable [
 	^ self subclassResponsibility
 ]
 
 { #category : #accessing }
-GlutinEventFetcher class >> preferableEventFetcher [
-	^ (self subclasses sorted: [ :a :b | a priority > b priority ])
-		detect: [ :each | each isAvailable ]
-		ifNone: [ self error: 'Could not find a suitable event fetcher' ]
+RustWindowingEventFetcher class >> preferableEventFetcher [
+	^ ((self allSubclasses select: [ :eachSubclass | eachSubclass isAbstract not ])
+		sorted: [ :a :b | a priority > b priority ])
+			detect: [ :each | each isAvailable ]
+			ifNone: [ self error: 'Could not find a suitable event fetcher' ]
 ]
 
 { #category : #accessing }
-GlutinEventFetcher class >> priority [
+RustWindowingEventFetcher class >> priority [
+	"The higher the priority the higher the chance that the event fetcher will be selected"
+
 	^ self subclassResponsibility
 ]
 
 { #category : #accessing }
-GlutinEventFetcher class >> shutDown: isQuitting [
+RustWindowingEventFetcher class >> shutDown: isQuitting [
 	self default shutDown: isQuitting
 ]
 
 { #category : #accessing }
-GlutinEventFetcher class >> startUp: isInANewSession [
+RustWindowingEventFetcher class >> startUp: isInANewSession [
 	self default startUp: isInANewSession
 ]
 
 { #category : #'api - event handlers' }
-GlutinEventFetcher >> addEventHandler: anEventHandler [
+RustWindowingEventFetcher >> addEventHandler: anEventHandler [
 	(eventHandlers includes: anEventHandler)
 		ifTrue: [ ^ self ].
 	eventHandlers add: anEventHandler
 ]
 
 { #category : #'private - event loop' }
-GlutinEventFetcher >> basicPharoEventLoop [
+RustWindowingEventFetcher >> basicPharoEventLoop [
 	self subclassResponsibility
 ]
 
 { #category : #accessing }
-GlutinEventFetcher >> eventHandlers [
+RustWindowingEventFetcher >> eventHandlers [
 	^ eventHandlers
 ]
 
 { #category : #accessing }
-GlutinEventFetcher >> eventLoop [
+RustWindowingEventFetcher >> eventLoop [
 	"Return a Glutin event loop behind this event fetcher. A reference to the event loop
 	is required to create a window"
 	<return: #GlutinCallbackEventLoop>
@@ -80,24 +92,25 @@ GlutinEventFetcher >> eventLoop [
 ]
 
 { #category : #accessing }
-GlutinEventFetcher >> fetcherProcess [
+RustWindowingEventFetcher >> fetcherProcess [
 	^ fetcherProcess
 ]
 
 { #category : #lifecycle }
-GlutinEventFetcher >> fetcherProcessPriority [
+RustWindowingEventFetcher >> fetcherProcessPriority [
 	^ self subclassResponsibility
 ]
 
 { #category : #initialization }
-GlutinEventFetcher >> initialize [
+RustWindowingEventFetcher >> initialize [
 	super initialize.
 	
 	eventHandlers := OrderedCollection new.
+	session := Smalltalk session
 ]
 
 { #category : #lifecycle }
-GlutinEventFetcher >> installEventFetcher [
+RustWindowingEventFetcher >> installEventFetcher [
 	"Initialize the event fetcher process"
 
 	self isRunning
@@ -107,7 +120,7 @@ GlutinEventFetcher >> installEventFetcher [
 ]
 
 { #category : #testing }
-GlutinEventFetcher >> isRunning [
+RustWindowingEventFetcher >> isRunning [
 	"Return true if a fetcher Pharo process is running"
 	<return: #Boolean>
 
@@ -115,7 +128,7 @@ GlutinEventFetcher >> isRunning [
 ]
 
 { #category : #'event - handling' }
-GlutinEventFetcher >> processGlutinEvent: aGlutinEvent [
+RustWindowingEventFetcher >> processGlutinEvent: aGlutinEvent [
 	"Send the event to all registered event handlers"
 
 	| mappedEvent |
@@ -135,7 +148,7 @@ GlutinEventFetcher >> processGlutinEvent: aGlutinEvent [
 ]
 
 { #category : #lifecycle }
-GlutinEventFetcher >> reinstallEventFetcher [
+RustWindowingEventFetcher >> reinstallEventFetcher [
 	"Force initialize a new event fetcher process. It is not possible to do this if Glutin event loop is not nil"
 	
 	self
@@ -145,22 +158,27 @@ GlutinEventFetcher >> reinstallEventFetcher [
 	self
 		assert: [ Glutin isSupported ]
 		description: [ 'Glutin must be supported by the system' ].
-	
+
 	fetcherProcess := [ self basicPharoEventLoop ] forkAt: self fetcherProcessPriority.
 	fetcherProcess name: 'Glutin Event Fetcher Process'
 ]
 
 { #category : #'api - event handlers' }
-GlutinEventFetcher >> removeEventHandler: anEventHandler [
+RustWindowingEventFetcher >> removeEventHandler: anEventHandler [
 	(eventHandlers includes: anEventHandler)
 		ifFalse: [ ^ self ].
 	eventHandlers remove: anEventHandler
 ]
 
-{ #category : #'system startup' }
-GlutinEventFetcher >> shutDown: isQuitting [
+{ #category : #accessing }
+RustWindowingEventFetcher >> session [
+	^ session
 ]
 
 { #category : #'system startup' }
-GlutinEventFetcher >> startUp: isInANewSession [
+RustWindowingEventFetcher >> shutDown: isQuitting [
+]
+
+{ #category : #'system startup' }
+RustWindowingEventFetcher >> startUp: isInANewSession [
 ]

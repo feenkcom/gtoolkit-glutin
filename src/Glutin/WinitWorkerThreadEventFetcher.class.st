@@ -1,6 +1,6 @@
 Class {
-	#name : #GlutinWorkerThreadEventFetcher,
-	#superclass : #GlutinEventFetcher,
+	#name : #WinitWorkerThreadEventFetcher,
+	#superclass : #RustWindowingEventFetcher,
 	#instVars : [
 		'mutex',
 		'currentSession',
@@ -12,24 +12,24 @@ Class {
 }
 
 { #category : #accessing }
-GlutinWorkerThreadEventFetcher class >> isAvailable [
+WinitWorkerThreadEventFetcher class >> isAvailable [
 	^ Smalltalk vm isRunningInWorkerThread
 ]
 
 { #category : #accessing }
-GlutinWorkerThreadEventFetcher class >> priority [
+WinitWorkerThreadEventFetcher class >> priority [
 	^ 10
 ]
 
 { #category : #'private - event loop' }
-GlutinWorkerThreadEventFetcher >> basicPharoEventLoop [
+WinitWorkerThreadEventFetcher >> basicPharoEventLoop [
 	"Fetch pending raw events from the OS.
 	 This method is run at the user interrupt priority."
 
 	"I make sure that Glutin events loop (external) is valid"
 
 	self ensureEventLoop.
-
+	
 	mainThreadEventLoop run.
 
 	[ true ] whileTrue: [
@@ -38,7 +38,7 @@ GlutinWorkerThreadEventFetcher >> basicPharoEventLoop [
 ]
 
 { #category : #'private - event loop' }
-GlutinWorkerThreadEventFetcher >> ensureEventLoop [
+WinitWorkerThreadEventFetcher >> ensureEventLoop [
 	"I make sure that Glutin events loop (external) is valid"
 	
 	mutex critical: [
@@ -54,7 +54,7 @@ GlutinWorkerThreadEventFetcher >> ensureEventLoop [
 ]
 
 { #category : #accessing }
-GlutinWorkerThreadEventFetcher >> eventLoop [
+WinitWorkerThreadEventFetcher >> eventLoop [
 	<return: #GlutinCallbackEventLoop>
 
 	self ensureEventLoop.
@@ -62,38 +62,38 @@ GlutinWorkerThreadEventFetcher >> eventLoop [
 ]
 
 { #category : #'private - event loop' }
-GlutinWorkerThreadEventFetcher >> fetchEvents [
+WinitWorkerThreadEventFetcher >> fetchEvents [
 	[ mainThreadEventLoop
 		poll: [ :aGlutinEvent |
 			self processGlutinEvent: aGlutinEvent ] ] whileTrue
 ]
 
 { #category : #lifecycle }
-GlutinWorkerThreadEventFetcher >> fetcherProcessPriority [
+WinitWorkerThreadEventFetcher >> fetcherProcessPriority [
 	^ Processor lowIOPriority
 ]
 
 { #category : #initialization }
-GlutinWorkerThreadEventFetcher >> initialize [
+WinitWorkerThreadEventFetcher >> initialize [
 	super initialize.
 	
 	mutex := Monitor new
 ]
 
 { #category : #'system startup' }
-GlutinWorkerThreadEventFetcher >> shutDown: isQuitting [
+WinitWorkerThreadEventFetcher >> shutDown: isQuitting [
 	fetcherProcess ifNotNil: #terminate.
 	fetcherProcess := nil.
 ]
 
 { #category : #'system startup' }
-GlutinWorkerThreadEventFetcher >> startUp: isInANewSession [
+WinitWorkerThreadEventFetcher >> startUp: isInANewSession [
 	
-	(true"Glutin isSupported" and: [ Smalltalk vm isRunningInWorkerThread ])
+	(Glutin isSupported and: [ Smalltalk vm isRunningInWorkerThread ])
 		ifTrue: [ self installEventFetcher ]
 ]
 
 { #category : #'private - event loop' }
-GlutinWorkerThreadEventFetcher >> waitForEvents [
+WinitWorkerThreadEventFetcher >> waitForEvents [
 	semaphore wait
 ]

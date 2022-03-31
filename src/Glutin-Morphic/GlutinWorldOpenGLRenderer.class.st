@@ -11,7 +11,7 @@ Class {
 
 { #category : #accessing }
 GlutinWorldOpenGLRenderer class >> isApplicableFor: aWorld [
-	^ Glutin isSupported
+	^ GlutinLibrary uniqueInstance hasModule and: [ Glutin isSupported and: [ RustWindowingEventFetcher default eventLoop isGlutin ] ]
 ]
 
 { #category : #accessing }

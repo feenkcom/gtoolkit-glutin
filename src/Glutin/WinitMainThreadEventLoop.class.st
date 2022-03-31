@@ -69,6 +69,12 @@ WinitMainThreadEventLoop class >> withSemaphoreSignaller: aCallbackFunction inde
 ]
 
 { #category : #'api - windows' }
+WinitMainThreadEventLoop >> closeWindow: aWinitWindow [
+	GlutinWindowsRegistry default unregisterWindow: aWinitWindow.
+	aWinitWindow release
+]
+
+{ #category : #'api - windows' }
 WinitMainThreadEventLoop >> createWindow: aWindowBuilder [
 	| aBuilderCopy aWindow |
 	
@@ -109,6 +115,15 @@ WinitMainThreadEventLoop >> initialize [
 	waker := self primCreateWaker
 ]
 
+{ #category : #'as yet unclassified' }
+WinitMainThreadEventLoop >> isRunning [ ^ isRunning
+]
+
+{ #category : #testing }
+WinitMainThreadEventLoop >> isWinit [
+	^ true
+]
+
 { #category : #running }
 WinitMainThreadEventLoop >> poll: aBlock [
 	<return: #Boolean>
@@ -135,6 +150,11 @@ WinitMainThreadEventLoop >> primCreateWindow: aWindowBuilder [
 ]
 
 { #category : #'private - ffi' }
+WinitMainThreadEventLoop >> primGetType [
+	^ self ffiCall: #(WinitEventLoopType winit_polling_event_loop_get_type(self))
+]
+
+{ #category : #'private - ffi' }
 WinitMainThreadEventLoop >> primGetWakerCallback [
 	^ self ffiCall: #(void* winit_event_loop_waker_function())
 ]
@@ -158,6 +178,9 @@ WinitMainThreadEventLoop >> primRun [
 WinitMainThreadEventLoop >> run [
 	self isNull
 		ifTrue: [ ^ self ].
+
+	self isRunning
+		ifTrue: [ ^ self ].
 	
 	Smalltalk vm isRunningInWorkerThread
 		ifFalse: [ self error: 'Must be on a worker thread!' ].
@@ -169,6 +192,13 @@ WinitMainThreadEventLoop >> run [
 	"this will block when not on the Worker Thread!"
 	self primRun.
 	isRunning := true
+]
+
+{ #category : #'api - accessing' }
+WinitMainThreadEventLoop >> type [
+	<return: #WinitEventLoopType>
+	
+	^ self primGetType
 ]
 
 { #category : #'api - accessing' }
