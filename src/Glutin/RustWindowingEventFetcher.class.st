@@ -19,7 +19,7 @@ RustWindowingEventFetcher class >> default [
 		default session ~~ Smalltalk session or: [
 			default class isAbstract or: [
 				default class isAvailable not ] ] ])
-		ifTrue: [ default := self preferableEventFetcher new ].
+		ifTrue: [ default := self preferableEventFetcher new transferEventHandlersFrom: default ].
 
 	^ default
 ]
@@ -181,4 +181,11 @@ RustWindowingEventFetcher >> shutDown: isQuitting [
 
 { #category : #'system startup' }
 RustWindowingEventFetcher >> startUp: isInANewSession [
+]
+
+{ #category : #initialization }
+RustWindowingEventFetcher >> transferEventHandlersFrom: anEventFetcher [
+	anEventFetcher ifNil: [ ^ self ].
+	
+	eventHandlers addAll: anEventFetcher eventHandlers
 ]
