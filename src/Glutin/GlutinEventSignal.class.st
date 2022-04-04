@@ -34,3 +34,8 @@ GlutinEventSignal >> event: anObject [
 GlutinEventSignal >> postCopy [
 	event := event copy
 ]
+
+{ #category : #accessing }
+GlutinEventSignal >> printOneLineContentsOn: aStream [
+	event printOn: aStream
+]
