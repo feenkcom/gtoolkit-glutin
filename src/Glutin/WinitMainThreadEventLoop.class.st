@@ -90,7 +90,8 @@ WinitMainThreadEventLoop >> createWindow: aWindowBuilder [
 
 	aBuilderCopy := aWindowBuilder copy.
 
-	aWindow := WinitWindow fromNativeHandle: (self primCreateWindow: aBuilderCopy).
+	aWindow := ((WinitWindowReference fromHandle: (self primCreateWindow: aBuilderCopy) getHandle)
+		eventLoop: self) autoRelease.
 
 	aBuilderCopy nullify.
 
@@ -115,8 +116,9 @@ WinitMainThreadEventLoop >> initialize [
 	waker := self primCreateWaker
 ]
 
-{ #category : #'as yet unclassified' }
-WinitMainThreadEventLoop >> isRunning [ ^ isRunning
+{ #category : #testing }
+WinitMainThreadEventLoop >> isRunning [
+	^ isRunning
 ]
 
 { #category : #testing }
@@ -157,6 +159,24 @@ WinitMainThreadEventLoop >> primGetType [
 { #category : #'private - ffi' }
 WinitMainThreadEventLoop >> primGetWakerCallback [
 	^ self ffiCall: #(void* winit_event_loop_waker_function())
+]
+
+{ #category : #'private - ffi' }
+WinitMainThreadEventLoop >> primOnRedrawCall: anExternalFunction with: anExternalObject for: aWindowId [
+	self ffiCall: #(void winit_polling_event_loop_add_redraw_listener(
+		self,
+		void* aWindowId,
+		void* anExternalFunction,
+		void* anExternalObject))
+]
+
+{ #category : #'private - ffi' }
+WinitMainThreadEventLoop >> primOnResizeCall: anExternalFunction with: anExternalObject for: aWindowId [
+	self ffiCall: #(void winit_polling_event_loop_add_resize_listener(
+		self,
+		void* aWindowId,
+		void* anExternalFunction,
+		void* anExternalObject))
 ]
 
 { #category : #'private - ffi' }

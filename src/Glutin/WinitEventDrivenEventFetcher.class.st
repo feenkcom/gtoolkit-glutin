@@ -6,7 +6,8 @@ Class {
 
 { #category : #testing }
 WinitEventDrivenEventFetcher class >> isAvailable [
-	^ OSPlatform current isMacOS and: [ Smalltalk vm isRunningInWorkerThread not ]
+	^ (OSPlatform current isMacOS or: [ OSPlatform current isWindows ])
+		and: [ Smalltalk vm isRunningInWorkerThread not ]
 ]
 
 { #category : #accessing }
