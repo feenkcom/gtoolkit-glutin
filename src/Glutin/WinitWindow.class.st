@@ -40,6 +40,11 @@ WinitWindow >> eventLoop: anObject [
 	eventLoop := anObject
 ]
 
+{ #category : #'api - platform' }
+WinitWindow >> hwnd [
+	^ self primGetHwnd
+]
+
 { #category : #'api - accessing' }
 WinitWindow >> id [
 	<return: #Number>
@@ -95,6 +100,11 @@ WinitWindow >> position [
 { #category : #'api - accessing' }
 WinitWindow >> position: aPoint [
 	self primSetPositionX: aPoint x y: aPoint y
+]
+
+{ #category : #'private - ffi' }
+WinitWindow >> primGetHwnd [
+	^ self ffiCall: #(void* winit_window_get_hwnd (self))
 ]
 
 { #category : #'private - ffi' }
