@@ -41,7 +41,7 @@ GlutinCursorMovedEvent >> copy [
 	^ super copy
 		x: self x;
 		y: self y;
-		deviceId: self device_id;
+		device_id: self device_id;
 		yourself
 ]
 
