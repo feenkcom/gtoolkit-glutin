@@ -6,7 +6,9 @@ Class {
 		'scaleFactor',
 		'cursorMap',
 		'windowLogicalSize',
+		'windowPhysicalSize',
 		'worldExtent',
+		'surfaceExtent',
 		'window'
 	],
 	#category : #'Glutin-Morphic'
@@ -16,7 +18,7 @@ Class {
 RustWindowingWorldRenderer class >> activeCycleLapse [
 	"Milliseconds"
 
-	^ 20
+	^ 16
 ]
 
 { #category : #accessing }
@@ -33,14 +35,6 @@ RustWindowingWorldRenderer >> activateCursor: aCursor withMask: maskForm [
 		at: aCursor
 		ifPresent: [ :aGlutinCursor | window cursor: aGlutinCursor ]
 		ifAbsent: [ window cursor: WinitCursorIcon Default ] ]
-]
-
-{ #category : #accessing }
-RustWindowingWorldRenderer >> actualFramebufferSize [
-	"Return the physical screen size"
-	<return: #Point>
-
-	^ ((FensterLogicalSize fromPoint: worldExtent) asPhysical: self scaleFactor) rounded asPoint
 ]
 
 { #category : #accessing }
@@ -65,18 +59,26 @@ RustWindowingWorldRenderer >> canvas: aCanvas [
 RustWindowingWorldRenderer >> checkForNewScreenSize [
 	"Is called on every frame"
 	<return: #Boolean>
-	| anExtent |
+	| aLogicalExtent aPhysicalExtent |
 
-	anExtent := self windowLogicalSize asPoint.
+	aLogicalExtent := self windowLogicalSize asPoint.
+	aPhysicalExtent := self windowPhysicalSize asPoint.
 
-	(worldExtent = anExtent)
+	(worldExtent = aLogicalExtent and: [ surfaceExtent = aPhysicalExtent ])
 		ifTrue: [ ^ false ].
+
+	surfaceExtent := aPhysicalExtent.
+
+	"fast return if only physical extent changed"
+	worldExtent = aLogicalExtent
+		ifTrue: [ ^ true ].
+
+	worldExtent := aLogicalExtent.
 	
-	worldExtent := anExtent.
-	world worldState realWindowExtent: anExtent.
+	world worldState realWindowExtent: aLogicalExtent.
 	world restoreMorphicDisplay.
 	
-	world extent: anExtent.
+	world extent: aLogicalExtent.
 	world worldState doFullRepaint.
 	
 	^ true
@@ -146,11 +148,6 @@ RustWindowingWorldRenderer >> fullscreenMode: aValue [
 ]
 
 { #category : #accessing }
-RustWindowingWorldRenderer >> glutinWindow [
-	^ window
-]
-
-{ #category : #accessing }
 RustWindowingWorldRenderer >> icon: aForm [ 
 
 	"osWindow icon: aForm"
@@ -181,7 +178,7 @@ RustWindowingWorldRenderer >> initializeGlutinWindow [
 	"#realWindowExtent is the logical size of the window"
 	windowLogicalSize := FensterLogicalSize
 		fromPoint: ((world worldState realWindowExtent ifNil: [ 976 @ 665 ]) asIntegerPoint).
-		
+
 	worldExtent := windowLogicalSize asPoint.
 
 	eventLoop := RustWindowingEventFetcher default eventLoop.
@@ -191,6 +188,9 @@ RustWindowingWorldRenderer >> initializeGlutinWindow [
 
 	window := eventLoop createWindow: aWindowBuilder.
 	scaleFactor := window scaleFactor.
+	
+	windowPhysicalSize := FensterPhysicalSize fromPoint: window innerExtent.
+	surfaceExtent := windowPhysicalSize asPoint.
 
 	eventHandler := (WinitMorphicEventHandler for: world) window: window.
 	RustWindowingEventFetcher default addEventHandler: eventHandler
@@ -234,6 +234,24 @@ RustWindowingWorldRenderer >> windowLogicalSize: aFensterLogicalSize [
 		ifTrue: [ self error: 'Window size must be positive' ].
 	
 	windowLogicalSize := roundedSize
+]
+
+{ #category : #accessing }
+RustWindowingWorldRenderer >> windowPhysicalSize [
+
+	^ windowPhysicalSize
+]
+
+{ #category : #accessing }
+RustWindowingWorldRenderer >> windowPhysicalSize: aFensterPhysicalSize [
+	"Is called when the physical window size is changed"
+	| roundedSize |
+	
+	roundedSize := aFensterPhysicalSize rounded.
+	roundedSize isZero
+		ifTrue: [ self error: 'Window size must be positive' ].
+	
+	windowPhysicalSize := roundedSize
 ]
 
 { #category : #accessing }
