@@ -1,42 +1,42 @@
 Class {
-	#name : #GlutinWorldRenderer,
+	#name : #RustWindowingWorldRenderer,
 	#superclass : #AbstractWorldRenderer,
 	#instVars : [
-		'glutinWindow',
 		'eventHandler',
 		'scaleFactor',
 		'cursorMap',
 		'windowLogicalSize',
-		'worldExtent'
+		'worldExtent',
+		'window'
 	],
 	#category : #'Glutin-Morphic'
 }
 
 { #category : #accessing }
-GlutinWorldRenderer class >> activeCycleLapse [
+RustWindowingWorldRenderer class >> activeCycleLapse [
 	"Milliseconds"
 
 	^ 20
 ]
 
 { #category : #accessing }
-GlutinWorldRenderer class >> idleCycleLapse [
+RustWindowingWorldRenderer class >> idleCycleLapse [
 	"Milliseconds"
 
 	^ 1000
 ]
 
 { #category : #accessing }
-GlutinWorldRenderer >> activateCursor: aCursor withMask: maskForm [
+RustWindowingWorldRenderer >> activateCursor: aCursor withMask: maskForm [
 
-	glutinWindow ifNotNil: [ cursorMap
+	window ifNotNil: [ cursorMap
 		at: aCursor
-		ifPresent: [ :aGlutinCursor | glutinWindow cursor: aGlutinCursor ]
-		ifAbsent: [ glutinWindow cursor: WinitCursorIcon Default ] ]
+		ifPresent: [ :aGlutinCursor | window cursor: aGlutinCursor ]
+		ifAbsent: [ window cursor: WinitCursorIcon Default ] ]
 ]
 
 { #category : #accessing }
-GlutinWorldRenderer >> actualFramebufferSize [
+RustWindowingWorldRenderer >> actualFramebufferSize [
 	"Return the physical screen size"
 	<return: #Point>
 
@@ -44,7 +44,7 @@ GlutinWorldRenderer >> actualFramebufferSize [
 ]
 
 { #category : #accessing }
-GlutinWorldRenderer >> actualScreenSize [
+RustWindowingWorldRenderer >> actualScreenSize [
 	"Return the logical screen size"
 	<return: #Point>
 
@@ -52,17 +52,17 @@ GlutinWorldRenderer >> actualScreenSize [
 ]
 
 { #category : #accessing }
-GlutinWorldRenderer >> canvas [
+RustWindowingWorldRenderer >> canvas [
 	^ self subclassResponsibility
 ]
 
 { #category : #accessing }
-GlutinWorldRenderer >> canvas: aCanvas [
+RustWindowingWorldRenderer >> canvas: aCanvas [
 	"nothing we can do here"
 ]
 
 { #category : #'api - cycle' }
-GlutinWorldRenderer >> checkForNewScreenSize [
+RustWindowingWorldRenderer >> checkForNewScreenSize [
 	"Is called on every frame"
 	<return: #Boolean>
 	| anExtent |
@@ -83,28 +83,28 @@ GlutinWorldRenderer >> checkForNewScreenSize [
 ]
 
 { #category : #accessing }
-GlutinWorldRenderer >> clipboardText [
+RustWindowingWorldRenderer >> clipboardText [
 	^ Clipboard clipboardText
 ]
 
 { #category : #accessing }
-GlutinWorldRenderer >> clipboardText: aString [
+RustWindowingWorldRenderer >> clipboardText: aString [
 	Clipboard clipboardText: aString
 ]
 
 { #category : #initialization }
-GlutinWorldRenderer >> convertWindowMouseEventPosition: aPosition [
+RustWindowingWorldRenderer >> convertWindowMouseEventPosition: aPosition [
 
 	^ (aPosition / self scaleFactor) rounded
 ]
 
 { #category : #activation }
-GlutinWorldRenderer >> deactivate [
+RustWindowingWorldRenderer >> deactivate [
 	world worldState worldRenderer: (NullWorldRenderer forWorld: world).
 	
-	glutinWindow ifNotNil: [
-		glutinWindow close.
-		glutinWindow := nil ].
+	window ifNotNil: [
+		window close.
+		window := nil ].
 
 	RustWindowingEventFetcher default removeEventHandler: eventHandler.
 	eventHandler := nil.
@@ -113,51 +113,51 @@ GlutinWorldRenderer >> deactivate [
 ]
 
 { #category : #'api - cycle' }
-GlutinWorldRenderer >> deferUpdates: aBoolean [
+RustWindowingWorldRenderer >> deferUpdates: aBoolean [
 	"Defered updates are not supported"
 
 	^ false
 ]
 
 { #category : #'api - cycle' }
-GlutinWorldRenderer >> displayWorldState: aWorldState ofWorld: aWorld submorphs: submorphs [
-	"Update this world's display."
-	
-	self subclassResponsibility
+RustWindowingWorldRenderer >> displayWorldState: aWorldState ofWorld: aWorld submorphs: submorphs [
+
+	"Obsolete starting with Pharo9"
+	self shouldNotImplement
 ]
 
 { #category : #activation }
-GlutinWorldRenderer >> doActivate [
+RustWindowingWorldRenderer >> doActivate [
 	self initializeCursorMap.
 	self initializeGlutinWindow.
 
-	world worldState realWindowExtent: glutinWindow innerExtent.
-	world extent: (glutinWindow innerExtent / scaleFactor) floor asIntegerPoint.
+	world worldState realWindowExtent: window innerExtent.
+	world extent: (window innerExtent / scaleFactor) floor asIntegerPoint.
 	world worldState doFullRepaint.
 	
 	WorldState MinCycleLapse: self class activeCycleLapse
 ]
 
 { #category : #operations }
-GlutinWorldRenderer >> fullscreenMode: aValue [
+RustWindowingWorldRenderer >> fullscreenMode: aValue [
 
 	"osWindow fullscreen: aValue.
 	self checkForNewScreenSize."
 ]
 
 { #category : #accessing }
-GlutinWorldRenderer >> glutinWindow [
-	^ glutinWindow
+RustWindowingWorldRenderer >> glutinWindow [
+	^ window
 ]
 
 { #category : #accessing }
-GlutinWorldRenderer >> icon: aForm [ 
+RustWindowingWorldRenderer >> icon: aForm [ 
 
 	"osWindow icon: aForm"
 ]
 
 { #category : #initialization }
-GlutinWorldRenderer >> initializeCursorMap [
+RustWindowingWorldRenderer >> initializeCursorMap [
 	"Use newFromPairs: to allow duplications"
 	cursorMap := Dictionary newFromPairs: { 
 		Cursor normal . WinitCursorIcon Default.
@@ -175,7 +175,7 @@ GlutinWorldRenderer >> initializeCursorMap [
 ]
 
 { #category : #initialization }
-GlutinWorldRenderer >> initializeGlutinWindow [
+RustWindowingWorldRenderer >> initializeGlutinWindow [
 	| aWindowBuilder eventLoop |
 	
 	"#realWindowExtent is the logical size of the window"
@@ -189,28 +189,35 @@ GlutinWorldRenderer >> initializeGlutinWindow [
 		title: Smalltalk image imageFile basename;
 		extent: windowLogicalSize asPoint.	
 
-	glutinWindow := eventLoop createWindow: aWindowBuilder.
-	scaleFactor := glutinWindow scaleFactor.
+	window := eventLoop createWindow: aWindowBuilder.
+	scaleFactor := window scaleFactor.
 
-	eventHandler := (WinitMorphicEventHandler for: world) window: glutinWindow.
+	eventHandler := (WinitMorphicEventHandler for: world) window: window.
 	RustWindowingEventFetcher default addEventHandler: eventHandler
 ]
 
 { #category : #accessing }
-GlutinWorldRenderer >> scaleFactor [
+RustWindowingWorldRenderer >> scaleFactor [
 	^ scaleFactor ifNil: [
-		glutinWindow
+		window
 			ifNil: [ 1 ]
-			ifNotNil: [ glutinWindow scaleFactor ] ]
+			ifNotNil: [ window scaleFactor ] ]
 ]
 
 { #category : #accessing }
-GlutinWorldRenderer >> scaleFactor: aNumber [
+RustWindowingWorldRenderer >> scaleFactor: aNumber [
 	scaleFactor := aNumber
 ]
 
+{ #category : #events }
+RustWindowingWorldRenderer >> updateToNewResolution [
+
+	"OSWindow specific"
+	self shouldNotImplement 
+]
+
 { #category : #accessing }
-GlutinWorldRenderer >> windowLogicalSize [
+RustWindowingWorldRenderer >> windowLogicalSize [
 	"Return the logical size of the window. The value can be changed anytime during the world cycle.
 	It is advised to only use it during #checkForNewScreenSize"
 	<return: #FensterLogicalSize>
@@ -219,7 +226,7 @@ GlutinWorldRenderer >> windowLogicalSize [
 ]
 
 { #category : #accessing }
-GlutinWorldRenderer >> windowLogicalSize: aFensterLogicalSize [
+RustWindowingWorldRenderer >> windowLogicalSize: aFensterLogicalSize [
 	| roundedSize |
 	
 	roundedSize := aFensterLogicalSize rounded.
@@ -230,6 +237,6 @@ GlutinWorldRenderer >> windowLogicalSize: aFensterLogicalSize [
 ]
 
 { #category : #accessing }
-GlutinWorldRenderer >> world: aWorld [
+RustWindowingWorldRenderer >> world: aWorld [
 	world := aWorld
 ]

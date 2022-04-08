@@ -676,8 +676,8 @@ WinitMorphicEventHandler >> visitWindowCloseRequest: anEvent [
 { #category : #'event - visiting' }
 WinitMorphicEventHandler >> visitWindowFocusedEvent: anEvent [
 	WorldState MinCycleLapse: (anEvent is_focused
-		ifTrue: [ GlutinWorldRenderer activeCycleLapse ]
-		ifFalse: [ GlutinWorldRenderer idleCycleLapse ])
+		ifTrue: [ RustWindowingWorldRenderer activeCycleLapse ]
+		ifFalse: [ RustWindowingWorldRenderer idleCycleLapse ])
 ]
 
 { #category : #'event - visiting' }
