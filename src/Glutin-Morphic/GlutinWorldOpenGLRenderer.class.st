@@ -1,6 +1,6 @@
 Class {
 	#name : #GlutinWorldOpenGLRenderer,
-	#superclass : #GlutinWorldRenderer,
+	#superclass : #RustWindowingWorldRenderer,
 	#instVars : [
 		'display',
 		'renderer',
@@ -68,44 +68,6 @@ GlutinWorldOpenGLRenderer >> deactivate [
 	display := nil
 ]
 
-{ #category : #rendering }
-GlutinWorldOpenGLRenderer >> displayWorldState: aWorldState ofWorld: aWorld submorphs: submorphs [
-	"Obsolete. In Pharo8 each world renderer had to implement its own displayWorldState:ofWorld:submorphs:"
-	| aCanvas handsToDraw allDamage worldDamageRects handDamageRects |
-
-	"force re-layout if needed"
-	submorphs do: [ :m | m fullBounds ]. 
-	
-	aCanvas := self canvas.
-	aCanvas
-		ifNil: [ ^ self ].	
-
-	aWorldState checkIfUpdateNeeded
-		ifFalse: [ ^ self ].  
-
-	glutinWindow
-		ifNil: [ ^ self ].
-		
-	worldDamageRects := aWorldState drawWorld: aWorld submorphs: submorphs invalidAreasOn: aCanvas.  
-	"repair world's damage on canvas"
-
-	handsToDraw := aWorldState selectHandsToDrawForDamage: worldDamageRects.
-	handDamageRects := handsToDraw collect: [:h | h savePatchFrom: aCanvas ].
-	allDamage := worldDamageRects, handDamageRects.
-
-	handsToDraw reverseDo: [ :h | aCanvas fullDrawMorph: h ].  "draw hands onto world canvas"
- 
-	"*make this true to flash damaged areas for testing*"
-	WorldState debugShowDamage
-		ifTrue: [ aWorld flashRects: allDamage color: Color black ].
-
-	aCanvas finish.
-
-	Glutin critical: [ renderer presentBuffer: buffer areas: allDamage ].
-
-	handsToDraw do: [:h | h restoreSavedPatchOn: aCanvas ].  "restore world canvas under hands"
-]
-
 { #category : #initialization }
 GlutinWorldOpenGLRenderer >> doActivate [
 	| anExtent |
@@ -116,14 +78,14 @@ GlutinWorldOpenGLRenderer >> doActivate [
 	buffer := self createBufferForExtent: anExtent.
 	display := self createFormForBuffer: buffer extent: anExtent.
 	
-	renderer := GlutinGLBufferRenderer new window: glutinWindow
+	renderer := GlutinGLBufferRenderer new window: window
 ]
 
 { #category : #rendering }
 GlutinWorldOpenGLRenderer >> drawDuring: aBlock [
 	"Starting from Pharo9, the basic rendering is implemented in the AbstractWorldRenderer"
 	
-	glutinWindow
+	window
 		ifNil: [ ^ self ].
 	
 	aBlock value: self canvas
@@ -132,6 +94,8 @@ GlutinWorldOpenGLRenderer >> drawDuring: aBlock [
 { #category : #rendering }
 GlutinWorldOpenGLRenderer >> updateDamage: rectangles [
 	"Starting from Pharo9, the basic rendering is implemented in the AbstractWorldRenderer"
+	rectangles
+		ifEmpty: [ ^ self ].
 
 	Glutin critical: [ renderer presentBuffer: buffer areas: rectangles ]
 ]

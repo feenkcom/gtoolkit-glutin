@@ -89,7 +89,7 @@ WinitWorkerThreadEventFetcher >> shutDown: isQuitting [
 { #category : #'system startup' }
 WinitWorkerThreadEventFetcher >> startUp: isInANewSession [
 	
-	(Glutin isSupported and: [ Smalltalk vm isRunningInWorkerThread ])
+	(Winit isSupported and: [ Smalltalk vm isRunningInWorkerThread ])
 		ifTrue: [ self installEventFetcher ]
 ]
 
