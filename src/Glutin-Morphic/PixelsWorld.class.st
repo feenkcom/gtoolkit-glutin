@@ -89,7 +89,6 @@ PixelsWorld >> primResizeSurfaceWidth: aSurfaceWidth height: aSurfaceHeight [
 		self,
 		size_t aSurfaceWidth,
 		size_t aSurfaceHeight))
-			options: #(optEventLoop)
 ]
 
 { #category : #drawing }

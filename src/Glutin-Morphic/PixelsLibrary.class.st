@@ -1,15 +1,28 @@
 Class {
 	#name : #PixelsLibrary,
 	#superclass : #FFILibrary,
-	#classInstVars : [
-		'MouseWheelScrollSpeed'
-	],
 	#category : #'Glutin-Morphic'
 }
 
 { #category : #'library path' }
 PixelsLibrary class >> ffiLibrary [
 	^ self
+]
+
+{ #category : #logger }
+PixelsLibrary class >> initEnvLogger [
+	self uniqueInstance initEnvLogger
+]
+
+{ #category : #initialization }
+PixelsLibrary class >> initialize [
+	SessionManager default registerUserClassNamed: self name
+]
+
+{ #category : #'system startup' }
+PixelsLibrary class >> startUp: isANewSession [
+	isANewSession
+		ifTrue: [ self initEnvLogger ]
 ]
 
 { #category : #testing }
@@ -27,9 +40,21 @@ PixelsLibrary >> hasModule [
 	^ aResult ifNil: [ false ]
 ]
 
+{ #category : #logger }
+PixelsLibrary >> initEnvLogger [
+	[ self primInitEnvLogger ]
+		on: Error
+		do: [ :e | NonInteractiveTranscript stdout nextPutAll: '[Pixels] Could not init env logger'; cr ]
+]
+
 { #category : #'accessing platform' }
 PixelsLibrary >> macLibraryName [
 	^ FFIMacLibraryFinder findLibrary: 'libPixels.dylib'
+]
+
+{ #category : #'private - ffi' }
+PixelsLibrary >> primInitEnvLogger [
+	^ self ffiCall: #(void pixels_init_logger())
 ]
 
 { #category : #'private - ffi' }

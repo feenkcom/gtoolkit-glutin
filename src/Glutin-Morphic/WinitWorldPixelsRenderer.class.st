@@ -27,15 +27,14 @@ WinitWorldPixelsRenderer >> canvas [
 ]
 
 { #category : #initialization }
-WinitWorldPixelsRenderer >> checkForNewScreenSize [
-	| anExtent |
-	
+WinitWorldPixelsRenderer >> checkForNewScreenSize [	
 	super checkForNewScreenSize
 		ifFalse: [ ^ false ]. 
 	
-	anExtent := self actualScreenSize.
-	pixels resizeBuffer: anExtent.
-	display := self createFormForPixels: pixels extent: anExtent.
+	pixels resizeBuffer: worldExtent.
+	pixels resizeSurface: surfaceExtent.
+
+	display := self createFormForPixels: pixels extent: worldExtent.
 	
 	^ true
 ]
@@ -89,10 +88,4 @@ WinitWorldPixelsRenderer >> updateDamage: rectangles [
 		pixels damage: eachRectangle ].
 
 	pixels draw
-]
-
-{ #category : #initialization }
-WinitWorldPixelsRenderer >> windowPhysicalSize: aPhysicalSize [
-	pixels ifNil: [ ^ self ].
-	pixels resizeSurface: (aPhysicalSize asPoint max: (1@1))
 ]
