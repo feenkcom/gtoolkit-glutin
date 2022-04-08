@@ -690,7 +690,8 @@ WinitMorphicEventHandler >> visitWindowResizedEvent: anEvent [
 	window resize: aPhysicalSize asPoint.
 
 	aWorldRenderer
-		windowLogicalSize: (aPhysicalSize asLogical: aWorldRenderer scaleFactor)
+		windowLogicalSize: (aPhysicalSize asLogical: aWorldRenderer scaleFactor);
+		windowPhysicalSize: aPhysicalSize
 ]
 
 { #category : #'event - visiting' }

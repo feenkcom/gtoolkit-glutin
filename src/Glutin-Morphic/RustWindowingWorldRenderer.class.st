@@ -16,7 +16,7 @@ Class {
 RustWindowingWorldRenderer class >> activeCycleLapse [
 	"Milliseconds"
 
-	^ 20
+	^ 16
 ]
 
 { #category : #accessing }
@@ -234,6 +234,11 @@ RustWindowingWorldRenderer >> windowLogicalSize: aFensterLogicalSize [
 		ifTrue: [ self error: 'Window size must be positive' ].
 	
 	windowLogicalSize := roundedSize
+]
+
+{ #category : #accessing }
+RustWindowingWorldRenderer >> windowPhysicalSize: aFensterPhysicalSize [
+	"Is called when the physical window size is changed"
 ]
 
 { #category : #accessing }

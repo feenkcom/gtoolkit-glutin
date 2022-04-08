@@ -3,8 +3,7 @@ Class {
 	#superclass : #RustWindowingWorldRenderer,
 	#instVars : [
 		'display',
-		'renderer',
-		'buffer'
+		'pixels'
 	],
 	#category : #'Glutin-Morphic'
 }
@@ -35,45 +34,38 @@ WinitWorldPixelsRenderer >> checkForNewScreenSize [
 		ifFalse: [ ^ false ]. 
 	
 	anExtent := self actualScreenSize.
-	buffer := self createBufferForExtent: anExtent.
-	display := self createFormForBuffer: buffer extent: anExtent.
+	pixels resizeBuffer: anExtent.
+	display := self createFormForPixels: pixels extent: anExtent.
 	
 	^ true
 ]
 
 { #category : #private }
-WinitWorldPixelsRenderer >> createBufferForExtent: anExtent [
-	self
-		assert: [ anExtent isIntegerPoint ]
-		description: [ 'Must be an integer point' ].
-		
-	^ GtBoxerArrayU8 new: anExtent x * anExtent y * 4 withAll: 0
-]
-
-{ #category : #private }
-WinitWorldPixelsRenderer >> createFormForBuffer: aBuffer extent: anExtent [
-	^ GlutinWorldExternalForm extent: anExtent depth: 32 bits: aBuffer data getHandle
+WinitWorldPixelsRenderer >> createFormForPixels: aPixelsWorld extent: aBufferExtent [
+	^ aPixelsWorld bufferDuring: [ :aGtBoxerArrayU8 |
+		GlutinWorldExternalForm
+			extent: aBufferExtent depth: 32
+			bits: aGtBoxerArrayU8 data getHandle ]
 ]
 
 { #category : #initialization }
 WinitWorldPixelsRenderer >> deactivate [
 	super deactivate.
 
-	renderer := nil.
+	pixels := nil.
 	display := nil
 ]
 
 { #category : #initialization }
 WinitWorldPixelsRenderer >> doActivate [
-	| anExtent |
+	| aBufferSize aSurfaceSize |
 	super doActivate.
 	
-	anExtent := self actualScreenSize max: 1@1.
+	aBufferSize := self actualScreenSize max: 1@1.
+	aSurfaceSize := window innerExtent max: 1@1.
 	
-	buffer := self createBufferForExtent: anExtent.
-	display := self createFormForBuffer: buffer extent: anExtent.
-	
-	renderer := PixelsSurface size: anExtent windowHandle: window rawWindowHandle
+	pixels := (PixelsWorld size: aSurfaceSize windowHandle: window rawWindowHandle) resizeBuffer: aBufferSize.
+	display := self createFormForPixels: pixels extent: aBufferSize
 ]
 
 { #category : #rendering }
@@ -92,7 +84,15 @@ WinitWorldPixelsRenderer >> updateDamage: rectangles [
 
 	rectangles
 		ifEmpty: [ ^ self ].
+		
+	rectangles do: [ :eachRectangle |
+		pixels damage: eachRectangle ].
 
-	renderer update: self actualFramebufferSize buffer: display extent pixels: buffer.
-	renderer draw
+	pixels draw
+]
+
+{ #category : #initialization }
+WinitWorldPixelsRenderer >> windowPhysicalSize: aPhysicalSize [
+	pixels ifNil: [ ^ self ].
+	pixels resizeSurface: (aPhysicalSize asPoint max: (1@1))
 ]
