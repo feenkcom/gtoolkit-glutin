@@ -9,7 +9,8 @@ Class {
 		'windowPhysicalSize',
 		'worldExtent',
 		'surfaceExtent',
-		'window'
+		'window',
+		'mutex'
 	],
 	#category : #'Glutin-Morphic'
 }
@@ -133,8 +134,8 @@ RustWindowingWorldRenderer >> doActivate [
 	self initializeCursorMap.
 	self initializeGlutinWindow.
 
-	world worldState realWindowExtent: window innerExtent.
-	world extent: (window innerExtent / scaleFactor) floor asIntegerPoint.
+	world worldState realWindowExtent: worldExtent.
+	world extent: worldExtent.
 	world worldState doFullRepaint.
 	
 	WorldState MinCycleLapse: self class activeCycleLapse
@@ -151,6 +152,12 @@ RustWindowingWorldRenderer >> fullscreenMode: aValue [
 RustWindowingWorldRenderer >> icon: aForm [ 
 
 	"osWindow icon: aForm"
+]
+
+{ #category : #initialization }
+RustWindowingWorldRenderer >> initialize [
+	super initialize.
+	mutex := Monitor new
 ]
 
 { #category : #initialization }
@@ -173,27 +180,24 @@ RustWindowingWorldRenderer >> initializeCursorMap [
 
 { #category : #initialization }
 RustWindowingWorldRenderer >> initializeGlutinWindow [
-	| aWindowBuilder eventLoop |
-	
-	"#realWindowExtent is the logical size of the window"
-	windowLogicalSize := FensterLogicalSize
-		fromPoint: ((world worldState realWindowExtent ifNil: [ 976 @ 665 ]) asIntegerPoint).
+	mutex critical: [
+		| aWindowBuilder eventLoop |
 
-	worldExtent := windowLogicalSize asPoint.
+		eventLoop := RustWindowingEventFetcher default eventLoop.
+		aWindowBuilder := eventLoop windowBuilder
+			title: Smalltalk image imageFile basename;
+			extent: windowLogicalSize asPoint.	
 
-	eventLoop := RustWindowingEventFetcher default eventLoop.
-	aWindowBuilder := eventLoop windowBuilder
-		title: Smalltalk image imageFile basename;
-		extent: windowLogicalSize asPoint.	
+		window := eventLoop createWindow: aWindowBuilder.
 
-	window := eventLoop createWindow: aWindowBuilder.
-	scaleFactor := window scaleFactor.
-	
-	windowPhysicalSize := FensterPhysicalSize fromPoint: window innerExtent.
-	surfaceExtent := windowPhysicalSize asPoint.
+		scaleFactor := window scaleFactor.
+		windowPhysicalSize := (FensterPhysicalSize fromPoint: window innerExtent) rounded.
+		surfaceExtent := windowPhysicalSize asPoint.
+		windowLogicalSize := (windowPhysicalSize asLogical: scaleFactor) rounded.
+		worldExtent := windowLogicalSize asPoint.
 
-	eventHandler := (WinitMorphicEventHandler for: world) window: window.
-	RustWindowingEventFetcher default addEventHandler: eventHandler
+		eventHandler := (WinitMorphicEventHandler for: world) window: window.
+		RustWindowingEventFetcher default addEventHandler: eventHandler ]
 ]
 
 { #category : #accessing }
@@ -256,5 +260,14 @@ RustWindowingWorldRenderer >> windowPhysicalSize: aFensterPhysicalSize [
 
 { #category : #accessing }
 RustWindowingWorldRenderer >> world: aWorld [
-	world := aWorld
+	world := aWorld.
+	
+	"#realWindowExtent is the logical size of the window"
+	windowLogicalSize := FensterLogicalSize
+		fromPoint: ((world worldState realWindowExtent ifNil: [ 976 @ 665 ]) asIntegerPoint) rounded.
+
+	worldExtent := windowLogicalSize asPoint.
+	
+	windowPhysicalSize := (windowLogicalSize asPhysical: 1.0) rounded.
+	surfaceExtent := windowPhysicalSize asPoint
 ]
