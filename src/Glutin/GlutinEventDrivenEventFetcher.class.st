@@ -6,7 +6,15 @@ Class {
 
 { #category : #accessing }
 GlutinEventDrivenEventFetcher class >> isAvailable [
-	^ Smalltalk vm isRunningInWorkerThread not
+	"Only works in a non-worker thread"
+	Smalltalk vm isRunningInWorkerThread
+		ifTrue: [ ^ false ].
+
+	CommandLineArguments new
+		optionAt: 'event-fetcher'
+		ifPresent: [ :aValue | ^ aValue = 'glutin' ].
+
+	^ true
 ]
 
 { #category : #accessing }
