@@ -6,8 +6,16 @@ Class {
 
 { #category : #testing }
 WinitEventDrivenEventFetcher class >> isAvailable [
-	^ (OSPlatform current isMacOS or: [ OSPlatform current isWindows ])
-		and: [ Smalltalk vm isRunningInWorkerThread not ]
+	"Only works in a non-worker thread"
+	Smalltalk vm isRunningInWorkerThread
+		ifTrue: [ ^ false ].
+
+	CommandLineArguments new
+		optionAt: 'event-fetcher'
+		ifPresent: [ :aValue | ^ aValue = 'winit' ].
+	
+	"if not specicified, use winit on macos"
+	^ OSPlatform current isMacOS
 ]
 
 { #category : #accessing }
