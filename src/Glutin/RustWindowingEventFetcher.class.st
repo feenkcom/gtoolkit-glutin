@@ -24,9 +24,13 @@ RustWindowingEventFetcher class >> default [
 	^ default
 ]
 
+{ #category : #initialization }
+RustWindowingEventFetcher class >> initialize [
+	SessionManager default registerUserClassNamed: self name
+]
+
 { #category : #accessing }
 RustWindowingEventFetcher class >> install [
-	SessionManager default registerUserClassNamed: self name.
 	self default installEventFetcher
 ]
 
