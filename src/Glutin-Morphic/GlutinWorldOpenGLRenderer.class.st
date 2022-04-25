@@ -20,8 +20,13 @@ GlutinWorldOpenGLRenderer class >> priority [
 ]
 
 { #category : #accessing }
-GlutinWorldOpenGLRenderer >> canvas [ 
-	^ display ifNotNil: [ display getCanvas ]
+GlutinWorldOpenGLRenderer >> canvas [
+	"Return a canvas to draw the morphic world on"
+	<return: #FormCanvas>
+
+	^ display
+		ifNotNil: [ :aDisplay | aDisplay getCanvas ]
+		ifNil: [ (Form extent: 1@1 depth: 32) getCanvas ]
 ]
 
 { #category : #initialization }
