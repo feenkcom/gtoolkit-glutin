@@ -22,8 +22,13 @@ WinitWorldPixelsRenderer class >> priority [
 ]
 
 { #category : #accessing }
-WinitWorldPixelsRenderer >> canvas [ 
-	^ display ifNotNil: [ display getCanvas ]
+WinitWorldPixelsRenderer >> canvas [
+	"Return a canvas to draw the morphic world on"
+	<return: #FormCanvas>
+
+	^ display
+		ifNotNil: [ :aDisplay | aDisplay getCanvas ]
+		ifNil: [ (Form extent: 1@1 depth: 32) getCanvas ]
 ]
 
 { #category : #initialization }
@@ -79,13 +84,10 @@ WinitWorldPixelsRenderer >> drawDuring: aBlock [
 
 { #category : #rendering }
 WinitWorldPixelsRenderer >> updateDamage: rectangles [
-	"Starting from Pharo9, the basic rendering is implemented in the AbstractWorldRenderer"
-
-	rectangles
-		ifEmpty: [ ^ self ].
-		
-	rectangles do: [ :eachRectangle |
-		pixels damage: eachRectangle ].
-
-	pixels draw
+	pixels ifNotNil: [ :thePixels |
+		rectangles
+			ifNotEmpty: [ :theRectangles |
+				theRectangles do: [ :eachRectangle |
+					thePixels damage: eachRectangle ].
+				thePixels draw ] ]
 ]
