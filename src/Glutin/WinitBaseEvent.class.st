@@ -1,5 +1,5 @@
 Class {
-	#name : #GlutinBaseEvent,
+	#name : #WinitBaseEvent,
 	#superclass : #RustWindowingBaseEvent,
 	#category : #'Glutin-Events'
 }
