@@ -38,5 +38,5 @@ BaselineOfGlutinBindings >> postLoadGlutin: spec [
 
 { #category : #baselines }
 BaselineOfGlutinBindings >> postLoadInitializeEventsMap: aSpec [
-	GlutinBaseEvent initializeEventTypeMap
+	RustWindowingBaseEvent initializeEventTypeMap
 ]

@@ -125,7 +125,7 @@ GlutinMainThreadEventLoop >> poll: aBlock [
 	<return: #Boolean>
 	| anEvent |
 	
-	anEvent := (GlutinBaseEvent fromHandle: self primPoll getHandle).
+	anEvent := (RustWindowingBaseEvent fromHandle: self primPoll getHandle).
 	anEvent isNull
 		ifTrue: [ ^ false ].
 		

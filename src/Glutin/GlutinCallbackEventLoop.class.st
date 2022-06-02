@@ -185,7 +185,7 @@ GlutinCallbackEventLoop >> run: aBlock [
 	aCallback := GlutinEventCallback on: [ :anEventAddress |
 		| aControlFlow |
 		
-		aControlFlow := aBlock cull: (GlutinBaseEvent fromHandle: anEventAddress) cull: self.
+		aControlFlow := aBlock cull: (RustWindowingBaseEvent fromHandle: anEventAddress) cull: self.
 		(aControlFlow isKindOf: WinitControlFlow)
 			ifFalse: [ aControlFlow := WinitControlFlow poll ].
 		aControlFlow ].
