@@ -21,6 +21,25 @@ GlutinMouseScrollDelta class >> fieldsDesc [
  	)
 ]
 
+{ #category : #accessing }
+GlutinMouseScrollDelta >> gtDisplayOn: aStream [
+	aStream 
+		nextPutAll: self x asString;
+		nextPut: $,;
+		nextPutAll: self y asString
+]
+
+{ #category : #accessing }
+GlutinMouseScrollDelta >> gtOverviewFor: aView [
+	<gtView>
+	^ aView columnedList 
+		title: 'Overview';
+		priority: 1;
+		items: [ { 'x' -> self x . 'y' -> self y . 'Type' -> self type} ];
+		column: 'Property' text: #key;
+		column: 'Value' text: #value
+]
+
 { #category : #'accessing - structure variables' }
 GlutinMouseScrollDelta >> type [
 	"This method was automatically generated"

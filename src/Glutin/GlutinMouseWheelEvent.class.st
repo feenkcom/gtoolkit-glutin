@@ -69,6 +69,22 @@ GlutinMouseWheelEvent >> device_id: anObject [
 	handle signedLongLongAt: OFFSET_DEVICE_ID put: anObject
 ]
 
+{ #category : #accessing }
+GlutinMouseWheelEvent >> gtDeltaOverviewFor: aView [
+	<gtView>
+	^ aView forward
+		title: 'Delta';
+		priority: 1;
+		object: [self delta];
+		view: #gtOverviewFor:
+]
+
+{ #category : #accessing }
+GlutinMouseWheelEvent >> gtDisplayOn: aStream [
+	aStream nextPutAll: 'Mouse wheel '.
+	self delta gtDisplayOn: aStream
+]
+
 { #category : #'accessing structure variables' }
 GlutinMouseWheelEvent >> phase [
 	"This method was automatically generated"
