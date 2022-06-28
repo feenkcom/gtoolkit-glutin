@@ -76,7 +76,7 @@ GlutinMainThreadEventLoop >> createWindow: aWindowBuilder [
 		assert: [ self isNull not ]
 		description: [ 'Can not create a window with invalid event loop' ].
 	
-	[ isRunning ] whileFalse: [ 100 milliseconds wait ].
+	[ isRunning ] whileFalse: [ 100 milliSeconds wait ].
 	
 	self
 		assert: [ isRunning ]
