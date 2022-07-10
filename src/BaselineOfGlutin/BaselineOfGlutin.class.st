@@ -13,6 +13,6 @@ BaselineOfGlutin >> baseline: spec [
 				spec repository: 'github://feenkcom/gtoolkit-boxer:v0.8.33/boxer-bindings' ].
 		spec
 			baseline: 'GlutinBindings' with: [
-				spec repository: 'github://feenkcom/gtoolkit-glutin:v0.8.87/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-glutin:v0.8.88/src' ].
 	]
 ]
