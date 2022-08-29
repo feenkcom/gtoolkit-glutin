@@ -69,6 +69,7 @@ WinitMorphicEventHandler class >> initializeKeyCharacterMapping [
 	WinitEventVirtualKeyCode Backslash . $\.
 	WinitEventVirtualKeyCode Minus . $-.
 	WinitEventVirtualKeyCode Return . Character cr.
+	WinitEventVirtualKeyCode NumpadEnter . Character cr.
 	WinitEventVirtualKeyCode Period . $..
 	} pairsDo: [ :key :val | KeyCharacterMapping at: key put: val ]
 ]
