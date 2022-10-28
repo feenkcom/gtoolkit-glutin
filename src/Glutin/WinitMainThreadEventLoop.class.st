@@ -24,7 +24,7 @@ WinitMainThreadEventLoop class >> createPollingEventLoopWithSemaphoreSignaller: 
 WinitMainThreadEventLoop class >> primRelease: aHandle [
 	
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"
-	self ffiCall: #(void winit_polling_event_loop_drop(void** aHandle))
+	self ffiCall: #(void winit_polling_event_loop_drop(void* aHandle))
 ]
 
 { #category : #'instance creation' }
