@@ -19,7 +19,7 @@ WinitWindowReference class >> primRelease: aHandle [
 { #category : #'private - ffi' }
 WinitWindowReference class >> primReleaseWindow: aWindowHandle eventLoop: anEventLoop [
 	self
-		ffiCall: #(void winit_window_ref_destroy (void* anEventLoop, void** aWindowHandle))
+		ffiCall: #(void winit_window_ref_destroy (void* anEventLoop, void* aWindowHandle))
 		options: #(optEventLoop)
 ]
 
@@ -44,7 +44,7 @@ WinitWindowReference class >> release: aHandle [
 	machine the ffi library path is sometimes different which results in an error.
 	However, since the object is anyway invalid due to a new session we can continue and just ignore it nulling
 	the pointer"
-	[ self primReleaseWindow: aWindowHandle eventLoop: anEventLoop ]
+	[ self primReleaseWindow: aWindowHandle eventLoop: anEventLoop. aWindowHandle beNull ]
 		on: Error do: [ :anError | 
 			NonInteractiveTranscript stdout
 				nextPutAll: ('[Warning] Failed to release {1}({2}) due to {3}' format: { 
@@ -200,6 +200,7 @@ WinitWindowReference >> primRequestRedraw [
 	^ self ffiCall: #(void winit_window_ref_request_redraw(
 		void* eventLoop,
 		self))
+		options: #(optEventLoop optNonBlocking)
 ]
 
 { #category : #'private - ffi' }

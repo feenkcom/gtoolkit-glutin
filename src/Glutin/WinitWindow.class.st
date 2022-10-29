@@ -16,7 +16,7 @@ WinitWindow class >> primRelease: aHandle [
 
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"
 	self
-		ffiCall: #(void winit_window_drop (void** aHandle))
+		ffiCall: #(void winit_window_drop (void* aHandle))
 		options: #(optEventLoop)
 ]
 

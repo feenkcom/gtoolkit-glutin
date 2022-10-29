@@ -15,7 +15,7 @@ WinitCallbackEventLoop class >> primCreate [
 WinitCallbackEventLoop class >> primRelease: aHandle [
 	
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"
-	^ self ffiCall: #(void winit_event_loop_drop(void** aHandle))
+	^ self ffiCall: #(void winit_event_loop_drop(void* aHandle))
 ]
 
 { #category : #'api - windows' }

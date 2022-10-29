@@ -15,7 +15,7 @@ WinitWindowBuilder class >> primCreate [
 WinitWindowBuilder class >> primRelease: aHandle [
 	
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"
-	^ self ffiCall: #(void winit_window_builder_drop(void** aHandle))
+	^ self ffiCall: #(void winit_window_builder_drop(void* aHandle))
 ]
 
 { #category : #'private - ffi' }
