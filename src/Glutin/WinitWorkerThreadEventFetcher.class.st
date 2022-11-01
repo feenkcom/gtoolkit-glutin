@@ -61,6 +61,13 @@ WinitWorkerThreadEventFetcher >> eventLoop [
 	^ mainThreadEventLoop
 ]
 
+{ #category : #'api - accessing' }
+WinitWorkerThreadEventFetcher >> eventLoopType [
+	^ mainThreadEventLoop
+		ifNil: [ WinitEventLoopType Unknown ]
+		ifNotNil: [ :anEventLoop | anEventLoop type ]
+]
+
 { #category : #'private - event loop' }
 WinitWorkerThreadEventFetcher >> fetchEvents [
 	[ mainThreadEventLoop

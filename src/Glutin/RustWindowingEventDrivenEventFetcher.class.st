@@ -119,6 +119,13 @@ RustWindowingEventDrivenEventFetcher >> eventLoop [
 	^ eventsLoop
 ]
 
+{ #category : #'api - accessing' }
+RustWindowingEventDrivenEventFetcher >> eventLoopType [
+	^ eventsLoop
+		ifNil: [ WinitEventLoopType Unknown ]
+		ifNotNil: [ :anEventLoop | anEventLoop type ]
+]
+
 { #category : #lifecycle }
 RustWindowingEventDrivenEventFetcher >> fetcherProcessPriority [
 	^ Processor userInterruptPriority
