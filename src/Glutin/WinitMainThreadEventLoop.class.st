@@ -68,6 +68,16 @@ WinitMainThreadEventLoop class >> withSemaphoreSignaller: aCallbackFunction inde
 		thunk: aReceiverThunk)
 ]
 
+{ #category : #'api - accessing' }
+WinitMainThreadEventLoop >> amountOfRedrawListeners [
+	^ self primCountRedrawListeners
+]
+
+{ #category : #'api - accessing' }
+WinitMainThreadEventLoop >> amountOfResizeListeners [
+	^ self primCountResizeListeners
+]
+
 { #category : #'api - windows' }
 WinitMainThreadEventLoop >> closeWindow: aWinitWindow [
 	GlutinWindowsRegistry default unregisterWindow: aWinitWindow.
@@ -108,6 +118,19 @@ WinitMainThreadEventLoop >> createWindow: aWindowBuilder [
 	self error: 'Failed to create a Winit window'
 ]
 
+{ #category : #'gt-extension' }
+WinitMainThreadEventLoop >> gtInfoFor: aView [
+	<gtView>
+
+	^ ({
+		#'Type' -> self type.
+		#'Redraw listeners' -> self amountOfRedrawListeners.
+		#'Resize listeners' -> self amountOfResizeListeners.
+	 } asOrderedDictionary gtItemsFor: aView)
+			title: 'Info';
+			priority: 7
+]
+
 { #category : #initialization }
 WinitMainThreadEventLoop >> initialize [
 	super initialize.
@@ -140,6 +163,16 @@ WinitMainThreadEventLoop >> poll: aBlock [
 ]
 
 { #category : #'private - ffi' }
+WinitMainThreadEventLoop >> primCountRedrawListeners [
+	self ffiCall: #(size_t winit_polling_event_loop_count_redraw_listeners(self))
+]
+
+{ #category : #'private - ffi' }
+WinitMainThreadEventLoop >> primCountResizeListeners [
+	self ffiCall: #(size_t winit_polling_event_loop_count_resize_listeners(self))
+]
+
+{ #category : #'private - ffi' }
 WinitMainThreadEventLoop >> primCreateWaker [
 	^ self ffiCall: #(void* winit_event_loop_waker_create(self))
 ]
@@ -153,7 +186,9 @@ WinitMainThreadEventLoop >> primCreateWindow: aWindowBuilder [
 
 { #category : #'private - ffi' }
 WinitMainThreadEventLoop >> primGetType [
-	^ self ffiCall: #(WinitEventLoopType winit_polling_event_loop_get_type(self))
+	^ self
+		ffiCall: #(WinitEventLoopType winit_polling_event_loop_get_type(self))
+		options: #(optEventLoop)
 ]
 
 { #category : #'private - ffi' }

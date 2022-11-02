@@ -81,12 +81,12 @@ RustWindowingEventFetcher >> basicPharoEventLoop [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : #'api - accessing' }
 RustWindowingEventFetcher >> eventHandlers [
 	^ eventHandlers
 ]
 
-{ #category : #accessing }
+{ #category : #'api - accessing' }
 RustWindowingEventFetcher >> eventLoop [
 	"Return a Glutin event loop behind this event fetcher. A reference to the event loop
 	is required to create a window"
@@ -95,7 +95,12 @@ RustWindowingEventFetcher >> eventLoop [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : #'api - accessing' }
+RustWindowingEventFetcher >> eventLoopType [
+	^ self subclassResponsibility
+]
+
+{ #category : #'api - accessing' }
 RustWindowingEventFetcher >> fetcherProcess [
 	^ fetcherProcess
 ]
@@ -170,7 +175,7 @@ RustWindowingEventFetcher >> removeEventHandler: anEventHandler [
 	eventHandlers remove: anEventHandler
 ]
 
-{ #category : #accessing }
+{ #category : #'api - accessing' }
 RustWindowingEventFetcher >> session [
 	^ session
 ]
