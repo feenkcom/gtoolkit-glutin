@@ -683,10 +683,13 @@ WinitMorphicEventHandler >> visitWindowFocusedEvent: anEvent [
 
 { #category : #'event - visiting' }
 WinitMorphicEventHandler >> visitWindowResizedEvent: anEvent [
-	| aWorldRenderer aPhysicalSize |
-	
+	| aWorldRenderer aNewSize aPhysicalSize |
+
+	"make sure that the size is not zero"
+	aNewSize := (anEvent width @ anEvent height) max: 1@1.
+
 	aWorldRenderer := morphicWorld worldState worldRenderer.
-	aPhysicalSize := FensterPhysicalSize fromPoint: (anEvent width @ anEvent height).
+	aPhysicalSize := FensterPhysicalSize fromPoint: aNewSize.
 
 	window resize: aPhysicalSize asPoint.
 
