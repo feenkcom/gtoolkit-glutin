@@ -189,6 +189,13 @@ WinitWindowReference >> primGetScaleFactor [
 ]
 
 { #category : #'private - ffi' }
+WinitWindowReference >> primRawDisplayHandle [
+	^ self
+		ffiCall: #(void* winit_window_ref_raw_display_handle(void* eventLoop, self))
+		options: #(optEventLoop)
+]
+
+{ #category : #'private - ffi' }
 WinitWindowReference >> primRawWindowHandle [
 	^ self
 		ffiCall: #(void* winit_window_ref_raw_window_handle(void* eventLoop, self))
@@ -239,6 +246,11 @@ WinitWindowReference >> primSetTitle: aGtBoxerString [
 			self,
 			GtBoxerString aGtBoxerString))
 		options: #(optEventLoop)
+]
+
+{ #category : #'api - accessing' }
+WinitWindowReference >> rawDisplayHandle [
+	^ self primRawDisplayHandle
 ]
 
 { #category : #'api - accessing' }

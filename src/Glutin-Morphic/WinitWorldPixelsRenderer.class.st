@@ -68,7 +68,11 @@ WinitWorldPixelsRenderer >> doActivate [
 	aBufferSize := self actualScreenSize max: 1@1.
 	aSurfaceSize := window innerExtent max: 1@1.
 	
-	pixels := (PixelsWorld size: aSurfaceSize windowHandle: window rawWindowHandle) resizeBuffer: aBufferSize.
+	pixels := (PixelsWorld
+		size: aSurfaceSize
+		windowHandle: window rawWindowHandle
+		displayHandle: window rawDisplayHandle)
+			resizeBuffer: aBufferSize.
 	display := self createFormForPixels: pixels extent: aBufferSize
 ]
 
