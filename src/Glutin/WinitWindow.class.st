@@ -139,8 +139,13 @@ WinitWindow >> primGetScaleFactor [
 ]
 
 { #category : #'private - ffi' }
+WinitWindow >> primRawDisplayHandle [
+	^ self ffiCall: #(void* winit_window_raw_display_handle(self))
+]
+
+{ #category : #'private - ffi' }
 WinitWindow >> primRawWindowHandle [
-	^ self ffiCall: #(void* winit_windowed_context_raw_window_handle (self))
+	^ self ffiCall: #(void* winit_window_raw_window_handle(self))
 ]
 
 { #category : #'private - ffi' }
@@ -174,6 +179,11 @@ WinitWindow >> primSetPositionX: aX y: aY [
 { #category : #'private - ffi' }
 WinitWindow >> primSetTitle: aGtBoxerString [
 	^ self ffiCall: #(void winit_window_set_title(self, GtBoxerString aGtBoxerString))
+]
+
+{ #category : #'api - accessing' }
+WinitWindow >> rawDisplayHandle [
+	^ self primRawDisplayHandle
 ]
 
 { #category : #'api - accessing' }

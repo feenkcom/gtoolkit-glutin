@@ -10,8 +10,12 @@ PixelsWorld class >> ffiLibrary [
 ]
 
 { #category : #'private - ffi' }
-PixelsWorld class >> primCreateWidth: aWidth height: aHeight windowHandle: aWindowHandle [
-	^ self ffiCall: #(void* pixels_new_world(uint32 aWidth, uint32 aHeight, void* aWindowHandle)) options: #(optEventLoop)
+PixelsWorld class >> primCreateWidth: aWidth height: aHeight windowHandle: aWindowHandle displayHandle: aDisplayHandle [
+	^ self ffiCall: #(void* pixels_new_world(
+		uint32 aWidth,
+		uint32 aHeight,
+		void* aWindowHandle,
+		void* aDisplayHandle)) options: #(optEventLoop)
 ]
 
 { #category : #'private - ffi' }
@@ -22,11 +26,15 @@ PixelsWorld class >> primRelease: aHandle [
 ]
 
 { #category : #'instance creation' }
-PixelsWorld class >> size: aPoint windowHandle: aWindowHandle [
+PixelsWorld class >> size: aPoint windowHandle: aWindowHandle displayHandle: aDisplayHandle [
 	self assert: [ aPoint x > 0 ] description: [ 'Width must be positive' ].
 	self assert: [ aPoint y > 0 ] description: [ 'Height must be positive' ].
 
-	^ self fromNativeHandle: (self primCreateWidth: aPoint x height: aPoint y windowHandle: aWindowHandle)
+	^ self fromNativeHandle: (self
+		primCreateWidth: aPoint x
+		height: aPoint y
+		windowHandle: aWindowHandle
+		displayHandle: aDisplayHandle)
 ]
 
 { #category : #drawing }
