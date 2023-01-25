@@ -1,6 +1,8 @@
 Class {
 	#name : #PixelsLibrary,
 	#superclass : #FFILibrary,
+	#traits : 'TGtWithArrayBoxU8',
+	#classTraits : 'TGtWithArrayBoxU8 classTrait',
 	#category : #'Glutin-Morphic'
 }
 

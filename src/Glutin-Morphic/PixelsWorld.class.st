@@ -6,7 +6,7 @@ Class {
 
 { #category : #accessing }
 PixelsWorld class >> ffiLibrary [
-	^ PixelsLibrary
+	^ PixelsLibrary uniqueInstance
 ]
 
 { #category : #'private - ffi' }
@@ -41,12 +41,17 @@ PixelsWorld class >> size: aPoint windowHandle: aWindowHandle displayHandle: aDi
 PixelsWorld >> buffer [
 	<return: #GtBoxerArrayU8>
 
-	^ GtBoxerArrayU8 fromNativeHandle: self primGetBuffer
+	^ GtArrayBoxU8
+		fromNativeHandle: self primGetBuffer
+		library: self ffiLibrary
 ]
 
 { #category : #drawing }
 PixelsWorld >> bufferDuring: aBlock [
-	^ GtBoxerArrayU8 fromNativeHandle: self primGetBuffer during: aBlock
+	^ GtArrayBoxU8
+		fromNativeHandle: self primGetBuffer
+		library: self ffiLibrary
+		during: aBlock
 ]
 
 { #category : #drawing }
