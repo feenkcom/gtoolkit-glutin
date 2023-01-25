@@ -1,6 +1,6 @@
 # GToolkit-Glutin
 
-GToolkit bindings to [Glutin](https://github.com/rust-windowing/glutin) - a low-level library for OpenGL context creation, written in pure Rust.
+GToolkit bindings to [Glutin](https://github.com/rust-windowing/glutin) and [Winit](https://github.com/rust-windowing/winit).
 
 ## Installation
 
@@ -9,7 +9,7 @@ EpMonitor current disable.
 [ 
   Metacello new
     baseline: 'Glutin';
-    repository: 'github://feenkcom/gtoolkit-glutin/src';
+    repository: 'github://feenkcom/gtoolkit-glutin:main/src';
     load
 ] ensure: [ EpMonitor current enable ].  
 ```
