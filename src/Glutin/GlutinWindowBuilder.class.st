@@ -62,3 +62,12 @@ GlutinWindowBuilder >> primWithVisibility: aBoolean [
 GlutinWindowBuilder >> primWithWidth: aWidth height: aHeight [
 	^ self ffiCall: #(void glutin_window_builder_with_dimensions(self, float64 aWidth, float64 aHeight))
 ]
+
+{ #category : #accessing }
+GlutinWindowBuilder >> title: aString [
+	
+	title := aString.
+	GtBoxerString
+		fromString: aString
+		during: [ :aGtBoxerString | self primWithTitle: aGtBoxerString ]
+]

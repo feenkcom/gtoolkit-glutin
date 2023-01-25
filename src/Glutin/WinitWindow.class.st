@@ -48,17 +48,11 @@ WinitWindow >> hwnd [
 { #category : #'api - accessing' }
 WinitWindow >> id [
 	<return: #Number>
-	| aUint128 |
 	
 	id
 		ifNotNil: [ ^ id ].
-
-	aUint128 := GtBoxerUint128 new.
-	
-	^ id := [
-		self primGetId: aUint128.
-		aUint128 asInteger
-	] ensure: [ aUint128 release ]
+		
+	^ id := self ffiLibrary getU128From: [ :aUint128 | self primGetId: aUint128 ]
 ]
 
 { #category : #'api - accessing' }
@@ -66,9 +60,8 @@ WinitWindow >> innerExtent [
 	"Return the size of the content area in physical pixels"
 	<return: #Point>
 
-	^ GtBoxerSizeU32 newDuring: [ :aSizeU32 |
-		self primGetInnerSize: aSizeU32.
-		aSizeU32 asPoint asIntegerPoint ]
+	^ self ffiLibrary getSizeU32From: [ :aSizeU32 |
+		self primGetInnerSize: aSizeU32 ]
 ]
 
 { #category : #'api - accessing' }
@@ -92,9 +85,8 @@ WinitWindow >> position [
 	"Return the window position in physical pixels"
 	<return: #Point>
 	
-	^ GtBoxerPointI32 newDuring: [ :aPointI32 |
-		self primGetPosition: aPointI32.
-		aPointI32 asPoint ]
+	^ self ffiLibrary getPointI32From: [ :aPointI32 |
+		self primGetPosition: aPointI32 ]
 ]
 
 { #category : #'api - accessing' }
@@ -111,14 +103,14 @@ WinitWindow >> primGetHwnd [
 WinitWindow >> primGetId: aUint128 [
 	^ self ffiCall: #(void winit_window_get_id(
 		self,
-		GtBoxerUint128 aUint128))
+		GtU128Box aUint128))
 ]
 
 { #category : #'private - ffi' }
 WinitWindow >> primGetInnerSize: aSizeU32 [
 	^ self ffiCall: #(void winit_window_get_inner_size(
 		self,
-		GtBoxerSizeU32 aSizeU32))
+		GtSizeBoxU32 aSizeU32))
 ]
 
 { #category : #'private - ffi' }
@@ -130,7 +122,7 @@ WinitWindow >> primGetNSView [
 WinitWindow >> primGetPosition: aPointI32 [
 	^ self ffiCall: #(void winit_window_get_position(
 		self,
-		GtBoxerPointI32 aPointI32))
+		GtPointBoxI32 aPointI32))
 ]
 
 { #category : #'private - ffi' }
@@ -177,8 +169,8 @@ WinitWindow >> primSetPositionX: aX y: aY [
 ]
 
 { #category : #'private - ffi' }
-WinitWindow >> primSetTitle: aGtBoxerString [
-	^ self ffiCall: #(void winit_window_set_title(self, GtBoxerString aGtBoxerString))
+WinitWindow >> primSetTitle: aStringBox [
+	^ self ffiCall: #(void winit_window_set_title(self, GtStringBox aStringBox))
 ]
 
 { #category : #'api - accessing' }
@@ -223,10 +215,9 @@ WinitWindow >> title [
 
 { #category : #'api - accessing' }
 WinitWindow >> title: aString [
-	| aGtBoxerString |
-
 	title := aString.
-	aGtBoxerString := GtBoxerString fromString: aString.
-	[self primSetTitle: aGtBoxerString ]
-		ensure: [ aGtBoxerString release ]
+
+	self ffiLibrary
+		newString: aString
+		during: [ :aStringBox | self primSetTitle: aStringBox ]
 ]

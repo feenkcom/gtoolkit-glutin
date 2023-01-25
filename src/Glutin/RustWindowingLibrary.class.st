@@ -12,11 +12,6 @@ RustWindowingLibrary class >> ffiLibrary [
 	^ self
 ]
 
-{ #category : #'library path' }
-RustWindowingLibrary class >> ffiLibraryName [
-	^ self
-]
-
 { #category : #accessing }
 RustWindowingLibrary class >> initEnvLogger [
 	self uniqueInstance initEnvLogger
