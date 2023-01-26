@@ -5,5 +5,5 @@ Trait {
 
 { #category : #accessing }
 TWinit classSide >> ffiLibrary [
-	^ WinitLibrary
+	^ WinitLibrary uniqueInstance
 ]

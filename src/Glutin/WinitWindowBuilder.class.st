@@ -44,8 +44,8 @@ WinitWindowBuilder >> primWithResizable: aBoolean [
 ]
 
 { #category : #'private - ffi' }
-WinitWindowBuilder >> primWithTitle: aGtBoxerString [
-	^ self ffiCall: #(void winit_window_builder_with_title(self, GtBoxerString aGtBoxerString))
+WinitWindowBuilder >> primWithTitle: aStringBox [
+	^ self ffiCall: #(void winit_window_builder_with_title(self, GtStringBox aStringBox))
 ]
 
 { #category : #'private - ffi' }
@@ -61,4 +61,12 @@ WinitWindowBuilder >> primWithVisibility: aBoolean [
 { #category : #'private - ffi' }
 WinitWindowBuilder >> primWithWidth: aWidth height: aHeight [
 	^ self ffiCall: #(void winit_window_builder_with_dimensions(self, float64 aWidth, float64 aHeight))
+]
+
+{ #category : #accessing }
+WinitWindowBuilder >> title: aString [
+	title := aString.
+	self ffiLibrary
+		newString: aString
+		during: [ :aStringBox | self primWithTitle: aStringBox ]
 ]

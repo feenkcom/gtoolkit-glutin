@@ -40,13 +40,13 @@ Winit class >> isSupported [
 ]
 
 { #category : #'private - ffi' }
-Winit class >> primPrintln: aBoxerString [
-	self ffiCall: #(void winit_println(GtBoxerString aBoxerString))
+Winit class >> primPrintln: aStringBox [
+	self ffiCall: #(void winit_println(GtStringBox aStringBox))
 ]
 
 { #category : #accessing }
 Winit class >> println: aString [
-	GtBoxerString
-		fromString: aString
-		during: [ :aBoxerString | self primPrintln: aBoxerString ]
+	self ffiLibrary
+		newString: aString
+		during: [ :aStringBox | self primPrintln: aStringBox ]
 ]

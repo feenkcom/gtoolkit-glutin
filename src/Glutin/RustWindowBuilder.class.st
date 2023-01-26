@@ -123,12 +123,7 @@ RustWindowBuilder >> title [
 
 { #category : #accessing }
 RustWindowBuilder >> title: aString [
-	
-	title := aString.
-	
-	GtBoxerString
-		fromString: aString
-		during: [ :aGtBoxerString | self primWithTitle: aGtBoxerString ]
+	self subclassResponsibility
 ]
 
 { #category : #accessing }
