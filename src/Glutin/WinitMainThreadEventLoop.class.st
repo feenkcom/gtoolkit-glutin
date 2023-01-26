@@ -157,8 +157,10 @@ WinitMainThreadEventLoop >> poll: aBlock [
 	anEvent := (RustWindowingBaseEvent fromHandle: self primPoll getHandle).
 	anEvent isNull
 		ifTrue: [ ^ false ].
-		
-	[ aBlock cull: anEvent ] ensure: [ anEvent release ].
+
+	[ aBlock cull: anEvent ] ensure: [
+		self primReleaseEvent: anEvent getHandle ].
+
 	^ true
 ]
 

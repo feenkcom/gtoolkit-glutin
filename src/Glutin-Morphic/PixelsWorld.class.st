@@ -42,14 +42,14 @@ PixelsWorld >> buffer [
 	<return: #GtBoxerArrayU8>
 
 	^ GtArrayBoxU8
-		fromNativeHandle: self primGetBuffer
+		fromOwnedHandle: self primGetBuffer
 		library: self ffiLibrary
 ]
 
 { #category : #drawing }
 PixelsWorld >> bufferDuring: aBlock [
 	^ GtArrayBoxU8
-		fromNativeHandle: self primGetBuffer
+		fromOwnedHandle: self primGetBuffer
 		library: self ffiLibrary
 		during: aBlock
 ]
