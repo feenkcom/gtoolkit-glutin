@@ -11,12 +11,16 @@ Class {
 BaselineOfGlutin >> baseline: spec [
 	<baseline>
 	spec for: #'common' do: [
+		spec postLoadDoIt: #'postLoadGlutin:'.
 		spec
 			baseline: 'GToolkitBoxer' with: [
-				spec repository: 'github://feenkcom/gtoolkit-boxer:v0.8.43/boxer-bindings' ].
+				spec repository: 'github://feenkcom/gtoolkit-boxer:v0.8.44/boxer-bindings' ].
 		spec
-			baseline: 'GlutinBindings' with: [
-				spec repository: 'github://feenkcom/gtoolkit-glutin:v0.8.103/src' ].
+			baseline: 'Fenster' with: [
+				spec repository: 'github://feenkcom/fenster:v0.8.22/src' ].
+
+		spec package: 'Glutin' with: [
+			spec requires: #('GToolkitBoxer' 'Fenster') ].
 	]
 ]
 
