@@ -48,10 +48,10 @@ WinitWindow >> hwnd [
 { #category : #'api - accessing' }
 WinitWindow >> id [
 	<return: #Number>
-	
+
 	id
 		ifNotNil: [ ^ id ].
-		
+
 	^ id := self ffiLibrary getU128From: [ :aUint128 | self primGetId: aUint128 ]
 ]
 

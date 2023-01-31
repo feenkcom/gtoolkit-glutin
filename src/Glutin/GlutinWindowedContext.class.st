@@ -25,7 +25,7 @@ GlutinWindowedContext class >> primCreate: anEventsLoop windowBuilder: aWindowBu
 GlutinWindowedContext class >> primRelease: aHandle [
 
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"
-	self ffiCall: #(void glutin_destroy_windowed_context (void** aHandle))
+	self ffiCall: #(void glutin_destroy_windowed_context (void* aHandle))
 ]
 
 { #category : #'initialize-release' }
@@ -41,17 +41,10 @@ GlutinWindowedContext >> cursor: aCursorIcon [
 { #category : #'api - accessing' }
 GlutinWindowedContext >> id [
 	<return: #Number>
-	| aUint128 |
-	
 	id
 		ifNotNil: [ ^ id ].
-
-	aUint128 := GtBoxerUint128 new.
 	
-	^ id := [
-		self primGetId: aUint128.
-		aUint128 asInteger
-	] ensure: [ aUint128 release ]
+	^ id := self ffiLibrary getU128From: [ :aUint128 | self primGetId: aUint128 ]
 ]
 
 { #category : #'api - accessing' }
@@ -59,9 +52,8 @@ GlutinWindowedContext >> innerExtent [
 	"Return the size of the content area in physical pixels"
 	<return: #Point>
 
-	^ GtBoxerSizeU32 newDuring: [ :aSizeU32 |
-		self primGetInnerSize: aSizeU32.
-		aSizeU32 asPoint asIntegerPoint ]
+	^ self ffiLibrary
+		getSizeU32From: [ :aSizeU32 | self primGetInnerSize: aSizeU32 ]
 ]
 
 { #category : #'api - accessing' }
@@ -82,10 +74,9 @@ GlutinWindowedContext >> pixelFormat [
 GlutinWindowedContext >> position [
 	"Return the window position in physical pixels"
 	<return: #Point>
-	
-	^ GtBoxerPointI32 newDuring: [ :aPointI32 |
-		self primGetPosition: aPointI32.
-		aPointI32 asPoint ]
+
+	^ self ffiLibrary
+		getPointI32From: [ :aPointI32 | self primGetPosition: aPointI32 ]
 ]
 
 { #category : #'api - accessing' }
@@ -109,7 +100,7 @@ GlutinWindowedContext >> primGetId: aUint128 [
 GlutinWindowedContext >> primGetInnerSize: aSizeU32 [
 	^ self ffiCall: #(void glutin_windowed_context_get_inner_size(
 		self,
-		GtBoxerSizeU32 aSizeU32))
+		GtSizeBoxU32 aSizeU32))
 ]
 
 { #category : #'private - ffi' }
@@ -121,12 +112,12 @@ GlutinWindowedContext >> primGetPixelFormat [
 GlutinWindowedContext >> primGetPosition: aPointI32 [
 	^ self ffiCall: #(void glutin_windowed_context_get_position(
 		self,
-		GtBoxerPointI32 aPointI32))
+		GtPointBoxI32 aPointI32))
 ]
 
 { #category : #'private - ffi' }
-GlutinWindowedContext >> primGetProcAddress: aGtBoxerString [
-	^ self ffiCall: #(void* glutin_windowed_context_get_proc_address(self, GtBoxerString aGtBoxerString))
+GlutinWindowedContext >> primGetProcAddress: aStringBox [
+	^ self ffiCall: #(void* glutin_windowed_context_get_proc_address(self, GtStringBox aStringBox))
 ]
 
 { #category : #'private - ffi' }
@@ -184,8 +175,10 @@ GlutinWindowedContext >> primSetPositionX: aX y: aY [
 ]
 
 { #category : #'private - ffi' }
-GlutinWindowedContext >> primSetTitle: aGtBoxerString [
-	^ self ffiCall: #(void glutin_windowed_context_set_title(self, GtBoxerString aGtBoxerString))
+GlutinWindowedContext >> primSetTitle: aStringBox [
+	^ self ffiCall: #(void glutin_windowed_context_set_title(
+		self,
+		GtStringBox aStringBox))
 ]
 
 { #category : #'private - ffi' }
@@ -238,10 +231,9 @@ GlutinWindowedContext >> title [
 
 { #category : #'api - accessing' }
 GlutinWindowedContext >> title: aString [
-	| aGtBoxerString |
-
 	title := aString.
-	aGtBoxerString := GtBoxerString fromString: aString.
-	[self primSetTitle: aGtBoxerString ]
-		ensure: [ aGtBoxerString release ]
+	
+	self ffiLibrary
+		newString: aString
+		during: [ :aStringBox | self primSetTitle: aStringBox ]
 ]

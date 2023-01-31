@@ -34,9 +34,9 @@ GlutinGLTextureRenderer >> createTexture: aGlutinOpenGLBuffer [
 		border: 0
 		format: gl GL_BGRA
 		type: gl GL_UNSIGNED_BYTE
-		pixels: (GtBoxerArrayU8
-			fromHandle: aGlutinOpenGLBuffer pixels
-			size: aGlutinOpenGLBuffer stride * aGlutinOpenGLBuffer height * 4).
+		pixels: (gl ffiLibrary
+			unsafeNewArrayU8FromData: aGlutinOpenGLBuffer pixels
+			length: aGlutinOpenGLBuffer stride * aGlutinOpenGLBuffer height * 4).
 
 	^ aTexture
 ]

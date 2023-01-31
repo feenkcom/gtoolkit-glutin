@@ -30,9 +30,9 @@ GlutinContext >> getProcAddress: aProcNameString [
 	"Gets an OpenGL procedure address."
 	<return: #ExternalAddress>
 	
-	^ GtBoxerString
-		fromString: aProcNameString
-		during: [ :aGtBoxerString | self primGetProcAddress: aGtBoxerString ]
+	^ self ffiLibrary
+		newString: aProcNameString
+		during: [ :aStringBox | self primGetProcAddress: aStringBox ]
 ]
 
 { #category : #'api - gl' }
@@ -66,7 +66,7 @@ GlutinContext >> primGetApi [
 ]
 
 { #category : #'private - ffi' }
-GlutinContext >> primGetProcAddress: aGtBoxerString [
+GlutinContext >> primGetProcAddress: aStringBox [
 	^ self subclassResponsibility
 ]
 

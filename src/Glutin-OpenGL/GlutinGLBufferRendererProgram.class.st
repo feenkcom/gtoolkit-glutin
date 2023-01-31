@@ -48,9 +48,13 @@ GlutinGLBufferRendererProgram >> execute [
 		stride: 0
 		offset: 0.
 
-	GtBoxerArrayF32 new: 16 withAll: 0 during: [ :aBoxerArray |
-		aBoxerArray atAll: (1 to: matrix size) putAll: matrix.
-		self gl uniform_matrix_4fv: mloc transpose: false values: aBoxerArray ].
+	self gl ffiLibrary
+		newArrayF32WithAll: matrix
+		during: [ :anArrayF32 |
+			self gl
+				uniform_matrix_4fv: mloc
+				transpose: false
+				values: anArrayF32 ].
 
 	self gl draw_arrays_mode: self gl GL_TRIANGLES first: 0 count: 6
 ]

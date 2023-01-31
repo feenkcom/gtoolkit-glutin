@@ -18,7 +18,7 @@ GlutinCallbackEventLoop class >> primCreate [
 GlutinCallbackEventLoop class >> primRelease: aHandle [
 	
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"
-	^ self ffiCall: #(void glutin_destroy_events_loop(void** aHandle))
+	^ self ffiCall: #(void glutin_destroy_events_loop(void* aHandle))
 ]
 
 { #category : #'api - windows' }

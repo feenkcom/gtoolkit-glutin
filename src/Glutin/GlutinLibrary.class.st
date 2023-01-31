@@ -1,6 +1,8 @@
 Class {
 	#name : #GlutinLibrary,
 	#superclass : #RustWindowingLibrary,
+	#traits : 'TGtWithStringBox + TGtWithSizeBoxU32 + TGtWithPointBoxI32 + TGtWithU128Box',
+	#classTraits : 'TGtWithStringBox classTrait + TGtWithSizeBoxU32 classTrait + TGtWithPointBoxI32 classTrait + TGtWithU128Box classTrait',
 	#category : #'Glutin-Library'
 }
 

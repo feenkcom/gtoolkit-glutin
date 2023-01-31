@@ -62,11 +62,3 @@ WinitWindowBuilder >> primWithVisibility: aBoolean [
 WinitWindowBuilder >> primWithWidth: aWidth height: aHeight [
 	^ self ffiCall: #(void winit_window_builder_with_dimensions(self, float64 aWidth, float64 aHeight))
 ]
-
-{ #category : #accessing }
-WinitWindowBuilder >> title: aString [
-	title := aString.
-	self ffiLibrary
-		newString: aString
-		during: [ :aStringBox | self primWithTitle: aStringBox ]
-]

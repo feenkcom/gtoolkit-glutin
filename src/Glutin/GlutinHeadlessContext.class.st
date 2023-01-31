@@ -15,7 +15,7 @@ GlutinHeadlessContext class >> primCreate: anEventsLoop contextBuilder: aContext
 GlutinHeadlessContext class >> primRelease: aHandle [
 	
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"
-	self ffiCall: #(void glutin_destroy_context(void** aHandle))
+	self ffiCall: #(void glutin_destroy_context(void* aHandle))
 ]
 
 { #category : #testing }
@@ -29,8 +29,8 @@ GlutinHeadlessContext >> primGetApi [
 ]
 
 { #category : #'private - ffi' }
-GlutinHeadlessContext >> primGetProcAddress: aGtBoxerString [
-	^ self ffiCall: #(void* glutin_context_get_proc_address(self, GtBoxerString aGtBoxerString))
+GlutinHeadlessContext >> primGetProcAddress: aStringBox [
+	^ self ffiCall: #(void* glutin_context_get_proc_address(self, GtStringBox aStringBox))
 ]
 
 { #category : #'private - ffi' }
