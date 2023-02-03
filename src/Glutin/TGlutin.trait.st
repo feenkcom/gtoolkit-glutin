@@ -5,5 +5,5 @@ Trait {
 
 { #category : #accessing }
 TGlutin classSide >> ffiLibrary [
-	^ GlutinLibrary
+	^ GlutinLibrary uniqueInstance
 ]

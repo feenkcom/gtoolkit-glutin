@@ -11,7 +11,7 @@ Class {
 GlutinMonitorId class >> primRelease: aHandle [
 	
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"
-	^ self ffiCall: #(void glutin_primary_monitor_free(void** aHandle))
+	^ self ffiCall: #(void glutin_primary_monitor_free(void* aHandle))
 ]
 
 { #category : #accessing }

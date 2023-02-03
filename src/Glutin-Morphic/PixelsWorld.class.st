@@ -22,7 +22,7 @@ PixelsWorld class >> primCreateWidth: aWidth height: aHeight windowHandle: aWind
 PixelsWorld class >> primRelease: aHandle [
 	
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"
-	self ffiCall: #(void pixels_world_drop(void** aHandle)) options: #(optEventLoop)
+	self ffiCall: #(void pixels_world_drop(void* aHandle)) options: #(optEventLoop)
 ]
 
 { #category : #'instance creation' }
@@ -39,7 +39,7 @@ PixelsWorld class >> size: aPoint windowHandle: aWindowHandle displayHandle: aDi
 
 { #category : #drawing }
 PixelsWorld >> buffer [
-	<return: #GtBoxerArrayU8>
+	<return: #GtArrayBoxU8>
 
 	^ GtArrayBoxU8
 		fromOwnedHandle: self primGetBuffer

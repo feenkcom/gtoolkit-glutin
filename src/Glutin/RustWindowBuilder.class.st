@@ -123,7 +123,10 @@ RustWindowBuilder >> title [
 
 { #category : #accessing }
 RustWindowBuilder >> title: aString [
-	self subclassResponsibility
+	title := aString.
+	self ffiLibrary
+		newString: aString
+		during: [ :aStringBox | self primWithTitle: aStringBox ]
 ]
 
 { #category : #accessing }

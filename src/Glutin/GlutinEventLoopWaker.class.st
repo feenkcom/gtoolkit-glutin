@@ -22,7 +22,7 @@ GlutinEventLoopWaker class >> primCreate: aGlutinEventLoop [
 GlutinEventLoopWaker class >> primRelease: aHandle [
 	
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"
-	self ffiCall: #(void glutin_event_loop_waker_drop(void** aHandle))
+	self ffiCall: #(void glutin_event_loop_waker_drop(void* aHandle))
 ]
 
 { #category : #accessing }

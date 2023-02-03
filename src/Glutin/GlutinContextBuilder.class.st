@@ -105,7 +105,7 @@ GlutinContextBuilder class >> primCreate [
 GlutinContextBuilder class >> primRelease: aHandle [
 	
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"
-	^ self ffiCall: #(void glutin_destroy_context_builder(void** aHandle))
+	^ self ffiCall: #(void glutin_destroy_context_builder(void* aHandle))
 ]
 
 { #category : #'private - ffi' }
@@ -234,11 +234,6 @@ GlutinContextBuilder >> primWithPixelFormatColor: colorBits alpha: alphaBits [
 { #category : #'private - ffi' }
 GlutinContextBuilder >> primWithSharedHeadlessContext: aGlutinHeadlessContext [
 	^ self ffiCall: #(void glutin_context_builder_with_shared_headless_context(self, GlutinHeadlessContext aGlutinHeadlessContext))
-]
-
-{ #category : #'private - ffi' }
-GlutinContextBuilder >> primWithSharedWindowedContext: aGlutinWindowedContext [
-	^ self ffiCall: #(void glutin_context_builder_with_shared_windowed_context(self, GlutinWindowedContext aGlutinWindowedContext))
 ]
 
 { #category : #'private - ffi' }

@@ -23,7 +23,7 @@ GlutinMainThreadEventLoop class >> createPollingEventLoopWithSemaphoreSignaller:
 GlutinMainThreadEventLoop class >> primRelease: aHandle [
 	
 	"Plain pointers must be deleted using delete(), all users must implement a specific method"
-	self ffiCall: #(void glutin_polling_event_loop_drop(void** aHandle))
+	self ffiCall: #(void glutin_polling_event_loop_drop(void* aHandle))
 ]
 
 { #category : #'instance creation' }
