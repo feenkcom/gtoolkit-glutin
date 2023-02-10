@@ -36,9 +36,7 @@ WinitWorldPixelsRenderer >> checkForNewScreenSize [
 	super checkForNewScreenSize
 		ifFalse: [ ^ false ]. 
 	
-	pixels resizeBuffer: worldExtent.
-	pixels resizeSurface: surfaceExtent.
-
+	pixels resizeBuffer: worldExtent surface: surfaceExtent.
 	display := self createFormForPixels: pixels extent: worldExtent.
 	
 	^ true
@@ -72,7 +70,8 @@ WinitWorldPixelsRenderer >> doActivate [
 		size: aSurfaceSize
 		windowHandle: window rawWindowHandle
 		displayHandle: window rawDisplayHandle)
-			resizeBuffer: aBufferSize.
+			resizeBuffer: aBufferSize
+			surface: surfaceExtent.
 	display := self createFormForPixels: pixels extent: aBufferSize
 ]
 
