@@ -89,33 +89,22 @@ PixelsWorld >> primGetBuffer [
 ]
 
 { #category : #'private - ffi' }
-PixelsWorld >> primResizeBufferWidth: aBufferWidth height: aBufferHeight [
-	^ self ffiCall: #(void pixels_world_resize_buffer(
+PixelsWorld >> primResizeBufferWidth: aBufferWidth height: aBufferHeight surfaceWidth: aSurfaceWidth height: aSurfaceHeight [
+	^ self ffiCall: #(void pixels_world_resize(
 		self,
 		size_t aBufferWidth,
-		size_t aBufferHeight))
-]
-
-{ #category : #'private - ffi' }
-PixelsWorld >> primResizeSurfaceWidth: aSurfaceWidth height: aSurfaceHeight [
-	^ self ffiCall: #(void pixels_world_resize_surface(
-		self,
+		size_t aBufferHeight,
 		size_t aSurfaceWidth,
 		size_t aSurfaceHeight))
 ]
 
 { #category : #drawing }
-PixelsWorld >> resizeBuffer: anExtent [
+PixelsWorld >> resizeBuffer: anBufferExtent surface: aSurfaceExtent [
 	"Resize the pixel buffer"
 
 	self
-		primResizeBufferWidth: anExtent x
-		height: anExtent y
-]
-
-{ #category : #drawing }
-PixelsWorld >> resizeSurface: anExtent [
-	self
-		primResizeSurfaceWidth: anExtent x
-		height: anExtent y
+		primResizeBufferWidth: anBufferExtent x
+		height: anBufferExtent y
+		surfaceWidth: aSurfaceExtent x
+		height: aSurfaceExtent y
 ]
