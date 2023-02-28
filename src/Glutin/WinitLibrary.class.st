@@ -18,6 +18,11 @@ WinitLibrary class >> startUp: isANewSession [
 ]
 
 { #category : #'accessing platform' }
+WinitLibrary >> androidLibraryName [
+	^ 'libWinit.so'
+]
+
+{ #category : #'accessing platform' }
 WinitLibrary >> macLibraryName [
 	^ FFIMacLibraryFinder findLibrary: 'libWinit.dylib'
 ]

@@ -136,7 +136,10 @@ WinitMainThreadEventLoop >> initialize [
 	super initialize.
 
 	isRunning := false.
-	waker := self primCreateWaker
+	waker := self primCreateWaker.
+
+	OSPlatform current isAndroid
+		ifTrue: [ self primSetAndroidApp: self primGetAndroidApp ]
 ]
 
 { #category : #testing }
@@ -187,6 +190,13 @@ WinitMainThreadEventLoop >> primCreateWindow: aWindowBuilder [
 ]
 
 { #category : #'private - ffi' }
+WinitMainThreadEventLoop >> primGetAndroidApp [
+	<primitive: #primitiveGetAndroidApp>
+
+	^ ExternalAddress null
+]
+
+{ #category : #'private - ffi' }
 WinitMainThreadEventLoop >> primGetType [
 	^ self
 		ffiCall: #(WinitEventLoopType winit_polling_event_loop_get_type(self))
@@ -229,6 +239,13 @@ WinitMainThreadEventLoop >> primReleaseEvent: aGlutinBaseEvent [
 { #category : #'private - ffi' }
 WinitMainThreadEventLoop >> primRun [
 	^ self ffiCall: #(void winit_polling_event_loop_run(self)) options: #(optEventLoop optNonBlocking)
+]
+
+{ #category : #'private - ffi' }
+WinitMainThreadEventLoop >> primSetAndroidApp: anAndroidApp [
+	^ self
+		ffiCall: #(void winit_polling_event_loop_set_android_app(self, void* anAndroidApp))
+		options: #(optEventLoop)
 ]
 
 { #category : #running }
