@@ -115,7 +115,7 @@ WinitWindow >> primGetInnerSize: aSizeU32 [
 
 { #category : #'private - ffi' }
 WinitWindow >> primGetNSView [
-	^ self ffiCall: #(void* winit_window_get_ns_view(self)) options: #(optEventLoop)
+	^ self ffiCall: #(void* winit_window_get_ns_view(self))
 ]
 
 { #category : #'private - ffi' }
@@ -128,6 +128,16 @@ WinitWindow >> primGetPosition: aPointI32 [
 { #category : #'private - ffi' }
 WinitWindow >> primGetScaleFactor [
 	^ self ffiCall: #(float64 winit_window_get_scale_factor(self))
+]
+
+{ #category : #'private - ffi' }
+WinitWindow >> primGetXlibDisplay [
+	^ self ffiCall: #(void* winit_window_get_xlib_display(self))
+]
+
+{ #category : #'private - ffi' }
+WinitWindow >> primGetXlibWindow [
+	^ self ffiCall: #(ulong winit_window_get_xlib_window(self))
 ]
 
 { #category : #'private - ffi' }
@@ -220,4 +230,14 @@ WinitWindow >> title: aString [
 	self ffiLibrary
 		newString: aString
 		during: [ :aStringBox | self primSetTitle: aStringBox ]
+]
+
+{ #category : #'api - platform' }
+WinitWindow >> xlibDisplay [
+	^ self primGetXlibDisplay
+]
+
+{ #category : #'api - platform' }
+WinitWindow >> xlibWindow [
+	^ self primGetXlibWindow
 ]
