@@ -181,6 +181,22 @@ WinitWindowReference >> primGetScaleFactor [
 ]
 
 { #category : #'private - ffi' }
+WinitWindowReference >> primGetXlibDisplay [
+	^ self ffiCall: #(void* winit_window_ref_get_xlib_display(
+			void* eventLoop,
+			self))
+		options: #(optEventLoop)
+]
+
+{ #category : #'private - ffi' }
+WinitWindowReference >> primGetXlibWindow [
+	^ self ffiCall: #(ulong winit_window_ref_get_xlib_window(
+			void* eventLoop,
+			self))
+		options: #(optEventLoop)
+]
+
+{ #category : #'private - ffi' }
 WinitWindowReference >> primRawDisplayHandle [
 	^ self
 		ffiCall: #(void* winit_window_ref_raw_display_handle(void* eventLoop, self))
@@ -292,4 +308,14 @@ WinitWindowReference >> title: aString [
 	self ffiLibrary
 		newString: aString
 		during: [ :aStringBox | self primSetTitle: aStringBox ]
+]
+
+{ #category : #'api - platform' }
+WinitWindowReference >> xlibDisplay [
+	^ self primGetXlibDisplay
+]
+
+{ #category : #'api - platform' }
+WinitWindowReference >> xlibWindow [
+	^ self primGetXlibWindow
 ]

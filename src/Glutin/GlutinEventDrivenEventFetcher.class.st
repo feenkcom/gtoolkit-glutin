@@ -14,7 +14,7 @@ GlutinEventDrivenEventFetcher class >> isAvailable [
 		optionAt: 'event-fetcher'
 		ifPresent: [ :aValue | ^ aValue = 'glutin' ].
 
-	^ true
+	^ false
 ]
 
 { #category : #accessing }
