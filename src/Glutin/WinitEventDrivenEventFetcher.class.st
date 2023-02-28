@@ -13,9 +13,8 @@ WinitEventDrivenEventFetcher class >> isAvailable [
 	CommandLineArguments new
 		optionAt: 'event-fetcher'
 		ifPresent: [ :aValue | ^ aValue = 'winit' ].
-	
-	"if not specicified, use winit on macos"
-	^ OSPlatform current isMacOS
+
+	^ true
 ]
 
 { #category : #accessing }
