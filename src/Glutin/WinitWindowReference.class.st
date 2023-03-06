@@ -181,6 +181,22 @@ WinitWindowReference >> primGetScaleFactor [
 ]
 
 { #category : #'private - ffi' }
+WinitWindowReference >> primGetWaylandDisplay [
+	^ self ffiCall: #(void* winit_window_ref_get_wayland_display(
+			void* eventLoop,
+			self))
+		options: #(optEventLoop)
+]
+
+{ #category : #'private - ffi' }
+WinitWindowReference >> primGetWaylandSurface [
+	^ self ffiCall: #(void* winit_window_ref_get_wayland_surface(
+			void* eventLoop,
+			self))
+		options: #(optEventLoop)
+]
+
+{ #category : #'private - ffi' }
 WinitWindowReference >> primGetXlibDisplay [
 	^ self ffiCall: #(void* winit_window_ref_get_xlib_display(
 			void* eventLoop,
@@ -308,6 +324,16 @@ WinitWindowReference >> title: aString [
 	self ffiLibrary
 		newString: aString
 		during: [ :aStringBox | self primSetTitle: aStringBox ]
+]
+
+{ #category : #'api - platform' }
+WinitWindowReference >> waylandDisplay [
+	^ self primGetWaylandDisplay
+]
+
+{ #category : #'api - platform' }
+WinitWindowReference >> waylandSurface [
+	^ self primGetWaylandSurface
 ]
 
 { #category : #'api - platform' }
