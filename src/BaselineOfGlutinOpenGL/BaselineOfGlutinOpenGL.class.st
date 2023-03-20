@@ -10,13 +10,13 @@ BaselineOfGlutinOpenGL >> baseline: spec [
 	spec for: #'common' do: [
 		spec
 			baseline: 'Glutin' with: [
-				spec repository: 'github://feenkcom/gtoolkit-glutin:v0.8.112/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-glutin:v0.8.113/src' ].
 		spec
 			baseline: 'GToolkitBoxer' with: [
-				spec repository: 'github://feenkcom/gtoolkit-boxer:v0.8.48/boxer-bindings' ].
+				spec repository: 'github://feenkcom/gtoolkit-boxer:v0.8.49/boxer-bindings' ].
 		spec
 			baseline: 'GToolkitGleam' with: [
-				spec repository: 'github://feenkcom/gtoolkit-gleam:v0.8.58/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-gleam:v0.8.59/src' ].
 
 		spec package: 'Glutin-OpenGL' with: [
 			spec requires: #('Glutin' 'GToolkitGleam' 'GToolkitBoxer') ].
