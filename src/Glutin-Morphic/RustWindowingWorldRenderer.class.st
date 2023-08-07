@@ -201,6 +201,11 @@ RustWindowingWorldRenderer >> initializeGlutinWindow [
 ]
 
 { #category : #accessing }
+RustWindowingWorldRenderer >> requestTextEditingAt: anObject [
+	"Introduced in Pharo11"
+]
+
+{ #category : #accessing }
 RustWindowingWorldRenderer >> scaleFactor [
 	^ scaleFactor ifNil: [
 		window
