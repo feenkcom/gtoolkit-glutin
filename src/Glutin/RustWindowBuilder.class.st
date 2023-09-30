@@ -123,9 +123,10 @@ RustWindowBuilder >> title [
 
 { #category : #accessing }
 RustWindowBuilder >> title: aString [
-	title := aString.
+
+	title := aString asString.
 	self ffiLibrary
-		newString: aString
+		newString: title
 		during: [ :aStringBox | self primWithTitle: aStringBox ]
 ]
 
