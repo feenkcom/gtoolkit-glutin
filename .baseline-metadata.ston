@@ -1,1 +1,7 @@
-{	"repositories" : {		"github://feenkcom/fenster/src" : "v0.8.23",		"github://feenkcom/gtoolkit-boxer/boxer-bindings" : "v0.8.53",		"github://feenkcom/gtoolkit-gleam" : "v0.8.63"	}}
+{
+	"repositories" : {
+		"github://feenkcom/fenster/src" : "v0.8.23",
+		"github://feenkcom/gtoolkit-boxer/boxer-bindings" : "v0.8.53",
+		"github://feenkcom/gtoolkit-gleam" : "v0.8.63"
+	}
+}
