@@ -42,6 +42,11 @@ WinitWorldPixelsRenderer >> checkForNewScreenSize [
 	^ true
 ]
 
+{ #category : #'as yet unclassified' }
+WinitWorldPixelsRenderer >> copyRectangle: aRectangle into: aForm [ 
+	
+]
+
 { #category : #private }
 WinitWorldPixelsRenderer >> createFormForPixels: aPixelsWorld extent: aBufferExtent [
 	^ aPixelsWorld bufferDuring: [ :aGtBoxerArrayU8 |
