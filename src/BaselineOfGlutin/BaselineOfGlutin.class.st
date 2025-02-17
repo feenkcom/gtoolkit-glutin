@@ -20,7 +20,7 @@ BaselineOfGlutin >> baseline: spec [
 				spec repository: 'github://feenkcom/fenster:v0.8.23/src' ].
 
 		spec package: 'Glutin' with: [
-			spec requires: #('GToolkitBoxer' 'Fenster') ].
+			spec requires: #(#GToolkitBoxer #Fenster) ].
 	]
 ]
 
