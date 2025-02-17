@@ -33,6 +33,16 @@ WinitMonitor >> gtInfoFor: aView [
 		view: #gtItemsFor:
 ]
 
+{ #category : #accessing }
+WinitMonitor >> logicalSize [
+	^ self physicalSize asLogical: self scaleFactor
+]
+
+{ #category : #accessing }
+WinitMonitor >> physicalSize [
+	^ FensterPhysicalSize fromPoint: self extent
+]
+
 { #category : #'private - ffi' }
 WinitMonitor >> primGetScaleFactor [
 	^ self ffiCall: #(float64 winit_monitor_get_hidpi_factor(self))
