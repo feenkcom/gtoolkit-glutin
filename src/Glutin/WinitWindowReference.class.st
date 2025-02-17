@@ -64,6 +64,11 @@ WinitWindowReference >> close [
 ]
 
 { #category : #'api - accessing' }
+WinitWindowReference >> currentMonitor [
+	^ WinitMonitor fromNativeHandle: self primGetCurrentMonitor
+]
+
+{ #category : #'api - accessing' }
 WinitWindowReference >> cursor: aCursorIcon [
 	self primSetCursor: aCursorIcon
 ]
@@ -140,6 +145,15 @@ WinitWindowReference >> position: aPoint [
 { #category : #'private - ffi' }
 WinitWindowReference >> primFocusWindow [
 	^ self ffiCall: #(void winit_window_ref_focus_window(
+			void* eventLoop,
+			self))
+		options: #(optEventLoop)
+]
+
+{ #category : #'private - ffi' }
+WinitWindowReference >> primGetCurrentMonitor [
+	^ self
+		ffiCall: #(void* winit_window_ref_current_monitor(
 			void* eventLoop,
 			self))
 		options: #(optEventLoop)

@@ -26,6 +26,11 @@ WinitWindow >> close [
 ]
 
 { #category : #'api - accessing' }
+WinitWindow >> currentMonitor [
+	^ WinitMonitor fromNativeHandle: self primGetCurrentMonitor
+]
+
+{ #category : #'api - accessing' }
 WinitWindow >> cursor: aCursorIcon [
 	self primSetCursor: aCursorIcon
 ]
@@ -92,6 +97,12 @@ WinitWindow >> position [
 { #category : #'api - accessing' }
 WinitWindow >> position: aPoint [
 	self primSetPositionX: aPoint x y: aPoint y
+]
+
+{ #category : #'private - ffi' }
+WinitWindow >> primGetCurrentMonitor [
+	^ self
+		ffiCall: #(void* winit_window_current_monitor(void* eventLoop))
 ]
 
 { #category : #'private - ffi' }
