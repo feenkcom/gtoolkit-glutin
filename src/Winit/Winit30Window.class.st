@@ -6,21 +6,28 @@ Class {
 	#category : #'Winit-External'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 Winit30Window >> close [
+	self primCloseWindow
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 Winit30Window >> cursor: aCursorIcon [
+	self primSetCursor: aCursorIcon
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'api - platform' }
+Winit30Window >> hwnd [
+	^ self primGetHwnd
+]
+
+{ #category : #accessing }
 Winit30Window >> id [
 	<return: #Number>
 	^ self primGetId
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'api - accessing' }
 Winit30Window >> innerExtent [
 	"Return the size of the content area in physical pixels"
 	<return: #Point>
@@ -29,23 +36,23 @@ Winit30Window >> innerExtent [
 		self primGetSurfaceSize: aSizeU32 ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'api - accessing' }
 Winit30Window >> innerExtent: aPoint [
 	"Request the size of the surface area in physical pixels"
 
 	self primRequestSurfaceWidth: aPoint x height: aPoint y
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'host space - rendering' }
 Winit30Window >> makeCurrent [
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'api - platform' }
 Winit30Window >> nsView [
 	^ self primGetNSView
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 Winit30Window >> position [
 	"Return the window position in physical pixels"
 	<return: #Point>
@@ -54,7 +61,7 @@ Winit30Window >> position [
 		self primGetPosition: aPointI32 ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - ffi' }
 Winit30Window >> primAddRedrawListener: anExternalFunction thunk: anExternalObject [
 	self ffiCall: #(void winit_window_handle_add_redraw_listener(
 		self,
@@ -62,7 +69,7 @@ Winit30Window >> primAddRedrawListener: anExternalFunction thunk: anExternalObje
 		void* anExternalObject))
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - ffi' }
 Winit30Window >> primAddResizeListener: anExternalFunction thunk: anExternalObject [
 	self ffiCall: #(void winit_window_handle_add_resize_listener(
 		self,
@@ -70,43 +77,85 @@ Winit30Window >> primAddResizeListener: anExternalFunction thunk: anExternalObje
 		void* anExternalObject))
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - ffi' }
+Winit30Window >> primCloseWindow [
+	^ self
+	ffiCall: #(void winit_window_handle_close(self))
+	options: #(optEventLoop)
+]
+
+{ #category : #'private - ffi' }
+Winit30Window >> primGetHwnd [
+	^ self
+		ffiCall: #(void* winit_window_handle_get_hwnd(self))
+		options: #(optEventLoop)
+]
+
+{ #category : #'private - ffi' }
 Winit30Window >> primGetId [
 	^ self ffiCall: #(size_t winit_window_handle_get_id(self))
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - ffi' }
 Winit30Window >> primGetNSView [
 	^ self
 		ffiCall: #(void* winit_window_handle_get_ns_view(self))
 		options: #(optEventLoop)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - ffi' }
 Winit30Window >> primGetPosition: aPointI32 [
 	^ self ffiCall: #(void winit_window_handle_get_position(
 		self,
 		GtPointBoxI32 aPointI32))
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - ffi' }
 Winit30Window >> primGetScaleFactor [
 	^ self ffiCall: #(float64 winit_window_handle_get_scale_factor(self))
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - ffi' }
 Winit30Window >> primGetSurfaceSize: aSizeU32 [
 	^ self ffiCall: #(void winit_window_handle_get_surface_size(
 		self,
 		GtSizeBoxU32 aSizeU32))
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - ffi' }
+Winit30Window >> primGetWaylandDisplay [
+	^ self
+		ffiCall: #(void* winit_window_handle_get_wayland_display(self))
+		options: #(optEventLoop)
+]
+
+{ #category : #'private - ffi' }
+Winit30Window >> primGetWaylandSurface [
+	^ self
+		ffiCall: #(void* winit_window_handle_get_wayland_surface(self))
+		options: #(optEventLoop)
+]
+
+{ #category : #'private - ffi' }
+Winit30Window >> primGetXlibDisplay [
+	^ self
+		ffiCall: #(void* winit_window_handle_get_xlib_display(self))
+		options: #(optEventLoop)
+]
+
+{ #category : #'private - ffi' }
+Winit30Window >> primGetXlibWindow [
+	^ self
+		ffiCall: #(void* winit_window_handle_get_xlib_window(self))
+		options: #(optEventLoop)
+]
+
+{ #category : #'private - ffi' }
 Winit30Window >> primRequestRedraw [
 	^ self ffiCall: #(void winit_window_handle_request_redraw(self))
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - ffi' }
 Winit30Window >> primRequestSurfaceWidth: aWidth height: aHeight [
 	^ self ffiCall: #(void winit_window_handle_request_surface_size(
 			self,
@@ -114,7 +163,15 @@ Winit30Window >> primRequestSurfaceWidth: aWidth height: aHeight [
 			uint32 aHeight))
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - ffi' }
+Winit30Window >> primSetCursor: aCursorIcon [
+	^ self ffiCall: #(void winit_window_handle_set_cursor_icon(
+			self,
+			WinitCursorIcon aCursorIcon))
+		options: #(optEventLoop optNonBlocking)
+]
+
+{ #category : #'api - accessing' }
 Winit30Window >> requestRedraw [
 	self isValid
 		ifFalse: [ ^ self ].
@@ -122,11 +179,11 @@ Winit30Window >> requestRedraw [
 	self primRequestRedraw
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'api - accessing' }
 Winit30Window >> resize: aPoint [
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 Winit30Window >> scaleFactor [
 	<return: #Number>
 
@@ -140,4 +197,24 @@ Winit30Window >> title [
 
 { #category : #'window - properties' }
 Winit30Window >> title: aString [ 
+]
+
+{ #category : #'api - platform' }
+Winit30Window >> waylandDisplay [
+	^ self primGetWaylandDisplay
+]
+
+{ #category : #'api - platform' }
+Winit30Window >> waylandSurface [
+	^ self primGetWaylandSurface
+]
+
+{ #category : #'api - platform' }
+Winit30Window >> xlibDisplay [
+	^ self primGetXlibDisplay
+]
+
+{ #category : #'api - platform' }
+Winit30Window >> xlibWindow [
+	^ self primGetXlibWindow
 ]
