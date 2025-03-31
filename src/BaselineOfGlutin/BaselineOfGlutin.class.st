@@ -21,6 +21,8 @@ BaselineOfGlutin >> baseline: spec [
 
 		spec package: 'Glutin' with: [
 			spec requires: #(#GToolkitBoxer #Fenster) ].
+		spec package: 'Winit' with: [
+			spec requires: #(#Glutin) ].
 	]
 ]
 
