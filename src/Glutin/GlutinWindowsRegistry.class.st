@@ -25,6 +25,11 @@ GlutinWindowsRegistry class >> default [
 ]
 
 { #category : #accessing }
+GlutinWindowsRegistry >> allWindows [
+	^ mutex critical: [ windows values ]
+]
+
+{ #category : #accessing }
 GlutinWindowsRegistry >> detectId: aWindowId ifFound: aFoundBlock [
 	^ self detectId: aWindowId ifFound: aFoundBlock ifNone: []
 ]

@@ -30,7 +30,10 @@ Class {
 		'WindowEventResized',
 		'WindowEventScaleFactorChanged',
 		'WindowEventTouch',
-		'WindowEventTouchpadPressure'
+		'WindowEventTouchpadPressure',
+		'Winit30_WindowEventKeyboardInput',
+		'Winit30_WindowEventModifiersChanged',
+		'Winit30_WindowEventReceivedText'
 	],
 	#category : #'Glutin-Enums'
 }
@@ -209,6 +212,24 @@ WinitEventType class >> WindowEventTouchpadPressure [
 	^ WindowEventTouchpadPressure
 ]
 
+{ #category : #'accessing enum' }
+WinitEventType class >> Winit30_WindowEventKeyboardInput [
+	"This method was automatically generated"
+	^ Winit30_WindowEventKeyboardInput
+]
+
+{ #category : #'accessing enum' }
+WinitEventType class >> Winit30_WindowEventModifiersChanged [
+	"This method was automatically generated"
+	^ Winit30_WindowEventModifiersChanged
+]
+
+{ #category : #'accessing enum' }
+WinitEventType class >> Winit30_WindowEventReceivedText [
+	"This method was automatically generated"
+	^ Winit30_WindowEventReceivedText
+]
+
 { #category : #'enum declaration' }
 WinitEventType class >> externalDeclaration [
 	"
@@ -245,6 +266,9 @@ WinitEventType class >> externalDeclaration [
 		RedrawEventsCleared,
 		ModifiersChanged,
 		UserEvent,
+		Winit30_WindowEventModifiersChanged,
+    	Winit30_WindowEventKeyboardInput,
+    	Winit30_WindowEventReceivedText,
 	)
 ]
 
