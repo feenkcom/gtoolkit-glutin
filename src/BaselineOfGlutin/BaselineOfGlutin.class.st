@@ -18,7 +18,9 @@ BaselineOfGlutin >> baseline: spec [
 			baseline: 'Fenster' with: [
 				spec repository: 'github://feenkcom/fenster:main/src' ].
 		spec package: 'Glutin' with: [
-				spec requires: #('GToolkitBoxer' 'Fenster' ). ]. ].
+				spec requires: #('GToolkitBoxer' 'Fenster' ). ].
+		spec package: 'Winit' with: [
+				spec requires: #('Glutin'). ]. ].
 ]
 
 { #category : #baselines }

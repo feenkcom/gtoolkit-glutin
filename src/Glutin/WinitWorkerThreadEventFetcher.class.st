@@ -95,7 +95,6 @@ WinitWorkerThreadEventFetcher >> shutDown: isQuitting [
 
 { #category : #'system startup' }
 WinitWorkerThreadEventFetcher >> startUp: isInANewSession [
-	
 	(Winit isSupported and: [ Smalltalk vm isRunningInWorkerThread ])
 		ifTrue: [ self installEventFetcher ]
 ]
