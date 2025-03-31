@@ -132,3 +132,12 @@ Winit30Window >> scaleFactor [
 
 	^ self primGetScaleFactor
 ]
+
+{ #category : #'window - properties' }
+Winit30Window >> title [
+	^ ''
+]
+
+{ #category : #'window - properties' }
+Winit30Window >> title: aString [ 
+]
