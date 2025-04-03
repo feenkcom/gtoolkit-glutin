@@ -23,6 +23,16 @@ Winit30KeyboardKey class >> key: aKey location: aLocation [
 		yourself
 ]
 
+{ #category : #'instance creation' }
+Winit30KeyboardKey class >> leftAlt [
+	^ self leftKey: Winit30NamedKey AltKey
+]
+
+{ #category : #'instance creation' }
+Winit30KeyboardKey class >> leftCtrl [
+	^ self leftKey: Winit30NamedKey ControlKey
+]
+
 { #category : #'as yet unclassified' }
 Winit30KeyboardKey class >> leftKey: aKey [
 	^ self
@@ -30,11 +40,41 @@ Winit30KeyboardKey class >> leftKey: aKey [
 		location: Winit30KeyLocation LeftLocation
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
+Winit30KeyboardKey class >> leftShift [
+	^ self leftKey: Winit30NamedKey ShiftKey
+]
+
+{ #category : #'instance creation' }
+Winit30KeyboardKey class >> leftSuper [
+	^ self leftKey: Winit30NamedKey SuperKey
+]
+
+{ #category : #'instance creation' }
+Winit30KeyboardKey class >> rightAlt [
+	^ self rightKey: Winit30NamedKey AltKey
+]
+
+{ #category : #'instance creation' }
+Winit30KeyboardKey class >> rightCtrl [
+	^ self rightKey: Winit30NamedKey ControlKey
+]
+
+{ #category : #'instance  creation' }
 Winit30KeyboardKey class >> rightKey: aKey [
 	^ self
 		key: aKey
 		location: Winit30KeyLocation RightLocation
+]
+
+{ #category : #'instance creation' }
+Winit30KeyboardKey class >> rightShift [
+	^ self rightKey: Winit30NamedKey ShiftKey
+]
+
+{ #category : #'instance creation' }
+Winit30KeyboardKey class >> rightSuper [
+	^ self rightKey: Winit30NamedKey SuperKey
 ]
 
 { #category : #'as yet unclassified' }
