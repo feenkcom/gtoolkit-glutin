@@ -11,6 +11,11 @@ Winit30Window >> close [
 	self primCloseWindow
 ]
 
+{ #category : #'api - accessing' }
+Winit30Window >> currentMonitor [
+	^ Winit30Monitor fromNativeHandle: self primGetCurrentMonitor
+]
+
 { #category : #accessing }
 Winit30Window >> cursor: aCursorIcon [
 	self primSetCursor: aCursorIcon
@@ -85,6 +90,13 @@ Winit30Window >> primCloseWindow [
 ]
 
 { #category : #'private - ffi' }
+Winit30Window >> primGetCurrentMonitor [
+	^ self
+		ffiCall: #(void* winit_window_handle_current_monitor(self))
+		options: #(optEventLoop)
+]
+
+{ #category : #'private - ffi' }
 Winit30Window >> primGetHwnd [
 	^ self
 		ffiCall: #(void* winit_window_handle_get_hwnd(self))
@@ -151,6 +163,20 @@ Winit30Window >> primGetXlibWindow [
 ]
 
 { #category : #'private - ffi' }
+Winit30Window >> primRawDisplayHandle [
+	^ self
+		ffiCall: #(void* winit_window_handle_raw_display_handle(self))
+		options: #(optEventLoop)
+]
+
+{ #category : #'private - ffi' }
+Winit30Window >> primRawWindowHandle [
+	^ self
+		ffiCall: #(void* winit_window_handle_raw_window_handle(self))
+		options: #(optEventLoop)
+]
+
+{ #category : #'private - ffi' }
 Winit30Window >> primRequestRedraw [
 	^ self ffiCall: #(void winit_window_handle_request_redraw(self))
 ]
@@ -169,6 +195,16 @@ Winit30Window >> primSetCursor: aCursorIcon [
 			self,
 			WinitCursorIcon aCursorIcon))
 		options: #(optEventLoop optNonBlocking)
+]
+
+{ #category : #'api - platform' }
+Winit30Window >> rawDisplayHandle [
+	^ self primRawDisplayHandle
+]
+
+{ #category : #'api - platform' }
+Winit30Window >> rawWindowHandle [
+	^ self primRawWindowHandle
 ]
 
 { #category : #'api - accessing' }
