@@ -21,6 +21,11 @@ Winit30Window >> cursor: aCursorIcon [
 	self primSetCursor: aCursorIcon
 ]
 
+{ #category : #'api - accessing' }
+Winit30Window >> focusWindow [
+	self primFocusWindow
+]
+
 { #category : #'api - platform' }
 Winit30Window >> hwnd [
 	^ self primGetHwnd
@@ -87,6 +92,13 @@ Winit30Window >> primCloseWindow [
 	^ self
 	ffiCall: #(void winit_window_handle_close(self))
 	options: #(optEventLoop)
+]
+
+{ #category : #'private - ffi' }
+Winit30Window >> primFocusWindow [
+	^ self
+		ffiCall: #(void* winit_window_handle_focus_window(self))
+		options: #(optEventLoop)
 ]
 
 { #category : #'private - ffi' }
