@@ -88,6 +88,11 @@ Winit30ApplicationHandle >> primCreateWindow: windowAttributes semaphoreSignalle
 ]
 
 { #category : #'as yet unclassified' }
+Winit30ApplicationHandle >> primGetType [
+	^ self ffiCall: #(WinitEventLoopType winit_application_handle_release_get_type(self))
+]
+
+{ #category : #'as yet unclassified' }
 Winit30ApplicationHandle >> primPopEvent: windowEvent windowId: windowId eventType: eventType [
 	^ self ffiCall: #(void* winit_application_handle_pop_event(
 		self,
@@ -150,7 +155,9 @@ Winit30ApplicationHandle >> tryPollEvent: aBlock [
 
 { #category : #'as yet unclassified' }
 Winit30ApplicationHandle >> type [
-	^ WinitEventLoopType Unknown
+	<return: #WinitEventLoopType>
+
+	^ self primGetType
 ]
 
 { #category : #'api - windows' }
