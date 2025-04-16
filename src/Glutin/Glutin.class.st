@@ -14,7 +14,7 @@ Glutin class >> critical: aBlock [
 
 { #category : #'class initialization' }
 Glutin class >> initialize [
-	AccessMutex := Monitor new
+	AccessMutex := Mutex new
 ]
 
 { #category : #testing }

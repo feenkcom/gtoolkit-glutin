@@ -157,7 +157,7 @@ RustWindowingWorldRenderer >> icon: aForm [
 { #category : #initialization }
 RustWindowingWorldRenderer >> initialize [
 	super initialize.
-	mutex := Monitor new
+	mutex := Mutex new
 ]
 
 { #category : #initialization }

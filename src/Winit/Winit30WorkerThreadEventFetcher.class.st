@@ -92,7 +92,7 @@ Winit30WorkerThreadEventFetcher >> fetcherProcessPriority [
 Winit30WorkerThreadEventFetcher >> initialize [
 	super initialize.
 	
-	mutex := Monitor new
+	mutex := Mutex new
 ]
 
 { #category : #initialization }
