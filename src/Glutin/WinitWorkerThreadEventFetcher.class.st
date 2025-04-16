@@ -84,7 +84,7 @@ WinitWorkerThreadEventFetcher >> fetcherProcessPriority [
 WinitWorkerThreadEventFetcher >> initialize [
 	super initialize.
 	
-	mutex := Monitor new
+	mutex := Mutex new
 ]
 
 { #category : #'system startup' }
