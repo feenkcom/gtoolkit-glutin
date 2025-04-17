@@ -71,6 +71,14 @@ Winit30Window >> position [
 		self primGetPosition: aPointI32 ]
 ]
 
+{ #category : #accessing }
+Winit30Window >> position: aPoint [
+	"Set window position in physical pixels"
+	<return: #Point>
+	
+	self primSetPositionX: aPoint x y: aPoint y
+]
+
 { #category : #'private - ffi' }
 Winit30Window >> primAddRedrawListener: anExternalFunction thunk: anExternalObject [
 	self ffiCall: #(void winit_window_handle_add_redraw_listener(
@@ -207,6 +215,14 @@ Winit30Window >> primSetCursor: aCursorIcon [
 			self,
 			WinitCursorIcon aCursorIcon))
 		options: #(optEventLoop optNonBlocking)
+]
+
+{ #category : #'private - ffi' }
+Winit30Window >> primSetPositionX: aX y: aY [
+	^ self ffiCall: #(void winit_window_handle_set_outer_position(
+			self,
+			int32 aX,
+			int32 aY))
 ]
 
 { #category : #'api - platform' }
