@@ -87,7 +87,10 @@ GlutinUserInterruptHandler >> processToInterrupt [
 			(self isAllowedToInterruptProcess: aProcess) ifTrue: [
 				(self canInterruptDirectly: aProcess )
 					ifTrue: [ ^ aProcess ] 
-					ifFalse: [ fallback := aProcess ]]]
+					ifFalse: [ 
+						"Do not set any fallback here as we could end up
+						interrupring a process that we skipped before
+						and that we do not want to interrupt " ]]]
 		startingAt: Processor activePriority.
 	^fallback
 ]
