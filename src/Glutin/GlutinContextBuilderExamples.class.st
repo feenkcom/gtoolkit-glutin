@@ -7,9 +7,9 @@ Class {
 { #category : #'instance creation' }
 GlutinContextBuilderExamples >> contextBuilder [
 	<gtExample>
+	<return: #GlutinContextBuilder>
 	| aContextBuilder |
-	
 	aContextBuilder := GlutinContextBuilder new.
-	
+
 	^ aContextBuilder
 ]
