@@ -7,8 +7,8 @@ Class {
 { #category : #examples }
 GlutinPixelFormatExamples >> default [
 	<gtExample>
+	<return: #GlutinPixelFormat>
 	| aPixelFormat |
-	
 	aPixelFormat := GlutinPixelFormat new.
 	self assert: aPixelFormat alphaBits equals: 0.
 	self assert: aPixelFormat colorBits equals: 0.
@@ -20,6 +20,6 @@ GlutinPixelFormatExamples >> default [
 	self assert: aPixelFormat isHardwareAccelerated not.
 	self assert: aPixelFormat isSrgb not.
 	self assert: aPixelFormat isStereoscopy not.
-	
+
 	^ aPixelFormat
 ]
