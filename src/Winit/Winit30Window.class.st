@@ -105,8 +105,8 @@ Winit30Window >> primCloseWindow [
 { #category : #'private - ffi' }
 Winit30Window >> primFocusWindow [
 	^ self
-		ffiCall: #(void* winit_window_handle_focus_window(self))
-		options: #(optEventLoop)
+		ffiCall: #(void winit_window_handle_focus_window(self))
+		options: #(optEventLoop optNonBlocking)
 ]
 
 { #category : #'private - ffi' }
@@ -198,7 +198,7 @@ Winit30Window >> primRawWindowHandle [
 
 { #category : #'private - ffi' }
 Winit30Window >> primRequestRedraw [
-	^ self ffiCall: #(void winit_window_handle_request_redraw(self))
+	^ self ffiCall: #(void winit_window_handle_request_redraw(self)) options: #(optEventLoop optNonBlocking)
 ]
 
 { #category : #'private - ffi' }
@@ -223,6 +223,7 @@ Winit30Window >> primSetPositionX: aX y: aY [
 			self,
 			int32 aX,
 			int32 aY))
+			options: #(optEventLoop optNonBlocking)
 ]
 
 { #category : #'api - platform' }
