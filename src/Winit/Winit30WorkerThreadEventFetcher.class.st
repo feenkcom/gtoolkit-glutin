@@ -14,9 +14,15 @@ Class {
 
 { #category : #accessing }
 Winit30WorkerThreadEventFetcher class >> isAvailable [
-	^ Smalltalk vm isRunningInWorkerThread
-		and: [ Winit30 isSupported
-			and: [ CommandLineArguments new hasOption: 'winit30' ] ]
+	Smalltalk vm isRunningInWorkerThread
+		ifFalse: [ ^ false ].
+
+	Winit30 isSupported
+		ifFalse: [ ^ false ].
+
+	^ (CommandLineArguments new hasOption: 'winit30')
+		or: [ OSPlatform current isMacOS
+			or: [ OSPlatform current isLinux ] ]
 ]
 
 { #category : #accessing }
