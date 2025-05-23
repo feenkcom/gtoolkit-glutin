@@ -41,13 +41,13 @@ Winit30KeyboardKey class >> leftKey: aKey [
 ]
 
 { #category : #'instance creation' }
-Winit30KeyboardKey class >> leftShift [
-	^ self leftKey: Winit30NamedKey ShiftKey
+Winit30KeyboardKey class >> leftMeta [
+	^ self leftKey: Winit30NamedKey MetaKey
 ]
 
 { #category : #'instance creation' }
-Winit30KeyboardKey class >> leftSuper [
-	^ self leftKey: Winit30NamedKey SuperKey
+Winit30KeyboardKey class >> leftShift [
+	^ self leftKey: Winit30NamedKey ShiftKey
 ]
 
 { #category : #'instance creation' }
@@ -68,13 +68,13 @@ Winit30KeyboardKey class >> rightKey: aKey [
 ]
 
 { #category : #'instance creation' }
-Winit30KeyboardKey class >> rightShift [
-	^ self rightKey: Winit30NamedKey ShiftKey
+Winit30KeyboardKey class >> rightMeta [
+	^ self rightKey: Winit30NamedKey MetaKey
 ]
 
 { #category : #'instance creation' }
-Winit30KeyboardKey class >> rightSuper [
-	^ self rightKey: Winit30NamedKey SuperKey
+Winit30KeyboardKey class >> rightShift [
+	^ self rightKey: Winit30NamedKey ShiftKey
 ]
 
 { #category : #'as yet unclassified' }

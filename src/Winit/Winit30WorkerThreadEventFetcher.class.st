@@ -20,6 +20,9 @@ Winit30WorkerThreadEventFetcher class >> isAvailable [
 	Winit30 isSupported
 		ifFalse: [ ^ false ].
 
+	(CommandLineArguments new hasOption: 'winit28')
+		ifTrue: [ ^ false ].
+
 	^ (CommandLineArguments new hasOption: 'winit30')
 		or: [ OSPlatform current isMacOS
 			or: [ OSPlatform current isLinux ] ]

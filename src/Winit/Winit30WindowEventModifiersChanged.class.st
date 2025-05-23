@@ -9,6 +9,7 @@ Class {
 		'OFFSET_LEFTLOGO',
 		'OFFSET_LEFTSHIFT',
 		'OFFSET_LOGO',
+		'OFFSET_NUMLOCK',
 		'OFFSET_RIGHTALT',
 		'OFFSET_RIGHTCTRL',
 		'OFFSET_RIGHTLOGO',
@@ -33,6 +34,7 @@ Winit30WindowEventModifiersChanged class >> fieldsDesc [
 		bool ctrl
 		bool alt
 		bool logo
+		bool numLock
 		Winit30ModifierKeyState leftShift
 		Winit30ModifierKeyState rightShift
 		Winit30ModifierKeyState leftCtrl
@@ -73,6 +75,7 @@ Winit30WindowEventModifiersChanged >> copy [
 		ctrl: self ctrl;
 		alt: self alt;
 		logo: self logo;
+		numLock: self numLock;
 		leftShift: self leftShift;
 		rightShift: self rightShift;
 		leftCtrl: self leftCtrl;
@@ -104,7 +107,8 @@ Winit30WindowEventModifiersChanged >> gtModifiersFor: aView [
 		items: [ {'shift' -> self shift.
 				'ctrl' -> self ctrl.
 				'alt' -> self alt.
-				'logo' -> self logo} ];
+				'logo' -> self logo.
+				'numLock' -> self numLock} ];
 		column: 'Property' text: [ :each | each key ];
 		column: 'Value' text: [ :each | each value ];
 		send: [ :each | each value ]
@@ -189,6 +193,18 @@ Winit30WindowEventModifiersChanged >> logo: anObject [
 	handle booleanAt: OFFSET_LOGO put: anObject
 ]
 
+{ #category : #'accessing - structure variables' }
+Winit30WindowEventModifiersChanged >> numLock [
+	"This method was automatically generated"
+	^handle booleanAt: OFFSET_NUMLOCK
+]
+
+{ #category : #'accessing - structure variables' }
+Winit30WindowEventModifiersChanged >> numLock: anObject [
+	"This method was automatically generated"
+	handle booleanAt: OFFSET_NUMLOCK put: anObject
+]
+
 { #category : #'as yet unclassified' }
 Winit30WindowEventModifiersChanged >> printOn: aStream [
 	"Append a sequence of characters to aStream that identify the receiver."
@@ -204,7 +220,10 @@ Winit30WindowEventModifiersChanged >> printOn: aStream [
 		print: self ctrl.
 	aStream
 		nextPutAll: ' logo: ';
-		print: self logo;
+		print: self logo.
+	aStream
+		nextPutAll: ' numLock ';
+		print: self numLock;
 		nextPutAll: ' }'
 ]
 
