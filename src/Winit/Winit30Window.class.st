@@ -6,6 +6,13 @@ Class {
 	#category : #'Winit-External'
 }
 
+{ #category : #'private - ffi' }
+Winit30Window class >> primRelease: aHandle [
+	
+	"Plain pointers must be deleted using delete(), all users must implement a specific method"
+	^ self ffiCall: #(void winit_window_handle_release(void* aHandle))
+]
+
 { #category : #'initialize-release' }
 Winit30Window >> close [
 	self primCloseWindow
