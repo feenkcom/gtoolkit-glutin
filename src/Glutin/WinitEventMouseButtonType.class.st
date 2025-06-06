@@ -2,6 +2,8 @@ Class {
 	#name : #WinitEventMouseButtonType,
 	#superclass : #WinitEnum,
 	#classVars : [
+		'Back',
+		'Forward',
 		'Left',
 		'Middle',
 		'Other',
@@ -10,6 +12,18 @@ Class {
 	],
 	#category : #'Glutin-Enums'
 }
+
+{ #category : #'accessing enum' }
+WinitEventMouseButtonType class >> Back [
+	"This method was automatically generated"
+	^ Back
+]
+
+{ #category : #'accessing enum' }
+WinitEventMouseButtonType class >> Forward [
+	"This method was automatically generated"
+	^ Forward
+]
 
 { #category : #'accessing enum' }
 WinitEventMouseButtonType class >> Left [
@@ -49,11 +63,13 @@ WinitEventMouseButtonType class >> externalDeclaration [
 
 	^ #(
 	 Unknown,
-    Left,
-    Right,
-    Middle,
-    Other,
-	)
+	 Left,
+	 Right,
+	 Middle,
+	 Other,
+	 Back,
+	 Forward,
+	 )
 ]
 
 { #category : #'enum declaration' }
