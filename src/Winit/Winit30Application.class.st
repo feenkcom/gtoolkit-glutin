@@ -26,7 +26,6 @@ Winit30Application >> initialize [
 	super initialize.
 
 	isRunning := false.
-	applicationHandle := nil.
 ]
 
 { #category : #'private - ffi' }
