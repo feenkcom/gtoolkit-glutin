@@ -1,5 +1,5 @@
 Class {
-	#name : #GlutinUserInterruptHandler,
+	#name : #RustWindowingUserInterruptHandler,
 	#superclass : #GlutinEventsHandler,
 	#traits : 'TGlutinEventVisitor',
 	#classTraits : 'TGlutinEventVisitor classTrait',
@@ -12,7 +12,7 @@ Class {
 }
 
 { #category : #private }
-GlutinUserInterruptHandler >> canInterruptDirectly: aProcess [ 
+RustWindowingUserInterruptHandler >> canInterruptDirectly: aProcess [ 
 	"Indicates that the given process can be directly interrupted and the look-up 
 	should not search for a better process. "
 	
@@ -25,8 +25,13 @@ GlutinUserInterruptHandler >> canInterruptDirectly: aProcess [
 			ifNil: [ GlutinIgnoreDuringInterruptStatus soleInstance default ]) not ]
 ]
 
+{ #category : #initialization }
+RustWindowingUserInterruptHandler >> defaultInterruptCombinations [
+	^ { }
+]
+
 { #category : #private }
-GlutinUserInterruptHandler >> handleUserInterrupt [
+RustWindowingUserInterruptHandler >> handleUserInterrupt [
 	"This will be called from the event-fetcher process. 
 	Assume no system-vital processes have a lower priority than this, and are thus ok to interrupt"
 	UserInterruptHandler cmdDotEnabled ifFalse: [ ^ self ]. 
@@ -41,21 +46,16 @@ GlutinUserInterruptHandler >> handleUserInterrupt [
 ]
 
 { #category : #initialization }
-GlutinUserInterruptHandler >> initialize [
+RustWindowingUserInterruptHandler >> initialize [
 	super initialize.
-	
+
 	buffer := Set new.
 	uiProcessBlock := [ nil ].
-	interruptCombinations := {
-		"mac"
-		{ WinitEventVirtualKeyCode LWin . WinitEventVirtualKeyCode Period } asSet.
-		"linux"
-		{ WinitEventVirtualKeyCode LControl . WinitEventVirtualKeyCode Period } asSet.
-	}.
+	interruptCombinations := self defaultInterruptCombinations.
 ]
 
 { #category : #private }
-GlutinUserInterruptHandler >> isAllowedToInterruptProcess: aProcess [
+RustWindowingUserInterruptHandler >> isAllowedToInterruptProcess: aProcess [
 	"Check if the system is allowed to interrupt a process."
 	
 	"Do not interrupt the idle process; it is fatal."
@@ -65,12 +65,12 @@ GlutinUserInterruptHandler >> isAllowedToInterruptProcess: aProcess [
 ]
 
 { #category : #'event - handling' }
-GlutinUserInterruptHandler >> processGlutinEvent: aGlutinEvent [
+RustWindowingUserInterruptHandler >> processGlutinEvent: aGlutinEvent [
 	aGlutinEvent accept: self
 ]
 
 { #category : #private }
-GlutinUserInterruptHandler >> processToInterrupt [ 
+RustWindowingUserInterruptHandler >> processToInterrupt [ 
 	"Look for best candidate to interrupt: 
 		- any scheduled non-finalization process of lower priority
 			- if the process has GlutinIgnoreDuringInterruptStatus set true the lookup searches for a better process.
@@ -96,12 +96,12 @@ GlutinUserInterruptHandler >> processToInterrupt [
 ]
 
 { #category : #accessing }
-GlutinUserInterruptHandler >> uiProcessBlock: aBlock [
+RustWindowingUserInterruptHandler >> uiProcessBlock: aBlock [
 	uiProcessBlock := aBlock
 ]
 
 { #category : #'event - visiting' }
-GlutinUserInterruptHandler >> visitKeyboardInputEvent: anEvent [
+RustWindowingUserInterruptHandler >> visitKeyboardInputEvent: anEvent [
 	
 	anEvent has_virtual_keycode
 		ifFalse: [ ^ self ].
@@ -117,6 +117,6 @@ GlutinUserInterruptHandler >> visitKeyboardInputEvent: anEvent [
 ]
 
 { #category : #'event - visiting' }
-GlutinUserInterruptHandler >> visitWindowFocusedEvent: anEvent [
+RustWindowingUserInterruptHandler >> visitWindowFocusedEvent: anEvent [
 	buffer removeAll
 ]

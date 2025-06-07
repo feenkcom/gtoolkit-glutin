@@ -148,6 +148,11 @@ RustWindowingEventDrivenEventFetcher >> newEventLoop [
 	^ self subclassResponsibility
 ]
 
+{ #category : #'as yet unclassified' }
+RustWindowingEventDrivenEventFetcher >> newUserInterruptHandler [
+	^ WinitUserInterruptHandler new
+]
+
 { #category : #'system startup' }
 RustWindowingEventDrivenEventFetcher >> shutDown: isQuitting [
 

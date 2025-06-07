@@ -87,6 +87,11 @@ WinitWorkerThreadEventFetcher >> initialize [
 	mutex := Mutex new
 ]
 
+{ #category : #'as yet unclassified' }
+WinitWorkerThreadEventFetcher >> newUserInterruptHandler [
+	^ WinitUserInterruptHandler new
+]
+
 { #category : #'system startup' }
 WinitWorkerThreadEventFetcher >> shutDown: isQuitting [
 	fetcherProcess ifNotNil: #terminate.
