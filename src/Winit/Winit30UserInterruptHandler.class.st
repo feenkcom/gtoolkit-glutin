@@ -23,8 +23,11 @@ Winit30UserInterruptHandler >> visitKeyboardInputEvent: anEvent [
 		ifTrue: [ buffer remove: aKey ifAbsent: [  ] ].
 	
 	anEvent state = WinitEventInputElementState Pressed
-		ifTrue: [ buffer add: aKey ].
-	
+		ifTrue: [
+			(buffer includes: aKey)
+				ifTrue: [ ^ self ].
+			buffer add: aKey ].
+
 	(interruptCombinations notNil and: [ interruptCombinations includes: buffer ])
-		ifTrue: [ self handleUserInterrupt ]
+		ifTrue: [ self handleUserInterrupt ].
 ]
