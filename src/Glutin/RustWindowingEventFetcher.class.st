@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'eventHandlers',
 		'fetcherProcess',
-		'session'
+		'session',
+		'interruptHandler'
 	],
 	#classVars : [
 		'default'
@@ -114,7 +115,9 @@ RustWindowingEventFetcher >> fetcherProcessPriority [
 RustWindowingEventFetcher >> initialize [
 	super initialize.
 	
-	eventHandlers := OrderedCollection new.
+	interruptHandler := self newUserInterruptHandler.
+	eventHandlers := OrderedCollection with: { interruptHandler }.
+	
 	session := Smalltalk session
 ]
 
@@ -128,12 +131,22 @@ RustWindowingEventFetcher >> installEventFetcher [
 	self reinstallEventFetcher
 ]
 
+{ #category : #accessing }
+RustWindowingEventFetcher >> interruptHandler [
+	^ interruptHandler ifNil: [ interruptHandler := self newUserInterruptHandler ]
+]
+
 { #category : #testing }
 RustWindowingEventFetcher >> isRunning [
 	"Return true if a fetcher Pharo process is running"
 	<return: #Boolean>
 
 	^ self fetcherProcess isNotNil and: [ self fetcherProcess isTerminated not ]
+]
+
+{ #category : #initialization }
+RustWindowingEventFetcher >> newUserInterruptHandler [
+	^ self subclassResponsibility
 ]
 
 { #category : #'event - handling' }

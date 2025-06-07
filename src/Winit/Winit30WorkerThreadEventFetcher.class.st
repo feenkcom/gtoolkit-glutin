@@ -117,6 +117,11 @@ Winit30WorkerThreadEventFetcher >> initializeApplication [
 		applicationHandle := anApplicationHandle ]
 ]
 
+{ #category : #initialization }
+Winit30WorkerThreadEventFetcher >> newUserInterruptHandler [
+	^ Winit30UserInterruptHandler new.
+]
+
 { #category : #'system startup' }
 Winit30WorkerThreadEventFetcher >> shutDown: isQuitting [
 	fetcherProcess ifNotNil: #terminate.
