@@ -116,7 +116,7 @@ RustWindowingEventFetcher >> initialize [
 	super initialize.
 	
 	interruptHandler := self newUserInterruptHandler.
-	eventHandlers := OrderedCollection with: { interruptHandler }.
+	eventHandlers := OrderedCollection with: interruptHandler.
 	
 	session := Smalltalk session
 ]
