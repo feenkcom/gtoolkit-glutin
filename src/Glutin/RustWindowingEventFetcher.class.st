@@ -116,7 +116,7 @@ RustWindowingEventFetcher >> initialize [
 	super initialize.
 	
 	interruptHandler := self newUserInterruptHandler.
-	eventHandlers := OrderedCollection with: interruptHandler.
+	eventHandlers := OrderedCollection new.
 	
 	session := Smalltalk session
 ]
@@ -168,7 +168,9 @@ RustWindowingEventFetcher >> processMappedEvent: mappedEvent [
 		[ mappedEvent state = WinitEventInputElementState Pressed ] ]) ifTrue:
 				[ ^ self ].
 
-	self eventHandlers do: [ :eachHandler | eachHandler processGlutinEvent: mappedEvent ]
+	self eventHandlers do: [ :eachHandler | eachHandler processGlutinEvent: mappedEvent ].
+	
+	interruptHandler processGlutinEvent: mappedEvent
 ]
 
 { #category : #lifecycle }
