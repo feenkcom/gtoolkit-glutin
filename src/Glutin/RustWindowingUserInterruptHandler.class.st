@@ -16,7 +16,9 @@ RustWindowingUserInterruptHandler >> canInterruptDirectly: aProcess [
 	"Indicates that the given process can be directly interrupted and the look-up 
 	should not search for a better process. "
 	
-	^ aProcess ~~  WeakArray runningFinalizationProcess and: [ 
+	^ aProcess ~~  (self 
+			forPharo12: [FinalizationProcess runningFinalizationProcess]
+			forPharo11AndPharo10: [ WeakArray runningFinalizationProcess]) and: [ 
 		"Manually get the value of the local process variable GlutinIgnoreDuringInterruptStatus.
 		In general this is not thread-safe as the process can modify this variable.
 		In this case this code is run in a high priority process and reads the value 
