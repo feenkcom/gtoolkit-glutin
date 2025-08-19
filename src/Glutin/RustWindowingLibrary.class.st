@@ -2,7 +2,8 @@ Class {
 	#name : #RustWindowingLibrary,
 	#superclass : #FFILibrary,
 	#classInstVars : [
-		'MouseWheelScrollSpeed'
+		'MouseWheelScrollSpeed',
+		'MouseWheelHorizontalScrollSpeed'
 	],
 	#category : #'Glutin-Library'
 }
@@ -15,6 +16,19 @@ RustWindowingLibrary class >> ffiLibrary [
 { #category : #accessing }
 RustWindowingLibrary class >> initEnvLogger [
 	self uniqueInstance initEnvLogger
+]
+
+{ #category : #settings }
+RustWindowingLibrary class >> mouseWheelHorizontalScrollSpeed [
+	"An additional speed factor applied to the horizontal scroll using a tilting wheel"
+	<return: #Number>
+
+	^ MouseWheelHorizontalScrollSpeed ifNil: [ 12 ]
+]
+
+{ #category : #settings }
+RustWindowingLibrary class >> mouseWheelHorizontalScrollSpeed: aNumber [
+	MouseWheelHorizontalScrollSpeed := aNumber
 ]
 
 { #category : #settings }
