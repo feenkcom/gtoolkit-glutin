@@ -23,9 +23,7 @@ Winit30WorkerThreadEventFetcher class >> isAvailable [
 	(CommandLineArguments new hasOption: 'winit28')
 		ifTrue: [ ^ false ].
 
-	^ (CommandLineArguments new hasOption: 'winit30')
-		or: [ OSPlatform current isMacOS
-			or: [ OSPlatform current isLinux ] ]
+	^ true
 ]
 
 { #category : #accessing }
