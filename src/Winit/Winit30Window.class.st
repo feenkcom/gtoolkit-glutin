@@ -162,6 +162,14 @@ Winit30Window >> primGetSurfaceSize: aSizeU32 [
 ]
 
 { #category : #'private - ffi' }
+Winit30Window >> primGetTitle: aStringBox [
+	^ self ffiCall: #(void winit_window_handle_get_title(
+			self,
+			void* aStringBox))
+		options: #(optEventLoop)
+]
+
+{ #category : #'private - ffi' }
 Winit30Window >> primGetWaylandDisplay [
 	^ self
 		ffiCall: #(void* winit_window_handle_get_wayland_display(self))
@@ -233,6 +241,14 @@ Winit30Window >> primSetPositionX: aX y: aY [
 			options: #(optEventLoop optNonBlocking)
 ]
 
+{ #category : #'private - ffi' }
+Winit30Window >> primSetTitle: aStringBox [
+	^ self ffiCall: #(void winit_window_handle_set_title(
+			self,
+			void* aStringBox))
+		options: #(optEventLoop)
+]
+
 { #category : #'api - platform' }
 Winit30Window >> rawDisplayHandle [
 	^ self primRawDisplayHandle
@@ -264,11 +280,14 @@ Winit30Window >> scaleFactor [
 
 { #category : #'window - properties' }
 Winit30Window >> title [
-	^ ''
+	^ self ffiLibrary getStringFrom: [ :aStringBox | self primGetTitle: aStringBox ]
 ]
 
 { #category : #'window - properties' }
-Winit30Window >> title: aString [ 
+Winit30Window >> title: aString [
+	self ffiLibrary
+		newString: aString
+		during: [ :aStringBox | self primSetTitle: aStringBox ]
 ]
 
 { #category : #'api - platform' }
