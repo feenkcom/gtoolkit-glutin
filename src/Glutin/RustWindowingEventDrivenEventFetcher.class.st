@@ -76,7 +76,7 @@ RustWindowingEventDrivenEventFetcher >> basicPharoEventLoop [
 							idleProcess ifNotNil: #terminate.
 							idleSemaphore consumeAllSignals.
 							idleProcess := idleProcessBlock forkAt: idlePriority.
-							(idleSemaphore waitTimeoutMSecs: 50)
+							(idleSemaphore waitTimeoutMilliseconds: 50)
 								"deadline expired, let's fetch the next one *now*"
 								ifTrue: [ aControlFlow := WinitControlFlow poll ].
 						] ifFalse: [ 
