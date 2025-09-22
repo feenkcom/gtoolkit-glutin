@@ -2154,7 +2154,7 @@ Winit30NamedKey class >> enumCleanUp [
 	self enumCleanUp
 	"
 	
-	(self class organization protocolNamed: 'accessing enum') methodSelectors
+	(self class protocolNamed: 'accessing enum' ifAbsent: [nil]) methodSelectors
 		collect: [ :each | self class >> each ]
 		thenDo: [ :each | each removeFromSystem ].
 
