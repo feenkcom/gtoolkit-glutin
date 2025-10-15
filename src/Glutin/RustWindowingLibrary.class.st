@@ -3,7 +3,8 @@ Class {
 	#superclass : #FFILibrary,
 	#classInstVars : [
 		'MouseWheelScrollSpeed',
-		'MouseWheelHorizontalScrollSpeed'
+		'MouseWheelHorizontalScrollSpeed',
+		'MouseWheelHorizontalScrollSpeedDueToVerticalAndShift'
 	],
 	#category : #'Glutin-Library'
 }
@@ -29,6 +30,19 @@ RustWindowingLibrary class >> mouseWheelHorizontalScrollSpeed [
 { #category : #settings }
 RustWindowingLibrary class >> mouseWheelHorizontalScrollSpeed: aNumber [
 	MouseWheelHorizontalScrollSpeed := aNumber
+]
+
+{ #category : #settings }
+RustWindowingLibrary class >> mouseWheelHorizontalScrollSpeedDueToVerticalAndShift [
+	"An additional speed factor applied to the horizontal scroll when pressing shift and scrolling with a vertical wheel"
+	<return: #Number>
+
+	^ MouseWheelHorizontalScrollSpeedDueToVerticalAndShift ifNil: [ 1 ]
+]
+
+{ #category : #settings }
+RustWindowingLibrary class >> mouseWheelHorizontalScrollSpeedDueToVerticalAndShift: aNumber [
+	MouseWheelHorizontalScrollSpeedDueToVerticalAndShift := aNumber
 ]
 
 { #category : #settings }
