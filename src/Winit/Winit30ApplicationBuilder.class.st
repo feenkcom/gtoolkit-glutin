@@ -31,6 +31,9 @@ Winit30ApplicationBuilder >> buildAndDo: aBlock [
 	anApplicationPointer := ExternalAddress newPointer.
 	anApplicationHandlePointer := ExternalAddress newPointer.
 	
+	OSPlatform current isAndroid
+		ifTrue: [ self primSetAndroidApp: self primGetAndroidApp ].
+
 	self primBuildApplication: anApplicationPointer handle: anApplicationHandlePointer.
 	self release.
 	
@@ -53,6 +56,18 @@ Winit30ApplicationBuilder >> primBuildApplication: aBuiltApplication handle: aBu
 	self
 		ffiCall: #(void winit_application_builder_build(self, void* aBuiltApplication, void* aBuiltApplicationHandle))
 		options: #(optEventLoop)
+]
+
+{ #category : #'private - ffi' }
+Winit30ApplicationBuilder >> primGetAndroidApp [
+	<primitive: #primitiveGetAndroidApp>
+
+	^ ExternalAddress null
+]
+
+{ #category : #'private - ffi' }
+Winit30ApplicationBuilder >> primSetAndroidApp: anAndroidApp [
+	self ffiCall: #(void winit_application_builder_with_android_app(self, void* anAndroidApp))
 ]
 
 { #category : #'private - ffi' }

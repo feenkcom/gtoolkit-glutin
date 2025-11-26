@@ -13,6 +13,11 @@ Winit30Window class >> primRelease: aHandle [
 	^ self ffiCall: #(void winit_window_handle_release(void* aHandle))
 ]
 
+{ #category : #'api - platform' }
+Winit30Window >> androidNativeWindow [
+	^ self primGetAndroidNativeWindow
+]
+
 { #category : #'initialize-release' }
 Winit30Window >> close [
 	self primCloseWindow
@@ -114,6 +119,13 @@ Winit30Window >> primFocusWindow [
 	^ self
 		ffiCall: #(void winit_window_handle_focus_window(self))
 		options: #(optEventLoop optNonBlocking)
+]
+
+{ #category : #'private - ffi' }
+Winit30Window >> primGetAndroidNativeWindow [
+	^ self
+		ffiCall: #(void* winit_window_handle_get_android_native_window(self))
+		options: #(optEventLoop)
 ]
 
 { #category : #'private - ffi' }
