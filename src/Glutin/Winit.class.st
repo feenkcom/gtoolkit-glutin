@@ -4,7 +4,8 @@ Class {
 	#traits : 'TWinit',
 	#classTraits : 'TWinit classTrait',
 	#classVars : [
-		'AccessMutex'
+		'AccessMutex',
+		'IsSupportedCache'
 	],
 	#category : #'Glutin-Library'
 }
@@ -34,9 +35,12 @@ Winit class >> isInteractive [
 
 { #category : #testing }
 Winit class >> isSupported [
-	^ WinitLibrary uniqueInstance hasModule
+
+	IsSupportedCache ifNil: [ IsSupportedCache := GtSessionCache getter:
+		[ WinitLibrary uniqueInstance hasModule
 		and: [ self isHeadfulVM not
-			and: [ self isInteractive ] ]
+			and: [ self isInteractive ] ] ] ].
+	^ IsSupportedCache value
 ]
 
 { #category : #'private - ffi' }

@@ -3,6 +3,9 @@ Class {
 	#superclass : #Object,
 	#traits : 'TWinit30',
 	#classTraits : 'TWinit30 classTrait',
+	#classVars : [
+		'IsSupportedCache'
+	],
 	#category : #'Winit-Library'
 }
 
@@ -31,7 +34,10 @@ Winit30 class >> isInteractive [
 
 { #category : #testing }
 Winit30 class >> isSupported [
-	^ Winit30Library uniqueInstance hasModule
-		and: [ self isHeadfulVM not
-			and: [ self isInteractive ] ]
+
+	IsSupportedCache ifNil: [ IsSupportedCache := GtSessionCache getter:
+		[ Winit30Library uniqueInstance hasModule
+			and: [ self isHeadfulVM not
+				and: [ self isInteractive ] ] ] ].
+	^ IsSupportedCache value
 ]
