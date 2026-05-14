@@ -14,7 +14,7 @@ Class {
 
 { #category : #private }
 WinitSessionCacheExamples >> cacheWithCounterGetter [
-	cache := GtSessionCache new.
+	cache := WinitSessionCache new.
 	counter := 0.
 	cache getter: [ counter := counter + 1. counter ].
 	^ cache
