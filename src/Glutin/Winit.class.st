@@ -36,7 +36,7 @@ Winit class >> isInteractive [
 { #category : #testing }
 Winit class >> isSupported [
 
-	IsSupportedCache ifNil: [ IsSupportedCache := GtSessionCache getter:
+	IsSupportedCache ifNil: [ IsSupportedCache := WinitSessionCache getter:
 		[ WinitLibrary uniqueInstance hasModule
 		and: [ self isHeadfulVM not
 			and: [ self isInteractive ] ] ] ].
