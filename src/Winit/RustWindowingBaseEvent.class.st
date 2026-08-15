@@ -1,6 +1,6 @@
 Class {
 	#name : #RustWindowingBaseEvent,
-	#superclass : #GtBoxerExternalStructure,
+	#superclass : #Object,
 	#classInstVars : [
 		'EventTypeMap'
 	],
@@ -10,16 +10,6 @@ Class {
 { #category : #accessing }
 RustWindowingBaseEvent class >> eventMap [
 	^ EventTypeMap
-]
-
-{ #category : #'field definition' }
-RustWindowingBaseEvent class >> fieldsDesc [
-	"
-	self rebuildFieldAccessors
-	"
-	^ #(
-		
- 	)
 ]
 
 { #category : #initialization }
