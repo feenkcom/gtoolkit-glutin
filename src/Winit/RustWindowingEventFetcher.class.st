@@ -16,12 +16,12 @@ Class {
 { #category : #accessing }
 RustWindowingEventFetcher class >> default [
 	"Initialize an event fetcher if it does not exist or if it is no longer available"
-	(default isNil or: [
-		default session ~~ Smalltalk session or: [
-			default class isAbstract or: [
-				default class isAvailable not ] ] ])
-		ifTrue: [ default := self preferableEventFetcher new transferEventHandlersFrom: default ].
 
+	(default isNil
+		or: [ default session ~~ Smalltalk session
+				or: [ default class isAbstract or: [ default class isAvailable not ] ] ])
+		ifTrue: [ self
+				preferableEventFetcherDo: [ :aClass | default := aClass new transferEventHandlersFrom: default ] ].
 	^ default
 ]
 
@@ -47,10 +47,18 @@ RustWindowingEventFetcher class >> isAvailable [
 
 { #category : #accessing }
 RustWindowingEventFetcher class >> preferableEventFetcher [
+	self preferableEventFetcherDo: [ :aClass | ^ aClass ].
+
+	self error: 'Could not find a suitable event fetcher'
+]
+
+{ #category : #accessing }
+RustWindowingEventFetcher class >> preferableEventFetcherDo: aBlock [
 	^ ((self allSubclasses select: [ :eachSubclass | eachSubclass isAbstract not ])
 		sorted: [ :a :b | a priority > b priority ])
 			detect: [ :each | each isAvailable ]
-			ifNone: [ self error: 'Could not find a suitable event fetcher' ]
+			ifFound: aBlock
+			ifNone: [ ]
 ]
 
 { #category : #accessing }
@@ -62,12 +70,12 @@ RustWindowingEventFetcher class >> priority [
 
 { #category : #accessing }
 RustWindowingEventFetcher class >> shutDown: isQuitting [
-	self default shutDown: isQuitting
+	self default ifNotNil: [ :aFetcher | aFetcher shutDown: isQuitting ] 
 ]
 
 { #category : #accessing }
 RustWindowingEventFetcher class >> startUp: isInANewSession [
-	self default startUp: isInANewSession
+	self default ifNotNil: [ :aFetcher | aFetcher startUp: isInANewSession ]
 ]
 
 { #category : #'api - event handlers' }
