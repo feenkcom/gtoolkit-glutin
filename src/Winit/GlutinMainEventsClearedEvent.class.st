@@ -14,11 +14,6 @@ GlutinMainEventsClearedEvent class >> eventType [
 	^ WinitEventType MainEventsCleared
 ]
 
-{ #category : #'event type' }
-GlutinMainEventsClearedEvent class >> fromBaseEvent: anEvent [
-	^ self new
-]
-
 { #category : #visiting }
 GlutinMainEventsClearedEvent >> accept: aVisitor [
 	^ aVisitor visitMainEventsCleared: self

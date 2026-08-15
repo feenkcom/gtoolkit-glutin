@@ -157,11 +157,6 @@ RustWindowingEventFetcher >> newUserInterruptHandler [
 ]
 
 { #category : #'event - handling' }
-RustWindowingEventFetcher >> processGlutinEvent: aGlutinEvent [
-	self processMappedEvent: aGlutinEvent mapped
-]
-
-{ #category : #'event - handling' }
 RustWindowingEventFetcher >> processMappedEvent: mappedEvent [
 	"Send the event to all registered event handlers"
 

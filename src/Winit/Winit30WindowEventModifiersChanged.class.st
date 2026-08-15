@@ -47,11 +47,6 @@ Winit30WindowEventModifiersChanged class >> fieldsDesc [
 ]
 
 { #category : #'as yet unclassified' }
-Winit30WindowEventModifiersChanged class >> fromBaseEvent: anEvent [
-	^ anEvent modifiers
-]
-
-{ #category : #'as yet unclassified' }
 Winit30WindowEventModifiersChanged >> accept: aVisitor [
 	^ aVisitor visitModifiersChanged: self
 ]

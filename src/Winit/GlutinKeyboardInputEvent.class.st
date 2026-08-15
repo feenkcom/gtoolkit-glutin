@@ -33,11 +33,6 @@ GlutinKeyboardInputEvent class >> fieldsDesc [
  	)
 ]
 
-{ #category : #'event type' }
-GlutinKeyboardInputEvent class >> fromBaseEvent: anEvent [
-	^ anEvent keyboard_input windowId: anEvent window_id asInteger
-]
-
 { #category : #visiting }
 GlutinKeyboardInputEvent >> accept: aVisitor [
 	^ aVisitor visitKeyboardInputEvent: self

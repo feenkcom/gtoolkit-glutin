@@ -14,11 +14,6 @@ GlutinResumedEvent class >> eventType [
 	^ WinitEventType Resumed
 ]
 
-{ #category : #'event type' }
-GlutinResumedEvent class >> fromBaseEvent: anEvent [
-	^ self new
-]
-
 { #category : #visiting }
 GlutinResumedEvent >> accept: aVisitor [
 	^ aVisitor visitResumed: self

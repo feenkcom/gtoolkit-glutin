@@ -26,11 +26,6 @@ GlutinWindowScaleFactorChangedEvent class >> fieldsDesc [
  	)
 ]
 
-{ #category : #'event type' }
-GlutinWindowScaleFactorChangedEvent class >> fromBaseEvent: anEvent [
-	^ anEvent scale_factor windowId: anEvent window_id asInteger
-]
-
 { #category : #visiting }
 GlutinWindowScaleFactorChangedEvent >> accept: aVisitor [
 	^ aVisitor visitWindowScaleFactorChangedEvent: self

@@ -22,11 +22,6 @@ GlutinUserEvent class >> fieldsDesc [
  	)
 ]
 
-{ #category : #'event type' }
-GlutinUserEvent class >> fromBaseEvent: anEvent [
-	^ anEvent user_event 
-]
-
 { #category : #visiting }
 GlutinUserEvent >> accept: aVisitor [
 	^ aVisitor visitUserEvent: self

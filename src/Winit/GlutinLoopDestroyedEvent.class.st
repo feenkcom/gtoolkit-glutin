@@ -14,11 +14,6 @@ GlutinLoopDestroyedEvent class >> eventType [
 	^ WinitEventType LoopDestroyed
 ]
 
-{ #category : #'event type' }
-GlutinLoopDestroyedEvent class >> fromBaseEvent: anEvent [
-	^ self new
-]
-
 { #category : #visiting }
 GlutinLoopDestroyedEvent >> accept: aVisitor [
 	^ aVisitor visitLoopDestroyed: self

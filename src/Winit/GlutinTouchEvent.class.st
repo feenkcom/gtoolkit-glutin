@@ -30,11 +30,6 @@ GlutinTouchEvent class >> fieldsDesc [
  	)
 ]
 
-{ #category : #'event type' }
-GlutinTouchEvent class >> fromBaseEvent: anEvent [
-	^ anEvent touch windowId: anEvent window_id asInteger
-]
-
 { #category : #visiting }
 GlutinTouchEvent >> accept: aVisitor [
 	^ aVisitor visitTouchEvent: self

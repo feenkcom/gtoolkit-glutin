@@ -28,11 +28,6 @@ GlutinDeviceEventModifiersChangedEvent class >> fieldsDesc [
  	)
 ]
 
-{ #category : #'event type' }
-GlutinDeviceEventModifiersChangedEvent class >> fromBaseEvent: anEvent [
-	^ anEvent modifiers
-]
-
 { #category : #visiting }
 GlutinDeviceEventModifiersChangedEvent >> accept: aVisitor [
 	^ aVisitor visitModifiersChanged: self

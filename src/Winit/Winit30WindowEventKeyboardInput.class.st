@@ -42,11 +42,6 @@ Winit30WindowEventKeyboardInput class >> fieldsDesc [
 ]
 
 { #category : #'as yet unclassified' }
-Winit30WindowEventKeyboardInput class >> fromBaseEvent: anEvent [
-	^ anEvent keyboard_input windowId: anEvent window_id asInteger
-]
-
-{ #category : #'as yet unclassified' }
 Winit30WindowEventKeyboardInput >> accept: aVisitor [
 	^ aVisitor visitKeyboardInputEvent: self
 ]

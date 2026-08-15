@@ -9,11 +9,6 @@ GlutinMappedEvent class >> eventType [
 	^ nil
 ]
 
-{ #category : #'event type' }
-GlutinMappedEvent class >> fromBaseEvent: anEvent [
-	^ self subclassResponsibility
-]
-
 { #category : #visiting }
 GlutinMappedEvent >> accept: aVisitor [
 	^ self subclassResponsibility

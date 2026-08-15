@@ -24,11 +24,6 @@ GlutinWindowMovedEvent class >> fieldsDesc [
  	)
 ]
 
-{ #category : #'event type' }
-GlutinWindowMovedEvent class >> fromBaseEvent: anEvent [
-	^ anEvent window_moved windowId: anEvent window_id asInteger
-]
-
 { #category : #visiting }
 GlutinWindowMovedEvent >> accept: aVisitor [
 	^ aVisitor visitWindowMovedEvent: self

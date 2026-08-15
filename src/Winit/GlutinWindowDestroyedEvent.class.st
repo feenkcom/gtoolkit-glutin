@@ -9,11 +9,6 @@ GlutinWindowDestroyedEvent class >> eventType [
 	^ WinitEventType WindowEventDestroyed
 ]
 
-{ #category : #'event type' }
-GlutinWindowDestroyedEvent class >> fromBaseEvent: anEvent [
-	^ self new windowId: anEvent window_id asInteger
-]
-
 { #category : #visiting }
 GlutinWindowDestroyedEvent >> accept: aVisitor [
 	^ aVisitor visitWindowDestroyed: self

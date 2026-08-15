@@ -26,11 +26,6 @@ GlutinMouseInputEvent class >> fieldsDesc [
  	)
 ]
 
-{ #category : #'event type' }
-GlutinMouseInputEvent class >> fromBaseEvent: anEvent [
-	^ anEvent mouse_input windowId: anEvent window_id asInteger
-]
-
 { #category : #visiting }
 GlutinMouseInputEvent >> accept: aVisitor [
 	^ aVisitor visitMouseInputEvent: self

@@ -30,11 +30,6 @@ GlutinReceivedCharacterEvent class >> fieldsDesc [
  	)
 ]
 
-{ #category : #'event type' }
-GlutinReceivedCharacterEvent class >> fromBaseEvent: anEvent [
-	^ anEvent received_character windowId: anEvent window_id asInteger
-]
-
 { #category : #visiting }
 GlutinReceivedCharacterEvent >> accept: aVisitor [
 	^ aVisitor visitCharacterReceivedEvent: self

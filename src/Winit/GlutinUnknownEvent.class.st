@@ -7,11 +7,6 @@ Class {
 	#category : #'Winit-Events'
 }
 
-{ #category : #'event type' }
-GlutinUnknownEvent class >> fromBaseEvent: anEvent [
-	^ self new baseEvent: anEvent
-]
-
 { #category : #visiting }
 GlutinUnknownEvent >> accept: aVisitor [
 	^ aVisitor visitUnknownEvent: self

@@ -24,11 +24,6 @@ GlutinWindowResizedEvent class >> fieldsDesc [
  	)
 ]
 
-{ #category : #'event type' }
-GlutinWindowResizedEvent class >> fromBaseEvent: anEvent [
-	^ anEvent window_resized windowId: anEvent window_id asInteger
-]
-
 { #category : #visiting }
 GlutinWindowResizedEvent >> accept: aVisitor [
 	^ aVisitor visitWindowResizedEvent: self
