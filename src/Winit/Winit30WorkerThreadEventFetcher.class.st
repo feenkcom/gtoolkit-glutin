@@ -20,9 +20,6 @@ Winit30WorkerThreadEventFetcher class >> isAvailable [
 	Winit30 isSupported
 		ifFalse: [ ^ false ].
 
-	(CommandLineArguments new hasOption: 'winit28')
-		ifTrue: [ ^ false ].
-
 	^ true
 ]
 
@@ -70,7 +67,6 @@ Winit30WorkerThreadEventFetcher >> ensureEventLoop [
 
 { #category : #accessing }
 Winit30WorkerThreadEventFetcher >> eventLoop [
-	<return: #GlutinCallbackEventLoop>
 
 	self ensureEventLoop.
 	^ applicationHandle
