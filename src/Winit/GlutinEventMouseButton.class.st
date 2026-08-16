@@ -1,44 +1,29 @@
 Class {
 	#name : #GlutinEventMouseButton,
-	#superclass : #FFIExternalStructure,
-	#classVars : [
-		'OFFSET_BUTTON_CODE',
-		'OFFSET_BUTTON_TYPE'
+	#superclass : #Object,
+	#instVars : [
+		'button_type',
+		'button_code'
 	],
 	#category : #'Winit-Structures'
 }
 
-{ #category : #'field definition' }
-GlutinEventMouseButton class >> fieldsDesc [
-	"
-	self rebuildFieldAccessors
-	"
-	^ #(
-		#WinitEventMouseButtonType button_type
-		uint8 button_code
- 	)
-]
-
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinEventMouseButton >> button_code [
-	"This method was automatically generated"
-	^handle unsignedByteAt: OFFSET_BUTTON_CODE
+	^ button_code
 ]
 
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinEventMouseButton >> button_code: anObject [
-	"This method was automatically generated"
-	handle unsignedByteAt: OFFSET_BUTTON_CODE put: anObject
+	button_code := anObject
 ]
 
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinEventMouseButton >> button_type [
-	"This method was automatically generated"
-	^WinitEventMouseButtonType fromInteger: (handle unsignedLongAt: OFFSET_BUTTON_TYPE)
+	^ button_type
 ]
 
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinEventMouseButton >> button_type: anObject [
-	"This method was automatically generated"
-	handle unsignedLongAt: OFFSET_BUTTON_TYPE put: anObject value
+	button_type := anObject
 ]

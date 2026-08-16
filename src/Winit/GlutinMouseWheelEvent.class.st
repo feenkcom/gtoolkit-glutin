@@ -1,10 +1,10 @@
 Class {
 	#name : #GlutinMouseWheelEvent,
 	#superclass : #GlutinWindowEvent,
-	#classVars : [
-		'OFFSET_DELTA',
-		'OFFSET_DEVICE_ID',
-		'OFFSET_PHASE'
+	#instVars : [
+		'device_id',
+		'phase',
+		'delta'
 	],
 	#category : #'Winit-Events'
 }
@@ -14,16 +14,34 @@ GlutinMouseWheelEvent class >> eventType [
 	^ WinitEventType WindowEventMouseWheel
 ]
 
-{ #category : #'field definition' }
-GlutinMouseWheelEvent class >> fieldsDesc [
-	"
-	self rebuildFieldAccessors
-	"
-	^ #(
-		int64 device_id
-		#WinitEventTouchPhase phase
-		GlutinMouseScrollDelta delta
- 	)
+{ #category : #'private - ffi' }
+GlutinMouseWheelEvent class >> primDeltaType: aHandle [
+	^ self ffiCall: #(uint32 winit_event_mouse_wheel_delta_type(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+GlutinMouseWheelEvent class >> primDeltaX: aHandle [
+	^ self ffiCall: #(float64 winit_event_mouse_wheel_delta_x(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+GlutinMouseWheelEvent class >> primDeltaY: aHandle [
+	^ self ffiCall: #(float64 winit_event_mouse_wheel_delta_y(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+GlutinMouseWheelEvent class >> primDeviceId: aHandle [
+	^ self ffiCall: #(int64 winit_event_mouse_wheel_device_id(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+GlutinMouseWheelEvent class >> primPhase: aHandle [
+	^ self ffiCall: #(uint32 winit_event_mouse_wheel_phase(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+GlutinMouseWheelEvent class >> primRelease: aHandle [
+	self ffiCall: #(void winit_event_mouse_wheel_release(void* aHandle))
 ]
 
 { #category : #visiting }
@@ -31,63 +49,28 @@ GlutinMouseWheelEvent >> accept: aVisitor [
 	^ aVisitor visitMouseWheelEvent: self
 ]
 
-{ #category : #copying }
-GlutinMouseWheelEvent >> copy [
-	^ super copy
-		delta: self delta;
-		device_id: self device_id;
-		phase: self phase;
-		yourself
-]
-
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinMouseWheelEvent >> delta [
-	"This method was automatically generated"
-	^ GlutinMouseScrollDelta fromHandle: (handle referenceStructAt: OFFSET_DELTA length: GlutinMouseScrollDelta byteSize)
+	^ delta
 ]
 
-{ #category : #'accessing structure variables' }
-GlutinMouseWheelEvent >> delta: anObject [
-	"This method was automatically generated"
-	handle structAt: OFFSET_DELTA put: anObject getHandle length: GlutinMouseScrollDelta byteSize
-]
-
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinMouseWheelEvent >> device_id [
-	"This method was automatically generated"
-	^handle signedLongLongAt: OFFSET_DEVICE_ID
-]
-
-{ #category : #'accessing structure variables' }
-GlutinMouseWheelEvent >> device_id: anObject [
-	"This method was automatically generated"
-	handle signedLongLongAt: OFFSET_DEVICE_ID put: anObject
+	^ device_id
 ]
 
 { #category : #accessing }
-GlutinMouseWheelEvent >> gtDeltaOverviewFor: aView [
-	<gtView>
-	^ aView forward
-		title: 'Delta';
-		priority: 1;
-		object: [self delta];
-		view: #gtOverviewFor:
-]
-
-{ #category : #accessing }
-GlutinMouseWheelEvent >> gtDisplayOn: aStream [
-	aStream nextPutAll: 'Mouse wheel '.
-	self delta gtDisplayOn: aStream
-]
-
-{ #category : #'accessing structure variables' }
 GlutinMouseWheelEvent >> phase [
-	"This method was automatically generated"
-	^WinitEventTouchPhase fromInteger: (handle unsignedLongAt: OFFSET_PHASE)
+	^ phase
 ]
 
-{ #category : #'accessing structure variables' }
-GlutinMouseWheelEvent >> phase: anObject [
-	"This method was automatically generated"
-	handle unsignedLongAt: OFFSET_PHASE put: anObject value
+{ #category : #initialization }
+GlutinMouseWheelEvent >> readFromHandle: aHandle [
+	device_id := self class primDeviceId: aHandle.
+	phase := WinitEventTouchPhase fromInteger: (self class primPhase: aHandle).
+	delta := GlutinMouseScrollDelta new
+		type: (WinitEventMouseScrollDeltaType fromInteger: (self class primDeltaType: aHandle));
+		x: (self class primDeltaX: aHandle);
+		y: (self class primDeltaY: aHandle);
+		yourself
 ]

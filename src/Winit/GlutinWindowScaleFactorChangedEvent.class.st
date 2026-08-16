@@ -1,10 +1,10 @@
 Class {
 	#name : #GlutinWindowScaleFactorChangedEvent,
 	#superclass : #GlutinWindowEvent,
-	#classVars : [
-		'OFFSET_HEIGHT',
-		'OFFSET_SCALE_FACTOR',
-		'OFFSET_WIDTH'
+	#instVars : [
+		'scale_factor',
+		'width',
+		'height'
 	],
 	#category : #'Winit-Events'
 }
@@ -14,16 +14,24 @@ GlutinWindowScaleFactorChangedEvent class >> eventType [
 	^ WinitEventType WindowEventScaleFactorChanged
 ]
 
-{ #category : #'field definition' }
-GlutinWindowScaleFactorChangedEvent class >> fieldsDesc [
-	"
-	self rebuildFieldAccessors
-	"
-	^ #(
-		float64 scale_factor
-		uint32 width
-		uint32 height
- 	)
+{ #category : #'private - ffi' }
+GlutinWindowScaleFactorChangedEvent class >> primHeight: aHandle [
+	^ self ffiCall: #(uint32 winit_event_scale_factor_changed_height(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowScaleFactorChangedEvent class >> primRelease: aHandle [
+	self ffiCall: #(void winit_event_scale_factor_changed_release(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowScaleFactorChangedEvent class >> primScaleFactor: aHandle [
+	^ self ffiCall: #(float64 winit_event_scale_factor_changed_scale_factor(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowScaleFactorChangedEvent class >> primWidth: aHandle [
+	^ self ffiCall: #(uint32 winit_event_scale_factor_changed_width(void* aHandle))
 ]
 
 { #category : #visiting }
@@ -31,47 +39,24 @@ GlutinWindowScaleFactorChangedEvent >> accept: aVisitor [
 	^ aVisitor visitWindowScaleFactorChangedEvent: self
 ]
 
-{ #category : #copying }
-GlutinWindowScaleFactorChangedEvent >> copy [
-	^ super copy
-		height: self height;
-		scale_factor: self scale_factor;
-		width: self width;
-		yourself
-]
-
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinWindowScaleFactorChangedEvent >> height [
-	"This method was automatically generated"
-	^handle unsignedLongAt: OFFSET_HEIGHT
+	^ height
 ]
 
-{ #category : #'accessing structure variables' }
-GlutinWindowScaleFactorChangedEvent >> height: anObject [
-	"This method was automatically generated"
-	handle unsignedLongAt: OFFSET_HEIGHT put: anObject
+{ #category : #initialization }
+GlutinWindowScaleFactorChangedEvent >> readFromHandle: aHandle [
+	scale_factor := self class primScaleFactor: aHandle.
+	width := self class primWidth: aHandle.
+	height := self class primHeight: aHandle
 ]
 
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinWindowScaleFactorChangedEvent >> scale_factor [
-	"This method was automatically generated"
-	^handle doubleAt: OFFSET_SCALE_FACTOR
+	^ scale_factor
 ]
 
-{ #category : #'accessing structure variables' }
-GlutinWindowScaleFactorChangedEvent >> scale_factor: anObject [
-	"This method was automatically generated"
-	handle doubleAt: OFFSET_SCALE_FACTOR put: anObject
-]
-
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinWindowScaleFactorChangedEvent >> width [
-	"This method was automatically generated"
-	^handle unsignedLongAt: OFFSET_WIDTH
-]
-
-{ #category : #'accessing structure variables' }
-GlutinWindowScaleFactorChangedEvent >> width: anObject [
-	"This method was automatically generated"
-	handle unsignedLongAt: OFFSET_WIDTH put: anObject
+	^ width
 ]

@@ -7,12 +7,6 @@ Class {
 	#category : #'Winit-Events'
 }
 
-{ #category : #copying }
-GlutinWindowEvent >> copy [
-	^ self class new
-		windowId: self windowId
-]
-
 { #category : #testing }
 GlutinWindowEvent >> isWindowEvent [
 	^ true

@@ -1,31 +1,18 @@
 Class {
 	#name : #GlutinDeviceEventModifiersChangedEvent,
-	#superclass : #GlutinDeviceEvent,
-	#classVars : [
-		'OFFSET_ALT',
-		'OFFSET_CTRL',
-		'OFFSET_LOGO',
-		'OFFSET_SHIFT'
+	#superclass : #Object,
+	#instVars : [
+		'shift',
+		'ctrl',
+		'alt',
+		'logo'
 	],
 	#category : #'Winit-Events'
 }
 
-{ #category : #'event type' }
-GlutinDeviceEventModifiersChangedEvent class >> eventType [
-	^ WinitEventType ModifiersChanged
-]
-
-{ #category : #'field definition' }
-GlutinDeviceEventModifiersChangedEvent class >> fieldsDesc [
-	"
-	self rebuildFieldAccessors
-	"
-	^ #(
-		bool shift
-		bool ctrl
-		bool alt
-		bool logo
- 	)
+{ #category : #'instance creation' }
+GlutinDeviceEventModifiersChangedEvent class >> new [
+	^ super new initialize
 ]
 
 { #category : #visiting }
@@ -33,56 +20,56 @@ GlutinDeviceEventModifiersChangedEvent >> accept: aVisitor [
 	^ aVisitor visitModifiersChanged: self
 ]
 
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinDeviceEventModifiersChangedEvent >> alt [
-	"This method was automatically generated"
-	^handle booleanAt: OFFSET_ALT
+	^ alt
 ]
 
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinDeviceEventModifiersChangedEvent >> alt: anObject [
-	"This method was automatically generated"
-	handle booleanAt: OFFSET_ALT put: anObject
+	alt := anObject
 ]
 
 { #category : #copying }
 GlutinDeviceEventModifiersChangedEvent >> copy [
-	^ super copy
-		alt: self alt;
-		ctrl: self ctrl;
-		logo: self logo;
+	^ self class new
 		shift: self shift;
+		ctrl: self ctrl;
+		alt: self alt;
+		logo: self logo;
 		yourself
 ]
 
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinDeviceEventModifiersChangedEvent >> ctrl [
-	"This method was automatically generated"
-	^handle booleanAt: OFFSET_CTRL
+	^ ctrl
 ]
 
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinDeviceEventModifiersChangedEvent >> ctrl: anObject [
-	"This method was automatically generated"
-	handle booleanAt: OFFSET_CTRL put: anObject
+	ctrl := anObject
 ]
 
-{ #category : #'accessing structure variables' }
+{ #category : #initialization }
+GlutinDeviceEventModifiersChangedEvent >> initialize [
+	shift := false.
+	ctrl := false.
+	alt := false.
+	logo := false
+]
+
+{ #category : #accessing }
 GlutinDeviceEventModifiersChangedEvent >> logo [
-	"This method was automatically generated"
-	^handle booleanAt: OFFSET_LOGO
+	^ logo
 ]
 
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinDeviceEventModifiersChangedEvent >> logo: anObject [
-	"This method was automatically generated"
-	handle booleanAt: OFFSET_LOGO put: anObject
+	logo := anObject
 ]
 
 { #category : #printing }
 GlutinDeviceEventModifiersChangedEvent >> printOn: aStream [
-	"Append a sequence of characters to aStream that identify the receiver."
-
 	aStream
 		nextPutAll: '{ shift: ';
 		print: self shift.
@@ -98,14 +85,12 @@ GlutinDeviceEventModifiersChangedEvent >> printOn: aStream [
 		nextPutAll: ' }'
 ]
 
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinDeviceEventModifiersChangedEvent >> shift [
-	"This method was automatically generated"
-	^handle booleanAt: OFFSET_SHIFT
+	^ shift
 ]
 
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinDeviceEventModifiersChangedEvent >> shift: anObject [
-	"This method was automatically generated"
-	handle booleanAt: OFFSET_SHIFT put: anObject
+	shift := anObject
 ]

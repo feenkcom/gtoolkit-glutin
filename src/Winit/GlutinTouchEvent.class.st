@@ -1,12 +1,12 @@
 Class {
 	#name : #GlutinTouchEvent,
 	#superclass : #GlutinWindowEvent,
-	#classVars : [
-		'OFFSET_DEVICE_ID',
-		'OFFSET_ID',
-		'OFFSET_PHASE',
-		'OFFSET_X',
-		'OFFSET_Y'
+	#instVars : [
+		'device_id',
+		'phase',
+		'x',
+		'y',
+		'id'
 	],
 	#category : #'Winit-Events'
 }
@@ -16,18 +16,34 @@ GlutinTouchEvent class >> eventType [
 	^ WinitEventType WindowEventTouch
 ]
 
-{ #category : #'field definition' }
-GlutinTouchEvent class >> fieldsDesc [
-	"
-	self rebuildFieldAccessors
-	"
-	^ #(
-		int64 device_id
-		#WinitEventTouchPhase phase
-		float64 x
-		float64 y
-		uint64 id
- 	)
+{ #category : #'private - ffi' }
+GlutinTouchEvent class >> primDeviceId: aHandle [
+	^ self ffiCall: #(int64 winit_event_touch_device_id(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+GlutinTouchEvent class >> primId: aHandle [
+	^ self ffiCall: #(uint64 winit_event_touch_id(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+GlutinTouchEvent class >> primPhase: aHandle [
+	^ self ffiCall: #(uint32 winit_event_touch_phase(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+GlutinTouchEvent class >> primRelease: aHandle [
+	self ffiCall: #(void winit_event_touch_release(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+GlutinTouchEvent class >> primX: aHandle [
+	^ self ffiCall: #(float64 winit_event_touch_x(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+GlutinTouchEvent class >> primY: aHandle [
+	^ self ffiCall: #(float64 winit_event_touch_y(void* aHandle))
 ]
 
 { #category : #visiting }
@@ -35,73 +51,36 @@ GlutinTouchEvent >> accept: aVisitor [
 	^ aVisitor visitTouchEvent: self
 ]
 
-{ #category : #copying }
-GlutinTouchEvent >> copy [
-	^ super copy
-		device_id: self device_id;
-		id: self id;
-		phase: self phase;
-		x: self x;
-		y: self y;
-		yourself
-]
-
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinTouchEvent >> device_id [
-	"This method was automatically generated"
-	^handle signedLongLongAt: OFFSET_DEVICE_ID
+	^ device_id
 ]
 
-{ #category : #'accessing structure variables' }
-GlutinTouchEvent >> device_id: anObject [
-	"This method was automatically generated"
-	handle signedLongLongAt: OFFSET_DEVICE_ID put: anObject
-]
-
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinTouchEvent >> id [
-	"This method was automatically generated"
-	^handle unsignedLongLongAt: OFFSET_ID
+	^ id
 ]
 
-{ #category : #'accessing structure variables' }
-GlutinTouchEvent >> id: anObject [
-	"This method was automatically generated"
-	handle unsignedLongLongAt: OFFSET_ID put: anObject
-]
-
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinTouchEvent >> phase [
-	"This method was automatically generated"
-	^WinitEventTouchPhase fromInteger: (handle unsignedLongAt: OFFSET_PHASE)
+	^ phase
 ]
 
-{ #category : #'accessing structure variables' }
-GlutinTouchEvent >> phase: anObject [
-	"This method was automatically generated"
-	handle unsignedLongAt: OFFSET_PHASE put: anObject value
+{ #category : #initialization }
+GlutinTouchEvent >> readFromHandle: aHandle [
+	device_id := self class primDeviceId: aHandle.
+	phase := WinitEventTouchPhase fromInteger: (self class primPhase: aHandle).
+	x := self class primX: aHandle.
+	y := self class primY: aHandle.
+	id := self class primId: aHandle
 ]
 
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinTouchEvent >> x [
-	"This method was automatically generated"
-	^handle doubleAt: OFFSET_X
+	^ x
 ]
 
-{ #category : #'accessing structure variables' }
-GlutinTouchEvent >> x: anObject [
-	"This method was automatically generated"
-	handle doubleAt: OFFSET_X put: anObject
-]
-
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinTouchEvent >> y [
-	"This method was automatically generated"
-	^handle doubleAt: OFFSET_Y
-]
-
-{ #category : #'accessing structure variables' }
-GlutinTouchEvent >> y: anObject [
-	"This method was automatically generated"
-	handle doubleAt: OFFSET_Y put: anObject
+	^ y
 ]

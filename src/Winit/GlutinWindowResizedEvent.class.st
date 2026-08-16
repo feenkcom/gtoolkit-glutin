@@ -1,9 +1,9 @@
 Class {
 	#name : #GlutinWindowResizedEvent,
 	#superclass : #GlutinWindowEvent,
-	#classVars : [
-		'OFFSET_HEIGHT',
-		'OFFSET_WIDTH'
+	#instVars : [
+		'width',
+		'height'
 	],
 	#category : #'Winit-Events'
 }
@@ -13,15 +13,19 @@ GlutinWindowResizedEvent class >> eventType [
 	^ WinitEventType WindowEventResized
 ]
 
-{ #category : #'field definition' }
-GlutinWindowResizedEvent class >> fieldsDesc [
-	"
-	self rebuildFieldAccessors
-	"
-	^ #(
-		uint32 width
-		uint32 height
- 	)
+{ #category : #'private - ffi' }
+GlutinWindowResizedEvent class >> primHeight: aHandle [
+	^ self ffiCall: #(uint32 winit_event_window_resized_height(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowResizedEvent class >> primRelease: aHandle [
+	self ffiCall: #(void winit_event_window_resized_release(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowResizedEvent class >> primWidth: aHandle [
+	^ self ffiCall: #(uint32 winit_event_window_resized_width(void* aHandle))
 ]
 
 { #category : #visiting }
@@ -29,34 +33,18 @@ GlutinWindowResizedEvent >> accept: aVisitor [
 	^ aVisitor visitWindowResizedEvent: self
 ]
 
-{ #category : #copying }
-GlutinWindowResizedEvent >> copy [
-	^ super copy
-		height: self height;
-		width: self width;
-		yourself
-]
-
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinWindowResizedEvent >> height [
-	"This method was automatically generated"
-	^handle unsignedLongAt: OFFSET_HEIGHT
+	^ height
 ]
 
-{ #category : #'accessing structure variables' }
-GlutinWindowResizedEvent >> height: anObject [
-	"This method was automatically generated"
-	handle unsignedLongAt: OFFSET_HEIGHT put: anObject
+{ #category : #initialization }
+GlutinWindowResizedEvent >> readFromHandle: aHandle [
+	width := self class primWidth: aHandle.
+	height := self class primHeight: aHandle
 ]
 
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinWindowResizedEvent >> width [
-	"This method was automatically generated"
-	^handle unsignedLongAt: OFFSET_WIDTH
-]
-
-{ #category : #'accessing structure variables' }
-GlutinWindowResizedEvent >> width: anObject [
-	"This method was automatically generated"
-	handle unsignedLongAt: OFFSET_WIDTH put: anObject
+	^ width
 ]

@@ -1,8 +1,8 @@
 Class {
 	#name : #GlutinWindowFocusedEvent,
 	#superclass : #GlutinWindowEvent,
-	#classVars : [
-		'OFFSET_IS_FOCUSED'
+	#instVars : [
+		'is_focused'
 	],
 	#category : #'Winit-Events'
 }
@@ -12,14 +12,14 @@ GlutinWindowFocusedEvent class >> eventType [
 	^ WinitEventType WindowEventFocused
 ]
 
-{ #category : #'field definition' }
-GlutinWindowFocusedEvent class >> fieldsDesc [
-	"
-	self rebuildFieldAccessors
-	"
-	^ #(
-		bool is_focused
- 	)
+{ #category : #'private - ffi' }
+GlutinWindowFocusedEvent class >> primIsFocused: aHandle [
+	^ self ffiCall: #(bool winit_event_window_focused_is_focused(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowFocusedEvent class >> primRelease: aHandle [
+	self ffiCall: #(void winit_event_window_focused_release(void* aHandle))
 ]
 
 { #category : #visiting }
@@ -27,21 +27,12 @@ GlutinWindowFocusedEvent >> accept: aVisitor [
 	^ aVisitor visitWindowFocusedEvent: self
 ]
 
-{ #category : #copying }
-GlutinWindowFocusedEvent >> copy [
-	^ super copy
-		is_focused: self is_focused;
-		yourself
-]
-
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinWindowFocusedEvent >> is_focused [
-	"This method was automatically generated"
-	^handle booleanAt: OFFSET_IS_FOCUSED
+	^ is_focused
 ]
 
-{ #category : #'accessing structure variables' }
-GlutinWindowFocusedEvent >> is_focused: anObject [
-	"This method was automatically generated"
-	handle booleanAt: OFFSET_IS_FOCUSED put: anObject
+{ #category : #initialization }
+GlutinWindowFocusedEvent >> readFromHandle: aHandle [
+	is_focused := self class primIsFocused: aHandle
 ]

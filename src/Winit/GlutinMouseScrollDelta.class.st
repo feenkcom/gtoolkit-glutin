@@ -1,29 +1,17 @@
 Class {
 	#name : #GlutinMouseScrollDelta,
-	#superclass : #FFIExternalStructure,
-	#classVars : [
-		'OFFSET_TYPE',
-		'OFFSET_X',
-		'OFFSET_Y'
+	#superclass : #Object,
+	#instVars : [
+		'type',
+		'x',
+		'y'
 	],
 	#category : #'Winit-Structures'
 }
 
-{ #category : #'field definition' }
-GlutinMouseScrollDelta class >> fieldsDesc [
-	"
-	self rebuildFieldAccessors
-	"
-	^ #(
-		WinitEventMouseScrollDeltaType type
-		float64 x
-		float64 y
- 	)
-]
-
 { #category : #accessing }
 GlutinMouseScrollDelta >> gtDisplayOn: aStream [
-	aStream 
+	aStream
 		nextPutAll: self x asString;
 		nextPut: $,;
 		nextPutAll: self y asString
@@ -32,7 +20,7 @@ GlutinMouseScrollDelta >> gtDisplayOn: aStream [
 { #category : #accessing }
 GlutinMouseScrollDelta >> gtOverviewFor: aView [
 	<gtView>
-	^ aView columnedList 
+	^ aView columnedList
 		title: 'Overview';
 		priority: 1;
 		items: [ { 'x' -> self x . 'y' -> self y . 'Type' -> self type} ];
@@ -40,38 +28,32 @@ GlutinMouseScrollDelta >> gtOverviewFor: aView [
 		column: 'Value' text: #value
 ]
 
-{ #category : #'accessing - structure variables' }
+{ #category : #accessing }
 GlutinMouseScrollDelta >> type [
-	"This method was automatically generated"
-	^WinitEventMouseScrollDeltaType fromInteger: (handle unsignedLongAt: OFFSET_TYPE)
+	^ type
 ]
 
-{ #category : #'accessing - structure variables' }
+{ #category : #accessing }
 GlutinMouseScrollDelta >> type: anObject [
-	"This method was automatically generated"
-	handle unsignedLongAt: OFFSET_TYPE put: anObject value
+	type := anObject
 ]
 
-{ #category : #'accessing - structure variables' }
+{ #category : #accessing }
 GlutinMouseScrollDelta >> x [
-	"This method was automatically generated"
-	^handle doubleAt: OFFSET_X
+	^ x
 ]
 
-{ #category : #'accessing - structure variables' }
+{ #category : #accessing }
 GlutinMouseScrollDelta >> x: anObject [
-	"This method was automatically generated"
-	handle doubleAt: OFFSET_X put: anObject
+	x := anObject
 ]
 
-{ #category : #'accessing - structure variables' }
+{ #category : #accessing }
 GlutinMouseScrollDelta >> y [
-	"This method was automatically generated"
-	^handle doubleAt: OFFSET_Y
+	^ y
 ]
 
-{ #category : #'accessing - structure variables' }
+{ #category : #accessing }
 GlutinMouseScrollDelta >> y: anObject [
-	"This method was automatically generated"
-	handle doubleAt: OFFSET_Y put: anObject
+	y := anObject
 ]

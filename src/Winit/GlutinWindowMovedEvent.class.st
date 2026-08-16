@@ -1,9 +1,9 @@
 Class {
 	#name : #GlutinWindowMovedEvent,
 	#superclass : #GlutinWindowEvent,
-	#classVars : [
-		'OFFSET_X',
-		'OFFSET_Y'
+	#instVars : [
+		'x',
+		'y'
 	],
 	#category : #'Winit-Events'
 }
@@ -13,15 +13,19 @@ GlutinWindowMovedEvent class >> eventType [
 	^ WinitEventType WindowEventMoved
 ]
 
-{ #category : #'field definition' }
-GlutinWindowMovedEvent class >> fieldsDesc [
-	"
-	self rebuildFieldAccessors
-	"
-	^ #(
-		int32 x
-		int32 y
- 	)
+{ #category : #'private - ffi' }
+GlutinWindowMovedEvent class >> primRelease: aHandle [
+	self ffiCall: #(void winit_event_window_moved_release(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowMovedEvent class >> primX: aHandle [
+	^ self ffiCall: #(int32 winit_event_window_moved_x(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+GlutinWindowMovedEvent class >> primY: aHandle [
+	^ self ffiCall: #(int32 winit_event_window_moved_y(void* aHandle))
 ]
 
 { #category : #visiting }
@@ -29,34 +33,18 @@ GlutinWindowMovedEvent >> accept: aVisitor [
 	^ aVisitor visitWindowMovedEvent: self
 ]
 
-{ #category : #copying }
-GlutinWindowMovedEvent >> copy [
-	^ super copy
-		x: self x;
-		y: self y;
-		yourself
+{ #category : #initialization }
+GlutinWindowMovedEvent >> readFromHandle: aHandle [
+	x := self class primX: aHandle.
+	y := self class primY: aHandle
 ]
 
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinWindowMovedEvent >> x [
-	"This method was automatically generated"
-	^handle signedLongAt: OFFSET_X
+	^ x
 ]
 
-{ #category : #'accessing structure variables' }
-GlutinWindowMovedEvent >> x: anObject [
-	"This method was automatically generated"
-	handle signedLongAt: OFFSET_X put: anObject
-]
-
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinWindowMovedEvent >> y [
-	"This method was automatically generated"
-	^handle signedLongAt: OFFSET_Y
-]
-
-{ #category : #'accessing structure variables' }
-GlutinWindowMovedEvent >> y: anObject [
-	"This method was automatically generated"
-	handle signedLongAt: OFFSET_Y put: anObject
+	^ y
 ]

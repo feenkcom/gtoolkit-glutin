@@ -1,10 +1,10 @@
 Class {
 	#name : #GlutinMouseInputEvent,
 	#superclass : #GlutinWindowEvent,
-	#classVars : [
-		'OFFSET_BUTTON',
-		'OFFSET_DEVICE_ID',
-		'OFFSET_STATE'
+	#instVars : [
+		'device_id',
+		'state',
+		'button'
 	],
 	#category : #'Winit-Events'
 }
@@ -14,16 +14,29 @@ GlutinMouseInputEvent class >> eventType [
 	^ WinitEventType WindowEventMouseInput
 ]
 
-{ #category : #'field definition' }
-GlutinMouseInputEvent class >> fieldsDesc [
-	"
-	self rebuildFieldAccessors
-	"
-	^ #(
-		int64 device_id
-		#WinitEventInputElementState state
-		GlutinEventMouseButton button
- 	)
+{ #category : #'private - ffi' }
+GlutinMouseInputEvent class >> primButtonCode: aHandle [
+	^ self ffiCall: #(uint16 winit_event_mouse_input_button_code(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+GlutinMouseInputEvent class >> primButtonType: aHandle [
+	^ self ffiCall: #(uint32 winit_event_mouse_input_button_type(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+GlutinMouseInputEvent class >> primDeviceId: aHandle [
+	^ self ffiCall: #(int64 winit_event_mouse_input_device_id(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+GlutinMouseInputEvent class >> primRelease: aHandle [
+	self ffiCall: #(void winit_event_mouse_input_release(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+GlutinMouseInputEvent class >> primState: aHandle [
+	^ self ffiCall: #(uint32 winit_event_mouse_input_state(void* aHandle))
 ]
 
 { #category : #visiting }
@@ -31,47 +44,27 @@ GlutinMouseInputEvent >> accept: aVisitor [
 	^ aVisitor visitMouseInputEvent: self
 ]
 
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinMouseInputEvent >> button [
-	"This method was automatically generated"
-	^ GlutinEventMouseButton fromHandle: (handle referenceStructAt: OFFSET_BUTTON length: GlutinEventMouseButton byteSize)
+	^ button
 ]
 
-{ #category : #'accessing structure variables' }
-GlutinMouseInputEvent >> button: anObject [
-	"This method was automatically generated"
-	handle structAt: OFFSET_BUTTON put: anObject getHandle length: GlutinEventMouseButton byteSize
+{ #category : #accessing }
+GlutinMouseInputEvent >> device_id [
+	^ device_id
 ]
 
-{ #category : #copying }
-GlutinMouseInputEvent >> copy [
-	^ super copy
-		button: self button;
-		device_id: self device_id;
-		state: self state;
+{ #category : #initialization }
+GlutinMouseInputEvent >> readFromHandle: aHandle [
+	device_id := self class primDeviceId: aHandle.
+	state := WinitEventInputElementState fromInteger: (self class primState: aHandle).
+	button := GlutinEventMouseButton new
+		button_type: (WinitEventMouseButtonType fromInteger: (self class primButtonType: aHandle));
+		button_code: (self class primButtonCode: aHandle);
 		yourself
 ]
 
-{ #category : #'accessing structure variables' }
-GlutinMouseInputEvent >> device_id [
-	"This method was automatically generated"
-	^handle signedLongLongAt: OFFSET_DEVICE_ID
-]
-
-{ #category : #'accessing structure variables' }
-GlutinMouseInputEvent >> device_id: anObject [
-	"This method was automatically generated"
-	handle signedLongLongAt: OFFSET_DEVICE_ID put: anObject
-]
-
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinMouseInputEvent >> state [
-	"This method was automatically generated"
-	^WinitEventInputElementState fromInteger: (handle unsignedLongAt: OFFSET_STATE)
-]
-
-{ #category : #'accessing structure variables' }
-GlutinMouseInputEvent >> state: anObject [
-	"This method was automatically generated"
-	handle unsignedLongAt: OFFSET_STATE put: anObject value
+	^ state
 ]

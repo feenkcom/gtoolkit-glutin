@@ -1,96 +1,112 @@
 Class {
 	#name : #Winit30WindowEventModifiersChanged,
 	#superclass : #GlutinWindowEvent,
-	#classVars : [
-		'OFFSET_ALT',
-		'OFFSET_CTRL',
-		'OFFSET_LEFTALT',
-		'OFFSET_LEFTCTRL',
-		'OFFSET_LEFTLOGO',
-		'OFFSET_LEFTSHIFT',
-		'OFFSET_LOGO',
-		'OFFSET_NUMLOCK',
-		'OFFSET_RIGHTALT',
-		'OFFSET_RIGHTCTRL',
-		'OFFSET_RIGHTLOGO',
-		'OFFSET_RIGHTSHIFT',
-		'OFFSET_SHIFT'
+	#instVars : [
+		'shift',
+		'ctrl',
+		'alt',
+		'logo',
+		'numLock',
+		'leftShift',
+		'rightShift',
+		'leftCtrl',
+		'rightCtrl',
+		'leftAlt',
+		'rightAlt',
+		'leftLogo',
+		'rightLogo'
 	],
 	#category : #'Winit-External'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event type' }
 Winit30WindowEventModifiersChanged class >> eventType [
 	^ WinitEventType Winit30_WindowEventModifiersChanged
 ]
 
-{ #category : #'as yet unclassified' }
-Winit30WindowEventModifiersChanged class >> fieldsDesc [
-	"
-	self rebuildFieldAccessors
-	"
-	^ #(
-		bool shift
-		bool ctrl
-		bool alt
-		bool logo
-		bool numLock
-		Winit30ModifierKeyState leftShift
-		Winit30ModifierKeyState rightShift
-		Winit30ModifierKeyState leftCtrl
-		Winit30ModifierKeyState rightCtrl
-		Winit30ModifierKeyState leftAlt
-		Winit30ModifierKeyState rightAlt
-		Winit30ModifierKeyState leftLogo
-		Winit30ModifierKeyState rightLogo
- 	)
+{ #category : #'private - ffi' }
+Winit30WindowEventModifiersChanged class >> primAlt: aHandle [
+	^ self ffiCall: #(bool winit_event_modifiers_changed_alt(void* aHandle))
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - ffi' }
+Winit30WindowEventModifiersChanged class >> primCtrl: aHandle [
+	^ self ffiCall: #(bool winit_event_modifiers_changed_ctrl(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+Winit30WindowEventModifiersChanged class >> primLeftAlt: aHandle [
+	^ self ffiCall: #(uint8 winit_event_modifiers_changed_left_alt(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+Winit30WindowEventModifiersChanged class >> primLeftCtrl: aHandle [
+	^ self ffiCall: #(uint8 winit_event_modifiers_changed_left_ctrl(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+Winit30WindowEventModifiersChanged class >> primLeftLogo: aHandle [
+	^ self ffiCall: #(uint8 winit_event_modifiers_changed_left_logo(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+Winit30WindowEventModifiersChanged class >> primLeftShift: aHandle [
+	^ self ffiCall: #(uint8 winit_event_modifiers_changed_left_shift(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+Winit30WindowEventModifiersChanged class >> primLogo: aHandle [
+	^ self ffiCall: #(bool winit_event_modifiers_changed_logo(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+Winit30WindowEventModifiersChanged class >> primNumLock: aHandle [
+	^ self ffiCall: #(bool winit_event_modifiers_changed_num_lock(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+Winit30WindowEventModifiersChanged class >> primRelease: aHandle [
+	self ffiCall: #(void winit_event_modifiers_changed_release(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+Winit30WindowEventModifiersChanged class >> primRightAlt: aHandle [
+	^ self ffiCall: #(uint8 winit_event_modifiers_changed_right_alt(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+Winit30WindowEventModifiersChanged class >> primRightCtrl: aHandle [
+	^ self ffiCall: #(uint8 winit_event_modifiers_changed_right_ctrl(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+Winit30WindowEventModifiersChanged class >> primRightLogo: aHandle [
+	^ self ffiCall: #(uint8 winit_event_modifiers_changed_right_logo(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+Winit30WindowEventModifiersChanged class >> primRightShift: aHandle [
+	^ self ffiCall: #(uint8 winit_event_modifiers_changed_right_shift(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+Winit30WindowEventModifiersChanged class >> primShift: aHandle [
+	^ self ffiCall: #(bool winit_event_modifiers_changed_shift(void* aHandle))
+]
+
+{ #category : #visiting }
 Winit30WindowEventModifiersChanged >> accept: aVisitor [
 	^ aVisitor visitModifiersChanged: self
 ]
 
-{ #category : #'accessing - structure variables' }
+{ #category : #accessing }
 Winit30WindowEventModifiersChanged >> alt [
-	"This method was automatically generated"
-	^handle booleanAt: OFFSET_ALT
+	^ alt
 ]
 
-{ #category : #'accessing - structure variables' }
-Winit30WindowEventModifiersChanged >> alt: anObject [
-	"This method was automatically generated"
-	handle booleanAt: OFFSET_ALT put: anObject
-]
-
-{ #category : #'as yet unclassified' }
-Winit30WindowEventModifiersChanged >> copy [
-	^ super copy
-		shift: self shift;
-		ctrl: self ctrl;
-		alt: self alt;
-		logo: self logo;
-		numLock: self numLock;
-		leftShift: self leftShift;
-		rightShift: self rightShift;
-		leftCtrl: self leftCtrl;
-		rightCtrl: self rightCtrl;
-		leftAlt: self leftAlt;
-		leftLogo: self leftLogo;
-		rightLogo: self rightLogo;
-		yourself
-]
-
-{ #category : #'accessing - structure variables' }
+{ #category : #accessing }
 Winit30WindowEventModifiersChanged >> ctrl [
-	"This method was automatically generated"
-	^handle booleanAt: OFFSET_CTRL
-]
-
-{ #category : #'accessing - structure variables' }
-Winit30WindowEventModifiersChanged >> ctrl: anObject [
-	"This method was automatically generated"
-	handle booleanAt: OFFSET_CTRL put: anObject
+	^ ctrl
 ]
 
 { #category : #views }
@@ -128,82 +144,38 @@ Winit30WindowEventModifiersChanged >> gtStateFor: aView [
 		send: [ :each | each value ]
 ]
 
-{ #category : #'accessing - structure variables' }
+{ #category : #accessing }
 Winit30WindowEventModifiersChanged >> leftAlt [
-	"This method was automatically generated"
-	^Winit30ModifierKeyState fromInteger: (handle unsignedByteAt: OFFSET_LEFTALT)
+	^ leftAlt
 ]
 
-{ #category : #'accessing - structure variables' }
-Winit30WindowEventModifiersChanged >> leftAlt: anObject [
-	"This method was automatically generated"
-	handle unsignedByteAt: OFFSET_LEFTALT put: anObject value
-]
-
-{ #category : #'accessing - structure variables' }
+{ #category : #accessing }
 Winit30WindowEventModifiersChanged >> leftCtrl [
-	"This method was automatically generated"
-	^Winit30ModifierKeyState fromInteger: (handle unsignedByteAt: OFFSET_LEFTCTRL)
+	^ leftCtrl
 ]
 
-{ #category : #'accessing - structure variables' }
-Winit30WindowEventModifiersChanged >> leftCtrl: anObject [
-	"This method was automatically generated"
-	handle unsignedByteAt: OFFSET_LEFTCTRL put: anObject value
-]
-
-{ #category : #'accessing - structure variables' }
+{ #category : #accessing }
 Winit30WindowEventModifiersChanged >> leftLogo [
-	"This method was automatically generated"
-	^Winit30ModifierKeyState fromInteger: (handle unsignedByteAt: OFFSET_LEFTLOGO)
+	^ leftLogo
 ]
 
-{ #category : #'accessing - structure variables' }
-Winit30WindowEventModifiersChanged >> leftLogo: anObject [
-	"This method was automatically generated"
-	handle unsignedByteAt: OFFSET_LEFTLOGO put: anObject value
-]
-
-{ #category : #'accessing - structure variables' }
+{ #category : #accessing }
 Winit30WindowEventModifiersChanged >> leftShift [
-	"This method was automatically generated"
-	^Winit30ModifierKeyState fromInteger: (handle unsignedByteAt: OFFSET_LEFTSHIFT)
+	^ leftShift
 ]
 
-{ #category : #'accessing - structure variables' }
-Winit30WindowEventModifiersChanged >> leftShift: anObject [
-	"This method was automatically generated"
-	handle unsignedByteAt: OFFSET_LEFTSHIFT put: anObject value
-]
-
-{ #category : #'accessing - structure variables' }
+{ #category : #accessing }
 Winit30WindowEventModifiersChanged >> logo [
-	"This method was automatically generated"
-	^handle booleanAt: OFFSET_LOGO
+	^ logo
 ]
 
-{ #category : #'accessing - structure variables' }
-Winit30WindowEventModifiersChanged >> logo: anObject [
-	"This method was automatically generated"
-	handle booleanAt: OFFSET_LOGO put: anObject
-]
-
-{ #category : #'accessing - structure variables' }
+{ #category : #accessing }
 Winit30WindowEventModifiersChanged >> numLock [
-	"This method was automatically generated"
-	^handle booleanAt: OFFSET_NUMLOCK
+	^ numLock
 ]
 
-{ #category : #'accessing - structure variables' }
-Winit30WindowEventModifiersChanged >> numLock: anObject [
-	"This method was automatically generated"
-	handle booleanAt: OFFSET_NUMLOCK put: anObject
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 Winit30WindowEventModifiersChanged >> printOn: aStream [
-	"Append a sequence of characters to aStream that identify the receiver."
-
 	aStream
 		nextPutAll: '{ shift: ';
 		print: self shift.
@@ -222,62 +194,44 @@ Winit30WindowEventModifiersChanged >> printOn: aStream [
 		nextPutAll: ' }'
 ]
 
-{ #category : #'accessing - structure variables' }
+{ #category : #initialization }
+Winit30WindowEventModifiersChanged >> readFromHandle: aHandle [
+	shift := self class primShift: aHandle.
+	ctrl := self class primCtrl: aHandle.
+	alt := self class primAlt: aHandle.
+	logo := self class primLogo: aHandle.
+	numLock := self class primNumLock: aHandle.
+	leftShift := Winit30ModifierKeyState fromInteger: (self class primLeftShift: aHandle).
+	rightShift := Winit30ModifierKeyState fromInteger: (self class primRightShift: aHandle).
+	leftCtrl := Winit30ModifierKeyState fromInteger: (self class primLeftCtrl: aHandle).
+	rightCtrl := Winit30ModifierKeyState fromInteger: (self class primRightCtrl: aHandle).
+	leftAlt := Winit30ModifierKeyState fromInteger: (self class primLeftAlt: aHandle).
+	rightAlt := Winit30ModifierKeyState fromInteger: (self class primRightAlt: aHandle).
+	leftLogo := Winit30ModifierKeyState fromInteger: (self class primLeftLogo: aHandle).
+	rightLogo := Winit30ModifierKeyState fromInteger: (self class primRightLogo: aHandle)
+]
+
+{ #category : #accessing }
 Winit30WindowEventModifiersChanged >> rightAlt [
-	"This method was automatically generated"
-	^Winit30ModifierKeyState fromInteger: (handle unsignedByteAt: OFFSET_RIGHTALT)
+	^ rightAlt
 ]
 
-{ #category : #'accessing - structure variables' }
-Winit30WindowEventModifiersChanged >> rightAlt: anObject [
-	"This method was automatically generated"
-	handle unsignedByteAt: OFFSET_RIGHTALT put: anObject value
-]
-
-{ #category : #'accessing - structure variables' }
+{ #category : #accessing }
 Winit30WindowEventModifiersChanged >> rightCtrl [
-	"This method was automatically generated"
-	^Winit30ModifierKeyState fromInteger: (handle unsignedByteAt: OFFSET_RIGHTCTRL)
+	^ rightCtrl
 ]
 
-{ #category : #'accessing - structure variables' }
-Winit30WindowEventModifiersChanged >> rightCtrl: anObject [
-	"This method was automatically generated"
-	handle unsignedByteAt: OFFSET_RIGHTCTRL put: anObject value
-]
-
-{ #category : #'accessing - structure variables' }
+{ #category : #accessing }
 Winit30WindowEventModifiersChanged >> rightLogo [
-	"This method was automatically generated"
-	^Winit30ModifierKeyState fromInteger: (handle unsignedByteAt: OFFSET_RIGHTLOGO)
+	^ rightLogo
 ]
 
-{ #category : #'accessing - structure variables' }
-Winit30WindowEventModifiersChanged >> rightLogo: anObject [
-	"This method was automatically generated"
-	handle unsignedByteAt: OFFSET_RIGHTLOGO put: anObject value
-]
-
-{ #category : #'accessing - structure variables' }
+{ #category : #accessing }
 Winit30WindowEventModifiersChanged >> rightShift [
-	"This method was automatically generated"
-	^Winit30ModifierKeyState fromInteger: (handle unsignedByteAt: OFFSET_RIGHTSHIFT)
+	^ rightShift
 ]
 
-{ #category : #'accessing - structure variables' }
-Winit30WindowEventModifiersChanged >> rightShift: anObject [
-	"This method was automatically generated"
-	handle unsignedByteAt: OFFSET_RIGHTSHIFT put: anObject value
-]
-
-{ #category : #'accessing - structure variables' }
+{ #category : #accessing }
 Winit30WindowEventModifiersChanged >> shift [
-	"This method was automatically generated"
-	^handle booleanAt: OFFSET_SHIFT
-]
-
-{ #category : #'accessing - structure variables' }
-Winit30WindowEventModifiersChanged >> shift: anObject [
-	"This method was automatically generated"
-	handle booleanAt: OFFSET_SHIFT put: anObject
+	^ shift
 ]

@@ -1,10 +1,10 @@
 Class {
 	#name : #GlutinCursorMovedEvent,
 	#superclass : #GlutinWindowEvent,
-	#classVars : [
-		'OFFSET_DEVICE_ID',
-		'OFFSET_X',
-		'OFFSET_Y'
+	#instVars : [
+		'x',
+		'y',
+		'device_id'
 	],
 	#category : #'Winit-Events'
 }
@@ -14,16 +14,24 @@ GlutinCursorMovedEvent class >> eventType [
 	^ WinitEventType WindowEventCursorMoved
 ]
 
-{ #category : #'field definition' }
-GlutinCursorMovedEvent class >> fieldsDesc [
-	"
-	self rebuildFieldAccessors
-	"
-	^ #(
-		int64 device_id
-		float64 x
-		float64 y
- 	)
+{ #category : #'private - ffi' }
+GlutinCursorMovedEvent class >> primDeviceId: aHandle [
+	^ self ffiCall: #(int64 winit_event_cursor_moved_device_id(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+GlutinCursorMovedEvent class >> primRelease: aHandle [
+	self ffiCall: #(void winit_event_cursor_moved_release(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+GlutinCursorMovedEvent class >> primX: aHandle [
+	^ self ffiCall: #(float64 winit_event_cursor_moved_x(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+GlutinCursorMovedEvent class >> primY: aHandle [
+	^ self ffiCall: #(float64 winit_event_cursor_moved_y(void* aHandle))
 ]
 
 { #category : #visiting }
@@ -31,47 +39,24 @@ GlutinCursorMovedEvent >> accept: aVisitor [
 	^ aVisitor visitCursorMovedEvent: self
 ]
 
-{ #category : #copying }
-GlutinCursorMovedEvent >> copy [
-	^ super copy
-		x: self x;
-		y: self y;
-		device_id: self device_id;
-		yourself
-]
-
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinCursorMovedEvent >> device_id [
-	"This method was automatically generated"
-	^handle signedLongLongAt: OFFSET_DEVICE_ID
+	^ device_id
 ]
 
-{ #category : #'accessing structure variables' }
-GlutinCursorMovedEvent >> device_id: anObject [
-	"This method was automatically generated"
-	handle signedLongLongAt: OFFSET_DEVICE_ID put: anObject
+{ #category : #initialization }
+GlutinCursorMovedEvent >> readFromHandle: aHandle [
+	device_id := self class primDeviceId: aHandle.
+	x := self class primX: aHandle.
+	y := self class primY: aHandle
 ]
 
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinCursorMovedEvent >> x [
-	"This method was automatically generated"
-	^handle doubleAt: OFFSET_X
+	^ x
 ]
 
-{ #category : #'accessing structure variables' }
-GlutinCursorMovedEvent >> x: anObject [
-	"This method was automatically generated"
-	handle doubleAt: OFFSET_X put: anObject
-]
-
-{ #category : #'accessing structure variables' }
+{ #category : #accessing }
 GlutinCursorMovedEvent >> y [
-	"This method was automatically generated"
-	^handle doubleAt: OFFSET_Y
-]
-
-{ #category : #'accessing structure variables' }
-GlutinCursorMovedEvent >> y: anObject [
-	"This method was automatically generated"
-	handle doubleAt: OFFSET_Y put: anObject
+	^ y
 ]
