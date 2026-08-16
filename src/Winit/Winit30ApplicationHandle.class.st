@@ -44,13 +44,11 @@ Winit30ApplicationHandle >> createWindow: aWindowBuilder [
 	windowPointer := ExternalAddress newPointer.
 	
 	self
-		primCreateWindow: windowAttributes
-		semaphoreSignaller: semaphoreSignaller
+		primCreateWindow: windowAttributes transferOwnership
+		semaphoreSignaller: semaphoreSignaller transferOwnership
 		windowPointer: windowPointer.
 
 	semaphore wait.
-	windowAttributes beNull.
-	semaphoreSignaller beNull.
 
 	Smalltalk unregisterExternalObject: semaphore.
 	

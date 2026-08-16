@@ -20,8 +20,7 @@ Winit30ApplicationBuilder class >> primRelease: aHandle [
 
 { #category : #accessing }
 Winit30ApplicationBuilder >> addWakeupSignaller: aWakeupSignaller [
-	self primAddWakeupSignaller: aWakeupSignaller.
-	aWakeupSignaller beNull
+	self primAddWakeupSignaller: aWakeupSignaller transferOwnership
 ]
 
 { #category : #accessing }
@@ -34,8 +33,7 @@ Winit30ApplicationBuilder >> buildAndDo: aBlock [
 	OSPlatform current isAndroid
 		ifTrue: [ self primSetAndroidApp: self primGetAndroidApp ].
 
-	self primBuildApplication: anApplicationPointer handle: anApplicationHandlePointer.
-	self beNull.
+	self transferOwnership primBuildApplication: anApplicationPointer handle: anApplicationHandlePointer.
 	
 	anApplication := Winit30Application fromNativeHandle: (anApplicationPointer pointerAtOffset: 0).
 	anApplicationHandle := Winit30ApplicationHandle fromNativeHandle: (anApplicationHandlePointer pointerAtOffset: 0).
@@ -77,6 +75,5 @@ Winit30ApplicationBuilder >> primSetSemaphoreSignaller: aSemaphoreSignaller [
 
 { #category : #accessing }
 Winit30ApplicationBuilder >> setSemaphoreSignaller: aSemaphoreSignaller [
-	self primSetSemaphoreSignaller: aSemaphoreSignaller.
-	aSemaphoreSignaller beNull
+	self primSetSemaphoreSignaller: aSemaphoreSignaller transferOwnership.
 ]
