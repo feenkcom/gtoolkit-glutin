@@ -23,8 +23,7 @@ Winit30ApplicationHandle >> beRunning [
 
 { #category : #'as yet unclassified' }
 Winit30ApplicationHandle >> createWindow: aWindowBuilder [
-	| windowAttributes semaphore semaphoreIndex semaphoreSignaller windowPointer window |
-	
+	| semaphore semaphoreIndex semaphoreSignaller windowPointer window |
 	self
 		assert: [ self isNull not ]
 		description: [ 'Can not create a window with invalid event loop' ].
@@ -35,8 +34,6 @@ Winit30ApplicationHandle >> createWindow: aWindowBuilder [
 		assert: [ isRunning ]
 		description: [ 'Can not create a window when event loop is not running' ].
 
-	windowAttributes := aWindowBuilder copy.
-
 	semaphore := Semaphore new.
 	semaphoreIndex := Smalltalk registerExternalObject: semaphore.
 	semaphoreSignaller := Winit30SemaphoreSignaller forSemaphoreIndex: semaphoreIndex.
@@ -44,7 +41,7 @@ Winit30ApplicationHandle >> createWindow: aWindowBuilder [
 	windowPointer := ExternalAddress newPointer.
 	
 	self
-		primCreateWindow: windowAttributes transferOwnership
+		primCreateWindow: aWindowBuilder transferOwnership
 		semaphoreSignaller: semaphoreSignaller transferOwnership
 		windowPointer: windowPointer.
 

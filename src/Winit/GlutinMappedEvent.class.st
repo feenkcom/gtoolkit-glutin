@@ -6,6 +6,11 @@ Class {
 	#category : #'Winit-Events'
 }
 
+{ #category : #'event type' }
+GlutinMappedEvent class >> eventType [
+	^ nil
+]
+
 { #category : #'instance creation' }
 GlutinMappedEvent class >> fromHandle: aHandle [
 	| event |
@@ -15,14 +20,14 @@ GlutinMappedEvent class >> fromHandle: aHandle [
 	^ event
 ]
 
-{ #category : #'event type' }
-GlutinMappedEvent class >> eventType [
-	^ nil
-]
-
 { #category : #'private - ffi' }
 GlutinMappedEvent class >> primRelease: aHandle [
 	"Subclasses override with typed release calls"
+]
+
+{ #category : #visiting }
+GlutinMappedEvent >> accept: aVisitor [
+	^ self subclassResponsibility
 ]
 
 { #category : #testing }
@@ -48,9 +53,4 @@ GlutinMappedEvent >> isWindowEvent [
 { #category : #initialization }
 GlutinMappedEvent >> readFromHandle: aHandle [
 	"Subclasses read their fields from the native handle"
-]
-
-{ #category : #visiting }
-GlutinMappedEvent >> accept: aVisitor [
-	^ self subclassResponsibility
 ]

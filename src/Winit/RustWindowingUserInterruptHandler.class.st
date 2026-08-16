@@ -8,8 +8,21 @@ Class {
 		'uiProcessBlock',
 		'interruptCombinations'
 	],
+	#classVars : [
+		'CmdDotEnabled'
+	],
 	#category : #'Winit-Event fetcher'
 }
+
+{ #category : #accessing }
+RustWindowingUserInterruptHandler class >> cmdDotEnabled [
+	^ CmdDotEnabled ifNil: [CmdDotEnabled := true ]
+]
+
+{ #category : #accessing }
+RustWindowingUserInterruptHandler class >> cmdDotEnabled: aBoolean [
+	CmdDotEnabled := aBoolean
+]
 
 { #category : #private }
 RustWindowingUserInterruptHandler >> canInterruptDirectly: aProcess [ 
@@ -34,7 +47,7 @@ RustWindowingUserInterruptHandler >> defaultInterruptCombinations [
 RustWindowingUserInterruptHandler >> handleUserInterrupt [
 	"This will be called from the event-fetcher process. 
 	Assume no system-vital processes have a lower priority than this, and are thus ok to interrupt"
-	UserInterruptHandler cmdDotEnabled ifFalse: [ ^ self ]. 
+	self class cmdDotEnabled ifFalse: [ ^ self ]. 
 
 	[
 		self processToInterrupt
