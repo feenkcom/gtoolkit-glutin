@@ -20,7 +20,8 @@ Winit30Window >> androidNativeWindow [
 
 { #category : #'initialize-release' }
 Winit30Window >> close [
-	self primCloseWindow
+	self primCloseWindow.
+	self beNull
 ]
 
 { #category : #'api - accessing' }

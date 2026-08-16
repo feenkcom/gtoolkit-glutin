@@ -49,8 +49,8 @@ Winit30ApplicationHandle >> createWindow: aWindowBuilder [
 		windowPointer: windowPointer.
 
 	semaphore wait.
-	windowAttributes release.
-	semaphoreSignaller release.
+	windowAttributes beNull.
+	semaphoreSignaller beNull.
 
 	Smalltalk unregisterExternalObject: semaphore.
 	
