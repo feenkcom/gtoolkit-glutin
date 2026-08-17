@@ -85,6 +85,11 @@ Winit30WindowEventKeyboardInput >> has_virtual_keycode [
 ]
 
 { #category : #accessing }
+Winit30WindowEventKeyboardInput >> isKeyboardInputEvent [
+	^ true
+]
+
+{ #category : #accessing }
 Winit30WindowEventKeyboardInput >> isSynthetic [
 	^ isSynthetic
 ]

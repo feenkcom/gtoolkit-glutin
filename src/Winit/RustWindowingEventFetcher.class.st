@@ -166,7 +166,7 @@ RustWindowingEventFetcher >> processMappedEvent: mappedEvent [
 	However the Ubuntu workspace keyboard shortcut is causing synthetic Pressed events, without the corresponding Release event.
 	Ignore synthetic key Pressed events"
 	(mappedEvent isKeyboardInputEvent  and:
-		[ mappedEvent is_synthetic and:
+		[ mappedEvent isSynthetic and:
 		[ mappedEvent state = WinitEventInputElementState Pressed ] ]) ifTrue:
 				[ ^ self ].
 
