@@ -16,9 +16,11 @@ BaselineOfWinit >> baseline: spec [
 			baseline: 'GToolkitBoxer' with: [
 				spec repository: 'github://feenkcom/gtoolkit-boxer:main/boxer-bindings' ];
 			baseline: 'Fenster' with: [
-				spec repository: 'github://feenkcom/fenster:main/src' ].
+				spec repository: 'github://feenkcom/fenster:main/src' ];
+			baseline: 'BeaconCore' with: [
+				spec repository: 'github://feenkcom/pharo-beacon/repository' ].
 		spec package: 'Winit' with: [
-				spec requires: #('GToolkitBoxer' 'Fenster'). ]. ].
+				spec requires: #('GToolkitBoxer' 'Fenster' 'BeaconCore'). ]. ].
 ]
 
 { #category : #baselines }
