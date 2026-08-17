@@ -16,7 +16,7 @@ Class {
 		'leftLogo',
 		'rightLogo'
 	],
-	#category : #'Winit-External'
+	#category : #'Winit-Events'
 }
 
 { #category : #'event type' }

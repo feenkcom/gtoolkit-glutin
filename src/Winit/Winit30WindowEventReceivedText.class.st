@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'text'
 	],
-	#category : #'Winit-External'
+	#category : #'Winit-Events'
 }
 
 { #category : #'event type' }
