@@ -123,8 +123,6 @@ Winit30WindowBuilder >> title [
 
 { #category : #accessing }
 Winit30WindowBuilder >> title: aString [
-	GtJustContextStackSignal emit.
-	
 	title := aString asString.
 	self ffiLibrary
 		newString: title
