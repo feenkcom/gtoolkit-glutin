@@ -129,6 +129,10 @@ Winit30WorkerThreadEventFetcher >> initialize [
 Winit30WorkerThreadEventFetcher >> initializeApplication [
 	| anApplicationBuilder |
 	
+	self
+		assert: [ Winit30 isSupported ]
+		description: [ 'Application requires working Winit' ].
+
 	anApplicationBuilder := Winit30ApplicationBuilder new
 		setSemaphoreSignaller: (Winit30SemaphoreSignaller forSemaphoreIndex: semaphoreIndex);
 		addWakeupSignaller: (Winit30WakeupSignaller forVirtualMachine).

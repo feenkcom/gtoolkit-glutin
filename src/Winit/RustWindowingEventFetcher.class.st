@@ -16,12 +16,18 @@ Class {
 { #category : #accessing }
 RustWindowingEventFetcher class >> default [
 	"Initialize an event fetcher if it does not exist or if it is no longer available"
+	| shouldRecreateEventFetcher previousEventFetcher |
 
-	(default isNil
-		or: [ default session ~~ Smalltalk session
-				or: [ default class isAbstract or: [ default class isAvailable not ] ] ])
-		ifTrue: [ self
-				preferableEventFetcherDo: [ :aClass | default := aClass new transferEventHandlersFrom: default ] ].
+	shouldRecreateEventFetcher := default isNil
+			or: [ default session ~~ Smalltalk session
+					or: [ default class isAbstract or: [ default class isAvailable not ] ] ].
+
+	shouldRecreateEventFetcher
+		ifTrue: [ previousEventFetcher := default.
+			default := nil.
+			self
+				preferableEventFetcherDo: [ :aClass | default := aClass new transferEventHandlersFrom: previousEventFetcher ] ].
+
 	^ default
 ]
 
@@ -182,6 +188,10 @@ RustWindowingEventFetcher >> reinstallEventFetcher [
 	self
 		assert: [ fetcherProcess isNil ]
 		description: [ 'Fetcher process must not exist' ].
+		
+	self
+		assert: [ Winit30 isSupported ]
+		description: [ 'Event fetcher requires working Winit' ].
 
 	fetcherProcess := [ self basicPharoEventLoop ] forkAt: self fetcherProcessPriority.
 	fetcherProcess name: 'Glutin Event Fetcher Process'
