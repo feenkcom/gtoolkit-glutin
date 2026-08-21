@@ -2163,7 +2163,7 @@ Winit30NamedKey class >> enumCleanUp [
 
 { #category : #'enum declaration' }
 Winit30NamedKey class >> enumDecl [
-	^ (super enumDecl pairsCollect: [ :aName :anIndex | { (aName asString, 'Key' asSymbol) . anIndex} ]) flattened
+	^ (super enumDecl pairsCollect: [ :aName :anIndex | { (aName asString, 'Key') asSymbol . anIndex} ]) flattened
 ]
 
 { #category : #'enum declaration' }
@@ -2877,7 +2877,7 @@ Winit30NamedKey class >> externalDeclaration [
 	self rebuildEnumAccessors
 	"
 
-	^ #(Unknown,),((self enumSource lines collect: [ :each | each trimBoth ])
+	^ #('Unknown' ','),((self enumSource lines collect: [ :each | each trimBoth ])
 		reject: [ :each | (each beginsWith: '//') or: [ each beginsWith: '#[' ] ])
 		flatCollect: [ :each | (each piecesCutWhere: [ :a :b | b = $, ]) collect: [ :p | p asSymbol ] ]
 ]

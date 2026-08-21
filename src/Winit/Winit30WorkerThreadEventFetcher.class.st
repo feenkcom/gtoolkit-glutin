@@ -20,9 +20,6 @@ Winit30WorkerThreadEventFetcher class >> isAvailable [
 	Winit30 isSupported
 		ifFalse: [ ^ false ].
 
-	(CommandLineArguments new hasOption: 'winit28')
-		ifTrue: [ ^ false ].
-
 	^ true
 ]
 
@@ -40,7 +37,7 @@ Winit30WorkerThreadEventFetcher >> basicPharoEventLoop [
 
 	self ensureEventLoop.
 	
-	GtVirtualMachine instance
+	self
 		eventLoopWaker: applicationHandle getHandle
 		function: Winit30Application primGetWakerCallback.
 	
@@ -70,7 +67,6 @@ Winit30WorkerThreadEventFetcher >> ensureEventLoop [
 
 { #category : #accessing }
 Winit30WorkerThreadEventFetcher >> eventLoop [
-	<return: #GlutinCallbackEventLoop>
 
 	self ensureEventLoop.
 	^ applicationHandle
@@ -81,6 +77,33 @@ Winit30WorkerThreadEventFetcher >> eventLoopType [
 	^ applicationHandle
 		ifNil: [ WinitEventLoopType Unknown ]
 		ifNotNil: [ :anEventLoop | anEventLoop type ]
+]
+
+{ #category : #'private - event loop' }
+Winit30WorkerThreadEventFetcher >> eventLoopWaker: anExternalAddressThunk function: anExternalAddressFunction [
+	"Assign an event loop waker. When virtual machine runs in the worker (non-main) thread
+	it needs a way to wake up an event loop and process events or event loop callouts.
+	If an event loop waker is not assigned the virtual machine has to wait for a ui event (like mouse movement)
+	to start processing event loop callouts.
+
+	The waker function must be a pointer to the external C function in the following form:
+		extern ""C"" fn(waker_thunk: *const c_void, event: u32) -> bool
+		
+	The first argument that is passed to the waker function is a pointer to the thunk,
+	which is the first argument of this method. An event is a number that may help the event loop
+	to differentiate between wake up sources. The virtual machine passes `0` as an event"
+
+	self
+		assert: [ anExternalAddressThunk isExternalAddress ]
+		description: [ 'A waker argument must be an external address' ].
+		
+	self
+		assert: [ anExternalAddressFunction isExternalAddress ]
+		description: [ 'A waker function must be an external address' ].
+	
+	self
+		primitiveSetEventLoopWakerThunk: anExternalAddressThunk
+		function: anExternalAddressFunction
 ]
 
 { #category : #'private - event loop' }
@@ -106,6 +129,10 @@ Winit30WorkerThreadEventFetcher >> initialize [
 Winit30WorkerThreadEventFetcher >> initializeApplication [
 	| anApplicationBuilder |
 	
+	self
+		assert: [ Winit30 isSupported ]
+		description: [ 'Application requires working Winit' ].
+
 	anApplicationBuilder := Winit30ApplicationBuilder new
 		setSemaphoreSignaller: (Winit30SemaphoreSignaller forSemaphoreIndex: semaphoreIndex);
 		addWakeupSignaller: (Winit30WakeupSignaller forVirtualMachine).
@@ -118,6 +145,13 @@ Winit30WorkerThreadEventFetcher >> initializeApplication [
 { #category : #initialization }
 Winit30WorkerThreadEventFetcher >> newUserInterruptHandler [
 	^ Winit30UserInterruptHandler new.
+]
+
+{ #category : #'private - event loop' }
+Winit30WorkerThreadEventFetcher >> primitiveSetEventLoopWakerThunk: anExternalAddressThunk function: anExternalAddressFunction [
+	<primitive: 'primitiveSetEventLoopWaker' error: ec>
+	
+	^ false
 ]
 
 { #category : #'system startup' }

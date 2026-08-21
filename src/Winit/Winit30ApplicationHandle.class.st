@@ -23,8 +23,7 @@ Winit30ApplicationHandle >> beRunning [
 
 { #category : #'as yet unclassified' }
 Winit30ApplicationHandle >> createWindow: aWindowBuilder [
-	| windowAttributes semaphore semaphoreIndex semaphoreSignaller windowPointer window |
-	
+	| semaphore semaphoreIndex semaphoreSignaller windowPointer window |
 	self
 		assert: [ self isNull not ]
 		description: [ 'Can not create a window with invalid event loop' ].
@@ -35,8 +34,6 @@ Winit30ApplicationHandle >> createWindow: aWindowBuilder [
 		assert: [ isRunning ]
 		description: [ 'Can not create a window when event loop is not running' ].
 
-	windowAttributes := aWindowBuilder copy.
-
 	semaphore := Semaphore new.
 	semaphoreIndex := Smalltalk registerExternalObject: semaphore.
 	semaphoreSignaller := Winit30SemaphoreSignaller forSemaphoreIndex: semaphoreIndex.
@@ -44,13 +41,11 @@ Winit30ApplicationHandle >> createWindow: aWindowBuilder [
 	windowPointer := ExternalAddress newPointer.
 	
 	self
-		primCreateWindow: windowAttributes
-		semaphoreSignaller: semaphoreSignaller
+		primCreateWindow: aWindowBuilder transferOwnership
+		semaphoreSignaller: semaphoreSignaller transferOwnership
 		windowPointer: windowPointer.
 
 	semaphore wait.
-	windowAttributes release.
-	semaphoreSignaller release.
 
 	Smalltalk unregisterExternalObject: semaphore.
 	
@@ -92,63 +87,55 @@ Winit30ApplicationHandle >> primGetType [
 	^ self ffiCall: #(WinitEventLoopType winit_application_handle_release_get_type(self))
 ]
 
-{ #category : #'as yet unclassified' }
-Winit30ApplicationHandle >> primPopEvent: windowEvent windowId: windowId eventType: eventType [
-	^ self ffiCall: #(void* winit_application_handle_pop_event(
-		self,
-		size_t* windowId,
-		void* eventType,
-		void* windowEvent))
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #'private - ffi' }
 Winit30ApplicationHandle >> primReleaseWindowEvent: anEvent [
 	self ffiCall: #(void winit_window_event_release(void* anEvent))
+]
+
+{ #category : #'private - ffi' }
+Winit30ApplicationHandle >> primTryPopEvent [
+	^ self ffiCall: #(void* winit_application_handle_try_pop_event(self))
+]
+
+{ #category : #'private - ffi' }
+Winit30ApplicationHandle >> primWindowEventGetEventPtr: anEventHandle [
+	^ self ffiCall: #(void* winit_window_event_get_event_ptr(void* anEventHandle))
+]
+
+{ #category : #'private - ffi' }
+Winit30ApplicationHandle >> primWindowEventGetType: anEventHandle [
+	^ self ffiCall: #(uint32 winit_window_event_get_type(void* anEventHandle))
+]
+
+{ #category : #'private - ffi' }
+Winit30ApplicationHandle >> primWindowEventGetWindowId: anEventHandle [
+	^ self ffiCall: #(size_t winit_window_event_get_window_id(void* anEventHandle))
 ]
 
 { #category : #'as yet unclassified' }
 Winit30ApplicationHandle >> tryPollEvent: aBlock [
 	<return: #Boolean>
-	| windowIdPointer windowEventPointer eventTypePointer windowId eventType windowEvent eventPointer eventClass event |
-	
-	windowIdPointer := ExternalAddress newPointer.
-	windowIdPointer platformSizeTAt: 1 put: 0.
-	
-	windowEventPointer := ExternalAddress newPointer.
-	windowEventPointer pointerAtOffset: 0 put: ExternalAddress null.
-	
-	eventTypePointer := ExternalAddress newPointer.
-	eventTypePointer unsignedLongAt: 1 put: WinitEventType Unknown value.
-	
-	eventPointer := self
-		primPopEvent: windowEventPointer
-		windowId: windowIdPointer
-		eventType: eventTypePointer.
-	
-	windowId := windowIdPointer platformSizeTAt: 1.
-	windowIdPointer free.
-	
-	windowEvent := windowEventPointer pointerAtOffset: 0.
-	windowEventPointer free.
-	
-	eventType := WinitEventType fromInteger: (eventTypePointer unsignedLongAt: 1).
-	eventTypePointer free.
-	
-	eventType = WinitEventType Unknown
+	| outerHandle eventType windowId eventPtr eventClass event |
+
+	outerHandle := self primTryPopEvent.
+	outerHandle isNull
 		ifTrue: [ ^ false ].
 
-	windowEvent isNull
-		ifTrue: [ ^ false ].
-	
+	eventType := WinitEventType fromInteger: (self primWindowEventGetType: outerHandle).
+	eventType = WinitEventType Unknown
+		ifTrue: [
+			self primReleaseWindowEvent: outerHandle.
+			^ false ].
+
+	windowId := self primWindowEventGetWindowId: outerHandle.
+	eventPtr := self primWindowEventGetEventPtr: outerHandle.
+
 	eventClass := RustWindowingBaseEvent eventMap at: eventType ifAbsent: [ GlutinUnknownEvent ].
-	event := eventClass fromHandle: windowEvent.
+
+	event := eventClass fromHandle: eventPtr.
 	event isWindowEvent
 		ifTrue: [ event windowId: windowId ].
-
-	[ aBlock cull: event ]
-		ensure: [
-			event setHandle: nil.
-			self primReleaseWindowEvent: eventPointer ].
+	aBlock cull: event.
 
 	^ true
 ]

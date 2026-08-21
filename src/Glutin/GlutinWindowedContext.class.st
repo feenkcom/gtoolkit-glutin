@@ -93,7 +93,7 @@ GlutinWindowedContext >> primGetApi [
 GlutinWindowedContext >> primGetId: aUint128 [
 	^ self ffiCall: #(void glutin_windowed_context_get_id(
 		self,
-		GtBoxerUint128 aUint128))
+		GtU128Box aUint128))
 ]
 
 { #category : #'private - ffi' }

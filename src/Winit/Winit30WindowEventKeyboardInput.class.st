@@ -1,205 +1,164 @@
 Class {
 	#name : #Winit30WindowEventKeyboardInput,
 	#superclass : #GlutinWindowEvent,
-	#traits : 'TWinit30',
-	#classTraits : 'TWinit30 classTrait',
 	#instVars : [
-		'characterKey'
+		'device_id',
+		'scanCode',
+		'state',
+		'keyType',
+		'keyLocation',
+		'namedKey',
+		'characterKey',
+		'isSynthetic'
 	],
-	#classVars : [
-		'OFFSET_CHARACTERKEYPOINTER',
-		'OFFSET_DEVICE_ID',
-		'OFFSET_ISSYNTHETIC',
-		'OFFSET_KEYLOCATION',
-		'OFFSET_KEYTYPE',
-		'OFFSET_NAMEDKEY',
-		'OFFSET_SCANCODE',
-		'OFFSET_STATE'
-	],
-	#category : #'Winit-External'
+	#category : #'Winit-Events'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event type' }
 Winit30WindowEventKeyboardInput class >> eventType [
 	^ WinitEventType Winit30_WindowEventKeyboardInput
 ]
 
-{ #category : #'as yet unclassified' }
-Winit30WindowEventKeyboardInput class >> fieldsDesc [
-	"
-	self rebuildFieldAccessors
-	"
-	^ #(
-		int64 device_id
-		uint32 scanCode
-		WinitEventInputElementState state
-		Winit30KeyType keyType
-		Winit30KeyLocation keyLocation
-		Winit30NamedKey namedKey
-		void* characterKeyPointer
-		bool isSynthetic
- 	)
+{ #category : #'private - ffi' }
+Winit30WindowEventKeyboardInput class >> primCharacterKeyHandle: aHandle [
+	^ self ffiCall: #(void* winit_event_keyboard_input_character_key(void* aHandle))
 ]
 
-{ #category : #'as yet unclassified' }
-Winit30WindowEventKeyboardInput class >> fromBaseEvent: anEvent [
-	^ anEvent keyboard_input windowId: anEvent window_id asInteger
+{ #category : #'private - ffi' }
+Winit30WindowEventKeyboardInput class >> primDeviceId: aHandle [
+	^ self ffiCall: #(int64 winit_event_keyboard_input_device_id(void* aHandle))
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - ffi' }
+Winit30WindowEventKeyboardInput class >> primIsSynthetic: aHandle [
+	^ self ffiCall: #(bool winit_event_keyboard_input_is_synthetic(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+Winit30WindowEventKeyboardInput class >> primKeyLocation: aHandle [
+	^ self ffiCall: #(uint8 winit_event_keyboard_input_key_location(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+Winit30WindowEventKeyboardInput class >> primKeyType: aHandle [
+	^ self ffiCall: #(uint8 winit_event_keyboard_input_key_type(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+Winit30WindowEventKeyboardInput class >> primNamedKey: aHandle [
+	^ self ffiCall: #(uint32 winit_event_keyboard_input_named_key(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+Winit30WindowEventKeyboardInput class >> primRelease: aHandle [
+	self ffiCall: #(void winit_event_keyboard_input_release(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+Winit30WindowEventKeyboardInput class >> primScanCode: aHandle [
+	^ self ffiCall: #(uint32 winit_event_keyboard_input_scan_code(void* aHandle))
+]
+
+{ #category : #'private - ffi' }
+Winit30WindowEventKeyboardInput class >> primState: aHandle [
+	^ self ffiCall: #(uint32 winit_event_keyboard_input_state(void* aHandle))
+]
+
+{ #category : #visiting }
 Winit30WindowEventKeyboardInput >> accept: aVisitor [
 	^ aVisitor visitKeyboardInputEvent: self
 ]
 
-{ #category : #'accessing - structure variables' }
+{ #category : #accessing }
 Winit30WindowEventKeyboardInput >> characterKey [
-	^ characterKey ifNil: [
-		characterKey := self class ffiLibrary
-			unsafeStringFromHandle: self characterKeyPointer getHandle
-			during:  [ :aStringBox | aStringBox string ] ]
+	^ characterKey
 ]
 
-{ #category : #'accessing - structure variables' }
-Winit30WindowEventKeyboardInput >> characterKey: aStringOrNil [
-	characterKey := aStringOrNil
-]
-
-{ #category : #'accessing - structure variables' }
-Winit30WindowEventKeyboardInput >> characterKeyPointer [
-	"This method was automatically generated"
-	^ExternalData fromHandle: (handle pointerAt: OFFSET_CHARACTERKEYPOINTER) type: ExternalType void asPointerType
-]
-
-{ #category : #'accessing - structure variables' }
-Winit30WindowEventKeyboardInput >> characterKeyPointer: anObject [
-	"This method was automatically generated"
-	handle pointerAt: OFFSET_CHARACTERKEYPOINTER put: anObject getHandle.
-]
-
-{ #category : #'as yet unclassified' }
-Winit30WindowEventKeyboardInput >> copy [
-	^ super copy
-		device_id: self device_id;
-		scanCode: self scanCode;
-		state: self state;
-		keyType: self keyType;
-		keyLocation: self keyLocation;
-		namedKey: self namedKey;
-		characterKey: self characterKey;
-		isSynthetic: self isSynthetic;
-		yourself
-]
-
-{ #category : #'accessing - structure variables' }
+{ #category : #accessing }
 Winit30WindowEventKeyboardInput >> device_id [
-	"This method was automatically generated"
-	^handle signedLongLongAt: OFFSET_DEVICE_ID
+	^ device_id
 ]
 
-{ #category : #'accessing - structure variables' }
-Winit30WindowEventKeyboardInput >> device_id: anObject [
-	"This method was automatically generated"
-	handle signedLongLongAt: OFFSET_DEVICE_ID put: anObject
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 Winit30WindowEventKeyboardInput >> has_virtual_keycode [
-	"For compatibility with old winit events"
 	^ false
 ]
 
-{ #category : #'accessing - structure variables' }
+{ #category : #accessing }
+Winit30WindowEventKeyboardInput >> isKeyboardInputEvent [
+	^ true
+]
+
+{ #category : #accessing }
 Winit30WindowEventKeyboardInput >> isSynthetic [
-	"This method was automatically generated"
-	^handle booleanAt: OFFSET_ISSYNTHETIC
+	^ isSynthetic
 ]
 
-{ #category : #'accessing - structure variables' }
-Winit30WindowEventKeyboardInput >> isSynthetic: anObject [
-	"This method was automatically generated"
-	handle booleanAt: OFFSET_ISSYNTHETIC put: anObject
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 Winit30WindowEventKeyboardInput >> key [
-	self keyType = Winit30KeyType NamedType
+	keyType = Winit30KeyType NamedType
 		ifTrue: [
 			^ Winit30KeyboardKey
-				key: self namedKey
-				location: self keyLocation ].
-		
-	self keyType = Winit30KeyType CharacterType
+				key: namedKey
+				location: keyLocation ].
+
+	keyType = Winit30KeyType CharacterType
 		ifTrue: [
 			^ Winit30KeyboardKey
-				key: self characterKey
-				location: self keyLocation ].
+				key: characterKey
+				location: keyLocation ].
 
 	^ nil
 ]
 
-{ #category : #'accessing - structure variables' }
+{ #category : #accessing }
 Winit30WindowEventKeyboardInput >> keyLocation [
-	"This method was automatically generated"
-	^Winit30KeyLocation fromInteger: (handle unsignedByteAt: OFFSET_KEYLOCATION)
+	^ keyLocation
 ]
 
-{ #category : #'accessing - structure variables' }
-Winit30WindowEventKeyboardInput >> keyLocation: anObject [
-	"This method was automatically generated"
-	handle unsignedByteAt: OFFSET_KEYLOCATION put: anObject value
-]
-
-{ #category : #'accessing - structure variables' }
+{ #category : #accessing }
 Winit30WindowEventKeyboardInput >> keyType [
-	"This method was automatically generated"
-	^Winit30KeyType fromInteger: (handle unsignedByteAt: OFFSET_KEYTYPE)
+	^ keyType
 ]
 
-{ #category : #'accessing - structure variables' }
-Winit30WindowEventKeyboardInput >> keyType: anObject [
-	"This method was automatically generated"
-	handle unsignedByteAt: OFFSET_KEYTYPE put: anObject value
-]
-
-{ #category : #'accessing - structure variables' }
+{ #category : #accessing }
 Winit30WindowEventKeyboardInput >> namedKey [
-	"This method was automatically generated"
-	^Winit30NamedKey fromInteger: (handle unsignedLongAt: OFFSET_NAMEDKEY)
+	^ namedKey
 ]
 
-{ #category : #'accessing - structure variables' }
-Winit30WindowEventKeyboardInput >> namedKey: anObject [
-	"This method was automatically generated"
-	handle unsignedLongAt: OFFSET_NAMEDKEY put: anObject value
+{ #category : #initialization }
+Winit30WindowEventKeyboardInput >> readFromHandle: aHandle [
+	| charHandle |
+
+	device_id := self class primDeviceId: aHandle.
+	scanCode := self class primScanCode: aHandle.
+	state := WinitEventInputElementState fromInteger: (self class primState: aHandle).
+	keyType := Winit30KeyType fromInteger: (self class primKeyType: aHandle).
+	keyLocation := Winit30KeyLocation fromInteger: (self class primKeyLocation: aHandle).
+	namedKey := Winit30NamedKey fromInteger: (self class primNamedKey: aHandle).
+	isSynthetic := self class primIsSynthetic: aHandle.
+
+	charHandle := self class primCharacterKeyHandle: aHandle.
+	characterKey := charHandle isNull
+		ifTrue: [ nil ]
+		ifFalse: [
+			GtStringBox
+				fromOwnedHandle: charHandle
+				library: self class ffiLibrary
+				during: [ :s | s string ] ]
 ]
 
-{ #category : #'accessing - structure variables' }
+{ #category : #accessing }
 Winit30WindowEventKeyboardInput >> scanCode [
-	"This method was automatically generated"
-	^handle unsignedLongAt: OFFSET_SCANCODE
+	^ scanCode
 ]
 
-{ #category : #'accessing - structure variables' }
-Winit30WindowEventKeyboardInput >> scanCode: anObject [
-	"This method was automatically generated"
-	handle unsignedLongAt: OFFSET_SCANCODE put: anObject
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 Winit30WindowEventKeyboardInput >> scan_code [
-	"Compatibility with old winit event"
-
-	^ self scanCode
+	^ scanCode
 ]
 
-{ #category : #'accessing - structure variables' }
+{ #category : #accessing }
 Winit30WindowEventKeyboardInput >> state [
-	"This method was automatically generated"
-	^WinitEventInputElementState fromInteger: (handle unsignedLongAt: OFFSET_STATE)
-]
-
-{ #category : #'accessing - structure variables' }
-Winit30WindowEventKeyboardInput >> state: anObject [
-	"This method was automatically generated"
-	handle unsignedLongAt: OFFSET_STATE put: anObject value
+	^ state
 ]
