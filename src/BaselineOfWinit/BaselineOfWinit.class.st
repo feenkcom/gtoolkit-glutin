@@ -12,15 +12,19 @@ BaselineOfWinit >> baseline: spec [
 	<baseline>
 	spec for: #'common' do: [
 		spec postLoadDoIt: #'postLoadWinit:'.
-		spec 
+		spec
 			baseline: 'GToolkitBoxer' with: [
-				spec repository: 'github://feenkcom/gtoolkit-boxer:main/boxer-bindings' ];
+				spec repository: 'github://feenkcom/gtoolkit-boxer:v0.8.61/boxer-bindings' ].
+		spec
 			baseline: 'Fenster' with: [
-				spec repository: 'github://feenkcom/fenster:main/src' ];
+				spec repository: 'github://feenkcom/fenster:v0.8.25/src' ].
+		spec
 			baseline: 'BeaconCore' with: [
-				spec repository: 'github://feenkcom/pharo-beacon:main/src' ].
+				spec repository: 'github://feenkcom/pharo-beacon:v0.5.124/src' ].
+
 		spec package: 'Winit' with: [
-				spec requires: #('GToolkitBoxer' 'Fenster' 'BeaconCore'). ]. ].
+			spec requires: #(#GToolkitBoxer #Fenster #BeaconCore) ].
+	]
 ]
 
 { #category : #baselines }
