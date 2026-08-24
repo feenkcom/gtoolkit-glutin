@@ -22,6 +22,12 @@ Winit30ApplicationHandle >> beRunning [
 ]
 
 { #category : #'as yet unclassified' }
+Winit30ApplicationHandle >> closeWindow: aWindow [
+	Winit30WindowsRegistry default unregisterWindow: aWindow.
+	aWindow close
+]
+
+{ #category : #'as yet unclassified' }
 Winit30ApplicationHandle >> createWindow: aWindowBuilder [
 	| semaphore semaphoreIndex semaphoreSignaller windowPointer window |
 	self
@@ -54,7 +60,7 @@ Winit30ApplicationHandle >> createWindow: aWindowBuilder [
 
 	window isValid
 		ifTrue: [
-			GlutinWindowsRegistry default registerWindow: window.
+			Winit30WindowsRegistry default registerWindow: window.
 			
 			^ window ].
 
