@@ -1,5 +1,5 @@
 Class {
-	#name : #GlutinWindowsRegistry,
+	#name : #Winit30WindowsRegistry,
 	#superclass : #Object,
 	#instVars : [
 		'mutex',
@@ -12,7 +12,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-GlutinWindowsRegistry class >> cleanUp [
+Winit30WindowsRegistry class >> cleanUp [
 	<script: 'self cleanUp'>
 	super cleanUp.
 	
@@ -20,22 +20,22 @@ GlutinWindowsRegistry class >> cleanUp [
 ]
 
 { #category : #'instance creation' }
-GlutinWindowsRegistry class >> default [
+Winit30WindowsRegistry class >> default [
 	^ default ifNil: [ default := self new ]
 ]
 
 { #category : #accessing }
-GlutinWindowsRegistry >> allWindows [
+Winit30WindowsRegistry >> allWindows [
 	^ mutex critical: [ windows values ]
 ]
 
 { #category : #accessing }
-GlutinWindowsRegistry >> detectId: aWindowId ifFound: aFoundBlock [
+Winit30WindowsRegistry >> detectId: aWindowId ifFound: aFoundBlock [
 	^ self detectId: aWindowId ifFound: aFoundBlock ifNone: []
 ]
 
 { #category : #accessing }
-GlutinWindowsRegistry >> detectId: aWindowId ifFound: aFoundBlock ifNone: aNoneBlock [
+Winit30WindowsRegistry >> detectId: aWindowId ifFound: aFoundBlock ifNone: aNoneBlock [
 	| aWindow |
 	
 	aWindow := nil.
@@ -51,7 +51,7 @@ GlutinWindowsRegistry >> detectId: aWindowId ifFound: aFoundBlock ifNone: aNoneB
 ]
 
 { #category : #testing }
-GlutinWindowsRegistry >> hasWindows [
+Winit30WindowsRegistry >> hasWindows [
 	<return: #Boolean>
 	| hasWindows |
 	
@@ -61,7 +61,7 @@ GlutinWindowsRegistry >> hasWindows [
 ]
 
 { #category : #initialization }
-GlutinWindowsRegistry >> initialize [
+Winit30WindowsRegistry >> initialize [
 	super initialize.
 	
 	windows := OrderedDictionary new.
@@ -69,23 +69,23 @@ GlutinWindowsRegistry >> initialize [
 ]
 
 { #category : #'window creation and deletion' }
-GlutinWindowsRegistry >> registerWindow: aGlutinWindow [
+Winit30WindowsRegistry >> registerWindow: aWinitWindow [
 	mutex critical: [
 		windows
-			at: aGlutinWindow id
-			put: aGlutinWindow ]
+			at: aWinitWindow id
+			put: aWinitWindow ]
 ]
 
 { #category : #'window creation and deletion' }
-GlutinWindowsRegistry >> unregisterWindow: aGlutinWindow [
+Winit30WindowsRegistry >> unregisterWindow: aWinitWindow [
 	mutex critical: [
 		windows
-			removeKey: aGlutinWindow id
+			removeKey: aWinitWindow id
 			ifAbsent: [  ] ]
 ]
 
 { #category : #accessing }
-GlutinWindowsRegistry >> windowsDo: aBlock [
+Winit30WindowsRegistry >> windowsDo: aBlock [
 	| theWindowsCopy |
 	
 	theWindowsCopy := mutex critical: [ windows copy ].

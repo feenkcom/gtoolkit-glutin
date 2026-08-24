@@ -6,7 +6,7 @@ Class {
 
 { #category : #'event - handling' }
 GlutinWindowEventsSensor >> processCommonEvent: aGlutinCommonEvent [
-	GlutinWindowsRegistry default windowsDo: [ :aGlutinWindow |
+	Winit30WindowsRegistry default windowsDo: [ :aGlutinWindow |
 		aGlutinWindow isValid
 			ifTrue: [ self processCommonEvent: aGlutinCommonEvent forWindow: aGlutinWindow ] ]
 ]
@@ -17,7 +17,7 @@ GlutinWindowEventsSensor >> processCommonEvent: aGlutinCommonEvent forWindow: aG
 
 { #category : #'event - handling' }
 GlutinWindowEventsSensor >> processDeviceEvent: aGlutinDeviceEvent [
-	GlutinWindowsRegistry default windowsDo: [ :aGlutinWindow |
+	Winit30WindowsRegistry default windowsDo: [ :aGlutinWindow |
 		aGlutinWindow isValid
 			ifTrue: [ self processDeviceEvent: aGlutinDeviceEvent forWindow: aGlutinWindow ] ]
 ]
@@ -40,7 +40,7 @@ GlutinWindowEventsSensor >> processGlutinEvent: aGlutinMappedEvent [
 
 { #category : #'event - handling' }
 GlutinWindowEventsSensor >> processWindowEvent: aGlutinMappedEvent [
-	GlutinWindowsRegistry default
+	Winit30WindowsRegistry default
 		detectId: aGlutinMappedEvent windowId
 		ifFound: [ :aGlutinWindow | self processWindowEvent: aGlutinMappedEvent forWindow: aGlutinWindow ]
 ]
