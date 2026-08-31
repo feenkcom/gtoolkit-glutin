@@ -2,6 +2,6 @@
 	"repositories" : {
 		"github://feenkcom/fenster/src" : "v0.8.25",
 		"github://feenkcom/gtoolkit-boxer/boxer-bindings" : "v0.8.61",
-		"github://feenkcom/pharo-beacon/src" : "v0.5.124"
+		"github://feenkcom/pharo-beacon/src" : "v0.5.125"
 	}
 }

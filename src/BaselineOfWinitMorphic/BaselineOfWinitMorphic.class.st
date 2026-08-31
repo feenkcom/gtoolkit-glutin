@@ -10,7 +10,7 @@ BaselineOfWinitMorphic >> baseline: spec [
 	spec for: #'common' do: [
 		spec
 			baseline: 'Winit' with: [
-				spec repository: 'github://feenkcom/gtoolkit-glutin:v0.8.161/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-glutin:v0.8.162/src' ].
 		spec
 			baseline: 'Fenster' with: [
 				spec repository: 'github://feenkcom/fenster:v0.8.25/src' ].

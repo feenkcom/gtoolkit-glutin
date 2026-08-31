@@ -20,7 +20,7 @@ BaselineOfWinit >> baseline: spec [
 				spec repository: 'github://feenkcom/fenster:v0.8.25/src' ].
 		spec
 			baseline: 'BeaconCore' with: [
-				spec repository: 'github://feenkcom/pharo-beacon:v0.5.124/src' ].
+				spec repository: 'github://feenkcom/pharo-beacon:v0.5.125/src' ].
 
 		spec package: 'Winit' with: [
 			spec requires: #(#GToolkitBoxer #Fenster #BeaconCore) ].
