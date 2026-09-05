@@ -332,6 +332,146 @@ WinitMorphicEventHandler >> mapSymbolToKeyValue: symbol [
 	^ KeyCharacterMapping at: symbol ifAbsent: [ Character null ]
 ]
 
+{ #category : #'converting - winit30' }
+WinitMorphicEventHandler >> morphicCharacterForWinit30Key: aWinitKey [
+	"Answer the Morphic character represented by a Winit 0.30 logical key. Character keys answer their first character; named keys use Morphic's conventional control characters. Answer Character null when the key has no Morphic character representation."
+	| aLogicalKey |
+
+	aWinitKey ifNil: [ ^ Character null ].
+
+	aLogicalKey := aWinitKey key.
+	aLogicalKey isString ifTrue: [
+		aLogicalKey isEmpty ifTrue: [ ^ Character null ].
+		^ aLogicalKey first ].
+
+	^ self morphicCharacterForWinit30NamedKey: aLogicalKey
+]
+
+{ #category : #'converting - winit30' }
+WinitMorphicEventHandler >> morphicCharacterForWinit30NamedKey: aNamedKey [
+	"Answer the control character Morphic uses for a Winit 0.30 named editing or navigation key. Answer Character null for named keys that have no character representation."
+
+	aNamedKey = Winit30NamedKey EnterKey
+		ifTrue: [ ^ Character cr ].
+	aNamedKey = Winit30NamedKey BackspaceKey
+		ifTrue: [ ^ Character backspace ].
+	aNamedKey = Winit30NamedKey EscapeKey
+		ifTrue: [ ^ Character escape ].
+	aNamedKey = Winit30NamedKey TabKey
+		ifTrue: [ ^ Character tab ].
+	aNamedKey = Winit30NamedKey HomeKey
+		ifTrue: [ ^ Character home ].
+	aNamedKey = Winit30NamedKey ArrowLeftKey
+		ifTrue: [ ^ Character arrowLeft ].
+	aNamedKey = Winit30NamedKey ArrowUpKey
+		ifTrue: [ ^ Character arrowUp ].
+	aNamedKey = Winit30NamedKey ArrowRightKey
+		ifTrue: [ ^ Character arrowRight ].
+	aNamedKey = Winit30NamedKey ArrowDownKey
+		ifTrue: [ ^ Character arrowDown ].
+	aNamedKey = Winit30NamedKey EndKey
+		ifTrue: [ ^ Character end ].
+	aNamedKey = Winit30NamedKey PageUpKey
+		ifTrue: [ ^ Character pageUp ].
+	aNamedKey = Winit30NamedKey PageDownKey
+		ifTrue: [ ^ Character pageDown ].
+	aNamedKey = Winit30NamedKey InsertKey
+		ifTrue: [ ^ Character insert ].
+	aNamedKey = Winit30NamedKey DeleteKey
+		ifTrue: [ ^ Character delete ].
+
+	^ Character null
+]
+
+{ #category : #'converting - winit30' }
+WinitMorphicEventHandler >> morphicKeySymbolNameForWinit30NamedKey: aNamedKey [
+	"Answer the OSKeySymbols name corresponding to a Winit 0.30 named key. Handle names whose Winit and Morphic spellings differ explicitly; otherwise remove Winit's Key suffix and use the remaining name."
+
+	aNamedKey = Winit30NamedKey EnterKey
+		ifTrue: [ ^ #RETURN ].
+	aNamedKey = Winit30NamedKey ArrowLeftKey
+		ifTrue: [ ^ #LEFT ].
+	aNamedKey = Winit30NamedKey ArrowUpKey
+		ifTrue: [ ^ #UP ].
+	aNamedKey = Winit30NamedKey ArrowRightKey
+		ifTrue: [ ^ #RIGHT ].
+	aNamedKey = Winit30NamedKey ArrowDownKey
+		ifTrue: [ ^ #DOWN ].
+	aNamedKey = Winit30NamedKey PageUpKey
+		ifTrue: [ ^ #PAGE_UP ].
+	aNamedKey = Winit30NamedKey PageDownKey
+		ifTrue: [ ^ #PAGE_DOWN ].
+	aNamedKey = Winit30NamedKey CapsLockKey
+		ifTrue: [ ^ #CAPS_LOCK ].
+	aNamedKey = Winit30NamedKey NumLockKey
+		ifTrue: [ ^ #NUM_LOCK ].
+	aNamedKey = Winit30NamedKey ScrollLockKey
+		ifTrue: [ ^ #SCROLL_LOCK ].
+	aNamedKey = Winit30NamedKey ContextMenuKey
+		ifTrue: [ ^ #MENU ].
+
+	^ (aNamedKey item asString allButLast: 3) asUppercase asSymbol
+]
+
+{ #category : #'converting - winit30' }
+WinitMorphicEventHandler >> morphicKeySymbolValueForWinit30Key: aWinitKey default: aKeyValue [
+	"Answer the platform-independent OS key-symbol value used to construct a Morphic KeyboardKey. Translate Winit 0.30 named keys to OSKeySymbols names. Character keys retain their character value, except that uppercase Latin letters are normalized because OSKeySymbols records alphabetic key identities as lowercase values."
+	| aLogicalKey aCharacter aKeySymbolValue |
+
+	aWinitKey ifNil: [ ^ aKeyValue ].
+
+	aLogicalKey := aWinitKey key.
+	aLogicalKey isString ifFalse: [
+		| aKeySymbolName |
+		aKeySymbolName := self morphicKeySymbolNameForWinit30NamedKey: aLogicalKey.
+		aKeySymbolValue := OSKeySymbols mapKeySymbolNameToValue:
+			aKeySymbolName.
+		aKeySymbolValue isZero ifTrue: [ ^ aKeyValue ].
+		^ aKeySymbolValue ].
+
+	aLogicalKey isEmpty ifTrue: [ ^ aKeyValue ].
+	aCharacter := aLogicalKey first.
+	(aCharacter between: $A and: $Z)
+		ifTrue: [ ^ aCharacter asLowercase asciiValue ].
+
+	^ aKeyValue
+]
+
+{ #category : #'event - creating' }
+WinitMorphicEventHandler >> morphicKeyboardEventForWinit30Event: anEvent [
+	"Create, but do not enqueue, the Morphic KeyboardEvent corresponding to a Winit 0.30 keyboard input event. Preserve its state, modifiers, logical key, Unicode character value and native scan code. The caller is responsible for rejecting events whose state is Unknown."
+	| aWinitKey aCharacter aKeyValue aCharCode aKeySymbolValue anEventType aMorphicEvent |
+
+	aWinitKey := anEvent key.
+	aCharacter := self morphicCharacterForWinit30Key: aWinitKey.
+	aKeyValue := aCharacter asciiValue.
+	aCharCode := aCharacter charCode.
+	aCharCode > 255 ifTrue: [ aKeyValue := 0 ].
+
+	aKeySymbolValue := self
+		morphicKeySymbolValueForWinit30Key: aWinitKey
+		default: aKeyValue.
+
+	anEventType := anEvent state = WinitEventInputElementState Pressed
+		ifTrue: [ #keyDown ]
+		ifFalse: [ #keyUp ].
+
+	aMorphicEvent := KeyboardEvent new
+		setType: anEventType
+		buttons: (self convertModifiers: modifiers)
+		position: self logicalCursorPosition
+		keyValue: aKeyValue
+		charCode: aCharCode
+		hand: self activeHand
+		stamp: Time millisecondClockValue.
+	aMorphicEvent
+		scanCode: anEvent scanCode;
+		key: (OSKeySymbols
+			mapKeySymbolValueToKeyboardKey: aKeySymbolValue).
+
+	^ aMorphicEvent
+]
+
 { #category : #accessing }
 WinitMorphicEventHandler >> morphicWorld [
 	^ morphicWorld
@@ -579,20 +719,26 @@ WinitMorphicEventHandler >> visitKeyUpEventWindows: anEvent [
 
 { #category : #'event - visiting' }
 WinitMorphicEventHandler >> visitKeyboardInputEvent: anEvent [
-	| aState |
+	"Route a keyboard input event through the representation provided by its Winit version. Legacy events retain their virtual-keycode path; Winit 0.30 events use their logical-key representation."
 
 	anEvent has_virtual_keycode
-		ifFalse: [ ^ self ].
+		ifTrue: [ ^ self visitLegacyKeyboardInputEvent: anEvent ].
+
+	self visitWinit30KeyboardInputEvent: anEvent
+]
+
+{ #category : #'event - visiting' }
+WinitMorphicEventHandler >> visitLegacyKeyboardInputEvent: anEvent [
+	"Handle a pre-Winit-0.30 keyboard input event using the existing platform-specific virtual-keycode conversion. Ignore events whose input state is Unknown."
+	| aState |
 
 	aState := anEvent state.
-
 	aState = WinitEventInputElementState Unknown
 		ifTrue: [ ^ self ].
-	
+
 	aState = WinitEventInputElementState Pressed
 		ifTrue: [ self visitKeyDownEvent: anEvent ]
 		ifFalse: [ self visitKeyUpEvent: anEvent ]
-	
 ]
 
 { #category : #'event - visiting' }
@@ -705,6 +851,18 @@ WinitMorphicEventHandler >> visitWindowScaleFactorChangedEvent: anEvent [
 	
 	morphicWorld defer: [
 		morphicWorld worldState worldRenderer scaleFactor: scaleFactor ]
+]
+
+{ #category : #'event - visiting' }
+WinitMorphicEventHandler >> visitWinit30KeyboardInputEvent: anEvent [
+	"Translate and enqueue a Winit 0.30 keyboard input event. Ignore events whose input state is Unknown because they cannot be classified as a Morphic key-down or key-up event."
+	| aMorphicEvent |
+
+	anEvent state = WinitEventInputElementState Unknown
+		ifTrue: [ ^ self ].
+
+	aMorphicEvent := self morphicKeyboardEventForWinit30Event: anEvent.
+	self enqueueMorphicEvent: aMorphicEvent
 ]
 
 { #category : #accessing }
