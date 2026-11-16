@@ -41,9 +41,12 @@ WinitSessionCache >> session: aGtWorkingSession [
 
 { #category : #accessing }
 WinitSessionCache >> value [
+	| currentSession |
 
-	Smalltalk image session == session ifFalse:
-		[ value := getter value ].
-	
+	currentSession := Smalltalk image session.
+	currentSession == session ifFalse:
+		[ value := getter value.
+		session := currentSession ].
+
 	^ value
 ]
