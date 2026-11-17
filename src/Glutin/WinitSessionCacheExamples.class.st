@@ -33,6 +33,18 @@ WinitSessionCacheExamples >> doesNotComputeBeforeFirstValueRequest [
 ]
 
 { #category : #examples }
+WinitSessionCacheExamples >> doesNotRecomputeWithinTheSameImageSession [
+	<gtExample>
+	self cacheWithCounterGetter.
+	firstComputed := cache value.
+	secondComputed := cache value.
+	self assert: firstComputed equals: 1.
+	self assert: secondComputed equals: 1.
+	self assert: counter equals: 1.
+	^ cache
+]
+
+{ #category : #examples }
 WinitSessionCacheExamples >> recomputesWhenStoredSessionDiffersFromCurrentImageSession [
 	<gtExample>
 	self cacheWithCounterGetter.
