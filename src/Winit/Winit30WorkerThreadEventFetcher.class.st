@@ -156,8 +156,8 @@ Winit30WorkerThreadEventFetcher >> primitiveSetEventLoopWakerThunk: anExternalAd
 
 { #category : #'system startup' }
 Winit30WorkerThreadEventFetcher >> shutDown: isQuitting [
-	fetcherProcess ifNotNil: #terminate.
-	fetcherProcess := nil.
+	fetcherProcess ifNotNil: [ :v | v terminate ].
+	fetcherProcess := nil
 ]
 
 { #category : #'system startup' }
